@@ -89,6 +89,17 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install CLI agents globally
+        run: sudo npm install -g @openai/codex @anthropic-ai/claude-code
+
+      - name: Build cli-agents Docker image
+        run: docker build -t cli-agents agents/agents-cli
+
       - name: Configure AWS credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v6
         with:
