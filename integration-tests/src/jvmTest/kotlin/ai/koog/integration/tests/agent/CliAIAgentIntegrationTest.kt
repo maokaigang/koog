@@ -2,9 +2,7 @@ package ai.koog.integration.tests.agent
 
 import ai.koog.agents.cli.CliAIAgent
 import ai.koog.agents.cli.claude.ClaudeCodeAgent
-import ai.koog.agents.cli.claude.ClaudeCodeConfig
 import ai.koog.agents.cli.codex.CodexAgent
-import ai.koog.agents.cli.codex.CodexConfig
 import ai.koog.agents.cli.transport.CliTransport
 import ai.koog.agents.cli.transport.DockerCliTransport
 import ai.koog.integration.tests.utils.TestCredentials.readTestAnthropicKeyFromEnv
@@ -36,10 +34,8 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
     @MethodSource("defaultTransports")
     fun integration_testCodexAgent(transport: CliTransport) = runTest {
         val agent = CodexAgent(
-            CodexConfig(
-                transport = transport,
-                apiKey = readTestOpenAIKeyFromEnv()
-            )
+            apiKey = readTestOpenAIKeyFromEnv(),
+            transport = transport
         )
         testAgent(agent)
     }
@@ -48,23 +44,39 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
     @MethodSource("defaultTransports")
     fun integration_testClaudeAgent(transport: CliTransport) = runTest {
         val agent = ClaudeCodeAgent(
-            ClaudeCodeConfig(
-                transport = transport,
-                apiKey = readTestAnthropicKeyFromEnv()
-            )
+            apiKey = readTestAnthropicKeyFromEnv(),
+            transport = transport
         )
         testAgent(agent)
     }
 
     @Test
     fun integration_testCodexNoKey() = runTest {
-        val agent = CodexAgent(CodexConfig(transport = dockerTransport))
+        val agent = CodexAgent(transport = dockerTransport)
         testAgent(agent)
     }
 
     @Test
     fun integration_testClaudeCodeNoKey() = runTest {
-        val agent = ClaudeCodeAgent(ClaudeCodeConfig(transport = dockerTransport))
+        val agent = ClaudeCodeAgent(transport = dockerTransport)
         testAgent(agent)
+    }
+
+    @Test
+    fun integration_testClaudeCodeBuilder() = runTest {
+        val agent = ClaudeCodeAgent.builder()
+            .apiKey(readTestAnthropicKeyFromEnv())
+            .transport(CliTransport.Default)
+            .build()
+        agent.shouldNotBeNull()
+    }
+
+    @Test
+    fun integration_testCodexBuilder() = runTest {
+        val agent = CodexAgent.builder()
+            .apiKey(readTestOpenAIKeyFromEnv())
+            .transport(CliTransport.Default)
+            .build()
+        agent.shouldNotBeNull()
     }
 }

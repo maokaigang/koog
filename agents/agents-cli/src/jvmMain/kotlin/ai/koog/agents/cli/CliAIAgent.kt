@@ -1,6 +1,7 @@
 package ai.koog.agents.cli
 
 import ai.koog.agents.cli.transport.CliAvailable
+import ai.koog.agents.cli.transport.CliTransport
 import ai.koog.agents.cli.transport.CliUnavailable
 import ai.koog.agents.core.agent.AIAgent
 import ai.koog.agents.core.agent.AIAgentState
@@ -16,25 +17,30 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonObject
+import java.io.File
 import java.util.UUID
 import kotlin.reflect.typeOf
+import kotlin.time.Duration
 
 /**
  * Base helper: runs a process and exposes stdout/stderr as a Flow of AgentEvents.
+ *
+ * @param binary The name or path of the binary to execute.
+ * @param transport The transport mechanism to use for executing the agent process.
+ * @param workspace The working directory for the agent process.
+ * @param timeout The maximum duration to wait for the agent process to complete.
+ * @param name The name of the agent.
  */
 // TODO(): support structured output
 public abstract class CliAIAgent<Result>(
-    private val config: CliAIAgentConfig,
-    private val name: String = config.binary
+    private val binary: String,
+    private val commandOptions: List<String> = emptyList(),
+    private val env: Map<String, String> = emptyMap(),
+    private val transport: CliTransport = CliTransport.Default,
+    private val workspace: File = File("."),
+    private val timeout: Duration? = null,
+    private val name: String = binary
 ) : AIAgent<String, Result?>() {
-
-    protected abstract val commandOptions: List<String>
-
-    /**
-     * Builds the environment variables for the agent process.
-     * For example, most agents may require an API key or other credentials.
-     */
-    protected abstract fun buildEnvironment(): Map<String, String>
 
     /**
      * Extracts the result of the agent run.
@@ -64,14 +70,14 @@ public abstract class CliAIAgent<Result>(
     override suspend fun run(agentInput: String): Result? {
         connect()
 
-        logger.info { "Starting agent '$name' with binary '$config.binary' in workspace '${config.workspace}'" }
+        logger.info { "Starting agent '$name' with binary '$binary' in workspace '$workspace'" }
         val startTime = System.currentTimeMillis()
 
-        val processEvents = config.transport.execute(
-            command = listOf(config.binary) + commandOptions + agentInput,
-            workspace = config.workspace,
-            env = buildEnvironment(),
-            timeout = config.timeout
+        val processEvents = transport.execute(
+            command = listOf(binary) + commandOptions + agentInput,
+            workspace = workspace,
+            env = env,
+            timeout = timeout
         ).onEach {
             logEvent(it)
         }.toList()
@@ -101,14 +107,14 @@ public abstract class CliAIAgent<Result>(
         )
 
     private fun connect() {
-        when (val availability = config.transport.checkAvailability(config.binary)) {
+        when (val availability = transport.checkAvailability(binary)) {
             is CliAvailable -> {
                 logger.info { "Connected to agent '$name' (version: ${availability.version ?: "unknown"})" }
             }
 
             is CliUnavailable -> {
                 throw CliNotFoundException(
-                    "Agent '$name' CLI '$config.binary' is not available: ${availability.reason}",
+                    "Agent '$name' CLI '$binary' is not available: ${availability.reason}",
                     availability.cause
                 )
             }
