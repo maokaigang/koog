@@ -16,7 +16,6 @@ import ai.koog.prompt.llm.OllamaModels
 import io.kotest.matchers.nulls.shouldNotBeNull
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.serializer
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
@@ -93,22 +92,34 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
 
     @Test
     fun integration_testClaudeCodeStructuredOutput() = runTest {
-        val agent = ClaudeCodeAgent.builder()
-            .apiKey(readTestAnthropicKeyFromEnv())
-            .transport(CliTransport.Default)
-            .build(serializer<StructuredResult>())
+        val agent = ClaudeCodeAgent<StructuredResult>(
+            apiKey = readTestAnthropicKeyFromEnv(),
+            transport = dockerTransport
+        )
 
         testAgent(agent)
     }
 
     @Test
     fun integration_testCliAgentInGraphs() = runTest {
+        val claudeApiKey = readTestAnthropicKeyFromEnv()
+        val codexApiKey = readTestOpenAIKeyFromEnv()
+
         val claudePlanMode = ClaudeCodeAgent(
+            apiKey = claudeApiKey,
             transport = dockerTransport,
             permissionMode = ClaudePermissionMode.Plan
         )
-        val codex = CodexAgent(transport = dockerTransport)
-        val claudeStructuredResult = ClaudeCodeAgent<StructuredResult>(transport = dockerTransport)
+
+        val codex = CodexAgent(
+            apiKey = codexApiKey,
+            transport = dockerTransport
+        )
+
+        val claudeStructuredResult = ClaudeCodeAgent<StructuredResult>(
+            apiKey = claudeApiKey,
+            transport = dockerTransport
+        )
 
         val strategy = strategy<String, StructuredResult>("test-strategy") {
             val generatePlan by claudePlanMode.asNode().transform { it!! }
@@ -121,7 +132,9 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
         val agent = AIAgent(
             promptExecutor = MockExecutor.builder().build(),
             agentConfig = AIAgentConfig.withSystemPrompt(
-                "", OllamaModels.Meta.LLAMA_3_2, maxAgentIterations = 10,
+                "",
+                OllamaModels.Meta.LLAMA_3_2,
+                maxAgentIterations = 10,
             ),
             strategy = strategy
         )
