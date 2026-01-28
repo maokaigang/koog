@@ -2,11 +2,17 @@ package ai.koog.integration.tests.agent
 
 import ai.koog.agents.cli.CliAIAgent
 import ai.koog.agents.cli.claude.ClaudeCodeAgent
+import ai.koog.agents.cli.claude.ClaudePermissionMode
 import ai.koog.agents.cli.codex.CodexAgent
 import ai.koog.agents.cli.transport.CliTransport
 import ai.koog.agents.cli.transport.DockerCliTransport
+import ai.koog.agents.core.agent.AIAgent
+import ai.koog.agents.core.agent.config.AIAgentConfig
+import ai.koog.agents.core.dsl.builder.strategy
+import ai.koog.agents.testing.tools.MockExecutor
 import ai.koog.integration.tests.utils.TestCredentials.readTestAnthropicKeyFromEnv
 import ai.koog.integration.tests.utils.TestCredentials.readTestOpenAIKeyFromEnv
+import ai.koog.prompt.llm.OllamaModels
 import io.kotest.matchers.nulls.shouldNotBeNull
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.Serializable
@@ -33,7 +39,7 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
     }
 
     @Serializable
-    data class TestResult(val message: String)
+    data class StructuredResult(val message: String)
 
     @ParameterizedTest
     @MethodSource("defaultTransports")
@@ -90,8 +96,36 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
         val agent = ClaudeCodeAgent.builder()
             .apiKey(readTestAnthropicKeyFromEnv())
             .transport(CliTransport.Default)
-            .build(serializer<TestResult>())
+            .build(serializer<StructuredResult>())
 
         testAgent(agent)
+    }
+
+    @Test
+    fun integration_testCliAgentInGraphs() = runTest {
+        val claudePlanMode = ClaudeCodeAgent(
+            transport = dockerTransport,
+            permissionMode = ClaudePermissionMode.Plan
+        )
+        val codex = CodexAgent(transport = dockerTransport)
+        val claudeStructuredResult = ClaudeCodeAgent<StructuredResult>(transport = dockerTransport)
+
+        val strategy = strategy<String, StructuredResult>("test-strategy") {
+            val generatePlan by claudePlanMode.asNode().transform { it!! }
+            val solveTask by codex.asNode().transform { it!! }
+            val returnResult by claudeStructuredResult.asNode().transform { it!! }
+
+            nodeStart then generatePlan then solveTask then returnResult then nodeFinish
+        }
+
+        val agent = AIAgent(
+            promptExecutor = MockExecutor.builder().build(),
+            agentConfig = AIAgentConfig.withSystemPrompt(
+                "", OllamaModels.Meta.LLAMA_3_2, maxAgentIterations = 10,
+            ),
+            strategy = strategy
+        )
+
+        agent.run("Write a hello_world.py script").shouldNotBeNull()
     }
 }
