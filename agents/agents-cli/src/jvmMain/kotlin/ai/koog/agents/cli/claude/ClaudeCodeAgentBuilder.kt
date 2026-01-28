@@ -1,36 +1,40 @@
 package ai.koog.agents.cli.claude
 
 import ai.koog.agents.cli.transport.CliTransport
+import kotlinx.serialization.KSerializer
 import java.io.File
 import kotlin.time.Duration
 
 /**
  * Builder for [ClaudeCodeAgent].
  */
-public class ClaudeCodeAgentBuilder {
-    private var apiKey: String? = null
-    private var model: String? = null
-    private var systemPrompt: String? = null
-    private var permissionMode: ClaudePermissionMode? = null
-    private var additionalOptions: List<String> = emptyList()
-    private var workspace: File = File(".")
-    private var timeout: Duration? = null
-    private var transport: CliTransport = CliTransport.Default
+public open class ClaudeCodeAgentBuilder {
+    protected var apiKey: String? = null
+    protected var model: String? = null
+    protected var systemPrompt: String? = null
+    protected var permissionMode: ClaudePermissionMode? = null
+    protected var additionalOptions: List<String> = emptyList()
+    protected var workspace: File = File(".")
+    protected var timeout: Duration? = null
+    protected var transport: CliTransport = CliTransport.Default
 
     /**
      * Sets the Anthropic API key.
      */
-    public fun apiKey(apiKey: String?): ClaudeCodeAgentBuilder = apply { this.apiKey = apiKey }
+    public fun apiKey(apiKey: String?): ClaudeCodeAgentBuilder =
+        apply { this.apiKey = apiKey }
 
     /**
      * Sets the model to use.
      */
-    public fun model(model: String?): ClaudeCodeAgentBuilder = apply { this.model = model }
+    public fun model(model: String?): ClaudeCodeAgentBuilder =
+        apply { this.model = model }
 
     /**
      * Sets the system prompt to use.
      */
-    public fun systemPrompt(systemPrompt: String?): ClaudeCodeAgentBuilder = apply { this.systemPrompt = systemPrompt }
+    public fun systemPrompt(systemPrompt: String?): ClaudeCodeAgentBuilder =
+        apply { this.systemPrompt = systemPrompt }
 
     /**
      * Sets the permission mode to use.
@@ -47,29 +51,49 @@ public class ClaudeCodeAgentBuilder {
     /**
      * Sets the working directory for the agent.
      */
-    public fun workspace(workspace: File): ClaudeCodeAgentBuilder = apply { this.workspace = workspace }
+    public fun workspace(workspace: File): ClaudeCodeAgentBuilder =
+        apply { this.workspace = workspace }
 
     /**
      * Sets the maximum duration to wait for the agent process to complete.
      */
-    public fun timeout(timeout: Duration?): ClaudeCodeAgentBuilder = apply { this.timeout = timeout }
+    public fun timeout(timeout: Duration?): ClaudeCodeAgentBuilder =
+        apply { this.timeout = timeout }
 
     /**
      * Sets the transport mechanism to use for executing the agent process.
      */
-    public fun transport(transport: CliTransport): ClaudeCodeAgentBuilder = apply { this.transport = transport }
+    public fun transport(transport: CliTransport): ClaudeCodeAgentBuilder =
+        apply { this.transport = transport }
 
     /**
      * Builds a new [ClaudeCodeAgent] instance.
      */
-    public fun build(): ClaudeCodeAgent = ClaudeCodeAgent(
-        apiKey = apiKey,
-        model = model,
-        systemPrompt = systemPrompt,
-        permissionMode = permissionMode,
-        additionalOptions = additionalOptions,
-        workspace = workspace,
-        timeout = timeout,
-        transport = transport
-    )
+    public fun build(): ClaudeCodeAgent<String> =
+        ClaudeCodeAgent.invoke(
+            apiKey = apiKey,
+            model = model,
+            systemPrompt = systemPrompt,
+            permissionMode = permissionMode,
+            additionalOptions = additionalOptions,
+            workspace = workspace,
+            timeout = timeout,
+            transport = transport
+        )
+
+    /**
+     * Builds a new [ClaudeCodeAgent] instance with structured output given by [serializer].
+     */
+    public fun <Result> build(serializer: KSerializer<Result>): ClaudeCodeAgent<Result> =
+        ClaudeCodeAgent.invoke(
+            serializer = serializer,
+            apiKey = apiKey,
+            model = model,
+            systemPrompt = systemPrompt,
+            permissionMode = permissionMode,
+            additionalOptions = additionalOptions,
+            workspace = workspace,
+            timeout = timeout,
+            transport = transport
+        )
 }

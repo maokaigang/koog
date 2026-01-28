@@ -138,7 +138,10 @@ public abstract class CliAIAgent<Result>(
 
         // json utils
 
-        private val json: Json = Json { ignoreUnknownKeys = true }
+        /**
+         * Json configuration for cli agent implementations
+         */
+        public val json: Json = Json { ignoreUnknownKeys = true }
 
         /**
          * Converts a list of agent events to a list of JSON objects from stdout

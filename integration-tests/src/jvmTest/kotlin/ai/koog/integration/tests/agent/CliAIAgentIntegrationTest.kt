@@ -9,6 +9,8 @@ import ai.koog.integration.tests.utils.TestCredentials.readTestAnthropicKeyFromE
 import ai.koog.integration.tests.utils.TestCredentials.readTestOpenAIKeyFromEnv
 import io.kotest.matchers.nulls.shouldNotBeNull
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.serializer
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
@@ -29,6 +31,9 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
             agent.run("echo 'hi'").shouldNotBeNull()
         }
     }
+
+    @Serializable
+    data class TestResult(val message: String)
 
     @ParameterizedTest
     @MethodSource("defaultTransports")
@@ -78,5 +83,15 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
             .transport(CliTransport.Default)
             .build()
         agent.shouldNotBeNull()
+    }
+
+    @Test
+    fun integration_testClaudeCodeStructuredOutput() = runTest {
+        val agent = ClaudeCodeAgent.builder()
+            .apiKey(readTestAnthropicKeyFromEnv())
+            .transport(CliTransport.Default)
+            .build(serializer<TestResult>())
+
+        testAgent(agent)
     }
 }
