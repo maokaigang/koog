@@ -4,7 +4,7 @@ import ai.koog.agents.cli.AgentEvent
 import ai.koog.agents.cli.CliAIAgent
 import ai.koog.agents.cli.transport.CliTransport
 import kotlinx.serialization.json.jsonObject
-import java.io.File
+import kotlin.jvm.JvmStatic
 import kotlin.time.Duration
 
 /**
@@ -66,15 +66,15 @@ public enum class CodexApprovalPolicy(public val value: String) {
  * @param transport The transport mechanism to use for executing the agent process.
  */
 public class CodexAgent(
+    transport: CliTransport,
     apiKey: String? = null,
     model: String? = null,
     systemPrompt: String? = null,
     sandbox: CodexSandboxMode? = null,
     askForApproval: CodexApprovalPolicy? = null,
     additionalOptions: List<String> = emptyList(),
-    workspace: File = File("."),
+    workspace: String = ".",
     timeout: Duration? = null,
-    transport: CliTransport = CliTransport.Default,
 ) : CliAIAgent<String>(
     binary = "codex",
     commandOptions = buildList {

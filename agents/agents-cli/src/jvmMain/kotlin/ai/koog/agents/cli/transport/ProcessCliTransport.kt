@@ -18,14 +18,14 @@ import kotlin.time.Duration
 /**
  * Base class for transports that execute a local [Process].
  */
-public abstract class ProcessTransport : CliTransport {
+public abstract class ProcessCliTransport : CliTransport {
 
     /**
      * Builds the [ProcessBuilder] for execution.
      */
     protected abstract fun buildCommand(
         command: List<String>,
-        workspace: File,
+        workspace: String,
         env: Map<String, String>
     ): List<String>
 
@@ -49,7 +49,7 @@ public abstract class ProcessTransport : CliTransport {
 
     override fun execute(
         command: List<String>,
-        workspace: File,
+        workspace: String,
         env: Map<String, String>,
         timeout: Duration?
     ): Flow<CliAIAgentEvent> {
@@ -58,7 +58,7 @@ public abstract class ProcessTransport : CliTransport {
         return channelFlow {
             val process = try {
                 ProcessBuilder(command)
-                    .directory(workspace)
+                    .directory(File(workspace))
                     .apply { environment().putAll(env) }
                     .redirectErrorStream(false)
                     .start()
@@ -125,5 +125,16 @@ public abstract class ProcessTransport : CliTransport {
                 waiter.cancel()
             }
         }.flowOn(Dispatchers.SuitableForIO)
+    }
+
+    /**
+     * Default implementation of ProcessTransport.
+     */
+    public object Default : ProcessCliTransport() {
+        override fun buildCommand(
+            command: List<String>,
+            workspace: String,
+            env: Map<String, String>
+        ): List<String> = command
     }
 }

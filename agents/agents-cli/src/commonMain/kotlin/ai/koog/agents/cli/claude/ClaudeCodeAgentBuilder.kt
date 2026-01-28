@@ -2,21 +2,20 @@ package ai.koog.agents.cli.claude
 
 import ai.koog.agents.cli.transport.CliTransport
 import kotlinx.serialization.KSerializer
-import java.io.File
 import kotlin.time.Duration
 
 /**
  * Builder for [ClaudeCodeAgent].
  */
 public open class ClaudeCodeAgentBuilder {
+    protected var transport: CliTransport? = null
     protected var apiKey: String? = null
     protected var model: String? = null
     protected var systemPrompt: String? = null
     protected var permissionMode: ClaudePermissionMode? = null
     protected var additionalOptions: List<String> = emptyList()
-    protected var workspace: File = File(".")
+    protected var workspace: String = "."
     protected var timeout: Duration? = null
-    protected var transport: CliTransport = CliTransport.Default
 
     /**
      * Sets the Anthropic API key.
@@ -51,7 +50,7 @@ public open class ClaudeCodeAgentBuilder {
     /**
      * Sets the working directory for the agent.
      */
-    public fun workspace(workspace: File): ClaudeCodeAgentBuilder =
+    public fun workspace(workspace: String): ClaudeCodeAgentBuilder =
         apply { this.workspace = workspace }
 
     /**
@@ -71,14 +70,14 @@ public open class ClaudeCodeAgentBuilder {
      */
     public fun build(): ClaudeCodeAgent<String> =
         ClaudeCodeAgent.invoke(
+            transport = requireNotNull(transport) { "Transport must be set" },
             apiKey = apiKey,
             model = model,
             systemPrompt = systemPrompt,
             permissionMode = permissionMode,
             additionalOptions = additionalOptions,
             workspace = workspace,
-            timeout = timeout,
-            transport = transport
+            timeout = timeout
         )
 
     /**
@@ -86,6 +85,7 @@ public open class ClaudeCodeAgentBuilder {
      */
     public fun <Result> build(serializer: KSerializer<Result>): ClaudeCodeAgent<Result> =
         ClaudeCodeAgent.invoke(
+            transport = requireNotNull(transport) { "Transport must be set" },
             serializer = serializer,
             apiKey = apiKey,
             model = model,
@@ -93,7 +93,6 @@ public open class ClaudeCodeAgentBuilder {
             permissionMode = permissionMode,
             additionalOptions = additionalOptions,
             workspace = workspace,
-            timeout = timeout,
-            transport = transport
+            timeout = timeout
         )
 }

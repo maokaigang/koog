@@ -11,16 +11,13 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.condition.EnabledOnOs
 import org.junit.jupiter.api.condition.OS
-import java.io.File
 import kotlin.test.Test
 
-class NativeCliTransportTest {
-
-    private val workspace = File(".")
+class ProcessCliTransportTest {
 
     @Test
     fun testCheckAvailability() {
-        val availability = CliTransport.Default.checkAvailability("java")
+        val availability = ProcessCliTransport.Default.checkAvailability("java")
 
         availability.shouldBeInstanceOf<CliAvailable>()
         availability.version
@@ -30,9 +27,9 @@ class NativeCliTransportTest {
 
     @Test
     fun testExecuteEcho() = runTest {
-        val events = CliTransport.Default.execute(
+        val events = ProcessCliTransport.Default.execute(
             command = listOf("echo", "hello world"),
-            workspace = workspace
+            workspace = "."
         ).toList()
 
         events[0].shouldBeInstanceOf<CliAIAgentEvent.Started>()
@@ -49,9 +46,9 @@ class NativeCliTransportTest {
     @Test
     fun testExecuteInvalidCommand() = runTest {
         assertThrows<Exception> {
-            CliTransport.Default.execute(
+            ProcessCliTransport.Default.execute(
                 command = listOf("non-existent-command-12345"),
-                workspace = workspace
+                workspace = "."
             ).toList()
         }
     }
@@ -61,9 +58,9 @@ class NativeCliTransportTest {
     fun testExecuteWithEnv() = runTest {
         val env = mapOf("TEST_VAR" to "test-value")
 
-        val events = CliTransport.Default.execute(
+        val events = ProcessCliTransport.Default.execute(
             command = listOf("sh", "-c", "echo \$TEST_VAR"),
-            workspace = workspace,
+            workspace = ".",
             env = env
         ).toList()
 
@@ -77,12 +74,10 @@ class NativeCliTransportTest {
     @Test
     @EnabledOnOs(OS.LINUX, OS.MAC)
     fun testExecuteStderr() = runTest {
-        val workspace = File(".").absoluteFile
-
         // Redirect stdout to stderr
-        val events = CliTransport.Default.execute(
+        val events = ProcessCliTransport.Default.execute(
             command = listOf("sh", "-c", "echo 'error message' >&2"),
-            workspace = workspace
+            workspace = "."
         ).toList()
 
         events

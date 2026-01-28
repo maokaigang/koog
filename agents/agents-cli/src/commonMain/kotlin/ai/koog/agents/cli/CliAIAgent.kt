@@ -17,27 +17,28 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonObject
-import java.io.File
-import java.util.UUID
 import kotlin.reflect.typeOf
 import kotlin.time.Duration
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 /**
  * Base helper: runs a process and exposes stdout/stderr as a Flow of AgentEvents.
  *
  * @param binary The name or path of the binary to execute.
  * @param transport The transport mechanism to use for executing the agent process.
+ * @param commandOptions Additional CLI options to pass to the agent.
+ * @param env Additional environment variables to set for the agent process.
  * @param workspace The working directory for the agent process.
  * @param timeout The maximum duration to wait for the agent process to complete.
  * @param name The name of the agent.
  */
-// TODO(): support structured output
 public abstract class CliAIAgent<Result>(
     private val binary: String,
+    private val transport: CliTransport,
     private val commandOptions: List<String> = emptyList(),
     private val env: Map<String, String> = emptyMap(),
-    private val transport: CliTransport = CliTransport.Default,
-    private val workspace: File = File("."),
+    private val workspace: String = ".",
     private val timeout: Duration? = null,
     private val name: String = binary
 ) : AIAgent<String, Result?>() {
@@ -52,7 +53,8 @@ public abstract class CliAIAgent<Result>(
      */
     protected abstract fun extractResult(events: List<AgentEvent>): Result?
 
-    override val id: String = UUID.randomUUID().toString()
+    @OptIn(ExperimentalUuidApi::class)
+    override val id: String = Uuid.random().toString()
 
     // TODO(): implement these overrides properly
     // note: it might require refactoring the config and the state logic
@@ -71,7 +73,6 @@ public abstract class CliAIAgent<Result>(
         connect()
 
         logger.info { "Starting agent '$name' with binary '$binary' in workspace '$workspace'" }
-        val startTime = System.currentTimeMillis()
 
         val processEvents = transport.execute(
             command = listOf(binary) + commandOptions + agentInput,
@@ -85,11 +86,10 @@ public abstract class CliAIAgent<Result>(
         val agentEvents = processEvents.filterIsInstance<AgentEvent>()
 
         val result = extractResult(agentEvents)
-        val durationMs = System.currentTimeMillis() - startTime
 
         val exitCode = processEvents.filterIsInstance<CliAIAgentEvent.Exit>().firstOrNull()?.exitCode ?: -1
 
-        logger.info { "Agent '$name' finished in ${durationMs}ms with exit code $exitCode" }
+        logger.info { "Agent '$name' finished with exit code $exitCode" }
         logger.info { "Agent '$name' result: $result" }
 
         return result

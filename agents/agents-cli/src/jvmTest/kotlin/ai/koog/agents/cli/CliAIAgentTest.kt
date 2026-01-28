@@ -3,6 +3,7 @@ package ai.koog.agents.cli
 import ai.koog.agents.cli.transport.CliAvailability
 import ai.koog.agents.cli.transport.CliAvailable
 import ai.koog.agents.cli.transport.CliTransport
+import ai.koog.agents.cli.transport.ProcessCliTransport
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
@@ -20,17 +21,17 @@ class CliAIAgentTest {
         transport: CliTransport = AlwaysAvailableNativeTransport,
     ) : CliAIAgent<String>(
         binary,
+        transport,
         commandOptions,
         env,
-        transport,
     ) {
         override fun extractResult(events: List<AgentEvent>): String {
             return events.filterIsInstance<AgentEvent.Stdout>().joinToString("\n") { it.content }
         }
     }
 
-    // A transport that always says Available to skip the --version check
-    private object AlwaysAvailableNativeTransport : CliTransport by CliTransport.Default {
+    // Transport that always says Available to skip the --version check
+    private object AlwaysAvailableNativeTransport : CliTransport by ProcessCliTransport.Default {
         override fun checkAvailability(binary: String): CliAvailability {
             return CliAvailable("test-version")
         }
@@ -46,7 +47,7 @@ class CliAIAgentTest {
     fun testConnectUnavailable() = runTest {
         val agent = TestCliAIAgent(
             "non-existent-binary-12345",
-            transport = CliTransport.Default
+            transport = ProcessCliTransport.Default
         )
 
         shouldThrow<CliNotFoundException> {

@@ -2,7 +2,6 @@ package ai.koog.agents.cli.transport
 
 import ai.koog.agents.cli.CliAIAgentEvent
 import kotlinx.coroutines.flow.Flow
-import java.io.File
 import kotlin.time.Duration
 
 /**
@@ -19,19 +18,8 @@ public interface CliTransport {
      */
     public fun execute(
         command: List<String>,
-        workspace: File,
+        workspace: String,
         env: Map<String, String> = emptyMap(),
         timeout: Duration? = null
     ): Flow<CliAIAgentEvent>
-
-    /**
-     * Default implementation of ProcessTransport.
-     */
-    public object Default : ProcessTransport() {
-        override fun buildCommand(
-            command: List<String>,
-            workspace: File,
-            env: Map<String, String>
-        ): List<String> = command
-    }
 }

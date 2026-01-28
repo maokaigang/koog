@@ -1,22 +1,21 @@
 package ai.koog.agents.cli.codex
 
 import ai.koog.agents.cli.transport.CliTransport
-import java.io.File
 import kotlin.time.Duration
 
 /**
  * Builder for [CodexAgent].
  */
 public class CodexAgentBuilder {
+    private var transport: CliTransport? = null
     private var apiKey: String? = null
     private var model: String? = null
     private var systemPrompt: String? = null
     private var sandbox: CodexSandboxMode? = null
     private var askForApproval: CodexApprovalPolicy? = null
     private var additionalOptions: List<String> = emptyList()
-    private var workspace: File = File(".")
+    private var workspace: String = "."
     private var timeout: Duration? = null
-    private var transport: CliTransport = CliTransport.Default
 
     /**
      * Sets the OpenAI API key.
@@ -53,7 +52,7 @@ public class CodexAgentBuilder {
     /**
      * Sets the working directory for the agent.
      */
-    public fun workspace(workspace: File): CodexAgentBuilder = apply { this.workspace = workspace }
+    public fun workspace(workspace: String): CodexAgentBuilder = apply { this.workspace = workspace }
 
     /**
      * Sets the maximum duration to wait for the agent process to complete.
@@ -69,6 +68,7 @@ public class CodexAgentBuilder {
      * Builds a new [CodexAgent] instance.
      */
     public fun build(): CodexAgent = CodexAgent(
+        transport = requireNotNull(transport) { "Transport must be set" },
         apiKey = apiKey,
         model = model,
         systemPrompt = systemPrompt,
@@ -76,7 +76,6 @@ public class CodexAgentBuilder {
         askForApproval = askForApproval,
         additionalOptions = additionalOptions,
         workspace = workspace,
-        timeout = timeout,
-        transport = transport
+        timeout = timeout
     )
 }

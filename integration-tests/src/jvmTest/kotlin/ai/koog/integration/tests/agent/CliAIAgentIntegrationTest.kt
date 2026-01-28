@@ -6,6 +6,7 @@ import ai.koog.agents.cli.claude.ClaudePermissionMode
 import ai.koog.agents.cli.codex.CodexAgent
 import ai.koog.agents.cli.transport.CliTransport
 import ai.koog.agents.cli.transport.DockerCliTransport
+import ai.koog.agents.cli.transport.ProcessCliTransport
 import ai.koog.agents.core.agent.AIAgent
 import ai.koog.agents.core.agent.config.AIAgentConfig
 import ai.koog.agents.core.dsl.builder.strategy
@@ -28,7 +29,7 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
 
         @JvmStatic
         fun defaultTransports(): Stream<CliTransport> = Stream.of(
-            CliTransport.Default,
+            ProcessCliTransport.Default,
             dockerTransport
         )
 
@@ -76,7 +77,7 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
     fun integration_testClaudeCodeBuilder() = runTest {
         val agent = ClaudeCodeAgent.builder()
             .apiKey(readTestAnthropicKeyFromEnv())
-            .transport(CliTransport.Default)
+            .transport(ProcessCliTransport.Default)
             .build()
         agent.shouldNotBeNull()
     }
@@ -85,7 +86,7 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
     fun integration_testCodexBuilder() = runTest {
         val agent = CodexAgent.builder()
             .apiKey(readTestOpenAIKeyFromEnv())
-            .transport(CliTransport.Default)
+            .transport(ProcessCliTransport.Default)
             .build()
         agent.shouldNotBeNull()
     }

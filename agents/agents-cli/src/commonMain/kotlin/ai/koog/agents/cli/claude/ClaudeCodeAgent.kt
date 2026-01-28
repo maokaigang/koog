@@ -11,7 +11,8 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.serializer
-import java.io.File
+import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
 import kotlin.time.Duration
 
 /**
@@ -56,7 +57,7 @@ public class ClaudeCodeAgent<Result> internal constructor(
     commandOptions: List<String>,
     env: Map<String, String> = emptyMap(),
     transport: CliTransport,
-    workspace: File,
+    workspace: String,
     timeout: Duration?,
     private val isStructured: Boolean,
     private val decode: (String) -> Result?,
@@ -96,14 +97,14 @@ public class ClaudeCodeAgent<Result> internal constructor(
          * Creates a new [ClaudeCodeAgent] without structured output (returns [String]).
          */
         public operator fun invoke(
+            transport: CliTransport,
             apiKey: String? = null,
             model: String? = null,
             systemPrompt: String? = null,
             permissionMode: ClaudePermissionMode? = null,
             additionalOptions: List<String> = emptyList(),
-            workspace: File = File("."),
+            workspace: String = ".",
             timeout: Duration? = null,
-            transport: CliTransport = CliTransport.Default,
         ): ClaudeCodeAgent<String> {
             val commandOptions = getCommandOptions(
                 model = model,
@@ -117,11 +118,11 @@ public class ClaudeCodeAgent<Result> internal constructor(
             }
 
             return ClaudeCodeAgent(
+                transport = transport,
                 commandOptions = commandOptions,
                 env = env,
                 workspace = workspace,
                 timeout = timeout,
-                transport = transport,
                 isStructured = false,
             ) { it }
         }
@@ -130,15 +131,15 @@ public class ClaudeCodeAgent<Result> internal constructor(
          * Creates a new [ClaudeCodeAgent] with structured output using the provided [serializer].
          */
         public operator fun <T> invoke(
+            transport: CliTransport,
             serializer: KSerializer<T>,
             apiKey: String? = null,
             model: String? = null,
             systemPrompt: String? = null,
             permissionMode: ClaudePermissionMode? = null,
             additionalOptions: List<String> = emptyList(),
-            workspace: File = File("."),
+            workspace: String = ".",
             timeout: Duration? = null,
-            transport: CliTransport = CliTransport.Default,
         ): ClaudeCodeAgent<T> {
             val commandOptions = getCommandOptions(
                 model = model,
@@ -152,11 +153,11 @@ public class ClaudeCodeAgent<Result> internal constructor(
             }
 
             return ClaudeCodeAgent(
+                transport = transport,
                 commandOptions = commandOptions,
                 env = env,
                 workspace = workspace,
                 timeout = timeout,
-                transport = transport,
                 isStructured = true,
             ) { resultString ->
                 runCatching {
@@ -168,17 +169,18 @@ public class ClaudeCodeAgent<Result> internal constructor(
         /**
          * Creates a new [ClaudeCodeAgent] with structured output using the reified type [T].
          */
-        @JvmName("createReified")
+        @JvmName("invokeReified")
         public inline operator fun <reified T> invoke(
+            transport: CliTransport,
             apiKey: String? = null,
             model: String? = null,
             systemPrompt: String? = null,
             permissionMode: ClaudePermissionMode? = null,
             additionalOptions: List<String> = emptyList(),
-            workspace: File = File("."),
+            workspace: String = ".",
             timeout: Duration? = null,
-            transport: CliTransport = CliTransport.Default,
         ): ClaudeCodeAgent<T> = invoke(
+            transport = transport,
             serializer = serializer<T>(),
             apiKey = apiKey,
             model = model,
@@ -186,8 +188,7 @@ public class ClaudeCodeAgent<Result> internal constructor(
             permissionMode = permissionMode,
             additionalOptions = additionalOptions,
             workspace = workspace,
-            timeout = timeout,
-            transport = transport
+            timeout = timeout
         )
 
         /**

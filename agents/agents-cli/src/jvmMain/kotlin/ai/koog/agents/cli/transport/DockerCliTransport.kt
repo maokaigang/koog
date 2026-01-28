@@ -31,11 +31,11 @@ public class DockerVolume(
 public class DockerCliTransport(
     private val imageName: String,
     private val volumes: List<DockerVolume> = emptyList(),
-) : ProcessTransport() {
+) : ProcessCliTransport() {
 
     override fun buildCommand(
         command: List<String>,
-        workspace: File,
+        workspace: String,
         env: Map<String, String>
     ): List<String> = buildList {
         add("docker")
@@ -49,7 +49,7 @@ public class DockerCliTransport(
         }
 
         // Workspace volume
-        val absoluteWorkspace = workspace.absolutePath
+        val absoluteWorkspace = File(workspace).absolutePath
         add("-v")
         add("$absoluteWorkspace:/workspace")
         add("-w")
