@@ -8,6 +8,11 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.intOrNull
+import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.put
 import org.junit.jupiter.api.condition.EnabledOnOs
 import org.junit.jupiter.api.condition.OS
 import kotlin.test.Test
@@ -16,17 +21,33 @@ class CliAIAgentTest {
 
     private class TestCliAIAgent(
         binary: String,
-        commandOptions: List<String> = emptyList(),
+        commandFlags: List<String> = emptyList(),
         env: Map<String, String> = emptyMap(),
         transport: CliTransport = AlwaysAvailableNativeTransport,
-    ) : CliAIAgent<String>(
+    ) : CliAIAgent(
         binary,
         transport,
-        commandOptions,
+        commandFlags,
         env,
     ) {
-        override fun extractResult(events: List<AgentEvent>): String {
-            return events.filterIsInstance<AgentEvent.Stdout>().joinToString("\n") { it.content }
+        override fun extractResponse(events: List<AgentEvent>): CliAIAgentResponse {
+            val result = events.filterIsInstance<AgentEvent.Stdout>().joinToString("\n") { it.content }
+
+            return decode(buildJsonObject {
+                put("result", result)
+                // Note: Exit code is no longer available in decodeResponse via AgentEvent list
+                put("exitCode", 0)
+            })
+        }
+
+        private fun decode(resultEvent: JsonObject): CliAIAgentResponse {
+            val result = resultEvent["result"]?.stringVal ?: ""
+            val exitCode = resultEvent["exitCode"]?.jsonPrimitive?.intOrNull ?: -1
+            return CliAIAgentResponse(
+                content = result,
+                isError = exitCode != 0,
+                metadata = buildJsonObject { put("exitCode", exitCode) }
+            )
         }
     }
 
@@ -61,8 +82,9 @@ class CliAIAgentTest {
             "echo",
         )
 
-        val result = agent.run("hello")
-        result shouldBe "hello"
+        val response = agent.run("hello")
+        response.content shouldBe "hello"
+        response.metadata?.get("exitCode")?.jsonPrimitive?.intOrNull shouldBe 0
     }
 
     @Test
@@ -70,12 +92,13 @@ class CliAIAgentTest {
     fun testRunExecutionWithEnv() = runTest {
         val agent = TestCliAIAgent(
             "sh",
-            commandOptions = listOf("-c"),
+            commandFlags = listOf("-c"),
             env = mapOf("KEY" to "VALUE"),
         )
 
-        val result = agent.run("echo \$KEY")
-        result shouldBe "VALUE"
+        val response = agent.run("echo \$KEY")
+        response.content shouldBe "VALUE"
+        response.metadata?.get("exitCode")?.jsonPrimitive?.intOrNull shouldBe 0
     }
 
     @Test
@@ -83,10 +106,11 @@ class CliAIAgentTest {
     fun testRunExecutionStderr() = runTest {
         val agent = TestCliAIAgent(
             "sh",
-            commandOptions = listOf("-c"),
+            commandFlags = listOf("-c"),
         )
 
-        val result = agent.run("echo 'error message' >&2")
-        result shouldBe ""
+        val response = agent.run("echo 'error message' >&2")
+        response.content shouldBe ""
+        response.metadata?.get("exitCode")?.jsonPrimitive?.intOrNull shouldBe 0
     }
 }

@@ -1,10 +1,9 @@
 package ai.koog.integration.tests.agent
 
-import ai.koog.agents.cli.CliAIAgent
+import ai.koog.agents.cli.CliAIAgentResponse
 import ai.koog.agents.cli.claude.ClaudeCodeAgent
 import ai.koog.agents.cli.claude.ClaudePermissionMode
 import ai.koog.agents.cli.codex.CodexAgent
-import ai.koog.agents.cli.transport.CliTransport
 import ai.koog.agents.cli.transport.DockerCliTransport
 import ai.koog.agents.cli.transport.ProcessCliTransport
 import ai.koog.agents.core.agent.AIAgent
@@ -14,12 +13,11 @@ import ai.koog.agents.testing.tools.MockExecutor
 import ai.koog.integration.tests.utils.TestCredentials.readTestAnthropicKeyFromEnv
 import ai.koog.integration.tests.utils.TestCredentials.readTestOpenAIKeyFromEnv
 import ai.koog.prompt.llm.OllamaModels
+import io.kotest.matchers.booleans.shouldBeFalse
+import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.nulls.shouldNotBeNull
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.Serializable
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.MethodSource
-import java.util.stream.Stream
 import kotlin.test.Test
 
 class CliAIAgentIntegrationTest : AIAgentTestBase() {
@@ -27,36 +25,27 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
         private const val IMAGE_NAME = "cli-agents"
         private val dockerTransport = DockerCliTransport(IMAGE_NAME)
 
-        @JvmStatic
-        fun defaultTransports(): Stream<CliTransport> = Stream.of(
-            ProcessCliTransport.Default,
-            dockerTransport
-        )
+        private suspend fun testAgent(agent: AIAgent<String, CliAIAgentResponse>) {
+            val response = agent.run("echo 'hi'")
 
-        private suspend fun testAgent(agent: CliAIAgent<*>) {
-            agent.run("echo 'hi'").shouldNotBeNull()
+            response.isError.shouldBeFalse()
+            response.content.contains("hi", ignoreCase = true).shouldBeTrue()
+
+            val usage = response.usage
+
+            usage.inputTokens.shouldNotBeNull()
+            usage.outputTokens.shouldNotBeNull()
         }
     }
 
     @Serializable
     data class StructuredResult(val message: String)
 
-    @ParameterizedTest
-    @MethodSource("defaultTransports")
-    fun integration_testCodexAgent(transport: CliTransport) = runTest {
+    @Test
+    fun integration_testCodexWithDefaultTransport() = runTest {
         val agent = CodexAgent(
             apiKey = readTestOpenAIKeyFromEnv(),
-            transport = transport
-        )
-        testAgent(agent)
-    }
-
-    @ParameterizedTest
-    @MethodSource("defaultTransports")
-    fun integration_testClaudeAgent(transport: CliTransport) = runTest {
-        val agent = ClaudeCodeAgent(
-            apiKey = readTestAnthropicKeyFromEnv(),
-            transport = transport
+            transport = ProcessCliTransport.Default
         )
         testAgent(agent)
     }
@@ -64,41 +53,43 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
     @Test
     fun integration_testCodexNoKey() = runTest {
         val agent = CodexAgent(transport = dockerTransport)
-        testAgent(agent)
+        agent.run("Hi!").isError.shouldBeTrue()
     }
 
     @Test
     fun integration_testClaudeCodeNoKey() = runTest {
         val agent = ClaudeCodeAgent(transport = dockerTransport)
+        agent.run("Hi!").isError.shouldBeTrue()
+    }
+
+    @Test
+    fun integration_testClaudeCodeInvoke() = runTest {
+        val agent = ClaudeCodeAgent(
+            apiKey = readTestAnthropicKeyFromEnv(),
+            transport = ProcessCliTransport.Default
+        )
+
         testAgent(agent)
     }
 
     @Test
-    fun integration_testClaudeCodeBuilder() = runTest {
-        val agent = ClaudeCodeAgent.builder()
-            .apiKey(readTestAnthropicKeyFromEnv())
-            .transport(ProcessCliTransport.Default)
-            .build()
-        agent.shouldNotBeNull()
-    }
+    fun integration_testCodexInvoke() = runTest {
+        val agent = CodexAgent(
+            apiKey = readTestOpenAIKeyFromEnv(),
+            transport = ProcessCliTransport.Default
+        )
 
-    @Test
-    fun integration_testCodexBuilder() = runTest {
-        val agent = CodexAgent.builder()
-            .apiKey(readTestOpenAIKeyFromEnv())
-            .transport(ProcessCliTransport.Default)
-            .build()
-        agent.shouldNotBeNull()
+        testAgent(agent)
     }
 
     @Test
     fun integration_testClaudeCodeStructuredOutput() = runTest {
-        val agent = ClaudeCodeAgent<StructuredResult>(
+        val agent = ClaudeCodeAgent(
             apiKey = readTestAnthropicKeyFromEnv(),
             transport = dockerTransport
         )
 
-        testAgent(agent)
+        agent.runStructured<StructuredResult>("echo 'hi'")
     }
 
     @Test
@@ -117,15 +108,15 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
             transport = dockerTransport
         )
 
-        val claudeStructuredResult = ClaudeCodeAgent<StructuredResult>(
+        val claude = ClaudeCodeAgent(
             apiKey = claudeApiKey,
             transport = dockerTransport
         )
 
         val strategy = strategy<String, StructuredResult>("test-strategy") {
-            val generatePlan by claudePlanMode.asNode().transform { it!! }
-            val solveTask by codex.asNode().transform { it!! }
-            val returnResult by claudeStructuredResult.asNode().transform { it!! }
+            val generatePlan by claudePlanMode.asNode().transform { it.content }
+            val solveTask by codex.asNode().transform { it.content }
+            val returnResult by claude.asNodeStructured<StructuredResult>().transform { it.result }
 
             nodeStart then generatePlan then solveTask then returnResult then nodeFinish
         }

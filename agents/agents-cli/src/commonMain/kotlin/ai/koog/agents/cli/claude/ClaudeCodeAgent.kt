@@ -1,18 +1,19 @@
 package ai.koog.agents.cli.claude
 
 import ai.koog.agents.cli.AgentEvent
-import ai.koog.agents.cli.CliAIAgent
+import ai.koog.agents.cli.CliAIAgentResponse
+import ai.koog.agents.cli.CliAIAgentStructured
+import ai.koog.agents.cli.CliAgentException
+import ai.koog.agents.cli.CliAgentStructuredResponse
+import ai.koog.agents.cli.CliAgentUsage
 import ai.koog.agents.cli.transport.CliTransport
+import ai.koog.prompt.params.LLMParams
+import ai.koog.prompt.structure.Structure
 import ai.koog.prompt.structure.json.generator.JsonSchemaConsts
-import ai.koog.prompt.structure.json.generator.StandardJsonSchemaGenerator
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.jsonPrimitive
-import kotlinx.serialization.serializer
-import kotlin.jvm.JvmName
-import kotlin.jvm.JvmStatic
+import kotlinx.serialization.json.put
 import kotlin.time.Duration
 
 /**
@@ -53,200 +54,122 @@ public enum class ClaudePermissionMode(public val value: String) {
 /**
  * Claude Code CLI wrapper.
  */
-public class ClaudeCodeAgent<Result> internal constructor(
-    commandOptions: List<String>,
-    env: Map<String, String> = emptyMap(),
+public class ClaudeCodeAgent(
     transport: CliTransport,
-    workspace: String,
-    timeout: Duration?,
-    private val isStructured: Boolean,
-    private val decode: (String) -> Result?,
-) : CliAIAgent<Result?>(
+    apiKey: String? = null,
+    model: String? = null,
+    systemPrompt: String? = null,
+    permissionMode: ClaudePermissionMode? = null,
+    additionalFlags: List<String> = emptyList(),
+    workspace: String = ".",
+    timeout: Duration? = null,
+) : CliAIAgentStructured(
     binary = "claude",
-    commandOptions = commandOptions,
-    env = env,
+    commandFlags = buildList {
+        add("-p")
+
+        add("--output-format")
+        add("stream-json")
+
+        add("--verbose")
+
+        model?.let {
+            add("--model")
+            add(it)
+        }
+
+        systemPrompt?.let {
+            add("--system-prompt")
+            add(it)
+        }
+
+        permissionMode?.let {
+            add("--permission-mode")
+            add(it.value)
+        }
+
+        addAll(additionalFlags)
+    },
+    env = buildMap {
+        apiKey?.let { put("ANTHROPIC_API_KEY", it) }
+    },
     transport = transport,
     workspace = workspace,
     timeout = timeout
 ) {
 
-    override fun extractResult(events: List<AgentEvent>): Result? {
+    override fun extractResponse(events: List<AgentEvent>): CliAIAgentResponse {
         val jsonEvents = toJsonStdoutEvents(events)
-        val resultEvent = jsonEvents.lastOrNull { it["type"]?.stringVal == "result" } ?: return null
 
-        val resultString = if (isStructured) {
-            resultEvent["structured_output"]?.toString()
-        } else {
-            resultEvent["result"]?.stringVal
-        } ?: return null
+        val resultEvent = jsonEvents
+            .lastOrNull { it["type"]?.stringVal == "result" }
+            ?: throw CliAgentException("No result event found")
 
-        return decode(resultString)
+        val content = resultEvent["result"]
+            ?.stringVal
+            ?: throw CliAgentException("No result found in result event")
+
+        val isError = resultEvent["is_error"]?.boolVal ?: false
+
+        val usageObject = resultEvent["usage"]?.jsonObject
+
+        val usage = CliAgentUsage(
+            inputTokens = usageObject?.get("input_tokens")?.intVal,
+            outputTokens = usageObject?.get("output_tokens")?.intVal,
+            buildJsonObject {
+                put("cacheCreationInputTokens", usageObject?.get("cache_creation_input_tokens")?.intVal)
+                put("cacheReadInputTokens", usageObject?.get("cache_read_input_tokens")?.intVal)
+                put("totalCostUsd", resultEvent["total_cost_usd"]?.doubleVal)
+            }
+        )
+
+        return CliAIAgentResponse(
+            content = content,
+            isError = isError,
+            usage = usage
+        )
+    }
+
+    override fun <T> structuredOutputFlags(structure: Structure<T, LLMParams.Schema.JSON>): List<String> {
+        return listOf("--json-schema", extractClaudeSchema(structure.schema))
+    }
+
+    override fun <T> extractStructuredResponse(
+        events: List<AgentEvent>,
+        structure: Structure<T, *>
+    ): CliAgentStructuredResponse<T> {
+        val response = extractResponse(events)
+        val resultString = toJsonStdoutEvents(events)
+            .lastOrNull { it["type"]?.stringVal == "result" }
+            ?.get("structured_output")
+            ?.toString()
+            ?: throw CliAgentException("No structured output found")
+        val result = structure.parse(resultString)
+
+        return CliAgentStructuredResponse(
+            result = result,
+            response = response.copy(content = resultString)
+        )
     }
 
     /**
-     * Companion object for static builder api and constructor overloads.
+     * Extracts a JSON schema for Claude Code CLI from the provided [schema].
      */
-    public companion object {
-        /**
-         * Creates a new [ClaudeCodeAgentBuilder].
-         */
-        @JvmStatic
-        public fun builder(): ClaudeCodeAgentBuilder = ClaudeCodeAgentBuilder()
+    private fun extractClaudeSchema(schema: LLMParams.Schema.JSON): String {
+        val jsonSchema = schema.schema
 
-        /**
-         * Creates a new [ClaudeCodeAgent] without structured output (returns [String]).
-         */
-        public operator fun invoke(
-            transport: CliTransport,
-            apiKey: String? = null,
-            model: String? = null,
-            systemPrompt: String? = null,
-            permissionMode: ClaudePermissionMode? = null,
-            additionalOptions: List<String> = emptyList(),
-            workspace: String = ".",
-            timeout: Duration? = null,
-        ): ClaudeCodeAgent<String> {
-            val commandOptions = getCommandOptions(
-                model = model,
-                systemPrompt = systemPrompt,
-                permissionMode = permissionMode,
-                additionalOptions = additionalOptions,
-            )
+        val defs = jsonSchema[JsonSchemaConsts.Keys.DEFS]!!
 
-            val env = buildMap {
-                apiKey?.let { put("ANTHROPIC_API_KEY", it) }
-            }
+        val rootType = jsonSchema[JsonSchemaConsts.Keys.REF]
+            ?.stringVal
+            ?.removePrefix(JsonSchemaConsts.Keys.REF_PREFIX)
+            ?.let { defs.jsonObject[it] }
 
-            return ClaudeCodeAgent(
-                transport = transport,
-                commandOptions = commandOptions,
-                env = env,
-                workspace = workspace,
-                timeout = timeout,
-                isStructured = false,
-            ) { it }
-        }
+        require(rootType is JsonObject) { "Claude Code CLI requires a JSON object as the root type." }
 
-        /**
-         * Creates a new [ClaudeCodeAgent] with structured output using the provided [serializer].
-         */
-        public operator fun <T> invoke(
-            transport: CliTransport,
-            serializer: KSerializer<T>,
-            apiKey: String? = null,
-            model: String? = null,
-            systemPrompt: String? = null,
-            permissionMode: ClaudePermissionMode? = null,
-            additionalOptions: List<String> = emptyList(),
-            workspace: String = ".",
-            timeout: Duration? = null,
-        ): ClaudeCodeAgent<T> {
-            val commandOptions = getCommandOptions(
-                model = model,
-                systemPrompt = systemPrompt,
-                permissionMode = permissionMode,
-                additionalOptions = additionalOptions,
-            ) + "--json-schema" + generateClaudeSchema(serializer)
+        val updatedSchema = rootType.toMutableMap()
+        updatedSchema[JsonSchemaConsts.Keys.DEFS] = defs
 
-            val env = buildMap {
-                apiKey?.let { put("ANTHROPIC_API_KEY", it) }
-            }
-
-            return ClaudeCodeAgent(
-                transport = transport,
-                commandOptions = commandOptions,
-                env = env,
-                workspace = workspace,
-                timeout = timeout,
-                isStructured = true,
-            ) { resultString ->
-                runCatching {
-                    json.decodeFromString(serializer, resultString)
-                }.getOrNull()
-            }
-        }
-
-        /**
-         * Creates a new [ClaudeCodeAgent] with structured output using the reified type [T].
-         */
-        @JvmName("invokeReified")
-        public inline operator fun <reified T> invoke(
-            transport: CliTransport,
-            apiKey: String? = null,
-            model: String? = null,
-            systemPrompt: String? = null,
-            permissionMode: ClaudePermissionMode? = null,
-            additionalOptions: List<String> = emptyList(),
-            workspace: String = ".",
-            timeout: Duration? = null,
-        ): ClaudeCodeAgent<T> = invoke(
-            transport = transport,
-            serializer = serializer<T>(),
-            apiKey = apiKey,
-            model = model,
-            systemPrompt = systemPrompt,
-            permissionMode = permissionMode,
-            additionalOptions = additionalOptions,
-            workspace = workspace,
-            timeout = timeout
-        )
-
-        /**
-         * Generates a JSON schema for Claude Code CLI from the provided [serializer].
-         */
-        private fun generateClaudeSchema(serializer: KSerializer<*>): String {
-            val schema = StandardJsonSchemaGenerator.generate(
-                json = Json.Default,
-                name = "output_schema",
-                serializer = serializer,
-                descriptionOverrides = emptyMap(),
-                excludedProperties = emptySet()
-            )
-
-            val rootRef = schema.schema[JsonSchemaConsts.Keys.REF]?.jsonPrimitive?.content
-            val rootDefKey = rootRef?.removePrefix(JsonSchemaConsts.Keys.REF_PREFIX)
-            val rootType = rootDefKey?.let { schema.schema[JsonSchemaConsts.Keys.DEFS]?.jsonObject?.get(it) }
-
-            require(rootType is JsonObject) { "Claude Code CLI requires a JSON object as the root type." }
-
-            val updatedSchema = rootType.toMutableMap()
-            val defs = schema.schema[JsonSchemaConsts.Keys.DEFS]
-            if (defs != null) {
-                updatedSchema[JsonSchemaConsts.Keys.DEFS] = defs
-            }
-
-            return JsonObject(updatedSchema).toString()
-        }
-
-        private fun getCommandOptions(
-            model: String?,
-            systemPrompt: String?,
-            permissionMode: ClaudePermissionMode?,
-            additionalOptions: List<String>,
-        ) = buildList {
-            add("-p")
-
-            add("--output-format")
-            add("stream-json")
-
-            add("--verbose")
-
-            model?.let {
-                add("--model")
-                add(it)
-            }
-
-            systemPrompt?.let {
-                add("--system-prompt")
-                add(it)
-            }
-
-            permissionMode?.let {
-                add("--permission-mode")
-                add(it.value)
-            }
-
-            addAll(additionalOptions)
-        }
+        return JsonObject(updatedSchema).toString()
     }
 }

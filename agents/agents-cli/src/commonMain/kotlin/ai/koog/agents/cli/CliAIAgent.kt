@@ -8,6 +8,7 @@ import ai.koog.agents.core.agent.AIAgentState
 import ai.koog.agents.core.agent.config.AIAgentConfig
 import ai.koog.agents.core.annotation.InternalAgentsApi
 import ai.koog.agents.core.dsl.builder.AIAgentNodeDelegate
+import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.toList
@@ -15,7 +16,10 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.doubleOrNull
+import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonObject
 import kotlin.reflect.typeOf
 import kotlin.time.Duration
@@ -23,35 +27,36 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 /**
- * Base helper: runs a process and exposes stdout/stderr as a Flow of AgentEvents.
+ * Base class for implementing cli agents (claude code, codex, etc.)
+ * Runs a process and exposes stdout/stderr as a Flow of AgentEvents.
  *
  * @param binary The name or path of the binary to execute.
  * @param transport The transport mechanism to use for executing the agent process.
- * @param commandOptions Additional CLI options to pass to the agent.
+ * @param commandFlags Additional CLI flags to pass to the agent.
  * @param env Additional environment variables to set for the agent process.
  * @param workspace The working directory for the agent process.
  * @param timeout The maximum duration to wait for the agent process to complete.
  * @param name The name of the agent.
  */
-public abstract class CliAIAgent<Result>(
-    private val binary: String,
-    private val transport: CliTransport,
-    private val commandOptions: List<String> = emptyList(),
-    private val env: Map<String, String> = emptyMap(),
-    private val workspace: String = ".",
-    private val timeout: Duration? = null,
-    private val name: String = binary
-) : AIAgent<String, Result?>() {
+public abstract class CliAIAgent(
+    protected val binary: String,
+    protected val transport: CliTransport,
+    protected val commandFlags: List<String> = emptyList(),
+    protected val env: Map<String, String> = emptyMap(),
+    protected val workspace: String = ".",
+    protected val timeout: Duration? = null,
+    public val name: String = binary
+) : AIAgent<String, CliAIAgentResponse>() {
 
     /**
-     * Extracts the result of the agent run.
+     * Extracts the response from the agent run.
      *
      * This method processes a sequence of generated agent events and returns the agent execution result.
      *
      * @param events a list of events of type [AgentEvent], streamed by the agent cli
-     * @return a [Result] object representing the extracted result, or null if no result received
+     * @return a [CliAIAgentResponse] object representing the extracted result
      */
-    protected abstract fun extractResult(events: List<AgentEvent>): Result?
+    protected abstract fun extractResponse(events: List<AgentEvent>): CliAIAgentResponse
 
     @OptIn(ExperimentalUuidApi::class)
     override val id: String = Uuid.random().toString()
@@ -62,20 +67,20 @@ public abstract class CliAIAgent<Result>(
     override val agentConfig: AIAgentConfig
         get() = throw UnsupportedOperationException()
 
-    override suspend fun getState(): AIAgentState<Result?> = throw UnsupportedOperationException()
+    override suspend fun getState(): AIAgentState<CliAIAgentResponse> = throw UnsupportedOperationException()
 
     override suspend fun close() {
         // No-op by default
     }
 
     @OptIn(InternalAgentsApi::class)
-    override suspend fun run(agentInput: String): Result? {
+    override suspend fun run(agentInput: String): CliAIAgentResponse {
         connect()
 
         logger.info { "Starting agent '$name' with binary '$binary' in workspace '$workspace'" }
 
         val processEvents = transport.execute(
-            command = listOf(binary) + commandOptions + agentInput,
+            command = listOf(binary) + commandFlags + agentInput,
             workspace = workspace,
             env = env,
             timeout = timeout
@@ -83,13 +88,9 @@ public abstract class CliAIAgent<Result>(
             logEvent(it)
         }.toList()
 
-        val agentEvents = processEvents.filterIsInstance<AgentEvent>()
+        val result = extractResponse(processEvents.filterIsInstance<AgentEvent>())
 
-        val result = extractResult(agentEvents)
-
-        val exitCode = processEvents.filterIsInstance<CliAIAgentEvent.Exit>().firstOrNull()?.exitCode ?: -1
-
-        logger.info { "Agent '$name' finished with exit code $exitCode" }
+        logger.info { "Agent '$name' finished" }
         logger.info { "Agent '$name' result: $result" }
 
         return result
@@ -97,16 +98,25 @@ public abstract class CliAIAgent<Result>(
 
     /**
      * Transforms this agent into a node that can be used in a graph strategy.
+     *
+     * @param name Optional name of the node.
      */
-    public fun asNode(name: String? = null): AIAgentNodeDelegate<String, Result?> =
-        AIAgentNodeDelegate<String, Result?>(
+    public fun asNode(name: String? = null): AIAgentNodeDelegate<String, CliAIAgentResponse> =
+        AIAgentNodeDelegate(
             name = name,
             inputType = typeOf<String>(),
-            outputType = typeOf<Any?>(),
-            execute = { input -> run(input) }
-        )
+            outputType = typeOf<CliAIAgentResponse>(),
+        ) { agentInput ->
+            run(agentInput).also { response ->
+                llm.writeSession {
+                    appendPrompt {
+                        assistant(response.content)
+                    }
+                }
+            }
+        }
 
-    private fun connect() {
+    protected fun connect() {
         when (val availability = transport.checkAvailability(binary)) {
             is CliAvailable -> {
                 logger.info { "Connected to agent '$name' (version: ${availability.version ?: "unknown"})" }
@@ -122,9 +132,15 @@ public abstract class CliAIAgent<Result>(
     }
 
     protected companion object {
-        private val logger = KotlinLogging.logger { }
+        /**
+         * Logger for cli agent implementations
+         */
+        public val logger: KLogger = KotlinLogging.logger { }
 
-        private fun logEvent(event: CliAIAgentEvent) {
+        /**
+         * Formats the cli agent events for logs
+         */
+        public fun logEvent(event: CliAIAgentEvent) {
             logger.info {
                 when (event) {
                     is CliAIAgentEvent.Started -> "Agent Started"
@@ -160,5 +176,23 @@ public abstract class CliAIAgent<Result>(
          */
         public val JsonElement.stringVal: String?
             get() = (this as? JsonPrimitive)?.contentOrNull
+
+        /**
+         * Converts a JSON primitive to an integer
+         */
+        public val JsonElement.intVal: Int?
+            get() = (this as? JsonPrimitive)?.intOrNull
+
+        /**
+         * Converted a JSON primitive to a double
+         */
+        public val JsonElement.doubleVal: Double?
+            get() = (this as? JsonPrimitive)?.doubleOrNull
+
+        /**
+         * Converts a JSON primitive to a boolean
+         */
+        public val JsonElement.boolVal: Boolean?
+            get() = (this as? JsonPrimitive)?.booleanOrNull
     }
 }
