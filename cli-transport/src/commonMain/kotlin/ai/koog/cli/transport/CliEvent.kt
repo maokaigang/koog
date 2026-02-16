@@ -30,5 +30,3 @@ public sealed interface CliEvent {
      */
     public class Failed(public val message: String?) : CliEvent
 }
-
-

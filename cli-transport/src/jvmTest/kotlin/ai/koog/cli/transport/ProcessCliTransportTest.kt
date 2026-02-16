@@ -1,9 +1,5 @@
-package ai.koog.agents.transport.transport
+package ai.koog.cli.transport
 
-import ai.koog.agents.transport.AgentEvent
-import ai.koog.agents.transport.CliAIAgentEvent
-import ai.koog.cli.transport.ProcessCliTransport
-import ai.koog.cli.transport.CliAvailable
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldNotBeEmpty
@@ -34,15 +30,13 @@ class ProcessCliTransportTest {
             workspace = "."
         ).toList()
 
-        events[0].shouldBeInstanceOf<CliAIAgentEvent.Started>()
-
-        events[1]
-            .shouldBeInstanceOf<AgentEvent.Stdout>()
+        events[0]
+            .shouldBeInstanceOf<CliEvent.Stdout>()
             .content.shouldBe("hello world")
 
-        events[2]
-            .shouldBeInstanceOf<CliAIAgentEvent.Exit>()
-            .exitCode.shouldBe(0)
+        events[1]
+            .shouldBeInstanceOf<CliEvent.Exit>()
+            .code.shouldBe(0)
     }
 
     @Test
@@ -67,7 +61,7 @@ class ProcessCliTransportTest {
         ).toList()
 
         events
-            .filterIsInstance<AgentEvent.Stdout>()
+            .filterIsInstance<CliEvent.Stdout>()
             .firstOrNull()
             .shouldNotBeNull()
             .content.shouldBe("test-value")
@@ -83,7 +77,7 @@ class ProcessCliTransportTest {
         ).toList()
 
         events
-            .filterIsInstance<AgentEvent.Stderr>()
+            .filterIsInstance<CliEvent.Stderr>()
             .firstOrNull()
             .shouldNotBeNull()
             .content.shouldBe("error message")

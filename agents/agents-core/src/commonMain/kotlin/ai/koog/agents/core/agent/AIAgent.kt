@@ -338,7 +338,6 @@ public expect abstract class AIAgent<Input, Output> constructor() : Closeable {
     }
 }
 
-
 /**
  * Generates a node that runs the [AIAgent].
  */

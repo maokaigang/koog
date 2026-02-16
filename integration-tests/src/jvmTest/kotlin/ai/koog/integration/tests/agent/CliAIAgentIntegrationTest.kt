@@ -3,8 +3,8 @@ package ai.koog.integration.tests.agent
 import ai.koog.agents.core.agent.AIAgent
 import ai.koog.agents.core.agent.asNode
 import ai.koog.agents.core.agent.cli.AIAgentCliStrategy
-import ai.koog.agents.core.agent.cli.CliAIAgentResponse
 import ai.koog.agents.core.agent.cli.ClaudePermissionMode
+import ai.koog.agents.core.agent.cli.CliAIAgentResponse
 import ai.koog.agents.core.agent.config.AIAgentConfig
 import ai.koog.agents.core.dsl.builder.strategy
 import ai.koog.agents.testing.tools.MockExecutor

@@ -62,7 +62,7 @@ public class AIAgentCliStrategy<Input, Output>(
         val model = context.config.model
         val systemMessages = context.config.prompt.messages.filterIsInstance<Message.System>()
 
-         val command = listOf(config.binary) + config.flags(model, systemMessages) + config.generateRequest(context, input)
+        val command = listOf(config.binary) + config.flags(model, systemMessages) + config.generateRequest(context, input)
         logger.info { "Executing CLI command: ${command.joinToString(" ")}" }
 
         val events = config.transport.execute(
