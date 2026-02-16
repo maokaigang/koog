@@ -4,6 +4,7 @@
 package ai.koog.agents.core.agent
 
 import ai.koog.agents.annotations.JavaAPI
+import ai.koog.agents.core.agent.cli.AIAgentCliStrategy
 import ai.koog.agents.core.agent.config.AIAgentConfig
 import ai.koog.agents.core.agent.context.AIAgentContext
 import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy
@@ -166,6 +167,35 @@ public actual abstract class AIAgent<Input, Output> : Closeable {
             llmModel,
             responseProcessor,
             toolRegistry,
+            strategy,
+            id,
+            systemPrompt,
+            temperature,
+            numberOfChoices,
+            maxIterations,
+            installFeatures
+        )
+
+        public actual operator fun <Input, Output> invoke(
+            agentConfig: AIAgentConfig,
+            strategy: AIAgentCliStrategy<Input, Output>,
+            id: String?,
+            clock: Clock,
+            installFeatures: CliAIAgent.FeatureContext.() -> Unit
+        ): CliAIAgent<Input, Output> =
+            AIAgentHelper.invoke(agentConfig, strategy, id, clock, installFeatures)
+
+        public actual operator fun <Input, Output> invoke(
+            llmModel: LLModel,
+            strategy: AIAgentCliStrategy<Input, Output>,
+            id: String?,
+            systemPrompt: String?,
+            temperature: Double?,
+            numberOfChoices: Int,
+            maxIterations: Int,
+            installFeatures: CliAIAgent.FeatureContext.() -> Unit
+        ): CliAIAgent<Input, Output> = AIAgentHelper.invoke(
+            llmModel,
             strategy,
             id,
             systemPrompt,

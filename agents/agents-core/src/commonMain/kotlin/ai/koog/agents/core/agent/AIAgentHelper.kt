@@ -1,6 +1,7 @@
 package ai.koog.agents.core.agent
 
 import ai.koog.agents.core.agent.GraphAIAgent.FeatureContext
+import ai.koog.agents.core.agent.cli.AIAgentCliStrategy
 import ai.koog.agents.core.agent.config.AIAgentConfig
 import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy
 import ai.koog.agents.core.tools.ToolRegistry
@@ -284,6 +285,73 @@ internal object AIAgentHelper {
         ),
         installFeatures = installFeatures,
         toolRegistry = toolRegistry,
+        strategy = strategy
+    )
+
+    /**
+     * Creates a functional AI agent with the provided configurations and execution strategy.
+     *
+     * @param Input The type of the input the AI agent will process.
+     * @param Output The type of the output the AI agent will produce.
+     * @param agentConfig The configuration for the AI agent, including prompt setup, language model, and iteration limits.
+     * @param strategy The strategy for executing the agent's logic, including workflows and decision-making.
+     * @param id Unique identifier for the agent. Random UUID will be generated if set to null.
+     * @return A `FunctionalAIAgent` instance configured with the provided parameters and execution strategy.
+     */
+    @OptIn(ExperimentalUuidApi::class)
+    internal operator fun <Input, Output> invoke(
+        agentConfig: AIAgentConfig,
+        strategy: AIAgentCliStrategy<Input, Output>,
+        id: String? = null,
+        clock: Clock = Clock.System,
+        installFeatures: CliAIAgent.FeatureContext.() -> Unit = {},
+    ): CliAIAgent<Input, Output> {
+        return CliAIAgent(
+            id = id,
+            agentConfig = agentConfig,
+            strategy = strategy,
+            clock = clock,
+            installFeatures = installFeatures
+        )
+    }
+
+    /**
+     * Creates an [FunctionalAIAgent] with the specified parameters to execute a strategy with the assistance of a tool registry,
+     * configured language model, and associated features.
+     *
+     * @param llmModel The language model configuration defining the underlying LLM instance and its behavior.
+     * @param id Unique identifier for the agent. Random UUID will be generated if set to null.
+     * @param systemPrompt The system prompt that sets the initial context or instructions for the AI agent.
+     * @param temperature The temperature setting for the language model, which adjusts the diversity of output. Default is 1.0.
+     * @param numberOfChoices The number of response choices to generate when querying the language model. Default is 1.
+     * @param maxIterations The maximum number of iterations the agent is allowed to perform during execution. Default is 50.
+     * @param installFeatures A lambda to configure and install features in the agent's context.
+     * @return An AI agent instance configured with the provided parameters and ready to execute the specified strategy.
+     */
+    internal operator fun <Input, Output> invoke(
+        llmModel: LLModel,
+        strategy: AIAgentCliStrategy<Input, Output>,
+        id: String? = null,
+        systemPrompt: String? = null,
+        temperature: Double? = null,
+        numberOfChoices: Int = 1,
+        maxIterations: Int = 50,
+        installFeatures: CliAIAgent.FeatureContext.() -> Unit = {},
+    ): CliAIAgent<Input, Output> = CliAIAgent(
+        agentConfig = AIAgentConfig(
+            prompt = prompt(
+                id = "chat",
+                params = LLMParams(
+                    temperature = temperature,
+                    numberOfChoices = numberOfChoices
+                )
+            ) {
+                systemPrompt?.let { system(it) }
+            },
+            model = llmModel,
+            maxAgentIterations = maxIterations,
+        ),
+        installFeatures = installFeatures,
         strategy = strategy
     )
 
