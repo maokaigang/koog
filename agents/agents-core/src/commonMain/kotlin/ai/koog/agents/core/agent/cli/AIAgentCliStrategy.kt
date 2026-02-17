@@ -26,7 +26,7 @@ public interface AIAgentCliStrategyConfig<Input, Output> {
     /** CLI transport for executing commands. */
     public val transport: CliTransport
 
-    /** Binary name of the CLI tool. */
+    /** Binary of the CLI tool. */
     public val binary: String
 
     /** Working directory for command execution. */
@@ -94,6 +94,11 @@ public class AIAgentCliStrategy<Input, Output>(
      * Json utils for cli agent implementations
      */
     public companion object {
+
+        /**
+         * Creates a new builder for [AIAgentCliStrategy] with the specified name.
+         */
+        public fun builder(name: String): AIAgentCliStrategyBuilder = AIAgentCliStrategyBuilder(name)
 
         // claude constructors
 
