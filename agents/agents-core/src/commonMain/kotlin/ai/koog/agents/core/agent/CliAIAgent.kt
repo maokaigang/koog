@@ -75,7 +75,7 @@ public class CliAIAgent<Input, Output>(
     override val agentConfig: AIAgentConfig,
     override val strategy: AIAgentCliStrategy<Input, Output>,
     id: String? = null,
-    public val clock: Clock = Clock.System,
+    public val clock: Clock = kotlin.time.Clock.System,
     @property:InternalAgentsApi
     public val installFeatures: FeatureContext.() -> Unit = {}
 ) : AIAgentBase<Input, Output, AIAgentCliContext>(

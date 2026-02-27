@@ -303,7 +303,7 @@ internal object AIAgentHelper {
         agentConfig: AIAgentConfig,
         strategy: AIAgentCliStrategy<Input, Output>,
         id: String? = null,
-        clock: Clock = Clock.System,
+        clock: Clock = kotlin.time.Clock.System,
         installFeatures: CliAIAgent.FeatureContext.() -> Unit = {},
     ): CliAIAgent<Input, Output> {
         return CliAIAgent(
