@@ -11,6 +11,7 @@ import ai.koog.agents.testing.tools.MockExecutor
 import ai.koog.cli.transport.CliTransport
 import ai.koog.cli.transport.DockerCliTransport
 import ai.koog.cli.transport.ProcessCliTransport
+import ai.koog.integration.tests.utils.RetryUtils.withRetry
 import ai.koog.integration.tests.utils.TestCredentials.readTestAnthropicKeyFromEnv
 import ai.koog.integration.tests.utils.TestCredentials.readTestOpenAIKeyFromEnv
 import ai.koog.prompt.dsl.prompt
@@ -137,51 +138,53 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
 
     @Test
     fun integration_testCliAgentInGraphs() = runTest(timeout = 180.seconds) {
-        val claudeApiKey = readTestAnthropicKeyFromEnv()
-        val codexApiKey = readTestOpenAIKeyFromEnv()
+        withRetry {
+            val claudeApiKey = readTestAnthropicKeyFromEnv()
+            val codexApiKey = readTestOpenAIKeyFromEnv()
 
-        val claudePlanMode = AIAgent(
-            agentConfig = buildConfig(),
-            strategy = AIAgentCliStrategy.claude(
-                name = "claude-plan",
-                apiKey = claudeApiKey,
-                transport = dockerTransport,
-                permissionMode = ClaudePermissionMode.Plan
+            val claudePlanMode = AIAgent(
+                agentConfig = buildConfig(),
+                strategy = AIAgentCliStrategy.claude(
+                    name = "claude-plan",
+                    apiKey = claudeApiKey,
+                    transport = dockerTransport,
+                    permissionMode = ClaudePermissionMode.Plan
+                )
             )
-        )
 
-        val codex = AIAgent(
-            agentConfig = buildConfig(),
-            strategy = AIAgentCliStrategy.codex(
-                name = "codex",
-                apiKey = codexApiKey,
-                transport = dockerTransport
+            val codex = AIAgent(
+                agentConfig = buildConfig(),
+                strategy = AIAgentCliStrategy.codex(
+                    name = "codex",
+                    apiKey = codexApiKey,
+                    transport = dockerTransport
+                )
             )
-        )
 
-        val claudeStructured = AIAgent(
-            agentConfig = buildConfig(),
-            strategy = AIAgentCliStrategy.claude<String, StructuredResult>(
-                name = "claude-structured",
-                apiKey = claudeApiKey,
-                transport = dockerTransport
+            val claudeStructured = AIAgent(
+                agentConfig = buildConfig(),
+                strategy = AIAgentCliStrategy.claude<String, StructuredResult>(
+                    name = "claude-structured",
+                    apiKey = claudeApiKey,
+                    transport = dockerTransport
+                )
             )
-        )
 
-        val strategy = strategy("test-strategy") {
-            val generatePlan by claudePlanMode.asNode().transform { it.content }
-            val solveTask by codex.asNode().transform { it.content }
-            val returnResult by claudeStructured.asNode()
+            val strategy = strategy("test-strategy") {
+                val generatePlan by claudePlanMode.asNode().transform { it.content }
+                val solveTask by codex.asNode().transform { it.content }
+                val returnResult by claudeStructured.asNode()
 
-            nodeStart then generatePlan then solveTask then returnResult then nodeFinish
+                nodeStart then generatePlan then solveTask then returnResult then nodeFinish
+            }
+
+            val agent = AIAgent(
+                promptExecutor = MockExecutor.builder().build(),
+                agentConfig = buildConfig(),
+                strategy = strategy
+            )
+
+            assertResponse(agent.run("Write a python script printing 'hi'").response)
         }
-
-        val agent = AIAgent(
-            promptExecutor = MockExecutor.builder().build(),
-            agentConfig = buildConfig(),
-            strategy = strategy
-        )
-
-        assertResponse(agent.run("Write a python script printing 'hi'").response)
     }
 }
