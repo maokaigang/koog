@@ -17,6 +17,8 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.toList
 import kotlinx.serialization.serializer
 import kotlin.jvm.JvmName
+import kotlin.jvm.JvmOverloads
+import kotlin.jvm.JvmStatic
 import kotlin.time.Duration
 
 /**
@@ -98,6 +100,8 @@ public class AIAgentCliStrategy<Input, Output>(
         /**
          * Creates a new builder for [AIAgentCliStrategy] with the specified name.
          */
+        @JvmStatic
+        @JvmName("builder")
         public fun builder(name: String): AIAgentCliStrategyBuilder = AIAgentCliStrategyBuilder(name)
 
         // claude constructors
@@ -105,6 +109,9 @@ public class AIAgentCliStrategy<Input, Output>(
         /**
          * Creates a new instance of [AIAgentCliStrategy] using Claude.
          */
+        @JvmStatic
+        @JvmOverloads
+        @JvmName("claude")
         public fun claude(
             name: String,
             transport: CliTransport,
@@ -128,6 +135,8 @@ public class AIAgentCliStrategy<Input, Output>(
          * Creates a new instance of [AIAgentCliStrategy] using Claude.
          */
         @JvmName("claudeGeneric")
+        @JvmStatic
+        @JvmOverloads
         public fun <Input> claude(
             name: String,
             transport: CliTransport,
@@ -154,6 +163,8 @@ public class AIAgentCliStrategy<Input, Output>(
          * Creates a new instance of [AIAgentCliStrategy] in structured output mode.
          */
         @JvmName("claudeStructuredGeneric")
+        @JvmStatic
+        @JvmOverloads
         public fun <Input, Output> claude(
             name: String,
             transport: CliTransport,
@@ -207,6 +218,9 @@ public class AIAgentCliStrategy<Input, Output>(
         /**
          * Creates a new instance of [AIAgentCliStrategy] using Codex.
          */
+        @JvmStatic
+        @JvmOverloads
+        @JvmName("codex")
         public fun codex(
             name: String,
             transport: CliTransport,
@@ -231,6 +245,9 @@ public class AIAgentCliStrategy<Input, Output>(
         /**
          * Creates a new instance of [AIAgentCliStrategy] using Codex.
          */
+        @JvmStatic
+        @JvmOverloads
+        @JvmName("codexGeneric")
         public fun <Input> codex(
             name: String,
             transport: CliTransport,

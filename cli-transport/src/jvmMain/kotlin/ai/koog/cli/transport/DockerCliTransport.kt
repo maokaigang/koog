@@ -9,7 +9,7 @@ import java.nio.file.Path
  * @property containerPath Path inside the container.
  * @property readOnly Whether the volume should be mounted as read-only.
  */
-public class DockerVolume(
+public class DockerVolume @JvmOverloads constructor(
     public val hostPath: Path,
     public val containerPath: String,
     public val readOnly: Boolean = false,
@@ -28,7 +28,7 @@ public class DockerVolume(
  * @property imageName The Docker image to use.
  * @property volumes List of volume mappings.
  */
-public class DockerCliTransport(
+public class DockerCliTransport @JvmOverloads constructor(
     private val imageName: String,
     private val volumes: List<DockerVolume> = emptyList(),
 ) : ProcessCliTransport() {

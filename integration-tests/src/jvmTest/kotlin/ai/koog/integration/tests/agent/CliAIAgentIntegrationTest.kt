@@ -58,6 +58,9 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
     }
 
     @Serializable
+    data class TestInput(val request: String)
+
+    @Serializable
     data class StructuredResult(val message: String)
 
     private fun buildConfig(model: LLModel? = null): AIAgentConfig =
@@ -134,6 +137,54 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
         )
 
         assertResponse(agent.run("echo 'hi'").response)
+    }
+
+    @Test
+    fun integration_testClaudeCustomInput() = runTest {
+        val agent = AIAgent(
+            agentConfig = buildConfig(model = AnthropicModels.Sonnet_4_5),
+            strategy = AIAgentCliStrategy.claude<TestInput>(
+                name = "claude-custom",
+                apiKey = readTestAnthropicKeyFromEnv(),
+                transport = dockerTransport,
+                generateRequest = { _, input -> input.request }
+            )
+        )
+
+        val response = agent.run(TestInput("echo 'hi'"))
+        assertResponse(response)
+    }
+
+    @Test
+    fun integration_testCodexCustomInput() = runTest {
+        val agent = AIAgent(
+            agentConfig = buildConfig(model = OpenAIModels.Chat.GPT4o),
+            strategy = AIAgentCliStrategy.codex<TestInput>(
+                name = "codex-custom",
+                apiKey = readTestOpenAIKeyFromEnv(),
+                transport = dockerTransport,
+                generateRequest = { _, input -> input.request }
+            )
+        )
+
+        val response = agent.run(TestInput("echo 'hi'"))
+        assertResponse(response)
+    }
+
+    @Test
+    fun integration_testClaudeCustomInputStructuredOutput() = runTest {
+        val agent = AIAgent(
+            agentConfig = buildConfig(model = AnthropicModels.Sonnet_4_5),
+            strategy = AIAgentCliStrategy.claude<TestInput, StructuredResult>(
+                name = "claude-structured-custom",
+                apiKey = readTestAnthropicKeyFromEnv(),
+                transport = dockerTransport,
+                generateRequest = { _, input -> input.request }
+            )
+        )
+
+        val response = agent.run(TestInput("echo '{\"message\": \"hi\"}'"))
+        assertResponse(response.response)
     }
 
     @Test

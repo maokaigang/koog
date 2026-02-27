@@ -18,6 +18,12 @@ kotlin {
             }
         }
 
+        jvmMain {
+            dependencies {
+                api(project(":agents:agents-utils"))
+            }
+        }
+
         commonTest {
             dependencies {
                 implementation(libs.kotest.assertions.core)

@@ -1,5 +1,6 @@
 package ai.koog.cli.transport
 
+import ai.koog.agents.annotations.JavaAPI
 import ai.koog.utils.io.SuitableForIO
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -131,5 +132,29 @@ public abstract class ProcessCliTransport : CliTransport {
             workspace: String,
             env: Map<String, String>
         ): List<String> = command
+    }
+
+    /**
+     * Companion object for the [ProcessCliTransport] class, providing utility methods for creating
+     * specific types of `ProcessCliTransport` implementations.
+     */
+    public companion object {
+        /**
+         * Returns the default [ProcessCliTransport] implementation.
+         */
+        @JavaAPI
+        @JvmStatic
+        public fun defaultTransport(): ProcessCliTransport = Default
+
+        /**
+         * Creates a [DockerCliTransport] with the specified image and optional volumes.
+         */
+        @JavaAPI
+        @JvmStatic
+        @JvmOverloads
+        public fun dockerTransport(
+            imageName: String,
+            volumes: List<DockerVolume> = emptyList()
+        ): ProcessCliTransport = DockerCliTransport(imageName, volumes)
     }
 }
