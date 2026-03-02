@@ -26,7 +26,7 @@ import ai.koog.prompt.message.Message
 import ai.koog.prompt.streaming.StreamFrame
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.flow.Flow
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 
 private object DummyPromptExecutor : PromptExecutor() {
     override suspend fun execute(
@@ -73,7 +73,7 @@ public class CliAIAgent<Input, Output>(
     override val agentConfig: AIAgentConfig,
     override val strategy: AIAgentCliStrategy<Input, Output>,
     id: String? = null,
-    public val clock: Clock = kotlin.time.Clock.System,
+    public val clock: Clock = Clock.System,
     @property:InternalAgentsApi
     public val installFeatures: FeatureContext.() -> Unit = {}
 ) : AIAgentBase<Input, Output, AIAgentCliContext>(

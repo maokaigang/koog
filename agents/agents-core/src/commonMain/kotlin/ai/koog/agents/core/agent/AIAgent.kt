@@ -18,8 +18,8 @@ import ai.koog.prompt.processor.ResponseProcessor
 import ai.koog.utils.io.Closeable
 import kotlin.jvm.JvmStatic
 import kotlin.reflect.typeOf
-import kotlin.uuid.ExperimentalUuidApi
 import kotlin.time.Clock
+import kotlin.uuid.ExperimentalUuidApi
 
 /**
  * Represents a basic interface for AI agent.
