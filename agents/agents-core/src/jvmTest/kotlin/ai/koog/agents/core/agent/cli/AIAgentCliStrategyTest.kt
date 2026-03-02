@@ -2,7 +2,6 @@ package ai.koog.agents.core.agent.cli
 
 import ai.koog.cli.transport.ProcessCliTransport
 import ai.koog.prompt.structure.json.JsonStructure
-import io.ktor.utils.io.core.Input
 import kotlinx.serialization.Serializable
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -85,7 +84,7 @@ class AIAgentCliStrategyTest {
         assertNotNull(strategy)
         assertEquals("codex-generic", strategy.name)
     }
-    
+
     @Test
     fun testClaudeFullParams() {
         val strategy = AIAgentCliStrategy.claude(

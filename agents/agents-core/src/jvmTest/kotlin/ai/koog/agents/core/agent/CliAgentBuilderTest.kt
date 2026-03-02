@@ -1,9 +1,8 @@
 package ai.koog.agents.core.agent
 
 import ai.koog.agents.core.agent.cli.AIAgentCliStrategy
-import ai.koog.agents.core.agent.cli.CliAIAgentResponse
-import ai.koog.prompt.executor.clients.openai.OpenAIModels
 import ai.koog.cli.transport.ProcessCliTransport
+import ai.koog.prompt.executor.clients.openai.OpenAIModels
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull

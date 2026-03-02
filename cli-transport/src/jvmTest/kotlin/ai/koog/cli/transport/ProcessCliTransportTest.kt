@@ -145,7 +145,7 @@ class ProcessCliTransportTest {
                 .content
                 .trim()
 
-            val expectedPath = when(transport) {
+            val expectedPath = when (transport) {
                 is DockerCliTransport -> "/workspace"
                 is ProcessCliTransport.Default -> tmpDir.toRealPath().toString()
                 else -> error("Unknown transport type")

@@ -52,9 +52,7 @@ private object DummyPromptExecutor : PromptExecutor() {
         throw NotImplementedError("DummyPromptExecutor does not support execution")
     }
 
-    override fun close() {
-
-    }
+    override fun close() {}
 }
 
 /**
