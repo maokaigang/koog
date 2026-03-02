@@ -49,7 +49,7 @@ public class DockerCliTransport @JvmOverloads constructor(
 
         // Workspace volume
         val absoluteWorkspace = File(workspace).absolutePath
-        val dockerWorkspace = if (System.getenv("os.name").lowercase().contains("win")) "/workspace" else "C:\\workspace"
+        val dockerWorkspace = if (isWindows) "C:\\workspace" else "/workspace"
 
         add("-v")
         add("$absoluteWorkspace:$dockerWorkspace")
@@ -64,5 +64,9 @@ public class DockerCliTransport @JvmOverloads constructor(
 
         add(imageName)
         addAll(command)
+    }
+
+    private companion object {
+        private val isWindows = System.getProperty("os.name").lowercase().contains("win")
     }
 }
