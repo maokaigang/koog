@@ -49,10 +49,12 @@ public class DockerCliTransport @JvmOverloads constructor(
 
         // Workspace volume
         val absoluteWorkspace = File(workspace).absolutePath
+        val dockerWorkspace = if (System.getenv("os.name").lowercase().contains("win")) "/workspace" else "C:\\workspace"
+
         add("-v")
-        add("$absoluteWorkspace:/workspace")
+        add("$absoluteWorkspace:$dockerWorkspace")
         add("-w")
-        add("/workspace")
+        add(dockerWorkspace)
 
         // Additional volumes
         volumes.forEach {

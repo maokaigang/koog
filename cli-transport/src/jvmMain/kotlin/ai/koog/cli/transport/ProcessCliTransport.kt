@@ -2,6 +2,7 @@ package ai.koog.cli.transport
 
 import ai.koog.agents.annotations.JavaAPI
 import ai.koog.utils.io.SuitableForIO
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
@@ -52,6 +53,7 @@ public abstract class ProcessCliTransport : CliTransport {
         timeout: Duration?
     ): Flow<CliEvent> {
         val fullCommand = buildCommand(command, workspace, env)
+        logger.debug { "Executing command: ${fullCommand.joinToString(" ")} in workspace: $workspace" }
 
         return channelFlow {
             val process = try {
@@ -64,6 +66,7 @@ public abstract class ProcessCliTransport : CliTransport {
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
+                logger.error(e) { "Failed to start process: ${e.message}" }
                 val failed = CliEvent.Failed(e.message ?: e.toString())
                 send(failed)
                 close(e)
@@ -81,6 +84,7 @@ public abstract class ProcessCliTransport : CliTransport {
             val stderrJob = launch(Dispatchers.SuitableForIO) {
                 process.errorStream.bufferedReader().useLines { lines ->
                     lines.forEach { content ->
+                        logger.warn { "Process stderr: $content" }
                         trySend(CliEvent.Stderr(content))
                     }
                 }
@@ -91,6 +95,7 @@ public abstract class ProcessCliTransport : CliTransport {
                     val code = if (timeout != null) {
                         if (withTimeoutOrNull(timeout) { process.waitFor() } == null) {
                             process.destroyForcibly()
+                            logger.error { "Execution timed out after $timeout" }
                             throw CliTimeoutException("Execution timed out after $timeout", timeout)
                         }
                         process.exitValue()
@@ -101,6 +106,10 @@ public abstract class ProcessCliTransport : CliTransport {
                     // Ensure all output is collected before finishing
                     stdoutJob.join()
                     stderrJob.join()
+
+                    if (code != 0) {
+                        logger.warn { "Process exited with non-zero code: $code" }
+                    }
 
                     val exit = CliEvent.Exit(code)
                     trySend(exit)
@@ -139,6 +148,8 @@ public abstract class ProcessCliTransport : CliTransport {
      * specific types of `ProcessCliTransport` implementations.
      */
     public companion object {
+        private val logger = KotlinLogging.logger {}
+
         /**
          * Returns the default [ProcessCliTransport] implementation.
          */
