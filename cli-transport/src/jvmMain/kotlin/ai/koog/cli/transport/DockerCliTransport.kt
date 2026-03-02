@@ -14,7 +14,7 @@ public class DockerVolume @JvmOverloads constructor(
     public val readOnly: Boolean = false,
 ) {
     override fun toString(): String = buildString {
-        append(hostPath.absolutePath.replace("\\", "/"))
+        append(hostPath.absolutePath)
         append(":")
         append(containerPath)
         if (readOnly) append(":ro")
@@ -48,8 +48,8 @@ public class DockerCliTransport @JvmOverloads constructor(
         }
 
         // Workspace volume
-        val absoluteWorkspace = File(workspace).absolutePath.replace("\\", "/")
-        val dockerWorkspace = if (isWindows) "C:/workspace" else "/workspace"
+        val absoluteWorkspace = File(workspace).absolutePath
+        val dockerWorkspace = if (isWindows) "C:\\workspace" else "/workspace"
 
         add("-v")
         add("$absoluteWorkspace:$dockerWorkspace")

@@ -21,11 +21,11 @@ class DockerCliTransportTest {
         val testFile = tmpDir.resolve("test.txt").toFile()
         testFile.writeText("volume-test-content")
 
-        val containerPath = if (isWindows) "C:/mnt/test" else "/mnt/test"
+        val containerPath = if (isWindows) "C:\\test" else "/test"
         val command = if (isWindows) {
-            listOf("cmd", "/c", "type", "C:/mnt/test/test.txt")
+            listOf("cmd", "/c", "type", "$containerPath.txt")
         } else {
-            listOf("cat", "/mnt/test/test.txt")
+            listOf("cat", "$containerPath.txt")
         }
 
         try {

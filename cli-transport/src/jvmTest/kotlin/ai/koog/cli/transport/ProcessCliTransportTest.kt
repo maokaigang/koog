@@ -51,7 +51,7 @@ class ProcessCliTransportTest {
     @MethodSource("transportProvider")
     fun testExecuteEcho(transport: CliTransport) = runTest {
         val echoCommand = if (isWindows) {
-            listOf("cmd", "/c", "echo", "hello world")
+            listOf("cmd", "/c", "echo hello world")
         } else {
             listOf("echo", "hello world")
         }
@@ -77,7 +77,7 @@ class ProcessCliTransportTest {
     @ParameterizedTest
     @MethodSource("transportProvider")
     fun testExecuteInvalidCommand(transport: CliTransport) = runTest {
-        val invalidCommand = if (isWindows && transport is DockerCliTransport) {
+        val invalidCommand = if (isWindows) {
             listOf("cmd", "/c", "non-existent-command-12345")
         } else {
             listOf("non-existent-command-12345")

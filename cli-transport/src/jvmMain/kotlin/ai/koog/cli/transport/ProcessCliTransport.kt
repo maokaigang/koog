@@ -53,7 +53,7 @@ public abstract class ProcessCliTransport : CliTransport {
         timeout: Duration?
     ): Flow<CliEvent> {
         val fullCommand = buildCommand(command, workspace, env)
-        logger.debug { "Executing command: ${fullCommand.joinToString(" ")} in workspace: $workspace" }
+        logger.info { "Executing command: ${fullCommand.joinToString(" ")} in workspace: $workspace" }
 
         return channelFlow {
             val process = try {
