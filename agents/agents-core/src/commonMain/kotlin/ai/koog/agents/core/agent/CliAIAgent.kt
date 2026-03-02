@@ -28,7 +28,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Clock
 
-private object DummyPromptExecutor : PromptExecutor {
+private object DummyPromptExecutor : PromptExecutor() {
     override suspend fun execute(
         prompt: Prompt,
         model: LLModel,
