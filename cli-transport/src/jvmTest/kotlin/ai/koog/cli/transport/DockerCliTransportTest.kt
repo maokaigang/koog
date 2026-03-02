@@ -1,12 +1,15 @@
 package ai.koog.cli.transport
 
+import ai.koog.test.utils.DockerAvailableCondition
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.extension.ExtendWith
 import java.nio.file.Files
 import kotlin.test.Test
 
+@ExtendWith(DockerAvailableCondition::class)
 class DockerCliTransportTest {
     private val isWindows = System.getProperty("os.name").lowercase().contains("win")
 

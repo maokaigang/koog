@@ -1,5 +1,6 @@
 package ai.koog.cli.transport
 
+import ai.koog.test.utils.DockerAvailableCondition
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldNotBeEmpty
@@ -9,6 +10,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.condition.EnabledOnOs
 import org.junit.jupiter.api.condition.OS
+import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import java.nio.file.Files.createTempDirectory
@@ -16,6 +18,7 @@ import java.nio.file.Path
 import java.util.stream.Stream
 import kotlin.test.Test
 
+@ExtendWith(DockerAvailableCondition::class)
 class ProcessCliTransportTest {
 
     companion object {
@@ -27,7 +30,7 @@ class ProcessCliTransportTest {
         }
 
         @JvmStatic
-        fun transportProvider() = Stream.of(
+        fun transportProvider(): Stream<CliTransport> = Stream.of(
             ProcessCliTransport.Default,
             ProcessCliTransport.dockerTransport(imageName)
         )
