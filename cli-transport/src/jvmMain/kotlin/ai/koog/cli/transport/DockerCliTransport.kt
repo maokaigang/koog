@@ -1,7 +1,6 @@
 package ai.koog.cli.transport
 
 import java.io.File
-import java.nio.file.Path
 
 /**
  * A volume mapping for Docker.
@@ -10,12 +9,12 @@ import java.nio.file.Path
  * @property readOnly Whether the volume should be mounted as read-only.
  */
 public class DockerVolume @JvmOverloads constructor(
-    public val hostPath: Path,
+    public val hostPath: File,
     public val containerPath: String,
     public val readOnly: Boolean = false,
 ) {
     override fun toString(): String = buildString {
-        append(hostPath.toAbsolutePath())
+        append(hostPath.absolutePath)
         append(":")
         append(containerPath)
         if (readOnly) append(":ro")

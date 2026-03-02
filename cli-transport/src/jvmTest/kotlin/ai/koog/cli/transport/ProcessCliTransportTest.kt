@@ -9,9 +9,29 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.condition.EnabledOnOs
 import org.junit.jupiter.api.condition.OS
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.MethodSource
+import java.nio.file.Files.createTempDirectory
+import java.nio.file.Path
+import java.util.stream.Stream
 import kotlin.test.Test
 
 class ProcessCliTransportTest {
+
+    companion object {
+        private val isWindows = System.getProperty("os.name").lowercase().contains("win")
+        private val imageName = if (isWindows) {
+            "mcr.microsoft.com/windows/nanoserver:ltsc2022"
+        } else {
+            "alpine:latest"
+        }
+
+        @JvmStatic
+        fun transportProvider() = Stream.of(
+            ProcessCliTransport.Default,
+            ProcessCliTransport.dockerTransport(imageName)
+        )
+    }
 
     @Test
     fun testCheckAvailability() {
@@ -23,38 +43,46 @@ class ProcessCliTransportTest {
             .shouldNotBeEmpty()
     }
 
-    @Test
-    fun testExecuteEcho() = runTest {
-        val events = ProcessCliTransport.Default.execute(
+    @ParameterizedTest
+    @MethodSource("transportProvider")
+    fun testExecuteEcho(transport: CliTransport) = runTest {
+        val events = transport.execute(
             command = listOf("echo", "hello world"),
             workspace = "."
         ).toList()
 
-        events[0]
-            .shouldBeInstanceOf<CliEvent.Stdout>()
-            .content.shouldBe("hello world")
+        events.filterIsInstance<CliEvent.Stdout>()
+            .firstOrNull()
+            .shouldNotBeNull()
+            .content.trim().shouldBe("hello world")
 
-        events[1]
+        events.last()
             .shouldBeInstanceOf<CliEvent.Exit>()
             .code.shouldBe(0)
     }
 
-    @Test
-    fun testExecuteInvalidCommand() = runTest {
+    @ParameterizedTest
+    @MethodSource("transportProvider")
+    fun testExecuteInvalidCommand(transport: CliTransport) = runTest {
         assertThrows<Exception> {
-            ProcessCliTransport.Default.execute(
+            val events = transport.execute(
                 command = listOf("non-existent-command-12345"),
                 workspace = "."
             ).toList()
+
+            if (events.filterIsInstance<CliEvent.Exit>().first().code == 127) {
+                throw Exception("Command not found")
+            }
         }
     }
 
-    @Test
+    @ParameterizedTest
+    @MethodSource("transportProvider")
     @EnabledOnOs(OS.LINUX, OS.MAC)
-    fun testExecuteWithEnv() = runTest {
+    fun testExecuteWithEnv(transport: CliTransport) = runTest {
         val env = mapOf("TEST_VAR" to "test-value")
 
-        val events = ProcessCliTransport.Default.execute(
+        val events = transport.execute(
             command = listOf("sh", "-c", "echo \$TEST_VAR"),
             workspace = ".",
             env = env
@@ -67,11 +95,12 @@ class ProcessCliTransportTest {
             .content.shouldBe("test-value")
     }
 
-    @Test
+    @ParameterizedTest
+    @MethodSource("transportProvider")
     @EnabledOnOs(OS.LINUX, OS.MAC)
-    fun testExecuteStderr() = runTest {
+    fun testExecuteStderr(transport: CliTransport) = runTest {
         // Redirect stdout to stderr
-        val events = ProcessCliTransport.Default.execute(
+        val events = transport.execute(
             command = listOf("sh", "-c", "echo 'error message' >&2"),
             workspace = "."
         ).toList()
@@ -81,5 +110,77 @@ class ProcessCliTransportTest {
             .firstOrNull()
             .shouldNotBeNull()
             .content.shouldBe("error message")
+    }
+
+    @Test
+    @EnabledOnOs(OS.WINDOWS)
+    fun testExecuteEchoWindows() = runTest {
+        val events = ProcessCliTransport.Default.execute(
+            command = listOf("cmd", "/c", "echo", "hello world"),
+            workspace = "."
+        ).toList()
+
+        events.filterIsInstance<CliEvent.Stdout>()
+            .firstOrNull()
+            .shouldNotBeNull()
+            .content.trim().shouldBe("hello world")
+
+        events.last().shouldBeInstanceOf<CliEvent.Exit>().code shouldBe 0
+    }
+
+    @ParameterizedTest
+    @MethodSource("transportProvider")
+    @EnabledOnOs(OS.LINUX, OS.MAC)
+    fun testExecuteWithWorkspacePathUnix(transport: CliTransport) = runTest {
+        val tmpDir = createTempDirectory("koog-test")
+        try {
+            val events = transport.execute(
+                command = listOf("pwd"),
+                workspace = tmpDir.toAbsolutePath().toString()
+            ).toList()
+
+            val actualPath = events.filterIsInstance<CliEvent.Stdout>()
+                .firstOrNull()
+                .shouldNotBeNull()
+                .content
+                .trim()
+
+            val expectedPath = when(transport) {
+                is DockerCliTransport -> "/workspace"
+                is ProcessCliTransport.Default -> tmpDir.toRealPath().toString()
+                else -> error("Unknown transport type")
+            }
+
+            actualPath shouldBe expectedPath
+        } finally {
+            tmpDir.toFile().deleteRecursively()
+        }
+    }
+
+    @Test
+    @EnabledOnOs(OS.WINDOWS)
+    fun testExecuteWithWorkspacePathWindows() = runTest {
+        val tmpDir = createTempDirectory("koog-test")
+        try {
+            val events = ProcessCliTransport.Default.execute(
+                command = listOf("cmd", "/c", "cd"),
+                workspace = tmpDir.toAbsolutePath().toString()
+            ).toList()
+
+            val actualPath = events.filterIsInstance<CliEvent.Stdout>()
+                .firstOrNull()
+                .shouldNotBeNull()
+                .content
+                .trim()
+                .let(Path::of)
+                .toRealPath()
+                .toString()
+
+            val expectedPath = tmpDir.toRealPath().toString()
+
+            actualPath shouldBe expectedPath
+        } finally {
+            tmpDir.toFile().deleteRecursively()
+        }
     }
 }
