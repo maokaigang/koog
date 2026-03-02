@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.condition.DisabledOnOs
 import org.junit.jupiter.api.condition.OS
+import java.io.File
 import java.nio.file.Files
 import kotlin.test.Test
 
@@ -73,6 +74,33 @@ class DockerCliTransportTest {
                 .content.trim().shouldBe("workspace-content")
         } finally {
             tmpDir.toFile().deleteRecursively()
+        }
+    }
+
+    @Test
+    fun testDockerWorkspaceMappingCurrentDir() = runTest {
+        val testFile = File("test.txt")
+        testFile.writeText("current-dir-content")
+
+        val command = if (isWindows) {
+            listOf("cmd", "/c", "type", "test.txt")
+        } else {
+            listOf("cat", "test.txt")
+        }
+
+        try {
+            val transport = DockerCliTransport(imageName)
+            val events = transport.execute(
+                command = command,
+                workspace = "."
+            ).toList()
+
+            events.filterIsInstance<CliEvent.Stdout>()
+                .firstOrNull()
+                .shouldNotBeNull()
+                .content.trim().shouldBe("current-dir-content")
+        } finally {
+            testFile.delete()
         }
     }
 

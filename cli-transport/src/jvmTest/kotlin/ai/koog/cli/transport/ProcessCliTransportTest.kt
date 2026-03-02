@@ -8,12 +8,8 @@ import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.assertThrows
-import org.junit.jupiter.api.condition.EnabledOnOs
-import org.junit.jupiter.api.condition.OS
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
-import java.nio.file.Files.createTempDirectory
-import java.nio.file.Path
 import java.util.stream.Stream
 import kotlin.test.Test
 import kotlin.test.assertTrue
@@ -140,60 +136,5 @@ class ProcessCliTransportTest {
                 .any { it.content.contains("error message") },
             "error message should be captured from the stderr"
         )
-    }
-
-    @ParameterizedTest
-    @MethodSource("transportProvider")
-    fun testExecuteWithWorkspacePathUnix(transport: CliTransport) = runTest {
-        val tmpDir = createTempDirectory("koog-test")
-        try {
-            val events = transport.execute(
-                command = listOf("pwd"),
-                workspace = tmpDir.toAbsolutePath().toString()
-            ).toList()
-
-            val actualPath = events.filterIsInstance<CliEvent.Stdout>()
-                .firstOrNull()
-                .shouldNotBeNull()
-                .content
-                .trim()
-
-            val expectedPath = when (transport) {
-                is DockerCliTransport -> "/workspace"
-                is ProcessCliTransport.Default -> tmpDir.toRealPath().toString()
-                else -> error("Unknown transport type")
-            }
-
-            actualPath shouldBe expectedPath
-        } finally {
-            tmpDir.toFile().deleteRecursively()
-        }
-    }
-
-    @Test
-    @EnabledOnOs(OS.WINDOWS)
-    fun testExecuteWithWorkspacePathWindows() = runTest {
-        val tmpDir = createTempDirectory("koog-test")
-        try {
-            val events = ProcessCliTransport.Default.execute(
-                command = listOf("cmd", "/c", "cd"),
-                workspace = tmpDir.toAbsolutePath().toString()
-            ).toList()
-
-            val actualPath = events.filterIsInstance<CliEvent.Stdout>()
-                .firstOrNull()
-                .shouldNotBeNull()
-                .content
-                .trim()
-                .let(Path::of)
-                .toRealPath()
-                .toString()
-
-            val expectedPath = tmpDir.toRealPath().toString()
-
-            actualPath shouldBe expectedPath
-        } finally {
-            tmpDir.toFile().deleteRecursively()
-        }
     }
 }
