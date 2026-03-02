@@ -16,8 +16,10 @@ import java.nio.file.Files.createTempDirectory
 import java.nio.file.Path
 import java.util.stream.Stream
 import kotlin.test.Test
+import kotlin.test.assertTrue
 
 class ProcessCliTransportTest {
+    private val isWindows = System.getProperty("os.name").lowercase().contains("win")
 
     companion object {
         private val imageName by lazy { DockerImageResolver.resolveAndEnsureCliImage() }
@@ -48,8 +50,14 @@ class ProcessCliTransportTest {
     @ParameterizedTest
     @MethodSource("transportProvider")
     fun testExecuteEcho(transport: CliTransport) = runTest {
+        val echoCommand = if (isWindows) {
+            listOf("cmd", "/c", "echo", "hello world")
+        } else {
+            listOf("echo", "hello world")
+        }
+
         val events = transport.execute(
-            command = listOf("echo", "hello world"),
+            command = echoCommand,
             workspace = "."
         ).toList()
 
@@ -69,13 +77,20 @@ class ProcessCliTransportTest {
     @ParameterizedTest
     @MethodSource("transportProvider")
     fun testExecuteInvalidCommand(transport: CliTransport) = runTest {
+        val invalidCommand = if (isWindows && transport is DockerCliTransport) {
+            listOf("cmd", "/c", "non-existent-command-12345")
+        } else {
+            listOf("non-existent-command-12345")
+        }
+
         assertThrows<Exception> {
             val events = transport.execute(
-                command = listOf("non-existent-command-12345"),
+                command = invalidCommand,
                 workspace = "."
             ).toList()
 
-            if (events.filterIsInstance<CliEvent.Exit>().first().code == 127) {
+            val exitEvent = events.filterIsInstance<CliEvent.Exit>().firstOrNull()
+            if (exitEvent?.code == 127 || (isWindows && exitEvent?.code == 1)) {
                 throw Exception("Command not found")
             }
         }
@@ -83,12 +98,17 @@ class ProcessCliTransportTest {
 
     @ParameterizedTest
     @MethodSource("transportProvider")
-    @EnabledOnOs(OS.LINUX, OS.MAC)
     fun testExecuteWithEnv(transport: CliTransport) = runTest {
         val env = mapOf("TEST_VAR" to "test-value")
 
+        val command = if (isWindows) {
+            listOf("cmd", "/c", "echo %TEST_VAR%")
+        } else {
+            listOf("sh", "-c", "echo \$TEST_VAR")
+        }
+
         val events = transport.execute(
-            command = listOf("sh", "-c", "echo \$TEST_VAR"),
+            command = command,
             workspace = ".",
             env = env
         ).toList()
@@ -102,40 +122,28 @@ class ProcessCliTransportTest {
 
     @ParameterizedTest
     @MethodSource("transportProvider")
-    @EnabledOnOs(OS.LINUX, OS.MAC)
     fun testExecuteStderr(transport: CliTransport) = runTest {
-        // Redirect stdout to stderr
+        val command = if (isWindows) {
+            listOf("cmd", "/c", "echo error message 1>&2")
+        } else {
+            listOf("sh", "-c", "echo 'error message' >&2")
+        }
+
         val events = transport.execute(
-            command = listOf("sh", "-c", "echo 'error message' >&2"),
+            command = command,
             workspace = "."
         ).toList()
 
-        events
-            .filterIsInstance<CliEvent.Stderr>()
-            .firstOrNull()
-            .shouldNotBeNull()
-            .content.shouldBe("error message")
-    }
-
-    @Test
-    @EnabledOnOs(OS.WINDOWS)
-    fun testExecuteEchoWindows() = runTest {
-        val events = ProcessCliTransport.Default.execute(
-            command = listOf("cmd", "/c", "echo", "hello world"),
-            workspace = "."
-        ).toList()
-
-        events.filterIsInstance<CliEvent.Stdout>()
-            .firstOrNull()
-            .shouldNotBeNull()
-            .content.trim().shouldBe("hello world")
-
-        events.last().shouldBeInstanceOf<CliEvent.Exit>().code shouldBe 0
+        assertTrue(
+            events
+                .filterIsInstance<CliEvent.Stderr>()
+                .any { it.content.contains("error message") },
+            "error message should be captured from the stderr"
+        )
     }
 
     @ParameterizedTest
     @MethodSource("transportProvider")
-    @EnabledOnOs(OS.LINUX, OS.MAC)
     fun testExecuteWithWorkspacePathUnix(transport: CliTransport) = runTest {
         val tmpDir = createTempDirectory("koog-test")
         try {

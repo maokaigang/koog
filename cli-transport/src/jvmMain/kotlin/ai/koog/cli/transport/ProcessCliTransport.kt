@@ -76,6 +76,7 @@ public abstract class ProcessCliTransport : CliTransport {
             val stdoutJob = launch(Dispatchers.SuitableForIO) {
                 process.inputStream.bufferedReader().useLines { lines ->
                     lines.forEach { content ->
+                        logger.debug { "Process stdout: $content" }
                         trySend(CliEvent.Stdout(content))
                     }
                 }

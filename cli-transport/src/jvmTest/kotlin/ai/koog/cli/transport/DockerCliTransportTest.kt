@@ -23,7 +23,7 @@ class DockerCliTransportTest {
 
         val containerPath = if (isWindows) "C:/mnt/test" else "/mnt/test"
         val command = if (isWindows) {
-            listOf("cmd", "/c", "type", "C:\\mnt\\test\\test.txt")
+            listOf("cmd", "/c", "type", "C:/mnt/test/test.txt")
         } else {
             listOf("cat", "/mnt/test/test.txt")
         }
