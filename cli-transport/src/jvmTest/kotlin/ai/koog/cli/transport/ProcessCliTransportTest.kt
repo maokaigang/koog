@@ -1,6 +1,6 @@
 package ai.koog.cli.transport
 
-import ai.koog.test.utils.DockerAvailableCondition
+import ai.koog.test.utils.DockerImageResolver
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldNotBeEmpty
@@ -10,7 +10,6 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.condition.EnabledOnOs
 import org.junit.jupiter.api.condition.OS
-import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import java.nio.file.Files.createTempDirectory
@@ -18,22 +17,22 @@ import java.nio.file.Path
 import java.util.stream.Stream
 import kotlin.test.Test
 
-@ExtendWith(DockerAvailableCondition::class)
 class ProcessCliTransportTest {
 
     companion object {
-        private val isWindows = System.getProperty("os.name").lowercase().contains("win")
-        private val imageName = if (isWindows) {
-            "mcr.microsoft.com/windows/nanoserver:ltsc2022"
-        } else {
-            "alpine:latest"
-        }
+        private val imageName by lazy { DockerImageResolver.resolveAndEnsureCliImage() }
 
         @JvmStatic
-        fun transportProvider(): Stream<CliTransport> = Stream.of(
-            ProcessCliTransport.Default,
-            ProcessCliTransport.dockerTransport(imageName)
-        )
+        fun transportProvider(): Stream<CliTransport> = Stream.builder<CliTransport>()
+            .add(ProcessCliTransport.Default)
+            .apply {
+                // mac runners on CI do not have docker
+                // TODO(): need to refactor, so that the test runs locally on mac
+                if (!System.getProperty("os.name").lowercase().contains("mac")) {
+                    add(ProcessCliTransport.dockerTransport(imageName))
+                }
+            }
+            .build()
     }
 
     @Test

@@ -1,23 +1,19 @@
 package ai.koog.cli.transport
 
-import ai.koog.test.utils.DockerAvailableCondition
+import ai.koog.test.utils.DockerImageResolver
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.api.condition.DisabledOnOs
+import org.junit.jupiter.api.condition.OS
 import java.nio.file.Files
 import kotlin.test.Test
 
-@ExtendWith(DockerAvailableCondition::class)
+@DisabledOnOs(OS.MAC)
 class DockerCliTransportTest {
     private val isWindows = System.getProperty("os.name").lowercase().contains("win")
-
-    private val imageName = if (isWindows) {
-        "mcr.microsoft.com/windows/nanoserver:ltsc2022"
-    } else {
-        "alpine:latest"
-    }
+    private val imageName by lazy { DockerImageResolver.resolveAndEnsureCliImage() }
 
     @Test
     fun testDockerVolumeMapping() = runTest {
