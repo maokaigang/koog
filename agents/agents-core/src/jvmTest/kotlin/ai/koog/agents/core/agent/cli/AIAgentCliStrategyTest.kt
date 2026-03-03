@@ -38,9 +38,6 @@ class AIAgentCliStrategyTest {
         assertEquals("claude-generic", strategy.name)
     }
 
-    @Serializable
-    data class TestOutput(val result: String)
-
     @Test
     fun testClaudeStructured() {
         val structure = JsonStructure.create<TestOutput>()
