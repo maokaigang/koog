@@ -102,6 +102,7 @@ jobs:
         run: npm install -g @openai/codex @anthropic-ai/claude-code
 
       - name: Build cli-agents Docker image
+        if: runner.os == 'Linux'
         run: docker build -t cli-agents .github/CliAgentsImage
 
       - name: Configure AWS credentials via OIDC
