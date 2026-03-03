@@ -206,7 +206,7 @@ public class ClaudeCliStrategyStructuredConfig<Input, Output>(
     public val additionalFlags: List<String> = emptyList(),
     override val workspace: String = ".",
     override val timeout: Duration? = null,
-    private val generateRequestFn: (AIAgentCliContext, Input) -> String = { _, input -> input.toString() },
+    private val generateRequest: GenerateRequest<Input>
 ) : AIAgentCliStrategyConfig<Input, CliAgentStructuredResponse<Output>> {
     override val binary: String = "claude"
     override val env: Map<String, String> = ClaudeCliHelper.env(apiKey)
@@ -215,7 +215,7 @@ public class ClaudeCliStrategyStructuredConfig<Input, Output>(
         ClaudeCliHelper.structuredFlags(model, systemMessages, permissionMode, additionalFlags, structure)
 
     override fun generateRequest(context: AIAgentCliContext, input: Input): String =
-        generateRequestFn(context, input)
+        generateRequest.generateRequest(context, input)
 
     override fun extractOutput(events: List<CliEvent.Line>): CliAgentStructuredResponse<Output> =
         ClaudeCliHelper.extractStructuredOutput(events, structure)

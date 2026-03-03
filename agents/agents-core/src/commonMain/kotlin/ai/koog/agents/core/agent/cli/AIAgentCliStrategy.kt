@@ -16,6 +16,9 @@ import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.toList
 import kotlinx.serialization.serializer
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.InternalSerializationApi
+import kotlin.reflect.KClass
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmOverloads
 import kotlin.jvm.JvmStatic
@@ -48,6 +51,16 @@ public interface AIAgentCliStrategyConfig<Input, Output> {
 
     /** Extracts the output from CLI event lines. */
     public fun extractOutput(events: List<CliEvent.Line>): Output
+}
+
+/**
+ * Represents a function that generates a request string from context and input.
+ */
+public fun interface GenerateRequest<Input> {
+    /**
+     * Generates a request string from context and input.
+     */
+    public fun generateRequest(context: AIAgentCliContext, input: Input): String
 }
 
 /**
@@ -101,7 +114,6 @@ public class AIAgentCliStrategy<Input, Output>(
          * Creates a new builder for [AIAgentCliStrategy] with the specified name.
          */
         @JvmStatic
-        @JvmName("builder")
         public fun builder(name: String): AIAgentCliStrategyBuilder = AIAgentCliStrategyBuilder(name)
 
         // claude constructors
@@ -111,7 +123,6 @@ public class AIAgentCliStrategy<Input, Output>(
          */
         @JvmStatic
         @JvmOverloads
-        @JvmName("claude")
         public fun claude(
             name: String,
             transport: CliTransport,
@@ -134,7 +145,6 @@ public class AIAgentCliStrategy<Input, Output>(
         /**
          * Creates a new instance of [AIAgentCliStrategy] using Claude.
          */
-        @JvmName("claudeGeneric")
         @JvmStatic
         @JvmOverloads
         public fun <Input> claude(
@@ -145,7 +155,7 @@ public class AIAgentCliStrategy<Input, Output>(
             additionalFlags: List<String> = emptyList(),
             workspace: String = ".",
             timeout: Duration? = null,
-            generateRequest: (AIAgentCliContext, Input) -> String,
+            generateRequest: GenerateRequest<Input>,
         ): AIAgentCliStrategy<Input, CliAIAgentResponse> = AIAgentCliStrategy(
             name = name,
             config = ClaudeCliStrategyConfig(
@@ -155,14 +165,13 @@ public class AIAgentCliStrategy<Input, Output>(
                 additionalFlags = additionalFlags,
                 workspace = workspace,
                 timeout = timeout,
-                generateRequestFn = generateRequest
+                generateRequestFn = generateRequest::generateRequest
             )
         )
 
         /**
          * Creates a new instance of [AIAgentCliStrategy] in structured output mode.
          */
-        @JvmName("claudeStructuredGeneric")
         @JvmStatic
         @JvmOverloads
         public fun <Input, Output> claude(
@@ -174,7 +183,7 @@ public class AIAgentCliStrategy<Input, Output>(
             additionalFlags: List<String> = emptyList(),
             workspace: String = ".",
             timeout: Duration? = null,
-            generateRequest: (AIAgentCliContext, Input) -> String = { _, input -> input.toString() },
+            generateRequest: GenerateRequest<Input> = { _, input -> input.toString() },
         ): AIAgentCliStrategy<Input, CliAgentStructuredResponse<Output>> = AIAgentCliStrategy(
             name = name,
             config = ClaudeCliStrategyStructuredConfig(
@@ -185,13 +194,14 @@ public class AIAgentCliStrategy<Input, Output>(
                 additionalFlags = additionalFlags,
                 workspace = workspace,
                 timeout = timeout,
-                generateRequestFn = generateRequest
+                generateRequest = generateRequest
             )
         )
 
         /**
          * Creates a new instance of [AIAgentCliStrategy] in structured output mode.
          */
+        @JvmName("claudeStructured")
         public inline fun <Input, reified Output> claude(
             name: String,
             transport: CliTransport,
@@ -200,7 +210,7 @@ public class AIAgentCliStrategy<Input, Output>(
             additionalFlags: List<String> = emptyList(),
             workspace: String = ".",
             timeout: Duration? = null,
-            noinline generateRequest: (AIAgentCliContext, Input) -> String = { _, input -> input.toString() },
+            generateRequest: GenerateRequest<Input> = { _, input -> input.toString() },
         ): AIAgentCliStrategy<Input, CliAgentStructuredResponse<Output>> = claude(
             name = name,
             transport = transport,
@@ -213,6 +223,37 @@ public class AIAgentCliStrategy<Input, Output>(
             generateRequest = generateRequest
         )
 
+        /**
+         * Creates a new instance of [AIAgentCliStrategy] in structured output mode.
+         */
+        @JvmStatic
+        @JvmOverloads
+        @OptIn(InternalSerializationApi::class)
+        public fun <Input, Output : Any> claude(
+            name: String,
+            transport: CliTransport,
+            outputClass: KClass<Output>,
+            apiKey: String? = null,
+            permissionMode: ClaudePermissionMode? = null,
+            additionalFlags: List<String> = emptyList(),
+            workspace: String = ".",
+            timeout: Duration? = null,
+            generateRequest: GenerateRequest<Input> = { _, input -> input.toString() },
+        ): AIAgentCliStrategy<Input, CliAgentStructuredResponse<Output>> {
+            val serializer = outputClass.serializer()
+            return claude(
+                name = name,
+                transport = transport,
+                apiKey = apiKey,
+                structure = JsonStructure.create(serializer = serializer),
+                permissionMode = permissionMode,
+                additionalFlags = additionalFlags,
+                workspace = workspace,
+                timeout = timeout,
+                generateRequest = generateRequest
+            )
+        }
+
         // codex constructors
 
         /**
@@ -220,7 +261,6 @@ public class AIAgentCliStrategy<Input, Output>(
          */
         @JvmStatic
         @JvmOverloads
-        @JvmName("codex")
         public fun codex(
             name: String,
             transport: CliTransport,
@@ -247,7 +287,6 @@ public class AIAgentCliStrategy<Input, Output>(
          */
         @JvmStatic
         @JvmOverloads
-        @JvmName("codexGeneric")
         public fun <Input> codex(
             name: String,
             transport: CliTransport,
@@ -257,7 +296,7 @@ public class AIAgentCliStrategy<Input, Output>(
             additionalFlags: List<String> = emptyList(),
             workspace: String = ".",
             timeout: Duration? = null,
-            generateRequest: (AIAgentCliContext, Input) -> String,
+            generateRequest: GenerateRequest<Input>,
         ): AIAgentCliStrategy<Input, CliAIAgentResponse> = AIAgentCliStrategy(
             name = name,
             config = CodexCliStrategyConfig(
@@ -268,7 +307,7 @@ public class AIAgentCliStrategy<Input, Output>(
                 additionalFlags = additionalFlags,
                 workspace = workspace,
                 timeout = timeout,
-                generateRequestFn = generateRequest
+                generateRequest = generateRequest
             )
         )
 
@@ -278,7 +317,7 @@ public class AIAgentCliStrategy<Input, Output>(
          * Logs the cli agent events
          */
         private fun logEvent(event: CliEvent) {
-            logger.info {
+            logger.trace {
                 when (event) {
                     is CliEvent.Stdout -> "[STDOUT] ${event.content}"
                     is CliEvent.Stderr -> "[STDERR] ${event.content}"

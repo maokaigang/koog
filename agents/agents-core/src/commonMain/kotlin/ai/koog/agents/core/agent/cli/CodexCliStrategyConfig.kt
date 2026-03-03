@@ -71,7 +71,7 @@ public class CodexCliStrategyConfig<Input>(
     public val additionalFlags: List<String> = emptyList(),
     override val workspace: String = ".",
     override val timeout: Duration? = null,
-    private val generateRequestFn: (AIAgentCliContext, Input) -> String,
+    private val generateRequest: GenerateRequest<Input>
 ) : AIAgentCliStrategyConfig<Input, CliAIAgentResponse> {
     override val binary: String = "codex"
 
@@ -106,7 +106,7 @@ public class CodexCliStrategyConfig<Input>(
         }
 
     override fun generateRequest(context: AIAgentCliContext, input: Input): String =
-        generateRequestFn(context, input)
+        generateRequest.generateRequest(context, input)
 
     override fun extractOutput(events: List<CliEvent.Line>): CliAIAgentResponse {
         val jsonEvents = toJsonStdoutEvents(events)

@@ -1,5 +1,6 @@
 package ai.koog.agents.core.agent.cli
 
+import ai.koog.agents.core.agent.context.AIAgentCliContext
 import ai.koog.cli.transport.ProcessCliTransport
 import ai.koog.prompt.structure.json.JsonStructure
 import kotlinx.serialization.Serializable
@@ -11,6 +12,8 @@ import kotlin.time.Duration.Companion.seconds
 class AIAgentCliStrategyTest {
 
     private class TestInput(val request: String)
+
+    private fun generateRequest(context: AIAgentCliContext, input: TestInput): String = input.request
 
     @Test
     fun testClaudeBasic() {
@@ -29,7 +32,7 @@ class AIAgentCliStrategyTest {
             name = "claude-generic",
             transport = ProcessCliTransport.Default,
             apiKey = "test-key",
-            generateRequest = { _, input -> input.request }
+            generateRequest = ::generateRequest
         )
         assertNotNull(strategy)
         assertEquals("claude-generic", strategy.name)
@@ -41,11 +44,12 @@ class AIAgentCliStrategyTest {
     @Test
     fun testClaudeStructured() {
         val structure = JsonStructure.create<TestOutput>()
-        val strategy = AIAgentCliStrategy.claude<TestInput, TestOutput>(
+        val strategy = AIAgentCliStrategy.claude(
             name = "claude-structured",
             transport = ProcessCliTransport.Default,
             apiKey = "test-key",
-            structure = structure
+            structure = structure,
+            generateRequest = ::generateRequest
         )
         assertNotNull(strategy)
         assertEquals("claude-structured", strategy.name)
@@ -56,7 +60,8 @@ class AIAgentCliStrategyTest {
         val strategy = AIAgentCliStrategy.claude<TestInput, TestOutput>(
             name = "claude-reified",
             transport = ProcessCliTransport.Default,
-            apiKey = "test-key"
+            apiKey = "test-key",
+            generateRequest = ::generateRequest
         )
         assertNotNull(strategy)
         assertEquals("claude-reified", strategy.name)
@@ -75,11 +80,11 @@ class AIAgentCliStrategyTest {
 
     @Test
     fun testCodexGeneric() {
-        val strategy = AIAgentCliStrategy.codex<TestInput>(
+        val strategy = AIAgentCliStrategy.codex(
             name = "codex-generic",
             transport = ProcessCliTransport.Default,
             apiKey = "test-key",
-            generateRequest = { _, input -> input.request }
+            generateRequest = ::generateRequest
         )
         assertNotNull(strategy)
         assertEquals("codex-generic", strategy.name)
