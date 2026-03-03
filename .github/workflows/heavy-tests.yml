@@ -98,8 +98,17 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install CLI agents globally
+      - name: Install CLI agents globally for Linux
+        if: runner.os == 'Linux'
         run: npm install -g @openai/codex @anthropic-ai/claude-code
+
+      - name: Install CLI agents globally for Windows
+        if: runner.os == 'Windows'
+        run: |
+          npm install -g @openai/codex @anthropic-ai/claude-code
+          $bin = (npm bin -g)
+          "NPM global bin: $bin"
+          $bin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
       - name: Build cli-agents Docker image
         if: runner.os == 'Linux'
