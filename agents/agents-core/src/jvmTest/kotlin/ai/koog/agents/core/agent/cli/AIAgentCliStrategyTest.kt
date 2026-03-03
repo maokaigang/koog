@@ -3,7 +3,6 @@ package ai.koog.agents.core.agent.cli
 import ai.koog.agents.core.agent.context.AIAgentCliContext
 import ai.koog.cli.transport.ProcessCliTransport
 import ai.koog.prompt.structure.json.JsonStructure
-import kotlinx.serialization.Serializable
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull

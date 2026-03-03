@@ -106,9 +106,13 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           npm install -g @openai/codex @anthropic-ai/claude-code
-          $bin = (npm bin -g)
-          "NPM global bin: $bin"
-          $bin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          $prefix = npm config get prefix
+          "NPM global prefix: $prefix"
+          $prefix | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          
+          # Verify
+          Get-Command claude
+          Get-Command codex
 
       - name: Build cli-agents Docker image
         if: runner.os == 'Linux'
