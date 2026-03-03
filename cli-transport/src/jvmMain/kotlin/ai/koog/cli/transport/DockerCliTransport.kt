@@ -40,14 +40,32 @@ private fun MutableList<String>.mount(volume: DockerVolume) {
 public class DockerCliTransport @JvmOverloads constructor(
     private val imageName: String,
     private val volumes: List<DockerVolume> = emptyList(),
+    dockerPath: String? = null,
 ) : ProcessCliTransport() {
+
+    private val dockerPath = dockerPath ?: System.getenv("DOCKER_PATH") ?: "docker"
+
+    /**
+     * Checks the availability of Docker.
+     */
+    public fun checkDockerAvailability(): CliAvailability {
+        return Default.checkAvailability(dockerPath)
+    }
+
+    override fun checkAvailability(binary: String): CliAvailability {
+        val dockerAvailability = checkDockerAvailability()
+        if (dockerAvailability is CliUnavailable) {
+            return CliUnavailable("Docker is not available: ${dockerAvailability.reason}", dockerAvailability.cause)
+        }
+        return super.checkAvailability(binary)
+    }
 
     override fun buildCommand(
         command: List<String>,
         workspace: String,
         env: Map<String, String>
     ): List<String> = buildList {
-        add("docker")
+        add(dockerPath)
         add("run")
         add("--rm")
 

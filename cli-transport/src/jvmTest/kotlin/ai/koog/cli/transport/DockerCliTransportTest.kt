@@ -5,12 +5,12 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.condition.EnabledOnOs
-import org.junit.jupiter.api.condition.OS
 import org.junit.jupiter.api.extension.ExtendWith
 import java.io.File
 import java.nio.file.Files
 import kotlin.test.Test
+import kotlin.test.assertContains
+import kotlin.test.assertIs
 
 @ExtendWith(DockerAvailableCondition::class)
 class DockerCliTransportTest {
@@ -116,5 +116,14 @@ class DockerCliTransportTest {
             .firstOrNull()
             .shouldNotBeNull()
             .content.trim().shouldBe(varValue)
+    }
+
+    @Test
+    fun testIncorrectDockerExecutables() = runTest {
+        val transport = DockerCliTransport(imageName, dockerPath = "non-existent-path")
+
+        val availability = transport.checkAvailability("java")
+        assertIs<CliUnavailable>(availability, "incorrect docker should be unavailable")
+        assertContains(availability.reason, "Docker is not available")
     }
 }
