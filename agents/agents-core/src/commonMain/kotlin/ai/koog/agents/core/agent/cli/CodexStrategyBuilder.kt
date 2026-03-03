@@ -1,6 +1,5 @@
 package ai.koog.agents.core.agent.cli
 
-import ai.koog.agents.core.agent.context.AIAgentCliContext
 import ai.koog.cli.transport.CliTransport
 import kotlin.time.Duration
 

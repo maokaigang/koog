@@ -8,7 +8,6 @@ import ai.koog.agents.core.agent.cli.CliAIAgentResponse
 import ai.koog.agents.core.agent.config.AIAgentConfig
 import ai.koog.agents.core.dsl.builder.strategy
 import ai.koog.agents.testing.tools.MockExecutor
-import ai.koog.cli.transport.CliTransport
 import ai.koog.cli.transport.DockerCliTransport
 import ai.koog.cli.transport.ProcessCliTransport
 import ai.koog.integration.tests.utils.RetryUtils.withRetry
@@ -19,11 +18,10 @@ import ai.koog.prompt.executor.clients.anthropic.AnthropicModels
 import ai.koog.prompt.executor.clients.openai.OpenAIModels
 import ai.koog.prompt.executor.ollama.client.OllamaModels
 import ai.koog.prompt.llm.LLModel
+import ai.koog.test.utils.DockerAvailableCondition
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.Serializable
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.MethodSource
-import java.util.stream.Stream
+import org.junit.jupiter.api.extension.ExtendWith
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertFalse
@@ -49,12 +47,6 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
             assertNotNull(usage.inputTokens, "Usage should contain input tokens")
             assertNotNull(usage.outputTokens, "Usage should contain output tokens")
         }
-
-        @JvmStatic
-        private fun transportOptions() = Stream.of(
-            ProcessCliTransport.Default,
-            dockerTransport
-        )
     }
 
     @Serializable
@@ -70,22 +62,52 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
             maxAgentIterations = 10,
         )
 
-    @ParameterizedTest
-    @MethodSource("transportOptions")
-    fun integration_testCodex(transport: CliTransport) = runTest {
+    @Test
+    fun integration_testCodex() = runTest {
         val agent = AIAgent(
             agentConfig = buildConfig(model = OpenAIModels.Chat.GPT4o),
             strategy = AIAgentCliStrategy.codex(
                 name = "codex",
                 apiKey = readTestOpenAIKeyFromEnv(),
-                transport = transport
+                transport = ProcessCliTransport.Default
             )
         )
+
         testAgent(agent)
     }
 
     @Test
+    @ExtendWith(DockerAvailableCondition::class)
+    fun integration_testCodexDocker() = runTest {
+        val agent = AIAgent(
+            agentConfig = buildConfig(model = OpenAIModels.Chat.GPT4o),
+            strategy = AIAgentCliStrategy.codex(
+                name = "codex",
+                apiKey = readTestOpenAIKeyFromEnv(),
+                transport = ProcessCliTransport.Default
+            )
+        )
+
+        testAgent(agent)
+    }
+
+    // it could fail locally if you are logged in to codex
+    @Test
     fun integration_testCodexNoKey() = runTest {
+        val agent = AIAgent(
+            agentConfig = buildConfig(),
+            strategy = AIAgentCliStrategy.codex(
+                name = "codex",
+                transport = ProcessCliTransport.Default
+            )
+        )
+
+        assertTrue(agent.run("Hi!").isError, "Response should be an error")
+    }
+
+    @Test
+    @ExtendWith(DockerAvailableCondition::class)
+    fun integration_testCodexNoKeyDocker() = runTest {
         val agent = AIAgent(
             agentConfig = buildConfig(),
             strategy = AIAgentCliStrategy.codex(
@@ -97,15 +119,14 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
         assertTrue(agent.run("Hi!").isError, "Response should be an error")
     }
 
-    @ParameterizedTest
-    @MethodSource("transportOptions")
-    fun integration_testClaude(transport: CliTransport) = runTest {
+    @Test
+    fun integration_testClaude() = runTest {
         val agent = AIAgent(
             agentConfig = buildConfig(model = AnthropicModels.Sonnet_4_5),
             strategy = AIAgentCliStrategy.claude(
                 name = "claude",
                 apiKey = readTestAnthropicKeyFromEnv(),
-                transport = transport
+                transport = ProcessCliTransport.Default
             )
         )
 
@@ -113,7 +134,37 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
     }
 
     @Test
+    @ExtendWith(DockerAvailableCondition::class)
+    fun integration_testClaudeDocker() = runTest {
+        val agent = AIAgent(
+            agentConfig = buildConfig(model = AnthropicModels.Sonnet_4_5),
+            strategy = AIAgentCliStrategy.claude(
+                name = "claude",
+                apiKey = readTestAnthropicKeyFromEnv(),
+                transport = dockerTransport
+            )
+        )
+
+        testAgent(agent)
+    }
+
+    // it could fail locally if you are logged in to claude
+    @Test
     fun integration_testClaudeCodeNoKey() = runTest {
+        val agent = AIAgent(
+            agentConfig = buildConfig(),
+            strategy = AIAgentCliStrategy.claude(
+                name = "claude",
+                transport = ProcessCliTransport.Default
+            )
+        )
+
+        assertTrue(agent.run("Hi!").isError, "Response should be an error")
+    }
+
+    @Test
+    @ExtendWith(DockerAvailableCondition::class)
+    fun integration_testClaudeCodeNoKeyDocker() = runTest {
         val agent = AIAgent(
             agentConfig = buildConfig(),
             strategy = AIAgentCliStrategy.claude(
@@ -132,7 +183,7 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
             strategy = AIAgentCliStrategy.claude<String, StructuredResult>(
                 name = "claude",
                 apiKey = readTestAnthropicKeyFromEnv(),
-                transport = dockerTransport
+                transport = ProcessCliTransport.Default
             )
         )
 
@@ -146,7 +197,7 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
             strategy = AIAgentCliStrategy.claude<TestInput>(
                 name = "claude-custom",
                 apiKey = readTestAnthropicKeyFromEnv(),
-                transport = dockerTransport,
+                transport = ProcessCliTransport.Default,
                 generateRequest = { _, input -> input.request }
             )
         )
@@ -162,7 +213,7 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
             strategy = AIAgentCliStrategy.codex<TestInput>(
                 name = "codex-custom",
                 apiKey = readTestOpenAIKeyFromEnv(),
-                transport = dockerTransport,
+                transport = ProcessCliTransport.Default,
                 generateRequest = { _, input -> input.request }
             )
         )
@@ -178,7 +229,7 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
             strategy = AIAgentCliStrategy.claude<TestInput, StructuredResult>(
                 name = "claude-structured-custom",
                 apiKey = readTestAnthropicKeyFromEnv(),
-                transport = dockerTransport,
+                transport = ProcessCliTransport.Default,
                 generateRequest = { _, input -> input.request }
             )
         )
@@ -198,7 +249,7 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
                 strategy = AIAgentCliStrategy.claude(
                     name = "claude-plan",
                     apiKey = claudeApiKey,
-                    transport = dockerTransport,
+                    transport = ProcessCliTransport.Default,
                     permissionMode = ClaudePermissionMode.Plan
                 )
             )
@@ -208,7 +259,7 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
                 strategy = AIAgentCliStrategy.codex(
                     name = "codex",
                     apiKey = codexApiKey,
-                    transport = dockerTransport
+                    transport = ProcessCliTransport.Default
                 )
             )
 
@@ -217,7 +268,7 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
                 strategy = AIAgentCliStrategy.claude<String, StructuredResult>(
                     name = "claude-structured",
                     apiKey = claudeApiKey,
-                    transport = dockerTransport
+                    transport = ProcessCliTransport.Default,
                 )
             )
 
