@@ -1,38 +1,40 @@
 package ai.koog.cli.transport
 
-import ai.koog.test.utils.DockerImageResolver
+import ai.koog.test.utils.DockerAvailableCondition
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.condition.DisabledOnOs
+import org.junit.jupiter.api.condition.EnabledOnOs
 import org.junit.jupiter.api.condition.OS
+import org.junit.jupiter.api.extension.ExtendWith
 import java.io.File
 import java.nio.file.Files
 import kotlin.test.Test
 
-@DisabledOnOs(OS.MAC)
+@ExtendWith(DockerAvailableCondition::class)
 class DockerCliTransportTest {
-    private val isWindows = System.getProperty("os.name").lowercase().contains("win")
-    private val imageName by lazy { DockerImageResolver.resolveAndEnsureCliImage() }
+    private val imageName = "alpine:latest"
+
+    private val tempdirName = "docker-test"
+    private val filename = "test.txt"
+    private val content = "volume-test-content"
 
     @Test
     fun testDockerVolumeMapping() = runTest {
-        val tmpDir = Files.createTempDirectory("docker-test")
-        val testFile = tmpDir.resolve("test.txt").toFile()
-        testFile.writeText("volume-test-content")
+        val tmpDir = Files.createTempDirectory(tempdirName)
+        val containerPath = "/mnt/test"
 
-        val containerPath = if (isWindows) "C:\\test" else "/test"
-        val command = if (isWindows) {
-            listOf("cmd", "/c", "type", "$containerPath.txt")
-        } else {
-            listOf("cat", "$containerPath.txt")
-        }
+        val testFile = tmpDir.resolve(filename).toFile()
+        testFile.writeText(content)
+
+        val volumes = listOf(DockerVolume(tmpDir.toFile(), containerPath))
+        val command = listOf("cat", "$containerPath/$filename")
 
         try {
             val transport = DockerCliTransport(
                 imageName = imageName,
-                volumes = listOf(DockerVolume(tmpDir.toFile(), containerPath))
+                volumes = volumes
             )
 
             val events = transport.execute(
@@ -43,7 +45,7 @@ class DockerCliTransportTest {
             events.filterIsInstance<CliEvent.Stdout>()
                 .firstOrNull()
                 .shouldNotBeNull()
-                .content.trim().shouldBe("volume-test-content")
+                .content.trim().shouldBe(content)
         } finally {
             tmpDir.toFile().deleteRecursively()
         }
@@ -52,14 +54,10 @@ class DockerCliTransportTest {
     @Test
     fun testDockerWorkspaceMapping() = runTest {
         val tmpDir = Files.createTempDirectory("workspace-test")
-        val testFile = tmpDir.resolve("workspace.txt").toFile()
-        testFile.writeText("workspace-content")
+        val testFile = tmpDir.resolve(filename).toFile()
+        testFile.writeText(content)
 
-        val command = if (isWindows) {
-            listOf("cmd", "/c", "type", "workspace.txt")
-        } else {
-            listOf("cat", "workspace.txt")
-        }
+        val command = listOf("cat", filename)
 
         try {
             val transport = DockerCliTransport(imageName)
@@ -71,7 +69,7 @@ class DockerCliTransportTest {
             events.filterIsInstance<CliEvent.Stdout>()
                 .firstOrNull()
                 .shouldNotBeNull()
-                .content.trim().shouldBe("workspace-content")
+                .content.trim().shouldBe(content)
         } finally {
             tmpDir.toFile().deleteRecursively()
         }
@@ -79,14 +77,10 @@ class DockerCliTransportTest {
 
     @Test
     fun testDockerWorkspaceMappingCurrentDir() = runTest {
-        val testFile = File("test.txt")
-        testFile.writeText("current-dir-content")
+        val testFile = File(filename)
+        testFile.writeText(content)
 
-        val command = if (isWindows) {
-            listOf("cmd", "/c", "type", "test.txt")
-        } else {
-            listOf("cat", "test.txt")
-        }
+        val command = listOf("cat", filename)
 
         try {
             val transport = DockerCliTransport(imageName)
@@ -98,7 +92,7 @@ class DockerCliTransportTest {
             events.filterIsInstance<CliEvent.Stdout>()
                 .firstOrNull()
                 .shouldNotBeNull()
-                .content.trim().shouldBe("current-dir-content")
+                .content.trim().shouldBe(content)
         } finally {
             testFile.delete()
         }
@@ -107,12 +101,11 @@ class DockerCliTransportTest {
     @Test
     fun testDockerEnvVars() = runTest {
         val transport = DockerCliTransport(imageName)
-        val env = mapOf("DOCKER_VAR" to "docker-value")
-        val command = if (isWindows) {
-            listOf("cmd", "/c", "echo %DOCKER_VAR%")
-        } else {
-            listOf("sh", "-c", "echo \$DOCKER_VAR")
-        }
+        val varName = "TEST_VAR"
+        val varValue = "test-value"
+        val env = mapOf(varName to varValue)
+        val command = listOf("sh", "-c", "echo \$$varName")
+
         val events = transport.execute(
             command = command,
             workspace = ".",
@@ -122,6 +115,6 @@ class DockerCliTransportTest {
         events.filterIsInstance<CliEvent.Stdout>()
             .firstOrNull()
             .shouldNotBeNull()
-            .content.trim().shouldBe("docker-value")
+            .content.trim().shouldBe(varValue)
     }
 }

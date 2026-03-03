@@ -1,6 +1,5 @@
 package ai.koog.cli.transport
 
-import ai.koog.test.utils.DockerImageResolver
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldNotBeEmpty
@@ -8,30 +7,11 @@ import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.assertThrows
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.MethodSource
-import java.util.stream.Stream
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
 class ProcessCliTransportTest {
     private val isWindows = System.getProperty("os.name").lowercase().contains("win")
-
-    companion object {
-        private val imageName by lazy { DockerImageResolver.resolveAndEnsureCliImage() }
-
-        @JvmStatic
-        fun transportProvider(): Stream<CliTransport> = Stream.builder<CliTransport>()
-            .add(ProcessCliTransport.Default)
-            .apply {
-                // mac runners on CI do not have docker
-                // TODO(): need to refactor, so that the test runs locally on mac
-                if (!System.getProperty("os.name").lowercase().contains("mac")) {
-                    add(ProcessCliTransport.dockerTransport(imageName))
-                }
-            }
-            .build()
-    }
 
     @Test
     fun testCheckAvailability() {
@@ -43,16 +23,15 @@ class ProcessCliTransportTest {
             .shouldNotBeEmpty()
     }
 
-    @ParameterizedTest
-    @MethodSource("transportProvider")
-    fun testExecuteEcho(transport: CliTransport) = runTest {
+    @Test
+    fun testExecuteEcho() = runTest {
         val echoCommand = if (isWindows) {
             listOf("cmd", "/c", "echo hello world")
         } else {
             listOf("echo", "hello world")
         }
 
-        val events = transport.execute(
+        val events = ProcessCliTransport.Default.execute(
             command = echoCommand,
             workspace = "."
         ).toList()
@@ -70,9 +49,8 @@ class ProcessCliTransportTest {
             .code.shouldBe(0)
     }
 
-    @ParameterizedTest
-    @MethodSource("transportProvider")
-    fun testExecuteInvalidCommand(transport: CliTransport) = runTest {
+    @Test
+    fun testExecuteInvalidCommand() = runTest {
         val invalidCommand = if (isWindows) {
             listOf("cmd", "/c", "non-existent-command-12345")
         } else {
@@ -80,7 +58,7 @@ class ProcessCliTransportTest {
         }
 
         assertThrows<Exception> {
-            val events = transport.execute(
+            val events = ProcessCliTransport.Default.execute(
                 command = invalidCommand,
                 workspace = "."
             ).toList()
@@ -92,9 +70,8 @@ class ProcessCliTransportTest {
         }
     }
 
-    @ParameterizedTest
-    @MethodSource("transportProvider")
-    fun testExecuteWithEnv(transport: CliTransport) = runTest {
+    @Test
+    fun testExecuteWithEnv() = runTest {
         val env = mapOf("TEST_VAR" to "test-value")
 
         val command = if (isWindows) {
@@ -103,7 +80,7 @@ class ProcessCliTransportTest {
             listOf("sh", "-c", "echo \$TEST_VAR")
         }
 
-        val events = transport.execute(
+        val events = ProcessCliTransport.Default.execute(
             command = command,
             workspace = ".",
             env = env
@@ -116,16 +93,15 @@ class ProcessCliTransportTest {
             .content.shouldBe("test-value")
     }
 
-    @ParameterizedTest
-    @MethodSource("transportProvider")
-    fun testExecuteStderr(transport: CliTransport) = runTest {
+    @Test
+    fun testExecuteStderr() = runTest {
         val command = if (isWindows) {
             listOf("cmd", "/c", "echo error message 1>&2")
         } else {
             listOf("sh", "-c", "echo 'error message' >&2")
         }
 
-        val events = transport.execute(
+        val events = ProcessCliTransport.Default.execute(
             command = command,
             workspace = "."
         ).toList()
