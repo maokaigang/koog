@@ -58,7 +58,7 @@ public class DockerCliTransport @JvmOverloads constructor(
         }
 
         // Workspace volume
-        val dockerWorkspace = if (isWindows) "C:\\workspace" else "/workspace"
+        val dockerWorkspace = "/workspace"
         val workspaceVolume = DockerVolume(File(workspace), dockerWorkspace)
 
         mount(workspaceVolume)
@@ -70,9 +70,5 @@ public class DockerCliTransport @JvmOverloads constructor(
 
         add(imageName)
         addAll(command)
-    }
-
-    private companion object {
-        private val isWindows = System.getProperty("os.name").lowercase().contains("win")
     }
 }
