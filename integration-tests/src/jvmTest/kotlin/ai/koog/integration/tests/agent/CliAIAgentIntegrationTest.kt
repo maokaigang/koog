@@ -3,8 +3,8 @@ package ai.koog.integration.tests.agent
 import ai.koog.agents.core.agent.AIAgent
 import ai.koog.agents.core.agent.asNode
 import ai.koog.agents.core.agent.cli.AIAgentCliStrategy
-import ai.koog.agents.core.agent.cli.ClaudePermissionMode
 import ai.koog.agents.core.agent.cli.CliAIAgentResponse
+import ai.koog.agents.core.agent.cli.CodexSandboxMode
 import ai.koog.agents.core.agent.config.AIAgentConfig
 import ai.koog.agents.core.dsl.builder.strategy
 import ai.koog.agents.testing.tools.MockExecutor
@@ -22,6 +22,9 @@ import ai.koog.test.utils.DockerAvailableCondition
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.Serializable
 import org.junit.jupiter.api.extension.ExtendWith
+import java.nio.file.Files
+import java.nio.file.Paths
+import kotlin.io.path.readText
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertFalse
@@ -57,7 +60,7 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
 
     private fun buildConfig(model: LLModel? = null): AIAgentConfig =
         AIAgentConfig(
-            prompt("") { system("please follow the instructions of the user") },
+            prompt("") { system("please follow the instructions of the user without asking for confirmations") },
             model ?: OllamaModels.Meta.LLAMA_3_2,
             maxAgentIterations = 10,
         )
@@ -241,52 +244,51 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
     @Test
     fun integration_testCliAgentInGraphs() = runTest(timeout = 180.seconds) {
         withRetry {
-            val claudeApiKey = readTestAnthropicKeyFromEnv()
-            val codexApiKey = readTestOpenAIKeyFromEnv()
+            val file = Files.createTempFile(Paths.get("."), "test.txt", null)
+            try {
+                val claudeApiKey = readTestAnthropicKeyFromEnv()
+                val codexApiKey = readTestOpenAIKeyFromEnv()
 
-            val claudePlanMode = AIAgent(
-                agentConfig = buildConfig(),
-                strategy = AIAgentCliStrategy.claude(
-                    name = "claude-plan",
-                    apiKey = claudeApiKey,
-                    transport = ProcessCliTransport.Default,
-                    permissionMode = ClaudePermissionMode.Plan
+                val claude = AIAgent(
+                    agentConfig = buildConfig(),
+                    strategy = AIAgentCliStrategy.claude(
+                        name = "claude-plan",
+                        apiKey = claudeApiKey,
+                        transport = ProcessCliTransport.Default,
+                    )
                 )
-            )
 
-            val codex = AIAgent(
-                agentConfig = buildConfig(),
-                strategy = AIAgentCliStrategy.codex(
-                    name = "codex",
-                    apiKey = codexApiKey,
-                    transport = ProcessCliTransport.Default
+                val codex = AIAgent(
+                    agentConfig = buildConfig(),
+                    strategy = AIAgentCliStrategy.codex(
+                        name = "codex",
+                        apiKey = codexApiKey,
+                        transport = ProcessCliTransport.Default,
+                        sandbox = CodexSandboxMode.WorkspaceWrite
+                    ) { _, response: CliAIAgentResponse ->
+                        "write to ${file.toAbsolutePath()}: ${response.content}"
+                    }
                 )
-            )
 
-            val claudeStructured = AIAgent(
-                agentConfig = buildConfig(),
-                strategy = AIAgentCliStrategy.claude<String, StructuredResult>(
-                    name = "claude-structured",
-                    apiKey = claudeApiKey,
-                    transport = ProcessCliTransport.Default,
+                val strategy = strategy("test-strategy") {
+                    val generatePlan by claude.asNode()
+                    val solveTask by codex.asNode()
+
+                    nodeStart then generatePlan then solveTask then nodeFinish
+                }
+
+                val agent = AIAgent(
+                    promptExecutor = MockExecutor.builder().build(),
+                    agentConfig = buildConfig(),
+                    strategy = strategy,
                 )
-            )
 
-            val strategy = strategy("test-strategy") {
-                val generatePlan by claudePlanMode.asNode().transform { it.content }
-                val solveTask by codex.asNode().transform { it.content }
-                val returnResult by claudeStructured.asNode()
-
-                nodeStart then generatePlan then solveTask then returnResult then nodeFinish
+                assertResponse(agent.run("echo 'hi'"))
+                assertTrue(file.toFile().exists(), "File should exist")
+                assertTrue(file.readText().isNotBlank(), "File should not be blank")
+            } finally {
+                file.toFile().delete()
             }
-
-            val agent = AIAgent(
-                promptExecutor = MockExecutor.builder().build(),
-                agentConfig = buildConfig(),
-                strategy = strategy
-            )
-
-            assertResponse(agent.run("Write a python script printing 'hi'").response)
         }
     }
 }

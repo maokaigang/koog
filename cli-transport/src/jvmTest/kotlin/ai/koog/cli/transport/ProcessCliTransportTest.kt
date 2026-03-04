@@ -84,7 +84,7 @@ class ProcessCliTransportTest {
     @Test
     fun testExecuteStderr() = runTest {
         val command = if (isWindows) {
-            listOf("echo", "error message 1>&2")
+            listOf("echo error message 1>&2")
         } else {
             listOf("sh", "-c", "echo 'error message' >&2")
         }
