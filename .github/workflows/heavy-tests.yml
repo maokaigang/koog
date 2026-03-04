@@ -99,25 +99,7 @@ jobs:
           node-version: 20
 
       - name: Install CLI agents globally for Linux
-        if: runner.os == 'Linux'
         run: npm install -g @openai/codex @anthropic-ai/claude-code
-
-      - name: Install CLI agents globally for Windows
-        if: runner.os == 'Windows'
-        run: |
-          npm install -g @openai/codex @anthropic-ai/claude-code
-          $npm_prefix = npm config get prefix
-          $npm_bin = Join-Path $npm_prefix "bin"
-          
-          # On Windows, npm installs global binaries into the prefix directory directly, 
-          # but sometimes they might be in a 'bin' subdirectory depending on the environment.
-          # We add both to be safe.
-          "$npm_prefix" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-          "$npm_bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-          
-          # Verify
-          Get-Command claude
-          Get-Command codex
 
       - name: Build cli-agents Docker image
         if: runner.os == 'Linux'
