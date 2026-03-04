@@ -45,7 +45,6 @@ class ProcessCliTransportTest {
 
     @Test
     fun testExecuteInvalidCommand() = runTest {
-
         assertThrows<Exception> {
             val events = ProcessCliTransport.Default.execute(
                 command = listOf("non-existent-command-12345"),
