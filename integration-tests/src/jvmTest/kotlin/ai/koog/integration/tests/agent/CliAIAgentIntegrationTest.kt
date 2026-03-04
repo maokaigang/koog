@@ -10,7 +10,6 @@ import ai.koog.agents.core.dsl.builder.strategy
 import ai.koog.agents.testing.tools.MockExecutor
 import ai.koog.cli.transport.DockerCliTransport
 import ai.koog.cli.transport.ProcessCliTransport
-import ai.koog.integration.tests.utils.RetryUtils.withRetry
 import ai.koog.integration.tests.utils.TestCredentials.readTestAnthropicKeyFromEnv
 import ai.koog.integration.tests.utils.TestCredentials.readTestOpenAIKeyFromEnv
 import ai.koog.integration.tests.utils.annotations.Retry
@@ -23,9 +22,6 @@ import ai.koog.test.utils.DockerAvailableCondition
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.Serializable
 import org.junit.jupiter.api.extension.ExtendWith
-import java.nio.file.Files
-import java.nio.file.Paths
-import kotlin.io.path.readText
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertFalse
