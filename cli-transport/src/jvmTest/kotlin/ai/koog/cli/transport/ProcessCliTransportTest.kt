@@ -25,14 +25,8 @@ class ProcessCliTransportTest {
 
     @Test
     fun testExecuteEcho() = runTest {
-        val echoCommand = if (isWindows) {
-            listOf("cmd", "/c", "echo hello world")
-        } else {
-            listOf("echo", "hello world")
-        }
-
         val events = ProcessCliTransport.Default.execute(
-            command = echoCommand,
+            command = listOf("echo", "hello world"),
             workspace = "."
         ).toList()
 
@@ -51,15 +45,10 @@ class ProcessCliTransportTest {
 
     @Test
     fun testExecuteInvalidCommand() = runTest {
-        val invalidCommand = if (isWindows) {
-            listOf("cmd", "/c", "non-existent-command-12345")
-        } else {
-            listOf("non-existent-command-12345")
-        }
 
         assertThrows<Exception> {
             val events = ProcessCliTransport.Default.execute(
-                command = invalidCommand,
+                command = listOf("non-existent-command-12345"),
                 workspace = "."
             ).toList()
 
@@ -75,7 +64,7 @@ class ProcessCliTransportTest {
         val env = mapOf("TEST_VAR" to "test-value")
 
         val command = if (isWindows) {
-            listOf("cmd", "/c", "echo %TEST_VAR%")
+            listOf("echo", "%TEST_VAR%")
         } else {
             listOf("sh", "-c", "echo \$TEST_VAR")
         }
@@ -96,7 +85,7 @@ class ProcessCliTransportTest {
     @Test
     fun testExecuteStderr() = runTest {
         val command = if (isWindows) {
-            listOf("cmd", "/c", "echo error message 1>&2")
+            listOf("echo", "error message 1>&2")
         } else {
             listOf("sh", "-c", "echo 'error message' >&2")
         }

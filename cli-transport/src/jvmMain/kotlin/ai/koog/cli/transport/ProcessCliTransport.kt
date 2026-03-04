@@ -137,11 +137,17 @@ public abstract class ProcessCliTransport : CliTransport {
      * Default implementation of ProcessTransport.
      */
     public object Default : ProcessCliTransport() {
+        private val isWindows = System.getProperty("os.name").lowercase().contains("win")
+
         override fun buildCommand(
             command: List<String>,
             workspace: String,
             env: Map<String, String>
-        ): List<String> = command
+        ): List<String> = if (isWindows) {
+            listOf("cmd", "/c") + command
+        } else {
+            command
+        }
     }
 
     /**
