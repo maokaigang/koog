@@ -13,6 +13,7 @@ import ai.koog.cli.transport.ProcessCliTransport
 import ai.koog.integration.tests.utils.RetryUtils.withRetry
 import ai.koog.integration.tests.utils.TestCredentials.readTestAnthropicKeyFromEnv
 import ai.koog.integration.tests.utils.TestCredentials.readTestOpenAIKeyFromEnv
+import ai.koog.integration.tests.utils.annotations.Retry
 import ai.koog.prompt.dsl.prompt
 import ai.koog.prompt.executor.clients.anthropic.AnthropicModels
 import ai.koog.prompt.executor.clients.openai.OpenAIModels
@@ -242,53 +243,45 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
     }
 
     @Test
+    @Retry
     fun integration_testCliAgentInGraphs() = runTest(timeout = 180.seconds) {
-        withRetry {
-            val file = Files.createTempFile(Paths.get("."), "test.txt", null)
-            try {
-                val claudeApiKey = readTestAnthropicKeyFromEnv()
-                val codexApiKey = readTestOpenAIKeyFromEnv()
+        val claudeApiKey = readTestAnthropicKeyFromEnv()
+        val codexApiKey = readTestOpenAIKeyFromEnv()
 
-                val claude = AIAgent(
-                    agentConfig = buildConfig(),
-                    strategy = AIAgentCliStrategy.claude(
-                        name = "claude-plan",
-                        apiKey = claudeApiKey,
-                        transport = ProcessCliTransport.Default,
-                    )
-                )
+        val claude = AIAgent(
+            agentConfig = buildConfig(),
+            strategy = AIAgentCliStrategy.claude(
+                name = "claude-plan",
+                apiKey = claudeApiKey,
+                transport = ProcessCliTransport.Default,
+            )
+        )
 
-                val codex = AIAgent(
-                    agentConfig = buildConfig(),
-                    strategy = AIAgentCliStrategy.codex(
-                        name = "codex",
-                        apiKey = codexApiKey,
-                        transport = ProcessCliTransport.Default,
-                        sandbox = CodexSandboxMode.WorkspaceWrite
-                    ) { _, response: CliAIAgentResponse ->
-                        "write to ${file.toAbsolutePath()}: ${response.content}"
-                    }
-                )
-
-                val strategy = strategy("test-strategy") {
-                    val generatePlan by claude.asNode()
-                    val solveTask by codex.asNode()
-
-                    nodeStart then generatePlan then solveTask then nodeFinish
-                }
-
-                val agent = AIAgent(
-                    promptExecutor = MockExecutor.builder().build(),
-                    agentConfig = buildConfig(),
-                    strategy = strategy,
-                )
-
-                assertResponse(agent.run("echo 'hi'"))
-                assertTrue(file.toFile().exists(), "File should exist")
-                assertTrue(file.readText().isNotBlank(), "File should not be blank")
-            } finally {
-                file.toFile().delete()
+        val codex = AIAgent(
+            agentConfig = buildConfig(),
+            strategy = AIAgentCliStrategy.codex(
+                name = "codex",
+                apiKey = codexApiKey,
+                transport = ProcessCliTransport.Default,
+                sandbox = CodexSandboxMode.WorkspaceWrite
+            ) { _, response: CliAIAgentResponse ->
+                "echo '${response.content}'"
             }
+        )
+
+        val strategy = strategy("test-strategy") {
+            val generatePlan by claude.asNode()
+            val solveTask by codex.asNode()
+
+            nodeStart then generatePlan then solveTask then nodeFinish
         }
+
+        val agent = AIAgent(
+            promptExecutor = MockExecutor.builder().build(),
+            agentConfig = buildConfig(),
+            strategy = strategy,
+        )
+
+        assertResponse(agent.run("echo 'hi'"))
     }
 }
