@@ -98,7 +98,7 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install CLI agents globally for Linux
+      - name: Install CLI agents globally
         run: npm install -g @openai/codex @anthropic-ai/claude-code
 
       - name: Build cli-agents Docker image
