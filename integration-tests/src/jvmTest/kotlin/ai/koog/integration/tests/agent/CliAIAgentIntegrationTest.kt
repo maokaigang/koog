@@ -63,7 +63,7 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
         )
 
     @Test
-    fun integration_testCodex() = runTest {
+    fun integration_testCodex() = runTest(timeout = 180.seconds) {
         val agent = AIAgent(
             agentConfig = buildConfig(model = OpenAIModels.Chat.GPT4o),
             strategy = AIAgentCliStrategy.codex(
@@ -78,7 +78,7 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
 
     @Test
     @ExtendWith(DockerAvailableCondition::class)
-    fun integration_testCodexDocker() = runTest {
+    fun integration_testCodexDocker() = runTest(timeout = 180.seconds) {
         val agent = AIAgent(
             agentConfig = buildConfig(model = OpenAIModels.Chat.GPT4o),
             strategy = AIAgentCliStrategy.codex(
@@ -93,7 +93,7 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
 
     // it could fail locally if you are logged in to codex
     @Test
-    fun integration_testCodexNoKey() = runTest {
+    fun integration_testCodexNoKey() = runTest(timeout = 180.seconds) {
         val agent = AIAgent(
             agentConfig = buildConfig(),
             strategy = AIAgentCliStrategy.codex(
@@ -107,7 +107,7 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
 
     @Test
     @ExtendWith(DockerAvailableCondition::class)
-    fun integration_testCodexNoKeyDocker() = runTest {
+    fun integration_testCodexNoKeyDocker() = runTest(timeout = 180.seconds) {
         val agent = AIAgent(
             agentConfig = buildConfig(),
             strategy = AIAgentCliStrategy.codex(
@@ -120,7 +120,7 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
     }
 
     @Test
-    fun integration_testClaude() = runTest {
+    fun integration_testClaude() = runTest(timeout = 180.seconds) {
         val agent = AIAgent(
             agentConfig = buildConfig(model = AnthropicModels.Sonnet_4_5),
             strategy = AIAgentCliStrategy.claude(
@@ -135,7 +135,7 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
 
     @Test
     @ExtendWith(DockerAvailableCondition::class)
-    fun integration_testClaudeDocker() = runTest {
+    fun integration_testClaudeDocker() = runTest(timeout = 180.seconds) {
         val agent = AIAgent(
             agentConfig = buildConfig(model = AnthropicModels.Sonnet_4_5),
             strategy = AIAgentCliStrategy.claude(
@@ -150,7 +150,7 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
 
     // it could fail locally if you are logged in to claude
     @Test
-    fun integration_testClaudeCodeNoKey() = runTest {
+    fun integration_testClaudeCodeNoKey() = runTest(timeout = 180.seconds) {
         val agent = AIAgent(
             agentConfig = buildConfig(),
             strategy = AIAgentCliStrategy.claude(
@@ -164,7 +164,7 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
 
     @Test
     @ExtendWith(DockerAvailableCondition::class)
-    fun integration_testClaudeCodeNoKeyDocker() = runTest {
+    fun integration_testClaudeCodeNoKeyDocker() = runTest(timeout = 180.seconds) {
         val agent = AIAgent(
             agentConfig = buildConfig(),
             strategy = AIAgentCliStrategy.claude(
@@ -177,7 +177,7 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
     }
 
     @Test
-    fun integration_testClaudeCodeStructuredOutput() = runTest {
+    fun integration_testClaudeCodeStructuredOutput() = runTest(timeout = 180.seconds) {
         val agent = AIAgent(
             agentConfig = buildConfig(),
             strategy = AIAgentCliStrategy.claude<String, StructuredResult>(
@@ -191,7 +191,7 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
     }
 
     @Test
-    fun integration_testClaudeCustomInput() = runTest {
+    fun integration_testClaudeCustomInput() = runTest(timeout = 180.seconds) {
         val agent = AIAgent(
             agentConfig = buildConfig(model = AnthropicModels.Sonnet_4_5),
             strategy = AIAgentCliStrategy.claude<TestInput>(
@@ -207,7 +207,7 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
     }
 
     @Test
-    fun integration_testCodexCustomInput() = runTest {
+    fun integration_testCodexCustomInput() = runTest(timeout =   180.seconds) {
         val agent = AIAgent(
             agentConfig = buildConfig(model = OpenAIModels.Chat.GPT4o),
             strategy = AIAgentCliStrategy.codex<TestInput>(
@@ -223,7 +223,7 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
     }
 
     @Test
-    fun integration_testClaudeCustomInputStructuredOutput() = runTest {
+    fun integration_testClaudeCustomInputStructuredOutput() = runTest(timeout =  180.seconds) {
         val agent = AIAgent(
             agentConfig = buildConfig(model = AnthropicModels.Sonnet_4_5),
             strategy = AIAgentCliStrategy.claude<TestInput, StructuredResult>(
