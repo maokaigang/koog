@@ -209,7 +209,7 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
     }
 
     @Test
-    fun integration_testCodexCustomInput() = runTest(timeout =   180.seconds) {
+    fun integration_testCodexCustomInput() = runTest(timeout = 180.seconds) {
         val agent = AIAgent(
             agentConfig = buildConfig(model = OpenAIModels.Chat.GPT4o),
             strategy = AIAgentCliStrategy.codex<TestInput>(
@@ -225,7 +225,7 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
     }
 
     @Test
-    fun integration_testClaudeCustomInputStructuredOutput() = runTest(timeout =  180.seconds) {
+    fun integration_testClaudeCustomInputStructuredOutput() = runTest(timeout = 180.seconds) {
         val agent = AIAgent(
             agentConfig = buildConfig(model = AnthropicModels.Sonnet_4_5),
             strategy = AIAgentCliStrategy.claude<TestInput, StructuredResult>(
