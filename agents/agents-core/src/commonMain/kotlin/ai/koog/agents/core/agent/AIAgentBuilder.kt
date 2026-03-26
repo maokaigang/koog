@@ -3,6 +3,8 @@
 package ai.koog.agents.core.agent
 
 import ai.koog.agents.core.agent.GraphAIAgent.FeatureContext
+import ai.koog.agents.core.agent.cli.AIAgentCliStrategy
+import ai.koog.agents.core.agent.cli.AIAgentCliStrategyBuilder
 import ai.koog.agents.core.agent.config.AIAgentConfig
 import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy
 import ai.koog.agents.core.feature.AIAgentFunctionalFeature
@@ -242,6 +244,70 @@ public class PlannerAgentBuilder<Input, Output>(
             toolRegistry = toolRegistry,
             id = id,
             agentConfig = validatedConfig,
+            clock = clock
+        ) {
+            featureInstallers.forEach { install ->
+                install()
+            }
+        }
+    }
+}
+
+/**
+ * A builder class for creating instances of [CliAIAgent]. This builder provides a fluent interface
+ * to configure various parameters and components required to construct a CLI-based AI agent.
+ *
+ * @param Input The input type that the agent processes.
+ * @param Output The output type that the agent produces.
+ * @property strategy The CLI execution strategy used by the agent for processing input and generating results.
+ */
+public class CliAgentBuilder<Input, Output>(
+    private val strategy: AIAgentCliStrategy<Input, Output>,
+    promptExecutor: PromptExecutor? = null,
+    toolRegistry: ToolRegistry = ToolRegistry.EMPTY,
+    id: String? = null,
+    config: AIAgentConfig,
+    clock: Clock = Clock.System,
+    private var featureInstallers: MutableList<CliAIAgent.FeatureContext.() -> Unit> = mutableListOf(),
+) : AIAgentBuilderBase<CliAgentBuilder<Input, Output>>(
+    promptExecutor = promptExecutor,
+    toolRegistry = toolRegistry,
+    id = id,
+    config = config,
+    clock = clock,
+) {
+    override fun self(): CliAgentBuilder<Input, Output> = this
+
+    /**
+     * Installs a functional feature into the [CliAgentBuilder] with the specified configuration.
+     *
+     * @param feature The functional feature to be installed.
+     * @param configure A lambda or action responsible for configuring the provided feature.
+     * @return The current instance of [CliAgentBuilder] with the feature installed.
+     */
+    public fun <TConfig : FeatureConfig> install(
+        feature: AIAgentFunctionalFeature<TConfig, *>,
+        configure: ConfigureAction<TConfig>
+    ): CliAgentBuilder<Input, Output> = apply {
+        this.featureInstallers += {
+            install(feature) {
+                configure.configure(this)
+            }
+        }
+    }
+
+    /**
+     * Builds and returns an instance of [CliAIAgent] configured using the parameters
+     * provided to the [CliAgentBuilder].
+     *
+     * @return An instance of [CliAIAgent] initialized with the specified input and output types,
+     *         strategy, model configuration, and other settings.
+     */
+    public fun build(): CliAIAgent<Input, Output> {
+        return CliAIAgent(
+            strategy = strategy,
+            id = id,
+            agentConfig = config,
             clock = clock
         ) {
             featureInstallers.forEach { install ->

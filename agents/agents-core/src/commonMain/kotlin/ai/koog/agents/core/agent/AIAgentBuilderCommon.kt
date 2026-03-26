@@ -1,5 +1,7 @@
 package ai.koog.agents.core.agent
 
+import ai.koog.agents.core.agent.cli.AIAgentCliStrategy
+import ai.koog.agents.core.agent.cli.AIAgentCliStrategyBuilder
 import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy
 import ai.koog.agents.core.feature.AIAgentGraphFeature
 import ai.koog.agents.core.feature.config.FeatureConfig
@@ -90,6 +92,30 @@ public abstract class AIAgentBuilderCommon<Self : AIAgentBuilderCommon<Self>> in
         buildStrategy: BuilderChainAction<AIAgentPlannerStrategyBuilder, TypedAgentPlannerStrategyBuilder<Input, Output>>
     ): PlannerAgentBuilder<Input, Output> = plannerStrategy(
         buildStrategy.configure(AIAgentPlannerStrategyBuilder(name)).build()
+    )
+
+    /**
+     * Configures the CLI strategy to be used by the AI agent.
+     */
+    public fun <Input, Output> cliStrategy(
+        strategy: AIAgentCliStrategy<Input, Output>
+    ): CliAgentBuilder<Input, Output> = CliAgentBuilder(
+        strategy = strategy,
+        promptExecutor = this.promptExecutor,
+        toolRegistry = this.toolRegistry,
+        id = this.id,
+        config = this.config,
+        clock = this.clock
+    )
+
+    /**
+     * Defines a CLI strategy for the AI agent using a specified builder chain action.
+     */
+    public fun <Input, Output> cliStrategy(
+        name: String,
+        buildStrategy: BuilderChainAction<AIAgentCliStrategyBuilder, AIAgentCliStrategy<Input, Output>>
+    ): CliAgentBuilder<Input, Output> = cliStrategy(
+        buildStrategy.configure(AIAgentCliStrategyBuilder(name))
     )
 
     /**
