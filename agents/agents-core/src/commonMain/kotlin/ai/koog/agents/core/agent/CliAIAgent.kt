@@ -116,6 +116,7 @@ public class CliAIAgent<Input, Output>(
             agentId = id,
             logger = logger,
             toolRegistry = toolRegistry,
+            serializer = agentConfig.serializer,
         )
 
         val initialLLMContext = AIAgentLLMContext(
@@ -181,6 +182,7 @@ public class CliAIAgent<Input, Output>(
             agentId = id,
             logger = logger,
             toolRegistry = ToolRegistry.EMPTY,
+            serializer = agentConfig.serializer,
         )
 
         return baseEnvironment

@@ -7,7 +7,7 @@ import ai.koog.agents.core.agent.cli.CliAIAgentResponse
 import ai.koog.agents.core.agent.cli.CodexSandboxMode
 import ai.koog.agents.core.agent.config.AIAgentConfig
 import ai.koog.agents.core.dsl.builder.strategy
-import ai.koog.agents.testing.tools.MockExecutor
+import ai.koog.agents.testing.tools.MockExecutorDSLBuilder
 import ai.koog.cli.transport.DockerCliTransport
 import ai.koog.cli.transport.ProcessCliTransport
 import ai.koog.integration.tests.utils.TestCredentials.readTestAnthropicKeyFromEnv
@@ -18,6 +18,7 @@ import ai.koog.prompt.executor.clients.anthropic.AnthropicModels
 import ai.koog.prompt.executor.clients.openai.OpenAIModels
 import ai.koog.prompt.executor.ollama.client.OllamaModels
 import ai.koog.prompt.llm.LLModel
+import ai.koog.serialization.kotlinx.KotlinxSerializer
 import ai.koog.test.utils.DockerAvailableCondition
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.Serializable
@@ -27,6 +28,7 @@ import kotlin.test.assertContains
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
 
 class CliAIAgentIntegrationTest : AIAgentTestBase() {
@@ -273,7 +275,7 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
         }
 
         val agent = AIAgent(
-            promptExecutor = MockExecutor.builder().build(),
+            promptExecutor = MockExecutorDSLBuilder(Clock.System, KotlinxSerializer()).build(),
             agentConfig = buildConfig(),
             strategy = strategy,
         )
