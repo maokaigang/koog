@@ -59,7 +59,7 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
 
     private fun buildConfig(model: LLModel? = null): AIAgentConfig =
         AIAgentConfig(
-            prompt("") { system("please follow the instructions of the user without asking for confirmations") },
+            prompt("") { system("please follow the instructions of the user without asking for confirmations. do not call any tools") },
             model ?: OllamaModels.Meta.LLAMA_3_2,
             maxAgentIterations = 10,
         )

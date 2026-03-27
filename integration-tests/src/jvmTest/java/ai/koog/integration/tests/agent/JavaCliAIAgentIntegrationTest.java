@@ -63,7 +63,7 @@ public class JavaCliAIAgentIntegrationTest extends KoogJavaTestBase {
         var apiKey = TestCredentials.INSTANCE.readTestOpenAIKeyFromEnv();
         var agent = AIAgent.builder()
             .llmModel(OpenAIModels.Chat.GPT4o)
-            .systemPrompt("please follow the instructions of the user")
+            .systemPrompt("please follow the instructions of the user. do not call any tools")
             .cliStrategy("codex", builder ->
                 builder.codex()
                     .transport(ProcessCliTransport.defaultTransport())
@@ -80,7 +80,7 @@ public class JavaCliAIAgentIntegrationTest extends KoogJavaTestBase {
         var apiKey = TestCredentials.INSTANCE.readTestAnthropicKeyFromEnv();
         var agent = AIAgent.builder()
             .llmModel(AnthropicModels.Sonnet_4_5)
-            .systemPrompt("please follow the instructions of the user")
+            .systemPrompt("please follow the instructions of the user. do not call any tools")
             .cliStrategy("claude", builder ->
                 builder.claude()
                     .transport(ProcessCliTransport.defaultTransport())
@@ -97,7 +97,7 @@ public class JavaCliAIAgentIntegrationTest extends KoogJavaTestBase {
         var apiKey = TestCredentials.INSTANCE.readTestAnthropicKeyFromEnv();
         var agent = AIAgent.builder()
             .llmModel(AnthropicModels.Sonnet_4_5)
-            .systemPrompt("please follow the instructions of the user")
+            .systemPrompt("please follow the instructions of the user. do not call any tools")
             .cliStrategy("claude-structured", builder ->
                 builder.claude()
                     .transport(ProcessCliTransport.defaultTransport())
@@ -117,7 +117,7 @@ public class JavaCliAIAgentIntegrationTest extends KoogJavaTestBase {
         var apiKey = TestCredentials.INSTANCE.readTestAnthropicKeyFromEnv();
         var agent = AIAgent.builder()
             .llmModel(AnthropicModels.Sonnet_4_5)
-            .systemPrompt("please follow the instructions of the user")
+            .systemPrompt("please follow the instructions of the user. do not call any tools")
             .cliStrategy("claude-custom", builder ->
                 builder.claude()
                     .transport(ProcessCliTransport.defaultTransport())
@@ -136,7 +136,7 @@ public class JavaCliAIAgentIntegrationTest extends KoogJavaTestBase {
         var apiKey = TestCredentials.INSTANCE.readTestAnthropicKeyFromEnv();
         var agent = AIAgent.builder()
             .llmModel(AnthropicModels.Sonnet_4_5)
-            .systemPrompt("please follow the instructions of the user")
+            .systemPrompt("please follow the instructions of the user. do not call any tools")
             .cliStrategy("claude-custom-structured", builder ->
                 builder.claude()
                     .transport(ProcessCliTransport.defaultTransport())
@@ -157,7 +157,7 @@ public class JavaCliAIAgentIntegrationTest extends KoogJavaTestBase {
         var apiKey = TestCredentials.INSTANCE.readTestOpenAIKeyFromEnv();
         var agent = AIAgent.builder()
             .llmModel(OpenAIModels.Chat.GPT4o)
-            .systemPrompt("please follow the instructions of the user")
+            .systemPrompt("please follow the instructions of the user. do not call any tools")
             .cliStrategy("codex-custom", builder ->
                 builder.codex()
                     .transport(ProcessCliTransport.defaultTransport())
