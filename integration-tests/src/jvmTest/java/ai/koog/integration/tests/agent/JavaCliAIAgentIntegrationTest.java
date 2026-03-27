@@ -14,6 +14,9 @@ import ai.koog.prompt.executor.clients.anthropic.AnthropicModels;
 import ai.koog.prompt.executor.clients.openai.OpenAIModels;
 import kotlin.jvm.JvmClassMappingKt;
 import org.junit.jupiter.api.Test;
+
+import java.time.Duration;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class JavaCliAIAgentIntegrationTest extends KoogJavaTestBase {
@@ -143,6 +146,7 @@ public class JavaCliAIAgentIntegrationTest extends KoogJavaTestBase {
                     .apiKey(apiKey)
                     .generateRequest(JavaCliAIAgentIntegrationTest::generateRequest)
                     .structure(JvmClassMappingKt.getKotlinClass(StructuredResults.CalculationResult.class))
+                    .timeout(Duration.ofMinutes(1))
                     .build()
             )
             .build();

@@ -29,6 +29,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import kotlin.time.Clock
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 class CliAIAgentIntegrationTest : AIAgentTestBase() {
@@ -185,7 +186,8 @@ class CliAIAgentIntegrationTest : AIAgentTestBase() {
             strategy = AIAgentCliStrategy.claude<String, StructuredResult>(
                 name = "claude",
                 apiKey = readTestAnthropicKeyFromEnv(),
-                transport = ProcessCliTransport.Default
+                transport = ProcessCliTransport.Default,
+                timeout = 1.minutes
             )
         )
 
