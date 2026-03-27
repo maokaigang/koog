@@ -45,6 +45,8 @@ public class DockerCliTransport @JvmOverloads constructor(
 
     private val dockerPath = dockerPath ?: System.getenv("DOCKER_PATH") ?: "docker"
 
+    private val isWindows = System.getProperty("os.name").lowercase().contains("win")
+
     /**
      * Checks the availability of Docker.
      */
@@ -65,6 +67,11 @@ public class DockerCliTransport @JvmOverloads constructor(
         workspace: String,
         env: Map<String, String>
     ): List<String> = buildList {
+        if (isWindows) {
+            add("cmd")
+            add("/c")
+        }
+
         add(dockerPath)
         add("run")
         add("--rm")
