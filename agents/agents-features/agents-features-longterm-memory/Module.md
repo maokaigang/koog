@@ -17,11 +17,13 @@ The agents-features-longterm-memory module adds long-term memory capabilities to
 | Component                                                                                                                      | Description                                                            |
 |--------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------|
 | [`LongTermMemory`](src/commonMain/kotlin/ai/koog/agents/longtermmemory/feature/LongTermMemory.kt)                              | Agent feature with DSL config for retrieval & ingestion                |
-| [`SearchStorage`](src/commonMain/kotlin/ai/koog/agents/longtermmemory/retrieval/RetrievalStorage.kt)                           | Interface for searching memory records                                 |
-| [`WriteStorage`](src/commonMain/kotlin/ai/koog/agents/longtermmemory/ingestion/IngestionStorage.kt)                            | Interface for adding memory records                                    |
+| [`SearchStorage`](SearchStorage.kt)                                                                                            | Interface for searching memory records                                 |
+| [`WriteStorage`](WriteStorage.kt)                                                                                              | Interface for adding memory records                                    |
 | [`SearchStrategy`](src/commonMain/kotlin/ai/koog/agents/longtermmemory/retrieval/SearchStrategy.kt)                            | Converts user query into a `SearchRequest` (similarity or keyword)     |
-| [`ExtractionStrategy`](src/commonMain/kotlin/ai/koog/agents/longtermmemory/ingestion/extraction/ExtractionStrategy.kt)   | Transforms messages into `MemoryRecord`s for storage                   |
+| [`ExtractionStrategy`](src/commonMain/kotlin/ai/koog/agents/longtermmemory/ingestion/extraction/ExtractionStrategy.kt)         | Transforms messages into `MemoryRecord`s for storage                   |
 | [`PromptAugmenter`](src/commonMain/kotlin/ai/koog/agents/longtermmemory/retrieval/augmentation/PromptAugmenter.kt)             | Interface for augmenting prompts with relevant context                 |
 | [`SystemPromptAugmenter`](src/commonMain/kotlin/ai/koog/agents/longtermmemory/retrieval/augmentation/SystemPromptAugmenter.kt) | Inserts retrieved context as a system message                          |
 | [`UserPromptAugmenter`](src/commonMain/kotlin/ai/koog/agents/longtermmemory/retrieval/augmentation/UserPromptAugmenter.kt)     | Inserts retrieved context as a user message                            |
 | [`InMemoryRecordStorage`](src/commonMain/kotlin/ai/koog/agents/longtermmemory/storage/InMemoryRecordStorage.kt)                | In-memory storage implementing both retrieval and ingestion interfaces |
+
+[//]: # (FIXME: update paths)
