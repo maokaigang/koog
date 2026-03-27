@@ -27,7 +27,12 @@ public suspend fun PromptExecutor.executeProcessed(
     tools: List<ToolDescriptor>,
     processorConfig: ResponseProcessorConfig? = null,
 ): List<Message.Response> {
-    val responses = execute(prompt, model, tools)
+    val responses = execute(
+        prompt = prompt,
+        model = model,
+        tools = tools,
+        hooks = null
+    )
 
     return processorConfig
         ?.let { it.responseProcessor.process(this, prompt, model, tools, responses, it.serializer) }

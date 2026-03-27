@@ -7,6 +7,7 @@ import ai.koog.prompt.cache.model.put
 import ai.koog.prompt.dsl.ModerationResult
 import ai.koog.prompt.dsl.Prompt
 import ai.koog.prompt.executor.model.PromptExecutor
+import ai.koog.prompt.executor.model.PromptExecutorHooks
 import ai.koog.prompt.llm.LLModel
 import ai.koog.prompt.message.Message
 import ai.koog.prompt.streaming.StreamFrame
@@ -32,35 +33,46 @@ public class CachedPromptExecutor(
     override suspend fun execute(
         prompt: Prompt,
         model: LLModel,
-        tools: List<ToolDescriptor>
+        tools: List<ToolDescriptor>,
+        hooks: PromptExecutorHooks?
     ): List<Message.Response> {
-        return getOrPut(prompt, tools, model)
+        return getOrPut(prompt, tools, model, hooks)
     }
 
     override fun executeStreaming(
         prompt: Prompt,
         model: LLModel,
-        tools: List<ToolDescriptor>
+        tools: List<ToolDescriptor>,
+        hooks: PromptExecutorHooks?
     ): Flow<StreamFrame> =
         flow {
-            getOrPut(prompt, tools, model).toStreamFrames().forEach { emit(it) }
+            getOrPut(prompt, tools, model, hooks).toStreamFrames().forEach { emit(it) }
         }
 
-    private suspend fun getOrPut(prompt: Prompt, model: LLModel): Message.Assistant {
+    private suspend fun getOrPut(prompt: Prompt, model: LLModel, hooks: PromptExecutorHooks?): Message.Assistant {
         return cache.get(prompt, emptyList(), clock)
             ?.first() as Message.Assistant?
             ?: nested
-                .execute(prompt, model, emptyList()).first()
+                .execute(prompt, model, emptyList(), hooks).first()
                 .let { it as Message.Assistant }
                 .also { cache.put(prompt, emptyList(), listOf(it)) }
     }
 
-    private suspend fun getOrPut(prompt: Prompt, tools: List<ToolDescriptor>, model: LLModel): List<Message.Response> {
+    private suspend fun getOrPut(
+        prompt: Prompt,
+        tools: List<ToolDescriptor>,
+        model: LLModel,
+        hooks: PromptExecutorHooks?
+    ): List<Message.Response> {
         return cache.get(prompt, tools, clock)
-            ?: nested.execute(prompt, model, tools).also { cache.put(prompt, tools, it) }
+            ?: nested.execute(prompt, model, tools, hooks).also { cache.put(prompt, tools, it) }
     }
 
-    override suspend fun moderate(prompt: Prompt, model: LLModel): ModerationResult = nested.moderate(prompt, model)
+    override suspend fun moderate(
+        prompt: Prompt,
+        model: LLModel,
+        hooks: PromptExecutorHooks?
+    ): ModerationResult = nested.moderate(prompt, model, hooks)
 
     override suspend fun models(): List<LLModel> = nested.models()
 

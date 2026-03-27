@@ -36,7 +36,12 @@ public actual abstract class PromptExecutor actual constructor() : PromptExecuto
         tools: List<ToolDescriptor> = emptyList(),
         executorService: ExecutorService? = null
     ): List<Message.Response> = runOnIOBoundDispatcher(executorService) {
-        execute(prompt, model, emptyList())
+        this@PromptExecutor.execute(
+            prompt = prompt,
+            model = model,
+            tools = tools,
+            hooks = null
+        )
     }
 
     /**
@@ -57,7 +62,12 @@ public actual abstract class PromptExecutor actual constructor() : PromptExecuto
         tools: List<ToolDescriptor> = emptyList(),
         executorService: ExecutorService? = null
     ): List<LLMChoice> = runOnIOBoundDispatcher(executorService) {
-        executeMultipleChoices(prompt, model, tools)
+        this@PromptExecutor.executeMultipleChoices(
+            prompt = prompt,
+            model = model,
+            tools = tools,
+            hooks = null
+        )
     }
 
     /**
@@ -97,7 +107,11 @@ public actual abstract class PromptExecutor actual constructor() : PromptExecuto
         model: LLModel,
         executorService: ExecutorService? = null
     ): ModerationResult = runOnIOBoundDispatcher(executorService) {
-        moderate(prompt, model)
+        this@PromptExecutor.moderate(
+            prompt = prompt,
+            model = model,
+            hooks = null
+        )
     }
 
     /**

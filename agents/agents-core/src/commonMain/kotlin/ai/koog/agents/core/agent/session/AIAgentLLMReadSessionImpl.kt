@@ -143,7 +143,11 @@ internal class AIAgentLLMReadSessionImpl(
     override suspend fun requestModeration(moderatingModel: LLModel?): ModerationResult {
         validateSession()
         val preparedPrompt = preparePrompt(prompt, emptyList())
-        return executor.moderate(preparedPrompt, moderatingModel ?: model)
+        return executor.moderate(
+            prompt = preparedPrompt,
+            model = moderatingModel ?: model,
+            hooks = null
+        )
     }
 
     override suspend fun requestLLMMultiple(): List<Message.Response> {
@@ -213,7 +217,12 @@ internal class AIAgentLLMReadSessionImpl(
     override suspend fun requestLLMMultipleChoices(): List<LLMChoice> {
         validateSession()
         val preparedPrompt = preparePrompt(prompt, tools)
-        return executor.executeMultipleChoices(preparedPrompt, model, tools)
+        return executor.executeMultipleChoices(
+            prompt = preparedPrompt,
+            model = model,
+            tools = tools,
+            hooks = null
+        )
     }
 
     override fun close() {
