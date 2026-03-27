@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import java.io.File
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * Base class for transports that execute a local [Process].
@@ -96,8 +97,8 @@ public abstract class ProcessCliTransport : CliTransport {
                     val code = if (timeout != null) {
                         logger.debug { "Waiting for process with timeout: $timeout" }
                         if (withTimeoutOrNull(timeout) { process.waitFor() } == null) {
+                            logger.error { "Execution timed out after $timeout. Destroying process." }
                             process.destroy()
-                            logger.error { "Execution timed out after $timeout" }
                             throw CliTimeoutException("Execution timed out after $timeout", timeout)
                         }
                         process.exitValue()
@@ -106,11 +107,17 @@ public abstract class ProcessCliTransport : CliTransport {
                         process.waitFor()
                     }
 
-                    logger.debug { "Process exited with code: $code. Joining stdout/stderr jobs" }
-                    // Ensure all output is collected before finishing
-                    stdoutJob.join()
-                    stderrJob.join()
-                    logger.debug { "Stdout/stderr jobs joined" }
+                    logger.debug { "Process exited with code: $code. Joining stdout/stderr jobs with 10s timeout" }
+                    // Ensure all output is collected before finishing, but don't hang forever if streams stay open
+                    withTimeoutOrNull(10.seconds) {
+                        launch { stdoutJob.join() }
+                        launch { stderrJob.join() }
+                    }.also {
+                        if (it == null) {
+                            logger.warn { "Joining stdout/stderr jobs timed out" }
+                        }
+                    }
+                    logger.debug { "Stdout/stderr jobs joined (or timed out)" }
 
                     if (code != 0) {
                         logger.warn { "Process exited with non-zero code: $code" }
