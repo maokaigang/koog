@@ -145,7 +145,6 @@ public abstract class ProcessCliTransport : CliTransport {
      * Recursively destroys the process and its descendants.
      */
     private fun Process.destroyRecursively() {
-        // Use ProcessHandle (Java 9+) to recursively destroy descendants
         with(this.toHandle()) {
             descendants().forEach { it.destroyForcibly() }
             destroyForcibly()
@@ -162,11 +161,12 @@ public abstract class ProcessCliTransport : CliTransport {
             command: List<String>,
             workspace: String,
             env: Map<String, String>
-        ): List<String> = if (isWindows) {
-            listOf("cmd", "/c") + command
-        } else {
-            command
-        }
+        ): List<String> = command
+//        ): List<String> = if (isWindows) {
+//            listOf("cmd", "/c") + command
+//        } else {
+//            command
+//        }
     }
 
     /**
