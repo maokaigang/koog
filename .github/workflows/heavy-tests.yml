@@ -41,6 +41,10 @@ jobs:
             test-group: "ai.koog.integration.tests.agent.AIAgent*"
             artifact-name: "agent-tests"
             os: ubuntu-latest
+          - job-name: "cli-agent-tests (linux)"
+            test-group: "ai.koog.integration.tests.agent.CliAIAgentIntegrationTest"
+            artifact-name: "cli-agent-tests"
+            os: ubuntu-latest
           - job-name: "cli-agent-tests (windows)"
             test-group: "ai.koog.integration.tests.agent.CliAIAgentIntegrationTest"
             artifact-name: "cli-agent-tests"
@@ -99,10 +103,11 @@ jobs:
           node-version: 20
 
       - name: Install CLI agents globally
+        if: ${{ matrix.job-name == 'cli-agent-tests (linux)' || matrix.job-name == 'cli-agent-tests (windows)' }}
         run: npm install -g @openai/codex @anthropic-ai/claude-code
 
       - name: Build cli-agents Docker image
-        if: runner.os == 'Linux'
+        if: ${{ matrix.job-name == 'cli-agent-tests (linux)' }}
         run: docker build -t cli-agents .github/CliAgentsImage
 
       - name: Configure AWS credentials via OIDC
