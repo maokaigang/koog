@@ -140,6 +140,8 @@ public abstract class ProcessCliTransport : CliTransport {
             awaitClose {
                 try {
                     process.destroy()
+                } catch(e: CancellationException) {
+                    throw e
                 } catch (_: Throwable) {
                 }
                 stdoutJob.cancel()
