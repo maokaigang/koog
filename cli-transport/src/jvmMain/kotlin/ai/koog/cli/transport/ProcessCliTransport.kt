@@ -107,17 +107,8 @@ public abstract class ProcessCliTransport : CliTransport {
                         process.waitFor()
                     }
 
-                    logger.debug { "Process exited with code: $code. Joining stdout/stderr jobs with 10s timeout" }
-                    // Ensure all output is collected before finishing, but don't hang forever if streams stay open
-                    withTimeoutOrNull(10.seconds) {
-                        launch { stdoutJob.join() }
-                        launch { stderrJob.join() }
-                    }.also {
-                        if (it == null) {
-                            logger.warn { "Joining stdout/stderr jobs timed out" }
-                        }
-                    }
-                    logger.debug { "Stdout/stderr jobs joined (or timed out)" }
+                    stdoutJob.join()
+                    stderrJob.join()
 
                     if (code != 0) {
                         logger.warn { "Process exited with non-zero code: $code" }
