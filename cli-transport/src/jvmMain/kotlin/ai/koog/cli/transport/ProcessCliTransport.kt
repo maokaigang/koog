@@ -94,19 +94,23 @@ public abstract class ProcessCliTransport : CliTransport {
             val waiter = launch(Dispatchers.SuitableForIO) {
                 try {
                     val code = if (timeout != null) {
+                        logger.debug { "Waiting for process with timeout: $timeout" }
                         if (withTimeoutOrNull(timeout) { process.waitFor() } == null) {
-                            process.destroyForcibly()
+                            process.destroy()
                             logger.error { "Execution timed out after $timeout" }
                             throw CliTimeoutException("Execution timed out after $timeout", timeout)
                         }
                         process.exitValue()
                     } else {
+                        logger.debug { "Waiting for process indefinitely" }
                         process.waitFor()
                     }
 
+                    logger.debug { "Process exited with code: $code. Joining stdout/stderr jobs" }
                     // Ensure all output is collected before finishing
                     stdoutJob.join()
                     stderrJob.join()
+                    logger.debug { "Stdout/stderr jobs joined" }
 
                     if (code != 0) {
                         logger.warn { "Process exited with non-zero code: $code" }
@@ -116,6 +120,9 @@ public abstract class ProcessCliTransport : CliTransport {
                     trySend(exit)
                 } catch (e: CliTimeoutException) {
                     trySend(CliEvent.Failed(e.message))
+                } catch (e: Exception) {
+                    logger.error(e) { "Error while waiting for process: ${e.message}" }
+                    trySend(CliEvent.Failed(e.message ?: e.toString()))
                 } finally {
                     close()
                 }
