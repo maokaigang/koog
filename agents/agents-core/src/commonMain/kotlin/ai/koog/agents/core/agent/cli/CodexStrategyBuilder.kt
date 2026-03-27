@@ -2,6 +2,7 @@ package ai.koog.agents.core.agent.cli
 
 import ai.koog.cli.transport.CliTransport
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
 
 /**
  * Base class for Codex strategy builders.
@@ -67,6 +68,11 @@ public abstract class CodexStrategyBuilderBase<Self : CodexStrategyBuilderBase<S
     public fun timeout(timeout: Duration): Self = self().apply {
         this.timeout = timeout
     }
+
+    /**
+     * Sets the execution timeout in minutes.
+     */
+    public fun timeoutMin(timeoutMin: Long): Self = timeout(timeoutMin.minutes)
 }
 
 /**

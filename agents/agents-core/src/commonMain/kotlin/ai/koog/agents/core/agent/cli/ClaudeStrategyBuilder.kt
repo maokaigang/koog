@@ -9,6 +9,8 @@ import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.serializer
 import kotlin.reflect.KClass
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.minutes
 
 /**
  * Base class for building a Claude strategy.
@@ -66,6 +68,11 @@ public abstract class ClaudeStrategyBuilderBase<Self : ClaudeStrategyBuilderBase
     public fun timeout(timeout: Duration): Self = self().apply {
         this.timeout = timeout
     }
+
+    /**
+     * Sets the execution timeout in minutes.
+     */
+    public fun timeoutMin(timeoutMin: Long): Self = timeout(timeoutMin.minutes)
 }
 
 /**
