@@ -32,8 +32,7 @@ public abstract class ProcessCliTransport : CliTransport {
         val process = ProcessBuilder(buildCommand(listOf(binary, "--version")))
             .directory(File("."))
             .start()
-        val reader = process.inputStream.bufferedReader()
-        val version = reader.readLine()?.trim()
+        val version = process.inputStream.bufferedReader().use { it.readLine()?.trim() }
         val exitCode = process.waitFor()
         if (exitCode == 0) {
             CliAvailable(version)
@@ -62,7 +61,6 @@ public abstract class ProcessCliTransport : CliTransport {
                     .apply { environment().putAll(env) }
                     .redirectErrorStream(false)
                     .start()
-                    .also { it.outputStream.close() }
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
@@ -72,6 +70,8 @@ public abstract class ProcessCliTransport : CliTransport {
                 close(e)
                 return@channelFlow
             }
+
+            process.outputStream.close()
 
             val stdoutJob = launch(Dispatchers.SuitableForIO) {
                 process.inputStream.bufferedReader().useLines { lines ->

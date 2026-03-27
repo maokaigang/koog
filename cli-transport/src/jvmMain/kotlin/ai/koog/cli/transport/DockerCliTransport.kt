@@ -71,7 +71,6 @@ public class DockerCliTransport @JvmOverloads constructor(
             add("cmd")
             add("/c")
         }
-
         add(dockerPath)
         add("run")
         add("--rm")
