@@ -125,6 +125,8 @@ public abstract class ProcessCliTransport : CliTransport {
 
                     val exit = CliEvent.Exit(code)
                     trySend(exit)
+                } catch (e: CancellationException) {
+                    throw e
                 } catch (e: CliTimeoutException) {
                     trySend(CliEvent.Failed(e.message))
                 } catch (e: Exception) {
