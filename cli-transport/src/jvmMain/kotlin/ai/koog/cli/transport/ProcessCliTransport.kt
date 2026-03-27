@@ -13,7 +13,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import java.io.File
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.seconds
 
 /**
  * Base class for transports that execute a local [Process].
@@ -98,7 +97,7 @@ public abstract class ProcessCliTransport : CliTransport {
                         logger.debug { "Waiting for process with timeout: $timeout" }
                         if (withTimeoutOrNull(timeout) { process.waitFor() } == null) {
                             logger.error { "Execution timed out after $timeout. Destroying process." }
-                            process.destroy()
+                            process.destroyRecursively()
                             throw CliTimeoutException("Execution timed out after $timeout", timeout)
                         }
                         process.exitValue()
@@ -130,7 +129,7 @@ public abstract class ProcessCliTransport : CliTransport {
 
             awaitClose {
                 try {
-                    process.destroy()
+                    process.destroyRecursively()
                 } catch(e: CancellationException) {
                     throw e
                 } catch (_: Throwable) {
@@ -140,6 +139,17 @@ public abstract class ProcessCliTransport : CliTransport {
                 waiter.cancel()
             }
         }.flowOn(Dispatchers.SuitableForIO)
+    }
+
+    /**
+     * Recursively destroys the process and its descendants.
+     */
+    private fun Process.destroyRecursively() {
+        // Use ProcessHandle (Java 9+) to recursively destroy descendants
+        with(this.toHandle()) {
+            descendants().forEach { it.destroyForcibly() }
+            destroyForcibly()
+        }
     }
 
     /**
