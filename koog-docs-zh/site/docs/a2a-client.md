@@ -1,4 +1,4 @@
-<!-- koog-zh-meta: {"last_synced_at": "2026-03-28T12:49:34+00:00", "source_path": "a2a-client.md", "source_sha256": "112f6f65b4085d73ca4903aaeb5a66732d632f1c43b9520c02adc119aa5607d0", "source_tag": "0.7.3", "translation_status": "changed"} -->
+<!-- koog-zh-meta: {"last_synced_at": "2026-03-28T16:28:27+00:00", "source_path": "a2a-client.md", "source_sha256": "112f6f65b4085d73ca4903aaeb5a66732d632f1c43b9520c02adc119aa5607d0", "source_tag": "0.7.3", "translation_status": "changed"} -->
 # A2A 客户端 { #a2a-client }
 
 A2A 客户端使您能够通过网络与符合 A2A 规范的智能体进行通信。
@@ -33,7 +33,7 @@ A2A 客户端充当您的应用程序与符合 A2A 规范的智能体之间的�
 
 ### A2AClient { #a2aclient }
 
-实现完整 A2A 协议的主客户端类。它作为中央协调器，负责：
+实现完整 A2A 协议的主要客户端类。它作为中央协调器，负责：
 
 - **管理** 连接和通过可插拔解析器进行智能体发现
 - **编排** 消息交换和任务操作，确保自动协议合规
@@ -84,7 +84,7 @@ val transport = HttpJSONRPCClientTransport(
 
 ### AgentCardResolver { #agentcardresolver }
 
-`AgentCardResolver` 接口检索智能体元数据和能力。
+`AgentCardResolver` 接口用于检索智能体元数据和能力。
 它支持从各种来源发现智能体，并支持缓存策略以实现最佳性能。
 
 #### URL 智能体卡片解析器 { #url-agent-card-resolver }
@@ -121,8 +121,9 @@ val agentCardResolver = UrlAgentCardResolver(
 val client = A2AClient(transport, agentCardResolver)
 ```
 
-### 2. 连接与发现连接到代理并获取其名片。 { #2-connect-and-discover }
-拥有代理名片后，您可以查询其能力并执行其他操作，例如检查是否支持流式传输。
+### 2. 连接与发现 { #2-connect-and-discover }
+
+连接到代理并获取其名片。拥有代理名片后，您可以查询其能力并执行其他操作，例如检查是否支持流式传输。
 
 ```kotlin
 // Connect and retrieve agent capabilities
@@ -135,7 +136,7 @@ println("Supports streaming: ${agentCard.capabilities.streaming}")
 
 ### 3. 发送消息 { #3-send-messages }
 
-向代理发送消息并接收单个响应。
+向代理发送消息并接收单次响应。
 响应可以是代理直接回复的消息，也可以是代理执行任务时产生的任务事件。
 
 ```kotlin
@@ -165,10 +166,10 @@ when (val event = response.data) {
 }
 ```
 
-### 4. 流式发送消息 { #4-send-messages-streaming }
+### 4. 发送流式消息 { #4-send-messages-streaming }
 
 A2A 客户端支持流式响应以实现实时通信。
-它不会返回单个响应，而是返回包含消息和任务更新的 `Flow` 事件流。
+它不会返回单次响应，而是返回包含消息和任务更新的 `Flow` 事件流。
 
 ```kotlin
 // Check if agent supports streaming

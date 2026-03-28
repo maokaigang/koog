@@ -272,11 +272,13 @@ val agent = AIAgent(
 fun eveningRoutine(): String
 ```
 
-## 关键要点✅ **工具即函数**：任何 Kotlin 函数都能成为智能体的能力 { #key-takeaways }
-✅ **注解驱动行为**：@Tool 和 @LLMDescription 使函数可被发现
+## 关键要点 { #key-takeaways }
+
+✅ **工具即函数**：任何 Kotlin 函数都能成为智能体的能力
+✅ **注解驱动行为**：`@Tool` 和 `@LLMDescription` 使函数可被发现
 ✅ **工具集组织能力**：将相关工具按逻辑分组
-✅ **注册表即工具箱**：ToolRegistry 包含所有可用的智能体能力
-✅ **智能体统筹一切**：AIAgent 将 LLM 智能与工具结合
+✅ **注册表即工具箱**：`ToolRegistry` 包含所有可用的智能体能力
+✅ **智能体统筹一切**：`AIAgent` 将 LLM 智能与工具结合
 
 Koog 框架让构建能够理解自然语言并执行实际操作的复杂 AI 智能体变得异常简单。从简单开始，然后根据需要添加更多工具和功能来扩展智能体的能力。
 

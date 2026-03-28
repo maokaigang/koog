@@ -152,25 +152,17 @@ graph TB
     ```
     <!--- KNIT exampleGraphAgentsJava01.java -->
 
-This example uses only [predefined nodes](../nodes-and-components.md),
-but you can also create [custom nodes](../custom-nodes.md).
+此示例仅使用 [预定义节点](../nodes-and-components.md)，但你也可以创建 [自定义节点](../custom-nodes.md)。
 
-Every strategy graph must have a path from `nodeStart` to `nodeFinish` connected by [edges](../custom-strategy-graphs.md#edges).
-Edges can have conditions to determine when to follow a particular edge.
-Edges can also transform the output of the previous node before passing it to the next one.
-This is necessary to connect nodes that have non-matching output and input types.
+每个策略图都必须有一条从`nodeStart`到`nodeFinish`的路径，通过[边](../custom-strategy-graphs.md#edges)连接。边可以设置条件，用于决定何时沿特定边行进。边还可以在将前一个节点的输出传递给下一个节点之前对其进行转换。这对于连接输出和输入类型不匹配的节点是必需的。
 
-In the previous example, `onToolCall { true }` means that the edge will follow
-only if the previous node returned a tool call `Message.Tool.Call`.
+在前面的例子中，`onToolCall { true }` 表示仅当上一个节点返回了工具调用 `Message.Tool.Call` 时，该边才会被遵循。
 
-When using `onAssistantMessage { true }`, the edge will follow
-only if the previous node returned an assistant message `Message.Assistant`.
-This function also extracts the content of the assistant message,
-effectively transforming `Message.Assistant` to `String`, because `nodeFinish` expects a string.
+在使用`onAssistantMessage { true }`时，仅当上一个节点返回了助手消息`Message.Assistant`时，边才会被跟随。此函数还会提取助手消息的内容，从而将`Message.Assistant`转换为`String`，因为`nodeFinish`期望接收字符串。
 
 !!! tip
 
-    Instead of `onAssistantMessage {true}`, you can do the following:
+    除了使用`onAssistantMessage {true}`，您还可以采取以下方式：
 
     <!--- INCLUDE
     /**
@@ -196,9 +188,9 @@ effectively transforming `Message.Assistant` to `String`, because `nodeFinish` e
     ```
     <!--- KNIT example-graph-agents-03.kt -->
 
-## Create and run the agent
+## 创建并运行智能体 { #create-and-run-the-agent }
 
-Let's create an agent instance with this strategy and run it:
+让我们用这个策略创建一个代理实例并运行它：
 
 === "Kotlin"
 
@@ -307,7 +299,7 @@ Let's create an agent instance with this strategy and run it:
     ```
     <!--- KNIT exampleGraphAgentsJava02.java -->
 
-When you run this agent, it will respond with something like this:
+当你运行这个代理时，它会返回类似这样的响应：
 
 ```text
 To calculate this, I'll follow the order of operations:
@@ -321,9 +313,7 @@ The final answer is 193.
 ```
 <!--- KNIT example-graph-agents-02.txt -->
 
-However, since this agent doesn't have any tools, the LLM never returns a tool call 
-and simply generates the whole answer.
-This is what effectively happens:
+然而，由于该代理没有任何工具，LLM 始终不会返回工具调用，而是直接生成完整答案。实际发生的情况如下：
 
 ```mermaid
 ---
@@ -348,13 +338,11 @@ graph LR
 ```
 <!--- KNIT example-graph-agents-03.txt -->
 
-Even though it is correct in this case, the answer will depend on the arithmetic abilities of the underlying LLM.
-To make sure the calculations are correct, we should provide the agent with math tools.
-Then the LLM will be able to decide to call tools that perform the calculations deterministically.
+尽管在这种情况下答案是正确的，但结果仍取决于底层LLM的算术能力。为确保计算准确，我们应当为智能体提供数学工具。这样LLM就能决定调用可确定性执行计算的相关工具。
 
-## Add tools
+## 添加工具 { #add-tools }
 
-Define [tools](../tools-overview.md) for performing math operations and add them to a [ToolRegistry](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-tool-registry/index.html):
+定义用于执行数学运算的[工具](../tools-overview.md)，并将其添加到[工具注册表](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-tool-registry/index.html)中：
 
 === "Kotlin"
 
@@ -429,7 +417,7 @@ Define [tools](../tools-overview.md) for performing math operations and add them
     ```
     <!--- KNIT exampleGraphAgentsJava03.java -->
 
-Add the tool registry to the agent configuration:
+将工具注册表添加到代理配置中：
 
 === "Kotlin"
 
@@ -586,7 +574,7 @@ Add the tool registry to the agent configuration:
     ```
     <!--- KNIT exampleGraphAgentsJava04.java -->
 
-When you run the agent now, it will respond with something like this:
+现在运行代理时，它会返回类似这样的响应：
 
 ```text
 Multiplying 3 and 4...
@@ -601,14 +589,11 @@ Finally, 123 was added to the result:
 ```
 <!--- KNIT example-graph-agents-04.txt -->
 
-According to this output, the agent correctly performed the calculations, but it only called the `multiply` tool once
-instead of calling the corresponding tool for every operation.
-We can help the agent by describing its role and providing instructions for using appropriate tools in the system prompt.
+根据此输出，代理正确执行了计算，但它仅调用了一次`multiply`工具，而未对每个运算调用相应的工具。我们可以通过描述代理角色并在系统提示中提供使用适当工具的说明来帮助代理。
 
-## Provide a system prompt
+## 提供一条系统提示 { #provide-a-system-prompt }
 
-A [system prompt](../prompts/prompt-creation/index.md#system-message) defines the agent's role and instructions for performing tasks.
-In our example, it is important to describe how the agent should process complex multistep calculations:
+一个[系统提示](../prompts/prompt-creation/index.md#system-message)定义了代理的角色和执行任务的指令。在我们的示例中，重要的是描述代理应如何处理复杂的多步骤计算：
 
 === "Kotlin"
 
@@ -773,7 +758,7 @@ In our example, it is important to describe how the agent should process complex
     ```
     <!--- KNIT exampleGraphAgentsJava05.java -->
 
-When you run the agent now, it will respond with something like this:
+现在运行代理时，它会返回类似这样的响应：
 
 ```text
 Multiplying 3 and 4...
@@ -784,11 +769,10 @@ The final result is: 193
 ```
 <!--- KNIT example-graph-agents-05.txt -->
 
-As you can see, the agent now correctly calls the appropriate tool for each operation,
-ensuring that it performs the calculations deterministically instead of risking a hallucinated result.
+如您所见，代理现在能够正确调用每个操作对应的工具，确保以确定性的方式执行计算，从而避免了产生幻觉结果的风险。
 
-## Next steps
+## 下一步 { #next-steps }
 
-- Compare to [functional agents](functional-agents.md) and [planner agents](planner-agents/index.md)
-- Enhance your agent by [installing features](../features/index.md)
-- Improve the predictability and reliability with [structured output](../structured-output.md)
+- 与[功能代理](functional-agents.md)和[规划代理](planner-agents/index.md)相比
+- 通过[安装功能](../features/index.md)增强您的智能体
+- 通过[结构化输出](../structured-output.md)提升可预测性与可靠性

@@ -24,7 +24,7 @@
     }
     ```
 
-=== "Gradle (Groovy)"
+=== "Gradle（Groovy）"
 
     ```groovy title="build.gradle"
     dependencies {
@@ -43,11 +43,11 @@
     ```
 
 !!! note
-    The `ChatMemory` feature is available starting from Koog version **0.7.0**.
+    `ChatMemory` 功能自 Koog 版本 **0.7.0** 起可用。
 
-## Enable chat memory
+## 启用聊天记忆 { #enable-chat-memory }
 
-Install `ChatMemory` using the `install()` method when creating the agent:
+在创建代理时，使用`install()`方法安装`ChatMemory`：
 
 === "Kotlin"
     
@@ -71,8 +71,7 @@ Install `ChatMemory` using the `install()` method when creating the agent:
     ```
 
 
-By default, it uses an in-memory [chat history provider](#history-providers) with no [preprocessors](#preprocessors).
-Configure the `ChatMemory` feature to use a custom chat history provider and preprocessors, for example:
+默认情况下，它使用一个无[预处理器](#preprocessors)的内存[聊天历史记录提供者](#history-providers)。配置`ChatMemory`功能以使用自定义聊天历史记录提供程序和预处理器，例如：
 
 === "Kotlin"
 
@@ -102,10 +101,9 @@ Configure the `ChatMemory` feature to use a custom chat history provider and pre
         .build();
     ```
 
-## Session IDs
+## 会话ID { #session-ids }
 
-Provide the session ID as the second argument to `agent.run()`.
-`ChatMemory` uses this ID to store and load conversations:
+将会话ID作为第二个参数传递给`agent.run()`。`ChatMemory`使用此ID来存储和加载对话：
 
 ```kotlin
 // First run - the agent saves the chat history at the end
@@ -115,12 +113,11 @@ agent.run("What is the capital of France?", "session-1")
 agent.run("And what about Germany?", "session-1")
 ```
 
-Different session IDs produce fully isolated histories.
+不同的会话ID会生成完全隔离的历史记录。
 
-## History providers
+## 历史数据提供者 { #history-providers }
 
-The default `InMemoryChatHistoryProvider` is thread-safe but not persistent (history is lost on restart).
-For production, implement your own `ChatHistoryProvider` that stores messages persistently.
+默认的 `InMemoryChatHistoryProvider` 是线程安全的，但不具备持久性（重启后历史记录会丢失）。在生产环境中，请实现你自己的 `ChatHistoryProvider` 来持久化存储消息。
 
 ```kotlin
 class MyDatabaseChatHistoryProvider(private val db: Database) : ChatHistoryProvider {
@@ -136,20 +133,18 @@ class MyDatabaseChatHistoryProvider(private val db: Database) : ChatHistoryProvi
 
 ## Preprocessors
 
-Preprocessors transform the message list at both load time (before the agent sees it) and store time (before saving).
-They run sequentially in the order you add them to the `ChatMemory` feature configuration.
+预处理器在加载时（智能体接收消息前）和存储时（保存消息前）对消息列表进行转换。它们按照您在`ChatMemory`功能配置中添加的顺序依次执行。
 
-### Built-in preprocessors
+### 内置预处理器 { #built-in-preprocessors }
 
-| Config method            | Preprocessor class           | Behavior                              |
+| 配置方法 | 预处理器类 | 行为 |
 |--------------------------|------------------------------|---------------------------------------|
-| `windowSize(n)`          | `WindowSizePreProcessor`     | Keeps only the last `n` messages      |
-| `filterMessages { ... }` | `FilterMessagesPreProcessor` | Keeps messages matching the predicate |
+| `windowSize(n)` | `WindowSizePreProcessor` | 仅保留最后`n`条消息 |
+| `filterMessages { ... }` | `FilterMessagesPreProcessor` | 保留符合谓词条件的消息 |
 
-### Order of preprocessors
+### 预处理器的顺序 { #order-of-preprocessors }
 
-Preprocessors run sequentially, with each output being the next input.
-This means that order matters.
+预处理器按顺序运行，每个输出都作为下一个输入。这意味着顺序至关重要。
 
 ```kotlin
 // Effect: keep last 10 messages, then filter short ones from those 10
@@ -161,9 +156,9 @@ filterMessages { it.content.length <= 100 }
 windowSize(10)
 ```
 
-### Custom preprocessors
+### 自定义预处理器 { #custom-preprocessors }
 
-To create a custom preprocessor, implement the `ChatMemoryPreProcessor` interface:
+要创建自定义预处理器，需实现 `ChatMemoryPreProcessor` 接口：
 
 ```kotlin
 class RedactEmailsPreProcessor : ChatMemoryPreProcessor {
@@ -176,7 +171,7 @@ class RedactEmailsPreProcessor : ChatMemoryPreProcessor {
 }
 ```
 
-Then add it to the config:
+然后将其添加到配置中：
 
 ```kotlin
 install(ChatMemory) {
@@ -185,26 +180,20 @@ install(ChatMemory) {
 }
 ```
 
-## Chat memory vs agent persistence
+## 聊天记忆与智能体持久化 { #chat-memory-vs-agent-persistence }
 
-`ChatMemory` treats each `agent.run()` call as an atomic, self-contained loop.
-The agent loads chat history before running and stores it after a successful run.
-If the agent crashes during the run, it does not store the current chat messages,
-meaning that the chat history remains as it was before the run.
+`ChatMemory` 将每次 `agent.run()` 调用视为一个原子化的、自包含的循环。代理在运行前加载聊天历史，并在成功运行后存储历史记录。如果代理在运行过程中崩溃，则不会存储当前的聊天消息，这意味着聊天历史将保持运行前的状态。
 
-[Persistence](../agent-persistence.md) captures the agent's internal execution state
-(graph node, message history, inputs, and outputs) as checkpoints during the run.
-If the agent crashes, it can resume from the last checkpoint.
+[持久化](../agent-persistence.md) 在运行过程中捕获智能体的内部执行状态（图节点、消息历史、输入和输出）作为检查点。若智能体发生崩溃，可从最后一个检查点恢复执行。
 
 |                    | ChatMemory                                       | Persistence                                                        |
 |--------------------|--------------------------------------------------|--------------------------------------------------------------------|
-| **What it saves**  | Conversation messages                            | Execution state                                                    |
-| **When it saves**  | After `agent.run()` completes                    | After each graph node or at manually defined points during the run |
-| **Crash behavior** | In-progress run is lost; previous history intact | Can resume from last checkpoint                                    |
-| **Typical use**    | Multi-turn chat continuity                       | Long-running agents with crash recovery                            |
+| **它保存了什么** | 对话消息 | 执行状态 |
+| **保存时** | 在`agent.run()`完成后 | 在每次图节点运行后或在运行过程中手动定义的点处 |
+| **崩溃行为** | 运行中的任务已丢失；先前历史记录完好 | 可以从上一个检查点恢复 |
+| **典型用法** | 多轮对话连续性 | 具有崩溃恢复功能的长时运行代理 |
 
-If your agent performs long-running tasks where a mid-execution crash would be costly, consider
-installing both features:
+如果您的代理执行长时间运行的任务，且执行过程中发生崩溃会造成较大损失，建议同时启用以下功能：
 
 ```kotlin
 val agent = AIAgent(
@@ -223,14 +212,14 @@ val agent = AIAgent(
 }
 ```
 
-## Best practices
+## 最佳实践 { #best-practices }
 
-- **Always set a window size** to prevent unlimited conversation growth.
-- **Order preprocessors carefully**, as filtering before windowing and windowing before filtering produce different results.
-- **Use meaningful session IDs** for history isolation: user IDs, chat thread IDs, or UUIDs all work well.
-- **Implement a persistent provider for production** because the default `InMemoryChatHistoryProvider` loses history on restart.
+- **始终设置窗口大小**以防止对话无限增长。
+- **预处理器的顺序需谨慎安排**，因为先滤波后加窗与先加窗后滤波会产生不同的结果。
+- **使用有意义的会话ID**以实现历史隔离：用户ID、聊天线程ID或UUID都是不错的选择。
+- **为生产环境实现持久化提供程序**，因为默认的 `InMemoryChatHistoryProvider` 会在重启时丢失历史记录。
 
-## Next steps
+## 下一步 { #next-steps }
 
-- Learn how to [build a simple CLI chat loop with memory](chat-agent-with-memory.md)
-- See an example of a [chat endpoint with memory](chat-backend-with-memory.md)
+- 了解如何[构建一个简单的CLI聊天循环，包含记忆功能](chat-agent-with-memory.md)
+- 查看一个[带记忆功能的聊天端点](chat-backend-with-memory.md)的示例

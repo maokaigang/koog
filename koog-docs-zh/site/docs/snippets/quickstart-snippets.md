@@ -4,15 +4,16 @@ search:
 exclude: true
 ---
 
-# --8<-- [start:prerequisites] { #8-start-prerequisites }
+
+# --8<-- [start:prerequisites]
 确保您的环境和项目满足以下要求：
 
 - JDK 17+
 - Kotlin 2.2.0+
 - Gradle 8.0+ 或 Maven 3.8+
-# --8<-- [end:prerequisites] { #8-end-prerequisites }
 
-# --8<-- [start:dependencies] { #8-start-dependencies }
+# --8<-- [end:prerequisites]
+# --8<-- [start:dependencies]
 添加 [Koog 包](https://central.sonatype.com/artifact/ai.koog/koog-agents/) 作为依赖项：
 
 === "Gradle (Kotlin)"
@@ -40,9 +41,12 @@ exclude: true
         <version>0.7.1</version>
     </dependency>
     ```
+
 # --8<-- [end:dependencies]
 
+
 # --8<-- [start:api-key]
-Get an API key from an LLM provider or run a local LLM via Ollama.
-For more information, see [Quickstart](/quickstart.md).
+从 LLM 提供商获取 API 密钥，或通过 Ollama 运行本地 LLM。
+更多信息，请参阅 [快速开始](/quickstart.md)。
+
 # --8<-- [end:api-key]

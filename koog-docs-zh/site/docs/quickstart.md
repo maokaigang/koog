@@ -208,7 +208,7 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
         ```
         <!--- KNIT example-getting-started-java-01.java -->
 
-    The example can produce the following output:
+    示例可能会输出以下内容：
     
     ```
     Hello! I'm here to help you with whatever you need. Here are just a few things I can do:
@@ -284,7 +284,7 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
         ```
         <!--- KNIT example-getting-started-java-02.java -->
 
-    The example can produce the following output:
+    该示例可以生成以下输出：
 
     ```
     Hello! I can help you with:
@@ -358,7 +358,7 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
         ```
         <!--- KNIT example-getting-started-java-03.java -->
 
-    The example can produce the following output:
+    该示例可以生成以下输出：
 
     ```
     I'm an AI that can help you with tasks involving language and information. You can ask me to:
@@ -443,7 +443,7 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
         ```
         <!--- KNIT example-getting-started-java-04.java -->
 
-    The example can produce the following output:
+    该示例可以生成以下输出：
 
     ```
     Hello! I'm here to assist you with a wide range of tasks, including answering questions, providing information, helping with problem-solving, offering creative ideas, and even just chatting. Whether you need help with research, writing, learning something new, or simply want to discuss a topic, feel free to ask—I’m happy to help! 😊
@@ -508,7 +508,7 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
         ```
         <!--- KNIT example-getting-started-java-05.java -->
 
-    The example can produce the following output:
+    该示例可以生成以下输出：
 
     ```
     I can answer questions, help with writing, solve problems, organize tasks, and more—just let me know what you need!
@@ -573,7 +573,7 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
         ```
         <!--- KNIT example-getting-started-java-06.java -->
 
-    The example can produce the following output:
+    该示例可以生成以下输出：
 
     ```
     Hello! I'm a helpful assistant and I can assist you in many ways, including:
@@ -649,7 +649,7 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
         ```
         <!--- KNIT example-getting-started-java-07.java -->
 
-    The example can produce the following output:
+    该示例可以生成以下输出：
 
     ```
     I can assist you with a wide range of topics and tasks. Here are some examples:
@@ -715,13 +715,13 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
         ```
         <!--- KNIT example-getting-started-java-08.java -->
 
-    The example can produce the following output:
+    该示例可以生成以下输出：
 
     ```
     I can assist with various tasks such as answering questions, providing information, and even helping with language-related tasks like proofreading or writing suggestions. What's on your mind today?
     ```
     <!--- KNIT example-getting-started-09.txt -->
 
-## Next steps
+## 下一步 { #next-steps }
 
-- Learn more about [agent types](agents/index.md)
+- 了解更多关于[代理类型](agents/index.md)的信息

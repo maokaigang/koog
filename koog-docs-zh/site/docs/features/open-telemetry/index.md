@@ -1,7 +1,7 @@
-<!-- koog-zh-meta: {"last_synced_at": "2026-03-28T13:04:59+00:00", "source_path": "features/open-telemetry/index.md", "source_sha256": "c30379e50abb68d1244f4c65ab8241be9d2790a282d0fe3261a907720382e6e1", "source_tag": "0.7.3", "translation_status": "changed"} -->
+<!-- koog-zh-meta: {"last_synced_at": "2026-03-28T16:36:09+00:00", "source_path": "features/open-telemetry/index.md", "source_sha256": "c30379e50abb68d1244f4c65ab8241be9d2790a282d0fe3261a907720382e6e1", "source_tag": "0.7.3", "translation_status": "changed"} -->
 # OpenTelemetry 支持 { #opentelemetry-support }
 
-本文档详细介绍了 Koog 代理框架对 OpenTelemetry 的支持，用于追踪和监控您的 AI 代理。
+本页详细介绍了 Koog 代理框架对 OpenTelemetry 的支持，用于追踪和监控您的 AI 代理。
 
 ## 概述 { #overview }
 
@@ -15,13 +15,13 @@ OpenTelemetry 是一个可观测性框架，提供用于生成、收集和导出
 
 ## 关键 OpenTelemetry 概念 { #key-opentelemetry-concepts }
 
-- **跨度**：跨度表示分布式追踪中的单个工作单元或操作。它们指示应用程序中特定活动的开始和结束，例如代理执行、函数调用、LLM 调用或工具调用。
-- **属性**：属性提供有关遥测相关项目（例如跨度）的元数据。属性以键值对的形式表示。
-- **事件**：事件是跨度生命周期中的特定时间点（与跨度相关的事件），表示发生的可能值得注意的事情。
-- **导出器**：导出器是负责将收集到的遥测数据发送到各种后端或目的地的组件。
-- **收集器**：收集器接收、处理和导出遥测数据。它们充当应用程序和可观测性后端之间的中介。
-- **采样器**：采样器根据采样策略决定是否应记录追踪。它们用于管理遥测数据的量。
-- **资源**：资源表示产生遥测数据的实体。它们由资源属性标识，资源属性是提供有关资源信息的键值对。
+- **跨度（Spans）**：跨度表示分布式追踪中的单个工作单元或操作。它们指示应用程序中特定活动的开始和结束，例如代理执行、函数调用、LLM 调用或工具调用。
+- **属性（Attributes）**：属性提供关于遥测相关项目（例如跨度）的元数据。属性以键值对的形式表示。
+- **事件（Events）**：事件是跨度生命周期中的特定时间点（与跨度相关的事件），表示可能值得注意的事件。
+- **导出器（Exporters）**：导出器是负责将收集到的遥测数据发送到各种后端或目的地的组件。
+- **收集器（Collectors）**：收集器接收、处理和导出遥测数据。它们充当应用程序和可观测性后端之间的中介。
+- **采样器（Samplers）**：采样器根据采样策略决定是否应记录追踪。它们用于管理遥测数据的量。
+- **资源（Resources）**：资源表示产生遥测数据的实体。它们由资源属性标识，资源属性是提供有关资源信息的键值对。
 
 Koog 中的 OpenTelemetry 功能会自动为各种代理事件创建跨度，包括：
 
@@ -86,9 +86,9 @@ Koog 中的 OpenTelemetry 功能会自动为各种代理事件创建跨度，包
     ```
     <!--- KNIT exampleOpentelemetrySupportJava01.java -->
 
-## Configuration
+## Configuration { #configuration }
 
-### Basic configuration
+### Basic configuration { #basic-configuration }
 
 Here is the full list of available properties that you set when configuring the OpenTelemetry feature in an agent:
 
@@ -174,7 +174,7 @@ items. Here is an example of installing the OpenTelemetry feature with a basic s
 
 For a reference of available methods, see the sections below.
 
-#### setServiceInfo
+#### setServiceInfo { #setserviceinfo }
 
 Sets the service information including name and version. Takes the following arguments:
 
@@ -183,7 +183,7 @@ Sets the service information including name and version. Takes the following arg
 | `serviceName`      | String    | Yes      |               | The name of the service being instrumented.                 |
 | `serviceVersion`   | String    | Yes      |               | The version of the service being instrumented.              |
 
-#### addSpanExporter
+#### addSpanExporter { #addspanexporter }
 
 Adds a span exporter to send telemetry data to external systems. Takes the following argument:
 
@@ -191,7 +191,7 @@ Adds a span exporter to send telemetry data to external systems. Takes the follo
 |------------|----------------|----------|---------------|-------------------------------------------------------------------------------|
 | `exporter` | `SpanExporter` | Yes      |               | The `SpanExporter` instance to be added to the list of custom span exporters. |
 
-#### addSpanProcessor
+#### addSpanProcessor { #addspanprocessor }
 
 Adds a span processor factory to process spans before they are exported. Takes the following argument:
 
@@ -199,7 +199,7 @@ Adds a span processor factory to process spans before they are exported. Takes t
 |-------------|-----------------------------------|----------|---------------|--------------------------------------------------------------------------------------------------------------|
 | `processor` | `(SpanExporter) -> SpanProcessor` | Yes      |               | A function that creates a span processor for a given exporter. Lets you customize processing per exporter.   |
 
-#### addResourceAttributes
+#### addResourceAttributes { #addresourceattributes }
 
 Adds resource attributes to provide additional context about the service. Takes the following argument:
 
@@ -207,7 +207,7 @@ Adds resource attributes to provide additional context about the service. Takes 
 |--------------|---------------------------|----------|---------------|------------------------------------------------------------------------|
 | `attributes` | `Map<AttributeKey<T>, T>` | Yes      |               | The key-value pairs that provide additional details about the service. |
 
-#### setSampler
+#### setSampler { #setsampler }
 
 Sets the sampling strategy to control which spans are collected. Takes the following argument:
 
@@ -215,7 +215,7 @@ Sets the sampling strategy to control which spans are collected. Takes the follo
 |-----------|-----------|----------|---------------|------------------------------------------------------------------|
 | `sampler` | `Sampler` | Yes      |               | The sampler instance to set for the OpenTelemetry configuration. |
 
-#### setVerbose
+#### setVerbose { #setverbose }
 
 Enables or disables verbose logging. Takes the following argument:
 
@@ -227,7 +227,7 @@ Enables or disables verbose logging. Takes the following argument:
 
     Some content of OpenTelemetry spans is masked by default for security reasons. For example, LLM messages are masked as `HIDDEN:non-empty` instead of the actual message content. To get the content, set the value of the `verbose` argument to `true`.
 
-#### setSdk
+#### setSdk { #setsdk }
 
 Injects a pre-configured OpenTelemetrySdk instance.
 
@@ -238,7 +238,7 @@ Injects a pre-configured OpenTelemetrySdk instance.
 |-------|--------------------|----------|---------------------------------------|
 | `sdk` | `OpenTelemetrySdk` | Yes      | The SDK instance to use in the agent. |
 
-### Advanced configuration
+### Advanced configuration { #advanced-configuration }
 
 For more advanced configuration, you can also customize the following configuration options:
 
@@ -330,7 +330,7 @@ For more advanced configuration, you can also customize the following configurat
     ```
     <!--- KNIT exampleOpentelemetrySupportJava03.java -->
 
-#### Sampler
+#### Sampler { #sampler }
 
 To define a sampler, use a corresponding method of the `Sampler` class (`io.opentelemetry.sdk.trace.samplers.Sampler`)
 from the `opentelemetry-java` SDK that represents the sampling strategy you want to use.
@@ -341,7 +341,7 @@ The default sampling strategy is as follows:
 
 For more information about available samplers and sampling strategies, see the OpenTelemetry [Sampler](https://opentelemetry.io/docs/languages/java/sdk/#sampler) documentation.
 
-#### Resource attributes
+#### Resource attributes { #resource-attributes }
 
 Resource attributes represent additional information about a process producing telemetry data. Koog includes a set of
 resource attributes that are set by default:
@@ -421,7 +421,7 @@ takes a key and a value as its arguments.
     ```
     <!--- KNIT exampleOpentelemetrySupportJava04.java -->
 
-## Span types and attributes
+## Span types and attributes { #span-types-and-attributes }
 
 The OpenTelemetry feature automatically creates different types of spans to track various operations in your agent:
 
@@ -450,7 +450,7 @@ CreateAgentSpan
 ```
 <!--- KNIT example-opentelemetry-support-01.txt -->
 
-### Span attributes
+### Span attributes { #span-attributes }
 
 Span attributes provide metadata related to a span. Each span has its set of attributes, while some spans can also
 repeat attributes.
@@ -471,7 +471,7 @@ In addition, Koog also includes custom, Koog-specific attributes. You can recogn
 - `koog.subgraph.input`: the input passed to the subgraph at the beginning of execution. Present on `SubgraphExecuteSpan` when subgraph starts.
 - `koog.subgraph.output`: the output produced by the subgraph upon completion. Present on `SubgraphExecuteSpan` when subgraph completes successfully.
 
-### Events
+### Events { #events }
 
 A span can also have an _event_ attached to the span. Events describe a specific point in time when something relevant
 happened. For example, when an LLM call started or finished. Events also have attributes and additionally include event
@@ -493,7 +493,7 @@ string. The string includes the content or payload for the event body field, whi
 examples of event body fields, see the [OpenTelemetry documentation](https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-events/#examples). For the state of support for event body
 fields in `opentelemetry-java`, see the related [GitHub issue](https://github.com/open-telemetry/semantic-conventions/issues/1870).
 
-## Exporters
+## Exporters { #exporters }
 
 Exporters send collected telemetry data to an OpenTelemetry Collector or other types of destinations or backend
 implementations. To add an exporter, use the `addSpanExporter()` method when installing the OpenTelemetry feature. The
@@ -508,7 +508,7 @@ The sections below provide information about some of the most commonly used expo
 !!! note
 If you do not configure any custom exporters, Koog will use a console LoggingSpanExporter by default. This helps during local development and debugging.
 
-### Logging exporter
+### Logging exporter { #logging-exporter }
 
 A logging exporter that outputs trace information to the console. `LoggingSpanExporter`
 (`io.opentelemetry.exporter.logging.LoggingSpanExporter`) is a part of the `opentelemetry-java` SDK.
@@ -575,7 +575,7 @@ This type of export is useful for development and debugging purposes.
     ```
     <!--- KNIT exampleOpentelemetrySupportJava05.java -->
 
-### OpenTelemetry HTTP exporter
+### OpenTelemetry HTTP exporter { #opentelemetry-http-exporter }
 
 OpenTelemetry HTTP exporter (`OtlpHttpSpanExporter`) is a part of the `opentelemetry-java` SDK
 (`io.opentelemetry.exporter.otlp.http.trace.OtlpHttpSpanExporter`) and sends span data to a backend through HTTP.
@@ -660,7 +660,7 @@ OpenTelemetry HTTP exporter (`OtlpHttpSpanExporter`) is a part of the `opentelem
     ```
     <!--- KNIT exampleOpentelemetrySupportJava06.java -->
 
-### OpenTelemetry gRPC exporter
+### OpenTelemetry gRPC exporter { #opentelemetry-grpc-exporter }
 
 OpenTelemetry gRPC exporter (`OtlpGrpcSpanExporter`) is a part of the `opentelemetry-java` SDK
 (`io.opentelemetry.exporter.otlp.trace.OtlpGrpcSpanExporter`). It exports telemetry data to a backend through gRPC and
@@ -735,7 +735,7 @@ lets you define the host and port of the backend, collector, or endpoint that re
     ```
     <!--- KNIT exampleOpentelemetrySupportJava07.java -->
 
-## Integration with Langfuse
+## Integration with Langfuse { #integration-with-langfuse }
 
 Langfuse provides trace visualization and analytics for LLM/agent workloads.
 
@@ -807,7 +807,7 @@ You can configure Koog to export OpenTelemetry traces directly to Langfuse using
 
 Please read the [full documentation](opentelemetry-langfuse-exporter.md) about integration with Langfuse.
 
-## Integration with W&B Weave
+## Integration with W&B Weave { #integration-with-w-b-weave }
 
 W&B Weave provides trace visualization and analytics for LLM/agent workloads. Integration with W&B Weave can be configured via a predefined exporter:
 
@@ -877,12 +877,12 @@ W&B Weave provides trace visualization and analytics for LLM/agent workloads. In
 
 Please read the [full documentation](opentelemetry-weave-exporter.md) about integration with W&B Weave.
 
-## Integration with Jaeger
+## Integration with Jaeger { #integration-with-jaeger }
 
 Jaeger is a popular distributed tracing system that works with OpenTelemetry. The `opentelemetry` directory within
 `examples` in the Koog repository includes an example of using OpenTelemetry with Jaeger and Koog agents.
 
-### Prerequisites
+### Prerequisites { #prerequisites }
 
 To test OpenTelemetry with Koog and Jaeger, start the Jaeger OpenTelemetry all-in-one process using the provided
 `docker-compose.yaml` file, by running the following command:
@@ -895,7 +895,7 @@ docker compose up -d
 The provided Docker Compose YAML file includes the following content:
 
 ```yaml
-# docker-compose.yaml
+# docker-compose.yaml { #docker-compose-yaml }
 services:
   jaeger-all-in-one:
     image: jaegertracing/all-in-one:1.39
@@ -910,7 +910,7 @@ services:
 
 To access the Jaeger UI and view your traces, open `http://localhost:16686`.
 
-### Example
+### Example { #example }
 
 To export telemetry data for use in Jaeger, the example uses `LoggingSpanExporter`
 (`io.opentelemetry.exporter.logging.LoggingSpanExporter`) and `OtlpGrpcSpanExporter`
@@ -1013,9 +1013,9 @@ Here is the full code sample:
     ```
     <!--- KNIT exampleOpentelemetrySupportJava10.java -->
 
-## Troubleshooting
+## Troubleshooting { #troubleshooting }
 
-### Common issues
+### Common issues { #common-issues }
 
 1. **No traces appearing in Jaeger, Langfuse, or W&B Weave**
     - Ensure the service is running and the OpenTelemetry port (4317) is accessible.
@@ -1034,11 +1034,11 @@ Here is the full code sample:
 4. **Span adapters override each other**
     - Currently, the OpenTelemetry agent feature does not support applying multiple span adapters [KG-265](https://youtrack.jetbrains.com/issue/KG-265/Adding-Weave-exporter-breaks-Langfuse-exporter).
 
-## MCP (Model Context Protocol) telemetry support
+## MCP (Model Context Protocol) telemetry support { #mcp-model-context-protocol-telemetry-support }
 
 Koog provides comprehensive OpenTelemetry instrumentation for MCP operations following the [official OpenTelemetry semantic conventions for MCP](https://github.com/open-telemetry/semantic-conventions/pull/2083).
 
-### Overview
+### Overview { #overview }
 
 The MCP telemetry support includes:
 
@@ -1046,7 +1046,7 @@ The MCP telemetry support includes:
 - **Client-side instrumentation** for MCP client operations (tools/call)
 - **Full semantic convention compliance** with all required, conditionally required, and recommended attributes
 
-### MCP attributes
+### MCP attributes { #mcp-attributes }
 
 MCP telemetry follows OpenTelemetry semantic conventions and includes the following attribute groups:
 
@@ -1065,20 +1065,20 @@ MCP telemetry follows OpenTelemetry semantic conventions and includes the follow
 - `network.transport`: Transport type ("pipe" for stdio, "tcp" for HTTP)
 - `server.address` and `server.port`: For client operations
 
-### Span naming convention
+### Span naming convention { #span-naming-convention }
 
 MCP spans follow the naming convention: `{mcp.method.name} {target}`
 
 Where `{target}` is the tool name or prompt name when applicable. Examples:
 - `"tools/call search"` - calling a tool named "search"
 
-### Best practices
+### Best practices { #best-practices }
 
 - **Always set session IDs** when working with persistent MCP sessions to enable session tracking
 - **Propagate request IDs** from JSON-RPC requests for complete request tracing
 - **Monitor metrics** to identify performance bottlenecks in MCP operations
 
-### Example: Full MCP client with telemetry
+### Example: Full MCP client with telemetry { #example-full-mcp-client-with-telemetry }
 
 === "Kotlin"
 

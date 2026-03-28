@@ -89,8 +89,9 @@ public annotation class Tool(val customName: String = "")
     ```
     <!--- KNIT example-annotation-based-tools-java-01.java -->
 
-## @LLMDescription 注解`@LLMDescription` 注解为代码元素（类、函数、方法、参数等）提供描述性信息给 LLM。 { #llmdescription-annotation }
-这有助于 LLM 理解这些元素的用途和用法。
+## @LLMDescription 注解 { #llmdescription-annotation }
+
+`@LLMDescription` 注解为代码元素（类、函数、方法、参数等）向 LLM 提供描述性信息。这有助于 LLM 理解这些元素的用途和用法。
 
 ### 定义 { #definition }
 
@@ -252,7 +253,9 @@ public annotation class LLMDescription(val description: String)
         }
     }
     ```
-    <!--- KNIT example-annotation-based-tools-05.kt -->=== "Java"
+    <!--- KNIT example-annotation-based-tools-05.kt -->
+
+=== "Java"
 
     <!--- INCLUDE
     /**
@@ -386,7 +389,7 @@ public annotation class LLMDescription(val description: String)
         .toolRegistry(toolRegistry)
         .build();
 
-```    // 智能体现在可以使用你的天气工具了
+    // 智能体现在可以使用你的天气工具了
     String result = agent.run("纽约的天气怎么样？");
     System.out.println(result);
     ```

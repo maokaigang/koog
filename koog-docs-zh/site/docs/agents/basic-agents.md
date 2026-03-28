@@ -41,8 +41,7 @@ LLM 可决定是否调用提供的工具。
     )
     ```
 
-    This agent will expect a string as input and return a string as output.
-    To run the agent, use the `run()` function with some user input:
+    该代理期望接收字符串作为输入并返回字符串作为输出。要运行该代理，请使用 `run()` 函数并传入用户输入：
 
     ```kotlin
     fun main() = runBlocking {
@@ -74,8 +73,7 @@ LLM 可决定是否调用提供的工具。
         .build();
     ```
 
-    This agent expects a string as input and returns a string as output.
-    To run the agent, use the `run()` method with some user input:
+    该代理期望接收字符串作为输入并返回字符串作为输出。要运行该代理，请使用 `run()` 方法并传入用户输入：
 
     ```java
     String result = agent.run("Hello! How can you help me?");
@@ -83,7 +81,7 @@ LLM 可决定是否调用提供的工具。
     ```
     <!--- KNIT exampleBasicJava01.java -->
 
-The agent will return a generic answer, such as:
+代理将返回一个通用答案，例如：
 
 ```text
 I can assist with a wide range of topics and tasks. Here are some examples:
@@ -102,8 +100,7 @@ What's on your mind? Do you have a specific question, topic, or task you'd like 
 
 ## Add a system prompt
 
-Provide a [system message](../prompts/prompt-creation/index.md#system-message) to define the agent's role
-as well as the purpose, context, and instructions related to the task.
+提供一个[系统消息](../prompts/prompt-creation/index.md#system-message)来定义代理的角色，以及任务相关的目的、背景和说明。
 
 === "Kotlin"
 
@@ -145,7 +142,7 @@ as well as the purpose, context, and instructions related to the task.
     ```
     <!--- KNIT exampleBasicJava02.java -->
 
-The instructions in the system prompt will guide the agent's response:
+系统提示中的指令将指导代理的响应：
 
 ```text
 I'm here to help you navigate the wild world of internet memes!
@@ -156,9 +153,7 @@ What's on your mind? Are you trying to understand a specific meme, need help fin
 
 ## Configure LLM output
 
-You can provide some [LLM parameters](../llm-parameters.md#llm-parameter-reference) directly to the agent constructor 
-(Kotlin) or via the builder methods (Java) to customize the behavior of the LLM.
-For example, use the `temperature` parameter to adjust the randomness of the generated responses:
+您可以直接向代理构造函数（Kotlin）提供一些[LLM 参数](../llm-parameters.md#llm-parameter-reference)，或通过构建器方法（Java）来自定义LLM的行为。例如，使用`temperature`参数来调整生成响应的随机性：
 
 === "Kotlin"
 
@@ -202,7 +197,7 @@ For example, use the `temperature` parameter to adjust the randomness of the gen
     ```
     <!--- KNIT exampleBasicJava03.java -->
 
-Here are some response examples with different temperature values:
+以下是不同温度值下的响应示例：
 
 === "0.4"
     
@@ -233,9 +228,9 @@ Here are some response examples with different temperature values:
 
 ## Add tools
 
-Agents can use [tools](../tools-overview.md) to perform specific tasks.
+代理可以使用[工具](../tools-overview.md)来执行特定任务。
 
-First, create a tool by annotating a function (Kotlin) or method (Java) with the [`@Tool`](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools.annotations/-tool/index.html) annotation:
+首先，通过使用 [`@Tool`](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools.annotations/-tool/index.html) 注解标注函数（Kotlin）或方法（Java）来创建一个工具：
 
 === "Kotlin"
 
@@ -259,7 +254,7 @@ First, create a tool by annotating a function (Kotlin) or method (Java) with the
     }
     ```
 
-    Then, use the [`ToolRegistry`](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-tool-registry/index.html) to make this tool available to the agent:
+    然后，使用[`ToolRegistry`](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-tool-registry/index.html)使该工具对代理可用：
 
     ```kotlin
     val agent = AIAgent(
@@ -274,9 +269,7 @@ First, create a tool by annotating a function (Kotlin) or method (Java) with the
     ```
     <!--- KNIT example-basic-03.kt -->
 
-    In the example, `askUser` is a tool that helps the agent maintain a conversation with the user via printing and reading from the console.
-    If the agent decides to ask the user a question,
-    it can call this tool that writes to `stdout` via `println()` and reads from `stdin` via `readln()`.
+    在示例中，`askUser` 是一个工具，它通过控制台的打印和读取来帮助代理与用户保持对话。如果代理决定向用户提问，它可以调用这个工具，该工具通过 `println()` 写入 `stdout`，并通过 `readln()` 从 `stdin` 读取。
 
 === "Java"
 
@@ -315,7 +308,7 @@ First, create a tool by annotating a function (Kotlin) or method (Java) with the
     }
     ```
     
-    Then, use the [`ToolRegistry`](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-tool-registry/index.html) to make this tool available to the agent:
+    然后，使用[`ToolRegistry`](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-tool-registry/index.html)使该工具对代理可用：
 
     ```java
     UserConversationTools askUser = new UserConversationTools();
@@ -334,9 +327,9 @@ First, create a tool by annotating a function (Kotlin) or method (Java) with the
     ```
     <!--- KNIT exampleBasicJava04.java -->
 
-    In the example, `askUser` is a tool that helps the agent maintain a conversation with the user via printing and reading from the console.
+    在示例中，`askUser` 是一个工具，它通过控制台的打印和读取来帮助代理与用户保持对话。
 
-Here is an example interaction with the agent:
+以下是与该智能体交互的一个示例：
 
 ```text
 Agent: Which meme would you like me to explain? Please choose from: Grumpy Cat, Success Kid, or Doge.
@@ -367,10 +360,7 @@ The meme is known for its lighthearted and playful tone, and is often used to ex
 
 ## Adjust agent iterations
 
-To avoid infinite loops, Koog allows any agent to take a limited number of steps (50 by default).
-Use the `maxIterations` parameter to either increase this limit if you expect the agent to require more steps
-(such as tool calls and LLM requests) or decrease it for agents that require only a few steps.
-For example, a simple agent described here is not likely to require more than 10 steps:
+为避免无限循环，Koog 允许任何代理执行有限数量的步骤（默认为50步）。您可以通过 `maxIterations` 参数来调整此限制：若预期代理需要更多步骤（例如工具调用和 LLM 请求），可增加该值；对于仅需少量步骤的代理，则可减少限制。例如，此处描述的简单代理很可能不需要超过10个步骤：
 
 === "Kotlin"
 
@@ -461,14 +451,11 @@ For example, a simple agent described here is not likely to require more than 10
 
 !!! tip
 
-    Instead of passing the model, temperature, max iterations, and other parameters directly to the Kotlin constructor 
-    or Java builder, you can also define and pass them as a separate configuration object.
-    For more information, see [Agent configuration](index.md#agent-configuration).
+    除了直接将模型、温度、最大迭代次数等参数传递给 Kotlin 构造函数或 Java 构建器，您也可以将它们定义为一个独立的配置对象进行传递。更多信息请参阅 [代理配置](index.md#agent-configuration)。
 
-## Handle events during agent runtime
+## 处理代理运行期间的事件 { #handle-events-during-agent-runtime }
 
-To assist with testing and debugging, as well as making hooks for chained agent interactions,
-Koog provides the [EventHandler](https://api.koog.ai/agents/agents-features/agents-features-event-handler/ai.koog.agents.features.eventHandler.feature/-event-handler/index.html) feature.
+为便于测试和调试，以及为链式智能体交互创建钩子，Koog 提供了 [EventHandler](https://api.koog.ai/agents/agents-features/agents-features-event-handler/ai.koog.agents.features.eventHandler.feature/-event-handler/index.html) 功能。
 
 === "Kotlin"
 
@@ -514,23 +501,14 @@ Koog provides the [EventHandler](https://api.koog.ai/agents/agents-features/agen
     <!--- KNIT example-basic-05.kt -->
 
 === "Java"
-    使用智能体构建器上的 `.install()` 方法，通过 `EventHandler.Feature` 注册事件处理器：<!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent;
-    import ai.koog.agents.core.tools.ToolRegistry;
-    import ai.koog.agents.core.tools.annotations.LLMDescription;
-    import ai.koog.agents.core.tools.annotations.Tool;
-    import ai.koog.agents.core.tools.reflect.ToolSet;
-    import ai.koog.agents.features.eventHandler.feature.EventHandler;
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels;
+    使用智能体构建器上的 `.install()` 方法，通过 `EventHandler.Feature` 注册事件处理器：<!--- INCLUDE import ai.koog.agents.core.agent.AIAgent; import ai.koog.agents.core.tools.ToolRegistry; import ai.koog.agents.core.tools.annotations.LLMDescription; import ai.koog.agents.core.tools.annotations.Tool; import ai.koog.agents.core.tools.reflect.ToolSet; import ai.koog.agents.features.eventHandler.feature.EventHandler; import ai.koog.prompt.executor.clients.openai.OpenAIModels;
 
     
     import java.util.Scanner;
     
     import static ai.koog.prompt.executor.llms.all.SimplePromptExecutorsKt.simpleOpenAIExecutor;
 
-    class exampleBasicJava06 {
-        public static void main(String[] args) {
-    -->
+    class exampleBasicJava06 { public static void main(String[] args) { -->
 <!--- SUFFIX
         }
     }

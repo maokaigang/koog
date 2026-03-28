@@ -389,7 +389,9 @@ llm.writeSession {
     replaceHistoryWithTLDR(HistoryCompressionStrategy.WholeHistory, preserveMemory = true)
 }
 ```
-<!--- KNIT example-sessions-10.kt -->您也可以在策略图中使用 `nodeLLMCompressHistory` 节点，在特定位置压缩历史记录。
+<!--- KNIT example-sessions-10.kt -->
+
+您也可以在策略图中使用 `nodeLLMCompressHistory` 节点，在特定位置压缩历史记录。
 
 有关历史记录压缩和压缩策略的更多信息，请参阅[历史记录压缩](history-compression.md)。
 

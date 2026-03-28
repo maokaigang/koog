@@ -31,7 +31,7 @@ Koog 框架提供以下实现工具的方法：
 [`Tool<Args, Result>`](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-tool/index.html) 抽象类是 Kotlin 中创建工具的基类。
 它允许您创建接受特定参数类型（`Args`）并返回各种类型结果（`Result`）的工具。
 
-每个工具包含以下组件：| <div style="width:110px">组件</div> | 描述                                                                                                                                                                                                                                                                                                                                                                                                                           |
+ 每个工具包含以下组件： | <div style="width:110px">组件</div> | 描述 |
 |------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `Args`                                   | 定义工具所需参数的可序列化数据类。                                                                                                                                                                                                                                                                                                                                                             |
 | `Result`                                 | 工具返回结果的可序列化类型。若需以自定义格式呈现工具结果，请继承 [ToolResult.TextSerializable](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-tool-result/-text-serializable/index.html) 类并实现 `textForLLM(): String` 方法                                                                                                           |
@@ -89,32 +89,32 @@ Koog 框架提供以下实现工具的方法：
     ```
     <!--- KNIT example-class-based-tools-01.kt -->
 
-After implementing your tool, you need to add it to a tool registry and then use it with an agent. For details, see [Tool registry](tools-overview.md#tool-registry).
+在实现你的工具后，你需要将其添加到工具注册表，然后与智能体配合使用。详情请参阅[工具注册表](tools-overview.md#tool-registry)。
 
-For more details, see [API reference](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-tool/index.html).
+更多详情，请参阅[API 参考](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-tool/index.html)。
 
-### SimpleTool class (Kotlin)
+### SimpleTool 类（Kotlin） { #simpletool-class-kotlin }
 
-The [`SimpleTool<Args>`](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-simple-tool/index.html) abstract class extends `Tool<Args, ToolResult.Text>` and simplifies the creation of tools that return text results.
+[`SimpleTool<Args>`](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-simple-tool/index.html) 抽象类继承自 `Tool<Args, ToolResult.Text>`，简化了返回文本结果的工具创建过程。
 
-Each simple tool consists of the following components:
+每个简单工具包含以下组成部分：
 
-| <div style="width:110px">Component</div> | Description                                                                                                                                                                                                                                                                                              |
+| <div style="width:110px">组件</div> | 描述 |
 |------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `Args`                                   | The serializable data class that defines arguments required for the custom tool.                                                                                                                                                                                                                         |
-| `argsSerializer`                         | The overridden variable that defines how the arguments for the tool are serialized. See also [argsSerializer](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-tool/args-serializer.html).                                                                                             |
-| `descriptor`                             | The overridden variable that specifies tool metadata:<br/>- `name`<br/>- `description`<br/>- `requiredParameters` (empty by default)<br/> - `optionalParameters` (empty by default)<br/> See also [descriptor](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-tool/descriptor.html). |
-| `doExecute()`                            | The overridden function that describes the main action performed by the tool. It takes arguments of type `Args` and returns a `String`. See also [doExecute()](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-simple-tool/do-execute.html).                                          |
+| `Args` | 定义自定义工具所需参数的可序列化数据类。 |
+| `argsSerializer` | 用于定义工具参数序列化方式的重写变量。另请参阅[参数序列化器](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-tool/args-serializer.html)。 |
+| `descriptor` | 用于指定工具元数据的重写变量：<br/>- `name`<br/>- `description`<br/>- `requiredParameters`（默认为空）<br/> - `optionalParameters`（默认为空）<br/> 另请参阅 [描述符](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-tool/descriptor.html)。 |
+| `doExecute()` | 描述工具主要执行动作的重写函数。它接收类型为`Args`的参数，并返回一个`String`。另请参阅[执行()](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-simple-tool/do-execute.html)。 |
 
-!!! note "Java Implementation"
-    In Java, the equivalent approach is to use annotation-based methods that return `String`. The framework automatically handles the text result wrapping. For more details, see [Annotation-based methods](#annotation-based-methods-java) below.
+!!! note "Java 实现"
+    在Java中，等效的方法是使用基于注解的方式，这些方法返回`String`。框架会自动处理文本结果的包装。更多细节请参见下方的[基于注解的方法](#annotation-based-methods-java)。
 
 !!! tip
-    Ensure your tools have clear descriptions and well-defined parameter names to make it easier for the LLM to understand and use them properly. In Kotlin, use the `descriptor` and constructor parameters; in Java, use `@Tool` and `@LLMDescription` annotations.
+    确保你的工具具有清晰的描述和定义明确的参数名称，以便LLM能够更容易理解并正确使用它们。在Kotlin中，使用`descriptor`和构造函数参数；在Java中，使用`@Tool`和`@LLMDescription`注解。
 
-#### Usage example 
+#### 使用示例 { #usage-example }
 
-Here is an example of a custom tool implementation using `SimpleTool` in Kotlin:
+以下是使用`SimpleTool`在Kotlin中实现自定义工具的示例：
 
 === "Kotlin"
 
@@ -153,15 +153,13 @@ Here is an example of a custom tool implementation using `SimpleTool` in Kotlin:
     ```
     <!--- KNIT example-class-based-tools-02.kt -->
 
-### Annotation-based methods (Java)
+### 基于注解的方法（Java） { #annotation-based-methods-java }
 
-To implement tools in Java, instead of subclassing `Tool` or `SimpleTool`, use annotation-based methods with `@Tool` and
-`@LLMDescription`. Koog handles serialization and registration automatically through reflection. To learn more about the
-implementation, see Java examples below.
+要在Java中实现工具，无需子类化`Tool`或`SimpleTool`，而应使用基于注解的方法配合`@Tool`和`@LLMDescription`。Koog会通过反射自动处理序列化与注册。如需了解具体实现方式，请参阅下方Java示例。
 
-#### Usage examples
+#### 使用示例 { #usage-examples }
 
-This is an example of a tool implementation in Java, equivalent to using the `Tool` class in Kotlin.
+这是在Java中实现工具的一个示例，相当于在Kotlin中使用`Tool`类。
 
 === "Java"
 
@@ -199,8 +197,7 @@ This is an example of a tool implementation in Java, equivalent to using the `To
     ```
     <!--- KNIT example-class-based-tools-java-01.java -->
 
-Here is an example of a tool implementation in Java, equivalent to using the `SimpleTool` class in Kotlin. This example
-implements a simple tool that returns a text result.
+以下是Java中工具实现的一个示例，相当于在Kotlin中使用`SimpleTool`类。此示例实现了一个返回文本结果的简单工具。
 
 === "Java"
 
@@ -240,22 +237,22 @@ implements a simple tool that returns a text result.
     ```
     <!--- KNIT example-class-based-tools-java-02.java -->
 
-### Sending tool result to LLM in custom format
+### 以自定义格式向 LLM 发送工具结果 { #sending-tool-result-to-llm-in-custom-format }
 
 For Kotlin:
 
-If you are not happy with JSON results sent to LLM (in some cases, LLMs can work better if tool output is structured as Markdown, for instance), you have to follow the following steps:
+如果您对发送至LLM的JSON结果不满意（在某些情况下，若工具输出以Markdown格式结构化，LLM可能表现更佳），则需遵循以下步骤：
 
-1. Implement `ToolResult.TextSerializable` interface, and override `textForLLM()` method
-2. Override `resultSerializer` using `ToolResultUtils.toTextSerializer<T>()`
+1. 实现 `ToolResult.TextSerializable` 接口，并重写 `textForLLM()` 方法
+2. 使用`ToolResultUtils.toTextSerializer<T>()`覆盖`resultSerializer`
 
 For Java:
 
-Return formatted text (such as Markdown) directly as a `String` from your annotated method. The framework handles this automatically.
+从你的注解方法中直接返回格式化文本（例如 Markdown）作为 `String`。框架会自动处理。
 
 #### Example
 
-Here is an example showing custom formatted output in both Kotlin and Java:
+以下是一个示例，展示了在 Kotlin 和 Java 中自定义格式化输出的效果：
 
 === "Kotlin"
 
@@ -370,5 +367,4 @@ Here is an example showing custom formatted output in both Kotlin and Java:
     ```
     <!--- KNIT example-class-based-tools-java-03.java -->
 
-After implementing your tool in Kotlin or Java, you need to add it to a tool registry and then use it with an agent.
-For details, see [Tool registry](tools-overview.md#tool-registry).
+在 Kotlin 或 Java 中实现你的工具后，你需要将其添加到工具注册表中，然后通过代理来使用它。详情请参阅 [工具注册表](tools-overview.md#tool-registry)。

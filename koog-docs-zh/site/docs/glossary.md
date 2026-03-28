@@ -57,7 +57,9 @@
 
 - **EventHandler**：一种功能，支持监控和响应各种智能体事件，提供钩子以跟踪智能体生命周期、处理错误以及在整个工作流中处理工具调用。
 
-### AgentMemory功能- **AgentMemory**：一项使AI智能体能够在不同对话间存储、检索和使用信息的功能。了解更多信息，请参阅[AgentMemory](features/agent-memory.md)。 { #agentmemory-feature }
+### AgentMemory 功能 { #agentmemory-feature }
+
+- **AgentMemory**：一项使 AI 智能体能够在不同对话间存储、检索和使用信息的功能。了解更多信息，请参阅 [AgentMemory](features/agent-memory.md)。
 
 - **概念**：AgentMemory功能中一类带有相关元数据的信息类别，包含关键词、描述和事实类型。概念是AgentMemory系统的基础构建模块，智能体可以记忆和调用这些概念。了解更多信息，请参阅[AgentMemory](features/agent-memory.md)。
 

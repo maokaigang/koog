@@ -1,4 +1,4 @@
-<!-- koog-zh-meta: {"last_synced_at": "2026-03-28T12:49:40+00:00", "source_path": "a2a-server.md", "source_sha256": "ed11ef756b1734357683b2fc89abb7ab68e233e54fbda630ef4e752501f3d2d7", "source_tag": "0.7.3", "translation_status": "changed"} -->
+<!-- koog-zh-meta: {"last_synced_at": "2026-03-28T16:29:59+00:00", "source_path": "a2a-server.md", "source_sha256": "ed11ef756b1734357683b2fc89abb7ab68e233e54fbda630ef4e752501f3d2d7", "source_tag": "0.7.3", "translation_status": "changed"} -->
 # A2A 服务器 { #a2a-server }
 
 A2A 服务器使您能够通过标准化的 A2A（Agent-to-Agent）协议公开 AI 智能体。它完整实现了 [A2A 协议规范](https://a2a-protocol.org/latest/specification/)，处理客户端请求、执行智能体逻辑、管理复杂任务生命周期，并支持实时流式响应。
@@ -47,7 +47,7 @@ A2A 服务器充当 A2A 协议传输层与您的自定义智能体逻辑之间�
 
 `AgentExecutor` 接口是您实现智能体核心业务逻辑的地方。
 它充当 A2A 协议与您特定 AI 智能体能力之间的桥梁。
-要启动智能体的执行，您必须实现 `execute` 方法，在其中定义智能体的逻辑。
+要启动智能体的执行，您必须实现 `execute` 方法，在其中定义您的智能体逻辑。
 要取消智能体，您必须实现 `cancel` 方法。
 
 ```kotlin
@@ -69,13 +69,13 @@ class MyAgentExecutor : AgentExecutor {
 }
 ```
 
-`RequestContext` 提供了关于当前请求的丰富信息，
+`RequestContext` 提供了有关当前请求的丰富信息，
 包括当前会话的 `contextId` 和 `taskId`、发送的 `message` 以及请求的 `params`。
 
 `SessionEventProcessor` 与客户端通信：
 
 - **`sendMessage(message)`**：发送即时响应（聊天式交互）
-- **`sendTaskEvent(event)`**：发送与任务相关的更新（长时间运行的操作）
+- **`sendTaskEvent(event)`**：发送任务相关更新（长时间运行的操作）
 
 ```kotlin
 // For immediate responses (like chatbots)
@@ -105,7 +105,7 @@ eventProcessor.sendTaskEvent(
 
 ### AgentCard { #agentcard }
 
-`AgentCard` 充当您智能体的自描述清单。它告知客户端您的智能体能做什么、如何与之通信以及有哪些安全要求。
+`AgentCard` 充当您智能体的自描述清单。它告知客户端您的智能体能做什么、如何与其通信以及有哪些安全要求。
 
 ```kotlin
 val agentCard = AgentCard(
@@ -208,9 +208,9 @@ transport.start(
 ### 存储 { #storage }
 
 A2A 服务器采用可插拔的存储架构，分离不同类型的数据。
-所有存储实现都是可选的，默认情况下使用内存中的变体进行开发。- **TaskStorage**：任务生命周期管理 - 存储并管理任务状态、历史记录与产物
+所有存储实现都是可选的，默认情况下使用内存版本用于开发。- **TaskStorage**：任务生命周期管理 - 存储并管理任务状态、历史记录与产物
 - **MessageStorage**：对话历史管理 - 在会话上下文中管理消息历史
-- **PushNotificationConfigStorage**：Webhook 管理 - 管理用于异步通知的 Webhook 配置
+- **PushNotificationConfigStorage**：Webhook 管理 - 管理异步通知的 Webhook 配置
 
 ## 快速开始 { #quickstart }
 
@@ -329,7 +329,7 @@ class SimpleAgentExecutor : AgentExecutor {
 
 ### 任务型智能体 { #task-based-agent }
 若智能体的执行逻辑复杂且需要多步骤处理，可将其实现为任务型智能体。
-该模式同样适用于执行逻辑耗时较长且支持暂停的场景。
+该模式同样适用于执行逻辑耗时较长且需要暂停的场景。
 
 ```kotlin
 class TaskAgentExecutor : AgentExecutor {

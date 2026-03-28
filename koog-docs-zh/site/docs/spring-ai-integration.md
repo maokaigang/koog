@@ -73,18 +73,18 @@ Koog 提供了 Spring AI 集成启动器，将 Spring AI 的模型抽象与 Koog
     </dependencies>
     ```
 
-Make sure that your project has:
+确保你的项目包含：
 
-- Spring Boot 3 (it requires Java 17 or higher)
-- Kotlin libraries with version 2.3.10+ (kotlin-stdlib)
-- A Spring AI model starter for your chosen provider
+- Spring Boot 3（需要 Java 17 或更高版本）
+- Kotlin 版本为 2.3.10+ 的库（kotlin-stdlib）
+- 适用于您所选提供商的Spring AI模型入门
 
-### Available providers
-Anthropic, Azure OpenAI, Bedrock Converse, Deepseek, Google GenAI, HuggingFace, MiniMax, Mistral AI, OCI GenAI, Ollama, OpenAI, Vertex AI, ZhiPu AI
+### 可用提供商 { #available-providers }
+Anthropic, Azure OpenAI, Bedrock Converse, Deepseek, Google GenAI, HuggingFace, MiniMax, Mistral AI, OCI GenAI, Ollama, OpenAI, Vertex AI, 智谱AI
 
 ### Configure
 
-Modify your Spring Boot properties if needed:
+根据需要修改您的 Spring Boot 配置属性：
 
 ```properties
 # put your API key for Gemini Developer API or pass it via an environment variable
@@ -95,12 +95,11 @@ koog.spring.ai.chat.enabled=true
 koog.spring.ai.chat.dispatcher.type=AUTO
 ```
 
-If you have a single `ChatModel` bean, everything works automatically —
-the adapter wraps it into a Koog `LLMClient` and creates a ready-to-use `PromptExecutor`.
+如果你只有一个 `ChatModel` bean，一切都会自动运行——适配器会将其包装成一个 Koog `LLMClient`，并创建一个可直接使用的 `PromptExecutor`。
 
-### Usage Example
+### 使用示例 { #usage-example }
 
-Inject the `PromptExecutor` and use it to run a Koog agent:
+注入 `PromptExecutor` 并使用它来运行 Koog 代理：
 
 === "Kotlin"
 
@@ -153,38 +152,38 @@ Inject the `PromptExecutor` and use it to run a Koog agent:
     }
     ```
 
-Or provide your own `PromptExecutor` bean to override the auto-configured one entirely.
+或者提供你自己的 `PromptExecutor` bean 来完全覆盖自动配置的 bean。
 
-### Configuration Properties (`koog.spring.ai.chat`)
+### 配置属性（`koog.spring.ai.chat`） { #configuration-properties-koog-spring-ai-chat }
 
-| Property | Type | Default | Description |
+| 属性 | 类型 | 默认 | 描述 |
 |---|---|---|---|
-| `enabled` | `Boolean` | `true` | Enable/disable the chat auto-configuration |
-| `chat-model-bean-name` | `String?` | `null` | Bean name of the `ChatModel` to use (for multi-model contexts) |
-| `moderation-model-bean-name` | `String?` | `null` | Bean name of the `ModerationModel` to use (for multi-model contexts) |
-| `provider` | `String?` | `null` | LLM provider id (e.g. `openai`, `anthropic`, `google`). When set, overrides auto-detection from the `ChatModel` class name. Falls back to `spring-ai` if auto-detection fails. |
-| `dispatcher.type` | `AUTO` / `IO` | `AUTO` | Dispatcher for blocking model calls |
-| `dispatcher.parallelism` | `Int` | `0` (= unbounded) | Max concurrency for `IO` dispatcher (0 = no limit) |
+| `enabled` | `Boolean` | `true` | 启用/禁用聊天自动配置 |
+| `chat-model-bean-name` | `String?` | `null` | `ChatModel` 使用的 Bean 名称（适用于多模型场景） |
+| `moderation-model-bean-name` | `String?` | `null` | `ModerationModel` 使用的 Bean 名称（适用于多模型场景） |
+| `provider` | `String?` | `null` | LLM 提供者标识符（例如 `openai`、`anthropic`、`google`）。设置后，将覆盖从 `ChatModel` 类名进行的自动检测。若自动检测失败，则回退至 `spring-ai`。 |
+| `dispatcher.type` | `AUTO` / `IO` | `AUTO` | 阻塞模型调用的调度器 |
+| `dispatcher.parallelism` | `Int` | `0` (= 无界) | `IO` 调度器的最大并发数（0 = 无限制） |
 
-### Dispatcher Types
+### 调度器类型 { #dispatcher-types }
 
-- **`AUTO`** (default): Uses a Spring-managed `AsyncTaskExecutor` if available (e.g., when `spring.threads.virtual.enabled=true` in Spring Boot 3.2+), otherwise falls back to `Dispatchers.IO`. This lets you opt into virtual threads with a single standard Spring Boot property.
-- **`IO`**: Always uses `Dispatchers.IO`. When `dispatcher.parallelism` is greater than 0, uses `Dispatchers.IO.limitedParallelism(parallelism)` to cap concurrency.
+- **`AUTO`**（默认）：如果存在 Spring 管理的 `AsyncTaskExecutor`（例如，在 Spring Boot 3.2+ 中使用 `spring.threads.virtual.enabled=true` 时），则使用该执行器；否则回退到 `Dispatchers.IO`。这允许您通过单个标准的 Spring Boot 属性选择启用虚拟线程。
+- **`IO`**: 始终使用`Dispatchers.IO`。当`dispatcher.parallelism`大于0时，使用`Dispatchers.IO.limitedParallelism(parallelism)`来限制并发数。
 
-### Multi-model Contexts
+### 多模态上下文 { #multi-model-contexts }
 
-When multiple `ChatModel` or `ModerationModel` beans are registered, specify which one to use:
+当注册了多个`ChatModel`或`ModerationModel` bean时，请指定要使用哪一个：
 
 ```properties
 koog.spring.ai.chat.chat-model-bean-name=openAiChatModel
 koog.spring.ai.chat.moderation-model-bean-name=openAiModerationModel
 ```
 
-Without a selector, the auto-configuration activates only when a single candidate exists.
+没有选择器时，自动配置仅在存在唯一候选者时激活。
 
-### Extension Points
+### 扩展点 { #extension-points }
 
-- **`ChatOptionsCustomizer`**: Register a Spring bean implementing this functional interface to apply provider-specific `ChatOptions` tuning:
+- **`ChatOptionsCustomizer`**: 注册一个实现此函数式接口的 Spring bean，以应用特定于提供商的 `ChatOptions` 调优：
 
 === "Kotlin"
 
@@ -208,15 +207,15 @@ Without a selector, the auto-configuration activates only when a single candidat
     }
     ```
 
-  The auto-configuration picks it up automatically via optional injection.
+  自动配置通过可选注入自动拾取它。
 
-- **Custom `LLMClient`**: Register your own `LLMClient` bean to override the auto-configured adapter entirely.
-- **Custom `PromptExecutor`**: Register your own `PromptExecutor` bean to override the auto-configured `MultiLLMPromptExecutor`.
+- **自定义 `LLMClient`**: 注册您自己的 `LLMClient` bean 以完全覆盖自动配置的适配器。
+- **自定义 `PromptExecutor`**: 注册您自己的 `PromptExecutor` bean 以覆盖自动配置的 `MultiLLMPromptExecutor`。
 
-## Next Steps
+## 下一步 { #next-steps }
 
-- Learn about the [basic agents](agents/basic-agents.md) to build minimal AI workflows
-- Explore [graph-based agents](agents/graph-based-agents.md) for advanced use cases
-- See the [tools overview](tools-overview.md) to extend your agents' capabilities
-- Check out [examples](examples.md) for real-world implementations
-- Read the [Spring Boot Integration](spring-boot.md) guide for the direct Koog starter approach
+- 了解[基础智能体](agents/basic-agents.md)，构建极简AI工作流
+- 探索[基于图的智能体](agents/graph-based-agents.md)以了解高级用例
+- 请参阅[工具概览](tools-overview.md)以扩展您的智能体能力
+- 查看 [示例](examples.md) 获取实际应用案例
+- 阅读[Spring Boot 集成](spring-boot.md)指南，了解直接的Koog入门方法

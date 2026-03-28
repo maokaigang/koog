@@ -66,9 +66,7 @@
     ```
     <!--- KNIT exampleCustomNodesJava01.java -->
 
-The code above represents a custom node `myNode` with predefined `Input` and `Output` types, with the optional name
-string parameter (`node_name`). In an actual example, here is a simple node that takes a string input and returns
-the input's length:
+上述代码定义了一个自定义节点 `myNode`，其包含预定义的 `Input` 和 `Output` 类型，并可选地接受字符串名称参数（`node_name`）。在实际示例中，这里有一个简单的节点，它接收字符串输入并返回输入的长度：
 
 === "Kotlin"
 
@@ -111,8 +109,7 @@ the input's length:
     ```
     <!--- KNIT exampleCustomNodesJava02.java -->
 
-Another way to create a custom node in Kotlin is to define an extension function on `AIAgentSubgraphBuilderBase` that
-calls the `node` function. In Java, you achieve the same reusability by extracting the node builder call into a helper method:
+在 Kotlin 中创建自定义节点的另一种方式是在 `AIAgentSubgraphBuilderBase` 上定义一个扩展函数，该函数调用 `node` 函数。在 Java 中，你可以通过将节点构建器调用提取到辅助方法中来实现相同的可重用性：
 
 === "Kotlin"
 
@@ -163,11 +160,11 @@ calls the `node` function. In Java, you achieve the same reusability by extracti
     ```
     <!--- KNIT exampleCustomNodesJava03.java -->
 
-This creates a pass-through node that performs some custom logic but returns the input as the output without modification.
+这会创建一个直通节点，它执行一些自定义逻辑，但将输入原样返回作为输出，不做任何修改。
 
-### Nodes with additional arguments
+### 具有额外参数的节点 { #nodes-with-additional-arguments }
 
-You can create nodes that accept arguments to customize their behavior:
+您可以创建接受参数以自定义其行为的节点：
 
 === "Kotlin"
 
@@ -224,9 +221,9 @@ You can create nodes that accept arguments to customize their behavior:
     <!--- KNIT exampleCustomNodesJava04.java -->
 
 
-### Parameterized nodes
+### 参数化节点 { #parameterized-nodes }
 
-You can define nodes with input and output parameters:
+您可以定义具有输入和输出参数的节点：
 
 === "Kotlin"
 
@@ -276,9 +273,9 @@ You can define nodes with input and output parameters:
     ```
     <!--- KNIT exampleCustomNodesJava05.java -->
 
-### Stateful nodes
+### 有状态节点 { #stateful-nodes }
 
-If your node needs to maintain state between runs, you can use closure variables:
+如果你的节点需要在多次运行之间保持状态，可以使用闭包变量：
 
 === "Kotlin"
 
@@ -332,9 +329,9 @@ If your node needs to maintain state between runs, you can use closure variables
     ```
     <!--- KNIT exampleCustomNodesJava06.java -->
 
-## Node input and output types
+## 节点输入与输出类型 { #node-input-and-output-types }
 
-Nodes can have different input and output types, which are specified as generic parameters:
+节点可以拥有不同的输入和输出类型，这些类型通过泛型参数来指定：
 
 === "Kotlin"
 
@@ -380,25 +377,25 @@ Nodes can have different input and output types, which are specified as generic 
 !!! note
     The input and output types determine how the node can be connected to other nodes in the workflow. Nodes can only be connected if the output type of the source node is compatible with the input type of the target node.
 
-## Best practices
+## 最佳实践 { #best-practices }
 
-When implementing custom nodes, follow these best practices:
+在实现自定义节点时，请遵循以下最佳实践：
 
-1. **Keep nodes focused**: each node should perform a single, well-defined operation.
-2. **Use descriptive names**: node names should clearly indicate their purpose.
-3. **Document parameters**: provide clear documentation for all parameters.
-4. **Handle errors gracefully**: implement proper error handling to prevent workflow failures.
-5. **Make nodes reusable**: design nodes to be reusable across different workflows.
-6. **Use type parameters**: use generic type parameters when appropriate to make nodes more flexible.
-7. **Provide default values**: when possible, provide sensible default values for parameters.
+1. **保持节点专注**：每个节点应执行单一、明确定义的操作。
+2. **使用描述性名称**：节点名称应清晰表明其用途。
+3. **文档参数**：为所有参数提供清晰的文档说明。
+4. **优雅地处理错误**：实施适当的错误处理机制，防止工作流中断。
+5. **使节点可复用**：设计节点以便在不同工作流中重复使用。
+6. **使用类型参数**：在适当的情况下使用泛型类型参数，使节点更具灵活性。
+7. **提供默认值**：在可能的情况下，为参数提供合理的默认值。
 
-## Common patterns
+## 常见模式 { #common-patterns }
 
-The following sections provide some common patterns for implementing custom nodes.
+以下部分提供了一些实现自定义节点的常见模式。
 
-### Pass-through nodes
+### 直通节点 { #pass-through-nodes }
 
-Nodes that perform an operation but return the input as the output.
+执行操作但将输入作为输出返回的节点。
 
 === "Kotlin"
 
@@ -441,9 +438,9 @@ Nodes that perform an operation but return the input as the output.
     ```
     <!--- KNIT exampleCustomNodesJava08.java -->
 
-### Transformation nodes
+### 转换节点 { #transformation-nodes }
 
-Nodes that transform the input into a different output.
+将输入转换为不同输出的节点。
 
 === "Kotlin"
 
@@ -486,9 +483,9 @@ Nodes that transform the input into a different output.
     ```
     <!--- KNIT exampleCustomNodesJava09.java -->
 
-### LLM interaction nodes
+### LLM 交互节点 { #llm-interaction-nodes }
 
-Nodes that interact with the LLM.
+与LLM交互的节点。
 
 === "Kotlin"
 
@@ -543,9 +540,9 @@ Nodes that interact with the LLM.
     <!--- KNIT exampleCustomNodesJava10.java -->
 
 !!! note
-    The Kotlin example above shows fine-grained control over the LLM session (custom prompt construction, explicit `requestLLMWithoutTools` call). The Java API provides higher-level factory methods like `AIAgentNode.llmRequest()` that handle prompt construction automatically — the input string becomes the user message. For most use cases this is sufficient; for advanced prompt customization, compose multiple nodes or use a custom subgraph.
+    上面的Kotlin示例展示了对LLM会话的细粒度控制（自定义提示词构建、显式调用`requestLLMWithoutTools`）。而Java API提供了更高级的工厂方法，例如`AIAgentNode.llmRequest()`，它能自动处理提示词构建——输入字符串直接作为用户消息。对于大多数使用场景这已经足够；若需高级提示词定制，可通过组合多个节点或使用自定义子图来实现。
 
-### Tool run node
+### 工具运行节点 { #tool-run-node }
 
 === "Kotlin"
 
@@ -605,4 +602,4 @@ Nodes that interact with the LLM.
     <!--- KNIT exampleCustomNodesJava11.java -->
 
 !!! note
-    The Kotlin example demonstrates low-level tool execution by manually constructing a `Message.Tool.Call` and calling `environment.executeTool()`. The Java API encourages a higher-level approach using subgraphs with `withTask()`, where the LLM orchestrates tool calls automatically. To restrict which tools are available, chain `.limitedTools(List.of(myTool))` before `.withInput()`.
+    Kotlin示例展示了通过手动构建`Message.Tool.Call`并调用`environment.executeTool()`来实现底层工具执行。而Java API则提倡采用更高级的方法，即使用带有`withTask()`的子图，由LLM自动编排工具调用。若要限制可用工具的范围，可在`.withInput()`前链入`.limitedTools(List.of(myTool))`。

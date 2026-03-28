@@ -8,8 +8,7 @@ Koog 使用一个轻量级、与库无关的序列化层，将工具参数和结
 
 除了工具之外，序列化层还被代理功能（如**持久化**）用于序列化和反序列化节点输入和输出。
 
-默认情况下，Koog 使用 `KotlinxSerializer`（基于 kotlinx-serialization）。
-在 JVM 上，您也可以切换到 `JacksonSerializer`（基于 jackson-databind）。
+默认情况下，Koog 使用 `KotlinxSerializer`（基于 kotlinx-serialization）。 在 JVM 上，您也可以切换到 `JacksonSerializer`（基于 jackson-databind）。
 
 ## `JSONSerializer` 接口 { #the-jsonserializer-interface }
 
@@ -100,9 +99,9 @@ Koog 使用一个轻量级、与库无关的序列化层，将工具参数和结
     <!--- KNIT exampleSerializationJava01.java -->
 
 
-## Type tokens
+## 类型标记 { #type-tokens }
 
-`TypeToken` is how Koog passes type information at runtime.
+`TypeToken` 是 Koog 在运行时传递类型信息的方式。
 
 === "Kotlin"
 
@@ -149,11 +148,9 @@ Koog 使用一个轻量级、与库无关的序列化层，将工具参数和结
     ```
     <!--- KNIT exampleSerializationJava02.java -->
 
-## `JSONElement` — library-agnostic JSON tree
+## `JSONElement` — 库无关的 JSON 树 { #jsonelement-library-agnostic-json-tree }
 
-`JSONElement` is a neutral intermediate representation for JSON data.
-It exists so that serializers, tools, and agent internals do not depend on specific JSON types from a particular
-library.
+`JSONElement` 是 JSON 数据的一种中性中间表示。它的存在使得序列化器、工具和代理内部实现无需依赖特定库中的 JSON 类型。
 
 ### Hierarchy
 
@@ -167,14 +164,11 @@ JSONElement
 ```
 <!--- KNIT example-serialization-01.txt -->
 
-### Conversion to and from library types
+### 库类型的转换 { #conversion-to-and-from-library-types }
 
-Each serialization integration provides extension functions that let you convert between `JSONElement` and the
-library's own dynamic JSON type. This is useful when you already have a `JsonElement`, `JsonNode`, etc. and
-want to pass it to Koog (or vice versa), without going through a full encode/decode cycle.
-Examples are provided below for each supported library.
+每个序列化集成都提供了扩展函数，允许您在 `JSONElement` 和库自身的动态 JSON 类型之间进行转换。当您已经拥有 `JsonElement`、`JsonNode` 等对象，并希望将其传递给 Koog（或反之）时，这非常有用，无需经过完整的编码/解码流程。下方为每个受支持的库提供了示例。
 
-### Building and reading elements
+### 构建与读取元素 { #building-and-reading-elements }
 
 === "Kotlin"
 
@@ -235,12 +229,12 @@ Examples are provided below for each supported library.
     ```
     <!--- KNIT exampleSerializationJava03.java -->
 
-## Supported serializers
+## 支持的序列化器 { #supported-serializers }
 
 ### `KotlinxSerializer` (default)
 
-- **Module**: `ai.koog:serialization-core` (included transitively with `ai.koog:agents-core`)
-- **Backed by**: kotlinx-serialization
+- **模块**：`ai.koog:serialization-core`（通过 `ai.koog:agents-core` 间接包含）
+- **支持库**: kotlinx-serialization
 
 === "Kotlin"
 
@@ -264,7 +258,7 @@ Examples are provided below for each supported library.
 
     <!--- KNIT example-serialization-04.kt -->
 
-You can also convert between Koog's `JSONElement` and kotlinx-serialization's `JsonElement`
+您也可以在 Koog 的 `JSONElement` 与 kotlinx-serialization 的 `JsonElement` 之间进行转换。
 
 === "Kotlin"
 
@@ -292,12 +286,12 @@ You can also convert between Koog's `JSONElement` and kotlinx-serialization's `J
     <!--- KNIT example-serialization-05.kt -->
 
 
-### `JacksonSerializer` (JVM only)
+### `JacksonSerializer` (仅限JVM) { #jacksonserializer-jvm-only }
 
-- **Module**: `ai.koog:serialization-jackson` (separate dependency)
-- **Backed by**: jackson-databind
+- **模块**：`ai.koog:serialization-jackson`（独立依赖）
+- **支持库**：jackson-databind
 
-Add the dependency to your `build.gradle.kts`:
+将依赖项添加到您的 `build.gradle.kts`：
 
 ```kts
 dependencies {
@@ -306,7 +300,7 @@ dependencies {
 ```
 <!--- KNIT example-serialization-02.txt -->
 
-Then create the serializer:
+然后创建序列化器：
 
 === "Kotlin"
 
@@ -354,10 +348,9 @@ Then create the serializer:
     <!--- KNIT exampleSerializationJava04.java -->
 
 !!! note
-    `JacksonSerializer` automatically registers `JSONElementModule` on the `ObjectMapper` it uses for
-    proper serialization/deserialization of the `JSONElement` types.
+    `JacksonSerializer` 会自动在它用于正确序列化/反序列化 `JSONElement` 类型的 `ObjectMapper` 上注册 `JSONElementModule`。
 
-You can also convert between Koog's `JSONElement` and Jackson's `JsonNode`
+您也可以在 Koog 的 `JSONElement` 与 Jackson 的 `JsonNode` 之间进行转换。
 
 === "Kotlin"
 
@@ -416,7 +409,7 @@ You can also convert between Koog's `JSONElement` and Jackson's `JsonNode`
     <!--- KNIT exampleSerializationJava05.java -->
 
 
-## Configuring the serializer in `AIAgentConfig`
+## 在 `AIAgentConfig` 中配置序列化器 { #configuring-the-serializer-in-aiagentconfig }
 
 === "Kotlin" 
 

@@ -72,19 +72,19 @@ Koog 框架提供了预定义节点，同时也允许您使用 `node` 函数创�
     ```
     <!--- KNIT exampleCustomStrategyGraphsJava01.java -->
 
-#### Conditions
+#### 条件 { #conditions }
 
-Conditions determine when to follow a particular edge in the strategy graph. There are several types of conditions, here are some common ones:
+条件决定了在策略图中何时沿某条特定的边继续执行。条件有多种类型，下面列出一些常见类型：
 
-| Condition type      | Description                                                                              |
+| 条件类型            | 说明                                                                                     |
 |---------------------|------------------------------------------------------------------------------------------|
-| onCondition         | A general-purpose condition that takes a lambda expression that returns a boolean value. |
-| onToolCall          | A condition that matches when the LLM calls a tool.                                      |
-| onAssistantMessage  | A condition that matches when the LLM responds with a message.                           |
-| onMultipleToolCalls | A condition that matches when the LLM calls multiple tools.                              |
-| onToolNotCalled     | A condition that matches when the LLM does not call a tool.                              |
+| onCondition         | 通用条件，接收一个返回布尔值的 lambda 表达式。                                           |
+| onToolCall          | 当 LLM 调用了工具时匹配的条件。                                                          |
+| onAssistantMessage  | 当 LLM 返回消息时匹配的条件。                                                            |
+| onMultipleToolCalls | 当 LLM 同时调用多个工具时匹配的条件。                                                    |
+| onToolNotCalled     | 当 LLM 未调用工具时匹配的条件。                                                          |
 
-You can transform the output before passing it to the target node by using the `transformed` function:
+在将输出传递给目标节点之前，您还可以使用 `transformed` 函数先对其进行转换：
 
 === "Kotlin"
 
@@ -137,10 +137,10 @@ You can transform the output before passing it to the target node by using the `
     ```
     <!--- KNIT exampleCustomStrategyGraphsJava02.java -->
 
-### Subgraphs
+### 子图 { #subgraphs }
 
-Subgraphs are sections of the strategy graph that operate with their own set of tools and context.
-The strategy graph can contain multiple subgraphs. Each subgraph is defined by using the `subgraph` function:
+子图是策略图中拥有各自工具集和上下文的独立部分。
+一个策略图可以包含多个子图。每个子图都通过 `subgraph` 函数定义：
 
 === "Kotlin"
 
@@ -202,8 +202,8 @@ The strategy graph can contain multiple subgraphs. Each subgraph is defined by u
     ```
     <!--- KNIT exampleCustomStrategyGraphsJava03.java -->
 
-A subgraph can use any tool from a tool registry. 
-However, you can specify a subset of tools from this registry that can be used in the subgraph and pass it as an argument to the `subgraph` function:
+子图可以使用工具注册表中的任意工具。
+不过，您也可以从该注册表中指定一组仅供子图使用的工具子集，并将其作为参数传给 `subgraph` 函数：
 
 === "Kotlin"
 
@@ -259,21 +259,21 @@ However, you can specify a subset of tools from this registry that can be used i
     ```
     <!--- KNIT exampleCustomStrategyGraphsJava04.java -->
 
-## Basic strategy graph creation
+## 基础策略图创建 { #basic-strategy-graph-creation }
 
-The basic strategy graph operates as follows: 
+基础策略图的工作流程如下：
 
-1. Sends the input to the LLM.
-2. If the LLM responds with a message, finishes the process.
-3. If the LLM calls a tool, runs the tool.
-4. Sends the tool result back to the LLM.
-5. If the LLM responds with a message, finishes the process.
-6. If the LLM calls another tool, runs the tool, and the process repeats from step 4.
+1. 将输入发送给 LLM。
+2. 如果 LLM 返回一条消息，则结束流程。
+3. 如果 LLM 调用了工具，则执行该工具。
+4. 将工具结果发送回 LLM。
+5. 如果 LLM 返回一条消息，则结束流程。
+6. 如果 LLM 又调用了另一个工具，则执行该工具，并从第 4 步开始重复流程。
 
 ![basic-strategy-graph](img/basic-strategy-graph.png)
 
 
-Here is an example of a basic strategy graph:
+下面是一个基础策略图示例：
 
 === "Kotlin"
 
@@ -362,11 +362,11 @@ Here is an example of a basic strategy graph:
     ```
     <!--- KNIT exampleCustomStrategyGraphsJava05.java -->
 
-## Visualizing strategy graph 
+## 策略图可视化 { #visualizing-strategy-graph }
 
-On JVM you may generate a [Mermaid state diagram](https://mermaid.js.org/syntax/stateDiagram.html) for the strategy graph.
+在 JVM 上，您可以为策略图生成 [Mermaid 状态图](https://mermaid.js.org/syntax/stateDiagram.html)。
 
-For the graph created in the previous example, you can run:
+对于前一个示例中创建的图，您可以运行：
 
 === "Kotlin"
 
@@ -428,7 +428,7 @@ For the graph created in the previous example, you can run:
     ```
     <!--- KNIT exampleCustomStrategyGraphsJava06.java -->
 
-and the output will be:
+输出如下：
 ```mermaid
 ---
 title: my-strategy
@@ -447,15 +447,15 @@ stateDiagram
 ```
 <!--- KNIT example-custom-strategy-graphs-01.txt -->
 
-## Advanced strategy techniques
+## 高级策略技巧 { #advanced-strategy-techniques }
 
-### History compression
+### 历史压缩 { #history-compression }
 
-For long-running conversations, the history can grow large and consume a lot of tokens. To learn how to compress the history, see [History compression](history-compression.md).
+对于长时间运行的对话，历史记录可能会不断增长并消耗大量 token。关于如何压缩历史记录，请参见 [历史压缩](history-compression.md)。
 
-### Parallel tool execution
+### 并行工具执行 { #parallel-tool-execution }
 
-For workflows that require executing multiple tools in parallel, you can use the `nodeExecuteMultipleTools` node:
+对于需要并行执行多个工具的工作流，您可以使用 `nodeExecuteMultipleTools` 节点：
 
 <!--- INCLUDE
 import ai.koog.agents.core.dsl.builder.forwardTo
@@ -482,7 +482,7 @@ edge(executeMultipleTools forwardTo processMultipleResults)
 ```
 <!--- KNIT example-custom-strategy-graphs-07.kt -->
 
-You can also use the `toParallelToolCallsRaw` extension function for streaming data:
+您也可以对流式数据使用 `toParallelToolCallsRaw` 扩展函数：
 
 <!--- INCLUDE
 /*
@@ -495,13 +495,13 @@ parseMarkdownStreamToBooks(markdownStream).toParallelToolCallsRaw(BookTool::clas
 ```
 <!--- KNIT example-custom-strategy-graphs-08.kt -->
 
-To learn more, see [Tools](tools-overview.md#parallel-tool-calls). 
+更多信息请参见 [工具](tools-overview.md#parallel-tool-calls)。
 
-### Parallel node execution 
+### 并行节点执行 { #parallel-node-execution }
 
-Parallel node execution lets you run multiple nodes concurrently, improving performance and enabling complex workflows.
+并行节点执行允许您并发运行多个节点，从而提升性能并支持更复杂的工作流。
 
-To initiate parallel node runs, use the `parallel` method:
+要启动并行节点运行，请使用 `parallel` 方法：
 
 <!--- INCLUDE
 import ai.koog.agents.core.dsl.builder.strategy
@@ -527,14 +527,14 @@ val calc by parallel<String, Int>(
 ```
 <!--- KNIT example-custom-strategy-graphs-09.kt -->
 
-The code above creates a node named `calc` that runs the `nodeCalcTokens`, `nodeCalcSymbols`, and `nodeCalcWords` nodes 
-in parallel and returns the results as an instance of `AsyncParallelResult`.
+上述代码创建了一个名为 `calc` 的节点，它会并行运行 `nodeCalcTokens`、`nodeCalcSymbols` 和 `nodeCalcWords` 节点，
+并以 `AsyncParallelResult` 实例的形式返回结果。
 
-For more information related to parallel node execution and a detailed reference, see [Parallel node execution](parallel-node-execution.md).
+关于并行节点执行的更多信息和详细参考，请参见 [并行节点执行](parallel-node-execution.md)。
 
-### Conditional branching
+### 条件分支 { #conditional-branching }
 
-For complex workflows that require different paths based on certain conditions, you can use conditional branching:
+对于需要根据特定条件走不同路径的复杂工作流，您可以使用条件分支：
 
 <!--- INCLUDE
 import ai.koog.agents.core.dsl.builder.forwardTo
@@ -571,24 +571,24 @@ edge(
 ```
 <!--- KNIT example-custom-strategy-graphs-10.kt -->
 
-## Best practices
+## 最佳实践 { #best-practices }
 
-When you create custom strategy graphs, follow these best practices:
+创建自定义策略图时，请遵循以下最佳实践：
 
-- Keep it simple. Start with a simple graph and add complexity as needed.
-- Give your nodes and edges descriptive names to make the graph easier to understand.
-- Handle all possible paths and edge cases.
-- Test your graph with various inputs to ensure it behaves as expected.
-- Document the purpose and behavior of your graph for future reference.
-- Use predefined strategies or common patterns as a starting point.
-- For long-running conversations, use history compression to reduce token usage.
-- Use subgraphs to organize your graph and manage tool access.
+- 保持简单。先从简单的图开始，再按需增加复杂度。
+- 为节点和边提供描述性名称，方便理解图结构。
+- 覆盖所有可能的路径和边界情况。
+- 使用各种输入测试图，以确保其行为符合预期。
+- 为图的目的和行为编写文档，方便后续维护。
+- 以预定义策略或常见模式为起点。
+- 对于长时间运行的对话，使用历史压缩来减少 token 消耗。
+- 使用子图组织图结构并管理工具访问。
 
-## Usage examples
+## 用法示例 { #usage-examples }
 
-### Tone analysis strategy
+### 语气分析策略 { #tone-analysis-strategy }
 
-The tone analysis strategy is a good example of a tool-based strategy that includes history compression:
+语气分析策略是一个很好的基于工具的策略示例，其中包含历史压缩：
 
 <!--- INCLUDE
 import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy
@@ -659,56 +659,56 @@ fun toneStrategy(name: String, toolRegistry: ToolRegistry): AIAgentGraphStrategy
 ```
 <!--- KNIT example-custom-strategy-graphs-11.kt -->
 
-This strategy does the following:
+该策略的执行流程如下：
 
-1. Sends the input to the LLM.
-2. If the LLM responds with a message, the strategy finishes the process.
-3. If the LLM calls a tool, the strategy runs the tool.
-4. If the history is too large (more than 100 messages), the strategy compresses it before sending the tool result.
-5. Otherwise, the strategy sends the tool result directly.
-6. If the LLM calls another tool, the strategy runs it.
-7. If the LLM responds with a message, the strategy finishes the process.
+1. 将输入发送给 LLM。
+2. 如果 LLM 返回一条消息，策略就结束流程。
+3. 如果 LLM 调用了工具，策略就执行该工具。
+4. 如果历史记录过大（超过 100 条消息），策略会在发送工具结果前先压缩历史记录。
+5. 否则，策略会直接发送工具结果。
+6. 如果 LLM 又调用了另一个工具，策略就执行它。
+7. 如果 LLM 返回一条消息，策略就结束流程。
 
-## Troubleshooting
+## 故障排查 { #troubleshooting }
 
-When creating custom strategy graphs, you might encounter some common issues. Here are some troubleshooting tips:
+在创建自定义策略图时，您可能会遇到一些常见问题。以下是一些排查建议：
 
-### Graph fails to reach the finish node
+### 图无法到达结束节点 { #graph-fails-to-reach-the-finish-node }
 
-If your graph does not reach the finish node, check the following:
+如果您的图无法到达结束节点，请检查以下内容：
 
-- All paths from the start node eventually lead to the finish node.
-- Your conditions are not too restrictive, preventing edges from being followed.
-- There are no cycles in the graph that do not have an exit condition.
+- 从起始节点出发的所有路径最终都能到达结束节点。
+- 条件不要过于严格，以免边始终无法被选中。
+- 图中不要存在没有退出条件的循环。
 
-### Tool calls are not running
+### 工具调用未执行 { #tool-calls-are-not-running }
 
-If tool calls are not running, check the following:
+如果工具调用没有执行，请检查以下内容：
 
-- The tools are properly registered in the tool registry.
-- The edge from the LLM node to the tool execution node has the correct condition (`onToolCall { true }`).
+- 工具是否已正确注册到工具注册表中。
+- 从 LLM 节点到工具执行节点的边是否设置了正确的条件（`onToolCall { true }`）。
 
-### History gets too large
+### 历史记录过大 { #history-gets-too-large }
 
-If your history gets too large and consumes too many tokens, consider the following:
+如果历史记录过大并消耗过多 token，请考虑以下做法：
 
-- Add a history compression node.
-- Use a condition to check the size of the history and compress it when it gets too large.
-- Use a more aggressive compression strategy (e.g., `FromLastNMessages` with a smaller N value).
+- 添加一个历史压缩节点。
+- 使用条件检查历史记录大小，并在其过大时触发压缩。
+- 使用更激进的压缩策略，例如取值更小的 `FromLastNMessages`。
 
-### Graph behaves unexpectedly
+### 图行为异常 { #graph-behaves-unexpectedly }
 
-If your graph takes unexpected branches, check the following:
+如果您的图走到了意料之外的分支，请检查以下内容：
 
-- Your conditions are correctly defined.
-- The conditions are evaluated in the expected order (edges are checked in the order they are defined).
-- You are not accidentally overriding conditions with more general ones.
+- 条件是否定义正确。
+- 条件是否按预期顺序求值（边会按照定义顺序进行检查）。
+- 是否不小心用更通用的条件覆盖了更具体的条件。
 
-### Performance issues occur
+### 出现性能问题 { #performance-issues-occur }
 
-If your graph has performance issues, consider the following:
+如果您的图存在性能问题，请考虑以下做法：
 
-- Simplify the graph by removing unnecessary nodes and edges.
-- Use parallel tool execution for independent operations.
-- Compress history.
-- Use more efficient nodes and operations.
+- 删除不必要的节点和边，简化图结构。
+- 对彼此独立的操作使用并行工具执行。
+- 压缩历史记录。
+- 使用更高效的节点和操作。

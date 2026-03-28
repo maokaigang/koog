@@ -113,7 +113,9 @@ if (result.isHarmful) {
     // Proceed with processing the prompt
 } 
 ```
-<!--- KNIT example-content-moderation-01.kt -->`moderate` 方法接受以下参数：
+<!--- KNIT example-content-moderation-01.kt -->
+
+`moderate` 方法接受以下参数：
 
 | 名称     | 数据类型 | 必需 | 默认值 | 描述                      |
 |----------|-----------|----------|---------|----------------------------------|

@@ -41,6 +41,7 @@ PLACEHOLDER_PATTERN = re.compile(r"@@koogzh_[a-z]+_(?P<index>\d+)@@")
 HEADING_PATTERN = re.compile(r"^#\s+(?P<title>.+?)\s*$", re.MULTILINE)
 HEADING_ATTRS_SUFFIX = re.compile(r"\s+\{\s*#[^}]+\}\s*$")
 MERGED_TAB_PATTERN = re.compile(r'^(?P<indent>\s*)(?P<header>===\s+"[^"]+")(?P<rest>\S.*)$')
+MERGED_COMMENT_PATTERN = re.compile(r"^(?P<indent>\s*)(?P<comment><!--.*?-->)(?P<rest>\S.*)$")
 NAV_GROUP_TRANSLATIONS = {
     "Documentation": "文档",
     "Overview": "概览",
@@ -629,6 +630,8 @@ def deepseek_translate(text: str) -> str:
 
     base_url = os.environ.get("DEEPSEEK_BASE_URL", "https://api.deepseek.com").rstrip("/")
     model = os.environ.get("DEEPSEEK_TRANSLATION_MODEL", "deepseek-chat")
+    timeout = int(os.environ.get("DEEPSEEK_HTTP_TIMEOUT", "120"))
+    max_attempts = int(os.environ.get("DEEPSEEK_MAX_ATTEMPTS", "4"))
     url = f"{base_url}/chat/completions"
     payload = {
         "model": model,
@@ -652,7 +655,7 @@ def deepseek_translate(text: str) -> str:
 
     last_error: Exception | None = None
     body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
-    for attempt in range(4):
+    for attempt in range(max_attempts):
         try:
             request = Request(
                 url,
@@ -663,12 +666,12 @@ def deepseek_translate(text: str) -> str:
                 },
                 method="POST",
             )
-            with urlopen(request, timeout=120) as response:
+            with urlopen(request, timeout=timeout) as response:
                 data = json.loads(response.read().decode("utf-8"))
             return data["choices"][0]["message"]["content"]
         except Exception as error:  # noqa: BLE001
             last_error = error
-            if attempt < 3:
+            if attempt < max_attempts - 1:
                 time.sleep(2 * (attempt + 1))
     assert last_error is not None
     raise last_error
@@ -916,6 +919,65 @@ def normalize_merged_tab_blocks(text: str) -> str:
     return result
 
 
+def normalize_comment_tails(text: str) -> str:
+    lines = text.splitlines()
+    output: list[str] = []
+
+    for line in lines:
+        match = MERGED_COMMENT_PATTERN.match(line)
+        if not match:
+            output.append(line)
+            continue
+
+        indent_width = len(match.group("indent"))
+        comment_line = f"{match.group('indent')}{match.group('comment')}"
+        rest = match.group("rest")
+
+        if rest.startswith("==="):
+            rest_indent = " " * max(indent_width - 4, 0)
+        else:
+            rest_indent = " " * indent_width
+
+        output.append(comment_line)
+        output.append("")
+        output.append(f"{rest_indent}{rest}")
+
+    result = "\n".join(output)
+    if text.endswith("\n"):
+        result += "\n"
+    return result
+
+
+def normalize_stray_fence_lines(text: str) -> str:
+    lines = text.splitlines()
+    output: list[str] = []
+    in_fence = False
+
+    for line in lines:
+        if re.match(r"^\s*```", line):
+            if in_fence:
+                stray_match = re.match(r"^(?P<indent>\s*)```(?:\s+)(?P<rest>\S.*)$", line)
+                if stray_match:
+                    output.append(f"{stray_match.group('indent')}{stray_match.group('rest')}")
+                    continue
+            in_fence = not in_fence
+            output.append(line)
+            continue
+        output.append(line)
+
+    result = "\n".join(output)
+    if text.endswith("\n"):
+        result += "\n"
+    return result
+
+
+def normalize_post_translation_structure(text: str) -> str:
+    normalized = normalize_merged_tab_blocks(text)
+    normalized = normalize_comment_tails(normalized)
+    normalized = normalize_stray_fence_lines(normalized)
+    return normalized
+
+
 def parse_tab_blocks(lines: list[str]) -> list[TabBlock]:
     header_pattern = re.compile(r'^(\s*)===\s+"[^"]+"\s*$')
     stack: list[TabBlock] = []
@@ -1004,12 +1066,16 @@ def translate_markdown_with_deepseek(text: str) -> str:
         translated_parts.append(deepseek_translate(chunk))
 
     restored = restore_placeholders("".join(translated_parts), placeholders)
-    normalized = normalize_merged_tab_blocks(restored)
+    normalized = normalize_post_translation_structure(restored)
     structural = restore_structural_tab_blocks(text, normalized)
-    return preserve_heading_anchors(text, structural)
+    residual = translate_residual_english_prose(structural, "deepseek")
+    return preserve_heading_anchors(text, residual)
 
 
 def translate_structured_line(line: str, provider: str) -> str:
+    if line.lstrip().startswith("# --8<--"):
+        return line
+
     heading = re.match(r"^(#{1,6}\s+)(.*)$", line)
     if heading:
         original_text = heading.group(2).strip()
@@ -1071,6 +1137,163 @@ def flush_paragraph(paragraph: list[str], output: list[str], provider: str) -> N
     translated = translate_inline_text(block, provider)
     output.append(f"{indent}{translated}")
     paragraph.clear()
+
+
+def should_translate_residual_text(text: str, *, min_words: int = 4) -> bool:
+    if not re.search(r"[A-Za-z]", text):
+        return False
+
+    cleaned = re.sub(r"`[^`]+`", " ", text)
+    cleaned = re.sub(r"!\[[^\]]*\]\([^)]*\)", " ", cleaned)
+    cleaned = re.sub(r"\[[^\]]+\]\([^)]*\)", " ", cleaned)
+    cleaned = re.sub(r"https?://\S+", " ", cleaned)
+    cleaned = re.sub(r"\{\s*#[^}]+\}", " ", cleaned)
+    cleaned = re.sub(r"\b[a-z_][\w.<>:/-]*\([^)]*\)", " ", cleaned)
+    cleaned = re.sub(r"\b[a-z_][\w.<>:/-]*\b", lambda match: " " if "." in match.group(0) else match.group(0), cleaned)
+    cleaned = cleaned.strip()
+
+    if not cleaned:
+        return False
+
+    words = re.findall(r"[A-Za-z][A-Za-z'-]+", cleaned)
+    if len(words) < min_words:
+        return False
+
+    english_chars = len(re.findall(r"[A-Za-z]", cleaned))
+    cjk_chars = len(re.findall(r"[\u4e00-\u9fff]", cleaned))
+    return english_chars > cjk_chars
+
+
+def is_probably_indented_code_line(line: str) -> bool:
+    if not (line.startswith("    ") or line.startswith("\t")):
+        return False
+
+    stripped = line.strip()
+    if not stripped:
+        return False
+
+    if stripped.startswith(("<!--", "--8<--", "```")):
+        return False
+
+    if re.match(r"^(?:[A-Za-z_][\w<>.,? ]*\([^)]*\)|[A-Za-z_][\w<>.,? ]+)\s*\{?$", stripped):
+        return True
+
+    code_patterns = [
+        r"^(?:import|package|val|var|fun|class|interface|object|data class)\b",
+        r"^(?:public|private|protected|internal|override|suspend|static|final|abstract)\b",
+        r"^(?:if|else|for|while|when|switch|case|return|throw|try|catch)\b",
+        r"^(?://|/\*|\*|@|#include\b)",
+        r"(?:;|\{|\}|=>)$",
+        r"^[A-Za-z_][\w.<>]*\s*=",
+        r"^[A-Za-z_][\w.<>]*\(",
+    ]
+    return any(re.search(pattern, stripped) for pattern in code_patterns)
+
+
+def flush_residual_paragraph(paragraph: list[str], output: list[str], provider: str) -> None:
+    if not paragraph:
+        return
+    indent = re.match(r"^(\s*)", paragraph[0]).group(1)
+    block = " ".join(line.strip() for line in paragraph)
+    if should_translate_residual_text(block):
+        output.append(f"{indent}{translate_inline_text(block, provider)}")
+    else:
+        output.extend(paragraph)
+    paragraph.clear()
+
+
+def translate_residual_english_prose(text: str, provider: str) -> str:
+    lines = text.splitlines()
+    output: list[str] = []
+    paragraph: list[str] = []
+    in_fence = False
+    in_comment = False
+
+    for line in lines:
+        stripped = line.strip()
+
+        if in_comment:
+            flush_residual_paragraph(paragraph, output, provider)
+            output.append(line)
+            if "-->" in line:
+                in_comment = False
+            continue
+
+        if stripped.startswith("<!--"):
+            flush_residual_paragraph(paragraph, output, provider)
+            output.append(line)
+            if "-->" not in line:
+                in_comment = True
+            continue
+
+        if re.match(r"^\s*```", line):
+            flush_residual_paragraph(paragraph, output, provider)
+            output.append(line)
+            in_fence = not in_fence
+            continue
+
+        if in_fence:
+            output.append(line)
+            continue
+
+        if is_probably_indented_code_line(line):
+            flush_residual_paragraph(paragraph, output, provider)
+            output.append(line)
+            continue
+
+        if not stripped:
+            flush_residual_paragraph(paragraph, output, provider)
+            output.append(line)
+            continue
+
+        if stripped.startswith("--8<--") or stripped == "---":
+            flush_residual_paragraph(paragraph, output, provider)
+            output.append(line)
+            continue
+
+        if stripped.startswith("<") and stripped.endswith(">"):
+            flush_residual_paragraph(paragraph, output, provider)
+            output.append(line)
+            continue
+
+        if stripped.startswith("![") or re.fullmatch(r"https?://\S+", stripped):
+            flush_residual_paragraph(paragraph, output, provider)
+            output.append(line)
+            continue
+
+        if stripped.startswith("# --8<--"):
+            flush_residual_paragraph(paragraph, output, provider)
+            output.append(line)
+            continue
+
+        if "|" in line and line.count("|") >= 2:
+            flush_residual_paragraph(paragraph, output, provider)
+            if is_table_separator(stripped) or not should_translate_residual_text(line):
+                output.append(line)
+            else:
+                output.append(translate_table_row(line, provider))
+            continue
+
+        if re.match(r"^(#{1,6}\s+|[*+-]\s+|\d+\.\s+|>\s+)", stripped):
+            flush_residual_paragraph(paragraph, output, provider)
+            if should_translate_residual_text(stripped, min_words=2):
+                output.append(translate_structured_line(line, provider))
+            else:
+                output.append(line)
+            continue
+
+        if re.match(r'^\s*(?:!!!|\?\?\?|===)\s+', line):
+            flush_residual_paragraph(paragraph, output, provider)
+            if should_translate_residual_text(stripped, min_words=2):
+                output.append(translate_structured_line(line, provider))
+            else:
+                output.append(line)
+            continue
+
+        paragraph.append(line)
+
+    flush_residual_paragraph(paragraph, output, provider)
+    return "\n".join(output) + ("\n" if text.endswith("\n") else "")
 
 
 def translate_markdown(text: str, provider: str) -> str:
@@ -1147,7 +1370,7 @@ def translate_markdown(text: str, provider: str) -> str:
 
     flush_paragraph(paragraph, output, provider)
     translated = "\n".join(output) + ("\n" if text.endswith("\n") else "")
-    normalized = normalize_merged_tab_blocks(translated)
+    normalized = normalize_post_translation_structure(translated)
     return restore_structural_tab_blocks(text, normalized)
 
 
@@ -1200,12 +1423,12 @@ def translate_changed(args: argparse.Namespace) -> None:
         upstream_path = UPSTREAM_DIR / "docs" / source_path
         if not upstream_path.exists():
             continue
-        print(f"translating: {path.relative_to(ROOT)}")
+        print(f"translating: {path.relative_to(ROOT)}", flush=True)
         try:
             body = translate_markdown(read_text(upstream_path), args.provider)
         except Exception as error:  # noqa: BLE001
             failed += 1
-            print(f"failed: {path.relative_to(ROOT)} -> {error}", file=sys.stderr)
+            print(f"failed: {path.relative_to(ROOT)} -> {error}", file=sys.stderr, flush=True)
             continue
         doc.meta["source_sha256"] = markdown_map[source_path]
         doc.meta["source_tag"] = str(manifest["tag"])
@@ -1214,11 +1437,11 @@ def translate_changed(args: argparse.Namespace) -> None:
             doc.meta["translation_status"] = "changed"
         write_text(path, dump_site_doc(doc.meta, body))
         translated += 1
-        print(f"translated: {path.relative_to(ROOT)}")
+        print(f"translated: {path.relative_to(ROOT)}", flush=True)
 
     write_text(SITE_DIR / "mkdocs.yml", generate_site_mkdocs(UPSTREAM_DIR / "mkdocs.yml"))
-    print(f"translated files: {translated}")
-    print(f"failed files: {failed}")
+    print(f"translated files: {translated}", flush=True)
+    print(f"failed files: {failed}", flush=True)
 
 
 def set_status(args: argparse.Namespace) -> None:

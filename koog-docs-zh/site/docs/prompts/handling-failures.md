@@ -1,4 +1,4 @@
-<!-- koog-zh-meta: {"last_synced_at": "2026-03-28T13:04:44+00:00", "source_path": "prompts/handling-failures.md", "source_sha256": "5f6f1c637ffca1bb4e830c200a97215a966ebf5dca6a9fe52a2a99927ed2ab1d", "source_tag": "0.7.3", "translation_status": "changed"} -->
+<!-- koog-zh-meta: {"last_synced_at": "2026-03-28T16:55:03+00:00", "source_path": "prompts/handling-failures.md", "source_sha256": "5f6f1c637ffca1bb4e830c200a97215a966ebf5dca6a9fe52a2a99927ed2ab1d", "source_tag": "0.7.3", "translation_status": "changed"} -->
 # 处理故障 { #handling-failures }
 
 本页介绍如何使用内置的重试和超时机制处理 LLM 客户端和提示执行器的故障。
@@ -10,7 +10,7 @@
 
 ### 基本用法 { #basic-usage }
 
-使用重试功能包装任何现有客户端：
+用重试功能包装任何现有客户端：
 
 === "Kotlin"
 
@@ -58,12 +58,9 @@
     ```
     <!--- KNIT example-handling-failures-java-01.java -->
 
-### Configuring retry behavior
+### Configuring retry behavior { #configuring-retry-behavior }
 
-By default, `RetryingLLMClient` configures an LLM client with the maximum of 3 retry attempts, a 1-second initial delay,
-and a 30-second maximum delay.
-You can specify a different retry configuration using a `RetryConfig` passed to `RetryingLLMClient`.
-For example:
+默认情况下，`RetryingLLMClient` 配置 LLM 客户端时，最多重试 3 次，初始延迟为 1 秒，最大延迟为 30 秒。您可以通过向 `RetryingLLMClient` 传递 `RetryConfig` 来指定不同的重试配置。例如：
 
 === "Kotlin"
 
@@ -101,16 +98,16 @@ For example:
     ```
     <!--- KNIT example-handling-failures-java-02.java -->
 
-Koog provides several predefined retry configurations available via `RetryConfig` in Kotlin and `RetryConfig.Companion` in Java:
+Koog 提供了多种预定义的重试配置，可通过 Kotlin 中的 `RetryConfig` 以及 Java 中的 `RetryConfig.Companion` 来使用：
 
-| Configuration (Kotlin)     | Max attempts | Initial delay | Max delay | Use case                                                                                                 |
+| 配置 (Kotlin) | 最大尝试次数 | 初始延迟 | 最大延迟 | 用例 |
 |----------------------------|--------------|---------------|-----------|----------------------------------------------------------------------------------------------------------|
-| `RetryConfig.DISABLED`     | 1 (no retry) | -             | -         | Development, testing, and debugging.                                                                     |
-| `RetryConfig.CONSERVATIVE` | 3            | 2s            | 30s       | Background or scheduled tasks where reliability is more important than speed.                            |
-| `RetryConfig.AGGRESSIVE`   | 5            | 500ms         | 20s       | Critical operations where fast recovery from transient errors is more important than reducing API calls. |
+| `RetryConfig.DISABLED` | 1（无重试） | - | - | 开发、测试与调试。 |
+| `RetryConfig.CONSERVATIVE` | 3 | 2秒 | 30秒 | 后台或计划任务，其中可靠性比速度更重要。 |
+| `RetryConfig.AGGRESSIVE` | 5 | 500毫秒 | 20秒 | 关键操作中，快速从瞬时错误中恢复比减少API调用更为重要。 |
 | `RetryConfig.PRODUCTION`   | 3            | 1s            | 20s       | General production use.                                                                                  |
 
-You can use them directly or create custom configurations:
+您可以直接使用它们，也可以创建自定义配置：
 
 <!--- INCLUDE
 import ai.koog.prompt.executor.clients.openai.OpenAILLMClient
@@ -136,31 +133,26 @@ val customClient = RetryingLLMClient(
 ```
 <!--- KNIT example-handling-failures-03.kt -->
 
-### Retry error patterns
+### Retry error patterns { #retry-error-patterns }
 
-By default, the `RetryingLLMClient` recognizes common transient errors.
-This behavior is controlled by the [`RetryConfig.retryablePatterns`](api:prompt-executor-clients::ai.koog.prompt.executor.clients.retry.RetryConfig.retryablePatterns) patterns.
-Each pattern is represented by
-[`RetryablePattern`](api:prompt-executor-clients::ai.koog.prompt.executor.clients.retry.RetryablePattern)
-that checks the error message from a failed request and determines whether it should be retried.
+默认情况下，`RetryingLLMClient` 能够识别常见的瞬时错误。此行为由 [`RetryConfig.retryablePatterns`](api:prompt-executor-clients::ai.koog.prompt.executor.clients.retry.RetryConfig.retryablePatterns) 模式控制。每个模式通过 [`RetryablePattern`](api:prompt-executor-clients::ai.koog.prompt.executor.clients.retry.RetryablePattern) 来检查失败请求中的错误信息，并决定是否应进行重试。
 
-Koog provides the predefined retry configurations and patterns that work across all the supported LLM providers.
-You can keep the defaults or customize them for your specific needs.
+Koog 提供了预定义的重试配置和模式，这些配置和模式适用于所有支持的 LLM 提供商。您可以选择保留默认设置，也可以根据具体需求进行自定义。
 
-#### Pattern types
+#### Pattern types { #pattern-types }
 
-You can use the following pattern types and combine any number of them:
+您可以使用以下模式类型，并可任意组合多种模式：
 
-* `RetryablePattern.Status`: Matches a specific HTTP status code in the error message (such as `429`, `500`,`502`, etc.).
-* `RetryablePattern.Keyword`: Matches a keyword in the error message (such as `rate limit` or `request timeout`).
-* `RetryablePattern.Regex`: Matches a regular expression in the error message.
-* `RetryablePattern.Custom`: Matches a custom logic using a lambda function.
+* `RetryablePattern.Status`：匹配错误信息中特定的HTTP状态码（例如`429`、`500`、`502`等）。
+* `RetryablePattern.Keyword`: 匹配错误消息中的关键词（例如 `rate limit` 或 `request timeout`）。
+* `RetryablePattern.Regex`: 匹配错误消息中的正则表达式。
+* `RetryablePattern.Custom`: 使用 lambda 函数匹配自定义逻辑。
 
-If any pattern returns `true`, the error is considered retryable, and the LLM client retries the request.
+如果任何模式返回`true`，则错误被视为可重试，LLM客户端将重试该请求。
 
-#### Default patterns
+#### Default patterns { #default-patterns }
 
-Unless you customize the retry configuration, the following patterns are used by default:
+除非您自定义重试配置，否则将默认采用以下模式：
 
 * **HTTP status codes**:
     * `429`: Rate limit
@@ -177,16 +169,16 @@ Unless you customize the retry configuration, the following patterns are used by
     * connection timeout
     * read timeout
     * write timeout
-    * connection reset by peer
+    * 连接被对端重置
     * connection refused
     * temporarily unavailable
     * service unavailable
 
-These default patterns are defined in Koog as [`RetryConfig.DEFAULT_PATTERNS`](api:prompt-executor-clients::ai.koog.prompt.executor.clients.retry.RetryConfig.Companion.DEFAULT_PATTERNS).
+这些默认模式在Koog中被定义为[`RetryConfig.DEFAULT_PATTERNS`](api:prompt-executor-clients::ai.koog.prompt.executor.clients.retry.RetryConfig.Companion.DEFAULT_PATTERNS)。
 
-#### Custom patterns
+#### Custom patterns { #custom-patterns }
 
-You can define custom patterns for your specific needs:
+您可以根据具体需求定义自定义模式：
 
 <!--- INCLUDE
 import ai.koog.prompt.executor.clients.retry.RetryConfig
@@ -206,7 +198,7 @@ val config = RetryConfig(
 ```
 <!--- KNIT example-handling-failures-04.kt -->
 
-You can also append custom patterns to the default `RetryConfig.DEFAULT_PATTERNS`:
+您也可以将自定义模式附加到默认的 `RetryConfig.DEFAULT_PATTERNS` 中：
 
 <!--- INCLUDE
 import ai.koog.prompt.executor.clients.retry.RetryConfig
@@ -221,9 +213,9 @@ val config = RetryConfig(
 ```
 <!--- KNIT example-handling-failures-05.kt -->
 
-### Streaming with retry
+### Streaming with retry { #streaming-with-retry }
 
-Streaming operations can optionally be retried. This feature is disabled by default.
+流式操作可选择性地进行重试。此功能默认处于禁用状态。
 
 <!--- INCLUDE
 import ai.koog.prompt.executor.clients.openai.OpenAILLMClient
@@ -253,15 +245,11 @@ val stream = client.executeStreaming(prompt, OpenAIModels.Chat.GPT4o)
 ```
 <!--- KNIT example-handling-failures-06.kt -->
 
-!!!note
-    Streaming retries only apply to connection failures that occur before the first token is received.
-    Once streaming has started, the retry logic is disabled.
-    If an error occurs during streaming, the operation is terminated.
+!!!note 流式重试仅适用于在接收到首个令牌之前发生的连接故障。一旦流式传输开始，重试逻辑将被禁用。若在流式传输过程中发生错误，操作将被终止。
 
-### Retry with prompt executors
+### 使用提示执行器重试 { #retry-with-prompt-executors }
 
-When working with prompt executors, you can wrap the underlying LLM client with a retry mechanism before creating the executor in both Kotlin and Java.
-To learn more about prompt executors, see [Prompt executors](prompt-executors.md).
+在使用提示执行器时，你可以在创建执行器之前，为底层的LLM客户端添加重试机制，无论是在Kotlin还是Java中。要了解更多关于提示执行器的信息，请参阅[提示执行器](prompt-executors.md)。
 
 === "Kotlin"
 
@@ -342,21 +330,19 @@ To learn more about prompt executors, see [Prompt executors](prompt-executors.md
     ```
     <!--- KNIT example-handling-failures-java-03.java -->
 
-## Timeout configuration
+## Timeout configuration { #timeout-configuration }
 
-All LLM clients support timeout configuration in both Kotlin and Java to prevent hanging requests.
-You can specify timeout values for network connections when creating the client using
-the [`ConnectionTimeoutConfig`](api:prompt-executor-clients::ai.koog.prompt.executor.clients.ConnectionTimeoutConfig) class.
+所有 LLM 客户端均支持在 Kotlin 和 Java 中配置超时设置，以防止请求挂起。您可以在创建客户端时通过 [`ConnectionTimeoutConfig`](api:prompt-executor-clients::ai.koog.prompt.executor.clients.ConnectionTimeoutConfig) 类为网络连接指定超时值。
 
-`ConnectionTimeoutConfig` has the following properties:
+`ConnectionTimeoutConfig` 具有以下属性：
 
-| Property               | Default Value        | Description                                                   |
+| 属性 | 默认值 | 描述 |
 |------------------------|----------------------|---------------------------------------------------------------|
-| `connectTimeoutMillis` | 60 seconds (60,000)  | Maximum time to establish a connection to the server.         |
-| `requestTimeoutMillis` | 15 minutes (900,000) | Maximum time for the entire request to complete.              |
-| `socketTimeoutMillis`  | 15 minutes (900,000) | Maximum time to wait for data over an established connection. |
+| `connectTimeoutMillis` | 60秒（60,000毫秒） | 连接到服务器的最大时间限制。 |
+| `requestTimeoutMillis` | 15分钟（90万） | 整个请求完成的最大时间限制。 |
+| `socketTimeoutMillis` | 15分钟（90万） | 已建立连接上等待数据的最大时间。 |
 
-You can customize these values for your specific needs. For example:
+您可以根据具体需求自定义这些值。例如：
 
 === "Kotlin"
 
@@ -409,18 +395,18 @@ You can customize these values for your specific needs. For example:
     <!--- KNIT example-handling-failures-java-04.java -->
 
 !!! tip
-    For long-running or streaming calls, set higher values for `requestTimeoutMillis` and `socketTimeoutMillis`.
+    对于长时间运行或流式调用，请为`requestTimeoutMillis`和`socketTimeoutMillis`设置更高的值。
 
-## Error handling
+## Error handling { #error-handling }
 
-When working with LLMs in production, you need to implement error handling, including:
+在生产环境中使用 LLM 时，需要实现错误处理，包括：
 
-- **Try-catch blocks** to handle unexpected errors.
-- **Logging errors with context** for debugging.
-- **Fallbacks** for critical operations.
-- **Monitoring retry patterns** to identify recurring issues.
+- **Try-catch 块**用于处理意外错误。
+- **记录带上下文的错误**以便调试。
+- 关键操作的**后备方案**。
+- **监控重试模式**以识别反复出现的问题。
 
-Here is an example of error handling in Kotlin and Java:
+以下是Kotlin和Java中错误处理的示例：
 
 === "Kotlin"
 

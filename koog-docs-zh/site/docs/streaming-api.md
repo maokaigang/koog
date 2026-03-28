@@ -103,10 +103,9 @@ Koog 的 **流式传输 API** 允许你将 **LLM 输出** 作为 `Flow<StreamFra
     <!--- KNIT example-streaming-api-java-01.java -->
 
 
-It is important to note that you can parse the output by working directly with a raw string stream.
-This approach gives you more flexibility and control over the parsing process.
+需要注意的是，你可以通过直接处理原始字符串流来解析输出。这种方法能让你在解析过程中获得更大的灵活性和控制力。
 
-Here is a raw string stream with the Markdown definition of the output structure:
+以下是原始字符串流，包含输出结构的Markdown定义：
 
 === "Kotlin"
 
@@ -151,9 +150,9 @@ Here is a raw string stream with the Markdown definition of the output structure
     ```
     <!--- KNIT example-streaming-api-java-02.java -->
 
-### Working with reasoning frames
+### 使用推理框架 { #working-with-reasoning-frames }
 
-Models that support reasoning (such as Claude Sonnet 4.5 or GPT-o1) emit reasoning frames during streaming. You can access both the reasoning process and its summary:
+支持推理的模型（如Claude Sonnet 4.5或GPT-o1）在流式传输过程中会输出推理帧。您可以同时访问推理过程及其总结：
 
 <!--- INCLUDE
 import ai.koog.agents.core.dsl.builder.strategy
@@ -201,10 +200,9 @@ llm.writeSession {
 ```
 <!--- KNIT example-streaming-api-reasoning-01.kt -->
 
-### Working with a raw text stream (derived)
+### 处理原始文本流（派生） { #working-with-a-raw-text-stream-derived }
 
-If you have existing streaming parsers that expect `Flow<String>`,
-derive text chunks via `filterTextOnly()` or collect them with `collectText()`.
+如果您已有期望使用`Flow<String>`的流式解析器，可通过`filterTextOnly()`派生文本块，或使用`collectText()`收集它们。
 
 === "Kotlin"
 
@@ -246,9 +244,9 @@ derive text chunks via `filterTextOnly()` or collect them with `collectText()`.
     ```
     <!--- KNIT example-streaming-api-java-03.java -->
 
-### Listening to stream events in event handlers
+### 在事件处理器中监听流事件 { #listening-to-stream-events-in-event-handlers }
 
-You can listen to stream events in [agent event handlers](features/agent-event-handlers.md).
+您可以在[代理事件处理器](features/agent-event-handlers.md)中监听流事件。
 
 === "Kotlin"
 
@@ -301,31 +299,30 @@ You can listen to stream events in [agent event handlers](features/agent-event-h
 
 ### Converting frames to `Message.Response`
 
-You can transform a collected list of frames to standard message objects:
-- `toAssistantMessageOrNull()` — extracts `Message.Assistant` from text frames
-- `toReasoningMessageOrNull()` — extracts `Message.Reasoning` from reasoning frames
-- `toToolCallMessages()` — extracts `Message.Tool.Call` from tool call frames
-- `toMessageResponses()` — converts all complete frames to their corresponding `Message.Response` objects
+您可以将收集到的帧列表转换为标准消息对象：
+- `toAssistantMessageOrNull()` — 从文本帧中提取 `Message.Assistant`
+- `toReasoningMessageOrNull()` — 从推理框架中提取 `Message.Reasoning`
+- `toToolCallMessages()` — 从工具调用帧中提取 `Message.Tool.Call`
+- `toMessageResponses()` — 将所有完整帧转换为对应的`Message.Response`对象
 
 ## Examples
 
-### Structured data while streaming (Markdown example)
+### 流式传输中的结构化数据（Markdown示例） { #structured-data-while-streaming-markdown-example }
 
-Although it is possible to work with a raw string stream,
-it is often more convenient to work with [structured data](structured-output.md).
+虽然可以直接处理原始字符串流，但通常使用[结构化数据](structured-output.md)会更加方便。
 
-The structured data approach includes the following key components:
+结构化数据方法包含以下关键组成部分：
 
-1. **MarkdownStructureDefinition**: a class to help you define the schema and examples for structured data in
+1. **MarkdownStructureDefinition**：一个用于帮助您定义结构化数据模式和示例的类
    Markdown format.
-2. **markdownStreamingParser**: a function to create a parser that processes a stream of Markdown chunks and emits
+2. **markdownStreamingParser**：一个用于创建解析器的函数，该解析器处理 Markdown 数据块流并输出
    events.
 
-The sections below provide step-by-step instructions and code samples related to processing a stream of structured data. 
+以下部分提供了处理结构化数据流的分步说明和代码示例。
 
-#### 1. Define your data structure
+#### 1. 定义你的数据结构 { #1-define-your-data-structure }
 
-First, define a data class to represent your structured data:
+首先，定义一个数据类来表示您的结构化数据：
 
 === "Kotlin"
 
@@ -366,10 +363,9 @@ First, define a data class to represent your structured data:
     ```
     <!--- KNIT exampleStreamingApiJava01.java -->
 
-#### 2. Define the Markdown structure
+#### 2. 定义 Markdown 结构 { #2-define-the-markdown-structure }
 
-Create a definition that specifies how your data should be structured in Markdown with the
-`MarkdownStructureDefinition` class:
+创建一个定义，使用 `MarkdownStructureDefinition` 类来指定您的数据在 Markdown 中应如何结构化：
 
 === "Kotlin"
 
@@ -412,9 +408,9 @@ Create a definition that specifies how your data should be structured in Markdow
     ```
     <!--- KNIT example-streaming-api-java-05.java -->
 
-#### 3. Create a parser for your data structure
+#### 3. 为你的数据结构创建一个解析器 { #3-create-a-parser-for-your-data-structure }
 
-The `markdownStreamingParser` provides several handlers for different Markdown elements:
+`markdownStreamingParser` 为不同的 Markdown 元素提供了多个处理器：
 
 === "Kotlin"
 
@@ -458,8 +454,7 @@ The `markdownStreamingParser` provides several handlers for different Markdown e
     ```
     <!--- KNIT example-streaming-api-java-06.java -->
 
-Using the defined handlers, you can implement a function that parses the Markdown stream and emits your data objects 
-with the `markdownStreamingParser` function.
+利用已定义的处理程序，您可以实现一个解析Markdown流并利用`markdownStreamingParser`函数输出数据对象的函数。
 
 === "Kotlin"
 
@@ -523,7 +518,7 @@ with the `markdownStreamingParser` function.
     ```
     <!--- KNIT example-streaming-api-java-07.java -->
 
-#### 4. Use the parser in your agent strategy
+#### 4. 在您的智能体策略中应用解析器 { #4-use-the-parser-in-your-agent-strategy }
 
 === "Kotlin"
 
@@ -574,12 +569,11 @@ with the `markdownStreamingParser` function.
     ```
     <!--- KNIT example-streaming-api-java-08.java -->
 
-### Advanced usage: Streaming with tools
+### 高级用法：工具流式调用 { #advanced-usage-streaming-with-tools }
 
-You can also use the Streaming API with tools to process data as it arrives. 
-The following sections provide a brief step-by-step guide on how to define a tool and use it with streaming data.
+您也可以使用流式处理API配合工具来处理实时到达的数据。以下部分简要介绍了如何定义工具并将其用于流式数据的逐步指南。
 
-### 1. Define a tool for your data structure
+### 1. 为你的数据结构定义一个工具 { #1-define-a-tool-for-your-data-structure }
 
 === "Kotlin"
 
@@ -622,7 +616,7 @@ The following sections provide a brief step-by-step guide on how to define a too
     ```
     <!--- KNIT example-streaming-api-java-09.java -->
 
-### 2. Use the tool with streaming data
+### 2. 使用工具处理流式数据 { #2-use-the-tool-with-streaming-data }
 
 === "Kotlin"
 
@@ -678,7 +672,7 @@ The following sections provide a brief step-by-step guide on how to define a too
     ```
     <!--- KNIT example-streaming-api-java-10.java -->
 
-### 3. Register the tool in your agent configuration
+### 3. 在您的智能体配置中注册该工具 { #3-register-the-tool-in-your-agent-configuration }
 
 <!--- INCLUDE
 import ai.koog.agents.core.agent.AIAgent
@@ -703,16 +697,16 @@ val runner = AIAgent(
 
 ## Best practices
 
-1. **Define clear structures**: create clear and unambiguous markdown structures for your data.
+1. **定义清晰的结构**：为你的数据创建清晰且无歧义的Markdown结构。
 
-2. **Provide good examples**: include comprehensive examples in your `MarkdownStructureDefinition` to guide the LLM.
+2. **提供优质示例**：在您的`MarkdownStructureDefinition`中包含全面的示例，以指导LLM。
 
-3. **Handle incomplete data**: always check for null or empty values when parsing data from the stream.
+3. **处理不完整数据**：在解析流中的数据时，始终检查是否存在空值或空值。
 
-4. **Clean up resources**: use the `onFinishStream` handler to clean up resources and process any remaining data.
+4. **清理资源**：使用 `onFinishStream` 处理器来清理资源并处理任何剩余数据。
 
-5. **Handle errors**: implement proper error handling for malformed Markdown or unexpected data.
+5. **错误处理**：针对格式错误的Markdown或意外数据，实施适当的错误处理机制。
 
-6. **Testing**: test your parser with various input scenarios, including partial chunks and malformed input.
+6. **测试**：使用各种输入场景测试你的解析器，包括部分数据块和格式错误的输入。
 
-7. **Parallel processing**: for independent data items, consider using parallel tool calls for better performance.
+7. **并行处理**：对于独立的数据项，可考虑使用并行工具调用来提升性能。

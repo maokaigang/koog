@@ -71,7 +71,7 @@
     <!--- KNIT exampleCustomSubgraphsJava01.java -->
 
 
-* Subgraph with a specified list of tools (subset of tools from a defined tool registry):
+* 具有指定工具列表的子图（来自已定义工具注册表的工具子集）：
 
 === "Kotlin"
 
@@ -140,10 +140,9 @@
     ```
     <!--- KNIT exampleCustomSubgraphsJava02.java -->
 
-For more information about parameters and parameter values, see the `subgraph` [API reference](api:agents-core::ai.koog.agents.core.dsl.builder.AIAgentSubgraphBuilderBase.subgraph). For more
-information about tools, see [Tools](tools-overview.md).
+有关参数和参数值的更多信息，请参阅`subgraph` [API 参考](api:agents-core::ai.koog.agents.core.dsl.builder.AIAgentSubgraphBuilderBase.subgraph)。有关工具的更多信息，请参阅[工具](tools-overview.md)。
 
-The following code sample shows an actual implementation of a custom subgraph:
+以下代码示例展示了一个自定义子图的实际实现：
 
 === "Kotlin"
 
@@ -241,11 +240,11 @@ The following code sample shows an actual implementation of a custom subgraph:
     ```
     <!--- KNIT exampleCustomSubgraphsJava03.java -->
 
-### Configuring tools in a subgraph
+### 在子图中配置工具 { #configuring-tools-in-a-subgraph }
 
-Tools can be configured for a subgraph in several ways:
+子图可以通过多种方式配置工具：
 
-* Directly in the subgraph definition:
+* 直接在子图定义中：
 
 === "Kotlin"
 
@@ -293,7 +292,7 @@ Tools can be configured for a subgraph in several ways:
     ```
     <!--- KNIT exampleCustomSubgraphsJava04.java -->
 
-* From a tool registry:
+* 来自工具注册表：
 
 === "Kotlin"
 
@@ -343,7 +342,7 @@ Tools can be configured for a subgraph in several ways:
     ```
     <!--- KNIT exampleCustomSubgraphsJava05.java -->
 
-* Dynamically during execution:
+* 动态执行期间：
 
 === "Kotlin"
 
@@ -397,11 +396,11 @@ Tools can be configured for a subgraph in several ways:
     ```
     <!--- KNIT exampleCustomSubgraphsJava06.java -->
 
-## Advanced subgraph techniques
+## 高级子图技术 { #advanced-subgraph-techniques }
 
-### Multi-part strategies
+### 多部分策略 { #multi-part-strategies }
 
-Complex workflows can be broken down into multiple subgraphs, each handling a specific part of the process:
+复杂的工作流程可以分解为多个子图，每个子图负责处理流程中的特定部分：
 
 === "Kotlin"
 
@@ -514,40 +513,39 @@ Complex workflows can be broken down into multiple subgraphs, each handling a sp
     ```
     <!--- KNIT exampleCustomSubgraphsJava07.java -->
 
-## Best practices
+## 最佳实践 { #best-practices }
 
-When working with subgraphs, follow these best practices:
+在使用子图时，请遵循以下最佳实践：
 
-1. **Break complex workflows into subgraphs**: each subgraph should have a clear, focused responsibility.
+1. **将复杂工作流拆分为子图**：每个子图应具备清晰、专注的职责范围。
 
-2. **Pass only necessary context**: only pass the information that subsequent subgraphs need to function correctly.
+2. **仅传递必要的上下文**：仅传递后续子图正常运行所需的信息。
 
-3. **Document subgraph dependencies**: clearly document what each subgraph expects from previous subgraphs and what it provides to subsequent subgraphs.
+3. **记录子图依赖关系**：清晰记录每个子图对前序子图的依赖需求，以及它为后续子图提供的输出内容。
 
-4. **Test subgraphs in isolation**: ensure that each subgraph works correctly with various inputs before integrating it into a strategy.
+4. **独立测试子图**：在将每个子图集成到策略之前，确保其能够正确处理各种输入。
 
-5. **Consider token usage**: be mindful of token usage, especially when passing large histories between subgraphs.
+5. **考虑令牌使用**：注意令牌使用情况，尤其是在子图之间传递大量历史记录时。
 
 ## Troubleshooting
 
-### Tools not available
+### 工具不可用 { #tools-not-available }
 
-If tools are not available in a subgraph:
+如果子图中没有可用的工具：
 
-- Check that the tools are correctly registered in the tool registry.
+- 检查工具是否已在工具注册表中正确注册。
 
-### Subgraphs not running in the defined and expected order
+### 子图未按定义和预期顺序运行 { #subgraphs-not-running-in-the-defined-and-expected-order }
 
-If subgraphs are not executing in the defined order:
+如果子图未按定义的顺序执行：
 
-- Check the strategy definition to ensure that subgraphs are listed in the correct order.
-- Verify that each subgraph is correctly passing its output to the next subgraph.
-- Ensure that your subgraph is connected with the rest of the subgraph and is reachable from the start (and finish). Be careful with conditional edges, so they cover all possible conditions to continue in order not to get blocked in a subgraph or node.
+- 检查策略定义，确保子图按正确顺序排列。
+- 验证每个子图是否正确将其输出传递给下一个子图。
+- 确保你的子图与其余子图相连，并且可以从起点（和终点）访问。注意条件边，确保它们覆盖所有可能的继续条件，以免在子图或节点中被阻塞。
 
 ## Examples
 
-The following example shows how subgraphs are used to create an agent strategy in a real-world scenario.
-The code sample includes three defined subgraphs, `researchSubgraph`, `planSubgraph`, and `executeSubgraph`, where each of the subgraphs has a defined and distinct purpose within the assistant flow.
+以下示例展示了在实际场景中如何使用子图来构建智能体策略。代码示例包含三个已定义的子图：`researchSubgraph`、`planSubgraph` 和 `executeSubgraph`，每个子图在助手流程中都具有明确且独立的功能定位。
 
 === "Kotlin"
 

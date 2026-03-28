@@ -55,7 +55,7 @@ graph TB
         }
         ```
     
-    === "Gradle (Groovy)"
+    === "Gradle（Groovy）"
     
         ```groovy title="build.gradle"
         dependencies {
@@ -81,7 +81,7 @@ graph TB
 
     --8<-- "quickstart-snippets.md:api-key"
 
-    Examples on this page assume that you have set the `OPENAI_API_KEY` environment variable.
+    本页示例假设您已设置 `OPENAI_API_KEY` 环境变量。
 
 === "Kotlin"
 
@@ -154,24 +154,15 @@ graph TB
     }
     ```
 
-## Implementation details
+## 实现细节 { #implementation-details }
 
-The second argument to `agent.run()` is the [session ID](index.md#session-ids)
-used to identify and differentiate between ongoing conversations.
-In our example, it is constant because there is only one conversation at a time.
-In a real application, you can have a separate unique ID for conversations related to the same user, for example.
+`agent.run()`的第二个参数是用于识别和区分进行中对话的[会话ID](index.md#session-ids)。在我们的示例中，该参数为常量，因为每次仅处理一个对话。在实际应用中，您可以为同一用户相关的对话分配独立的唯一ID，例如。
 
-The agent uses the default [history provider](index.md#history-providers)
-that stores the conversation history in memory.
-This means that the history is lost when the application exits.
-In a real application, you should implement a custom history provider
-to persistently store the history in a database or a file.
+该代理使用默认的[历史记录提供者](index.md#history-providers)，该链接将对话历史存储在内存中。这意味着当应用程序退出时，历史记录会丢失。在实际应用中，您应该实现一个自定义的历史记录提供程序，以便将历史记录持久化存储在数据库或文件中。
 
-The `windowSize(20)` [preprocessor](index.md#preprocessors) ensures a limited context size:
-the agent stores only up to 20 most recent messages.
-Without this, the prompt size can grow beyond the context limit.
+`windowSize(20)` [预处理器](index.md#preprocessors) 确保了有限的上下文大小：代理仅存储最多20条最新消息。若不如此，提示词的大小可能会超出上下文限制。
 
-## Example session
+## 示例会话 { #example-session }
 
 ```
 You: My name is Alice.
@@ -184,5 +175,4 @@ You: What's my name?
 Assistant: Your name is Alice!
 ```
 
-Even though each interaction is a separate agent run, the agent correctly answers "Your name is Alice!"
-because the `ChatMemory` feature loaded earlier exchanges before processing the third message.
+尽管每次交互都是独立的智能体运行，但智能体仍能正确回答“你的名字是Alice！”，这是因为`ChatMemory`功能在处理第三条消息前已加载了先前的对话记录。

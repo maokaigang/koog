@@ -187,16 +187,18 @@ graph LR
 
     val secondNode by node<Output, Output> {
         // 将输出转换为输出
-    }// 节点将从前一个节点获取类型为 Output 的输入值，并将其传递给下一个节点
-val setupContext by nodeAppendPrompt<Output>("setupContext") {
-    system("您是一位专注于 Kotlin 编程的助手。")
-    user("我需要关于 Kotlin 协程的帮助。")
-}
+    }
 
-edge(firstNode forwardTo setupContext)
-edge(setupContext forwardTo secondNode)
-```
-<!--- KNIT example-nodes-and-component-03.kt -->
+    // 节点将从前一个节点获取类型为 Output 的输入值，并将其传递给下一个节点
+    val setupContext by nodeAppendPrompt<Output>("setupContext") {
+        system("您是一位专注于 Kotlin 编程的助手。")
+        user("我需要关于 Kotlin 协程的帮助。")
+    }
+
+    edge(firstNode forwardTo setupContext)
+    edge(setupContext forwardTo secondNode)
+    ```
+    <!--- KNIT example-nodes-and-component-03.kt -->
 
 === "Java"
 
@@ -356,7 +358,9 @@ strategy.edge(getUserQuestion, requestLLM);
 ```
 <!--- KNIT exampleNodesAndComponentsJava04.java -->
 
-### nodeLLMRequestStructured一个节点，将用户消息附加到 LLM 提示中，并向具有纠错能力的 LLM 请求结构化数据。详情请参阅 [API 参考](api:agents-core::ai.koog.agents.core.dsl.extension.nodeLLMRequestStructured)。 { #nodellmrequeststructured }
+### nodeLLMRequestStructured { #nodellmrequeststructured }
+
+这是一个将用户消息附加到 LLM 提示中，并向具有纠错能力的 LLM 请求结构化数据的节点。详情请参阅 [API 参考](api:agents-core::ai.koog.agents.core.dsl.extension.nodeLLMRequestStructured)。
 
 ```mermaid
 graph LR
@@ -569,7 +573,9 @@ graph LR
 
     classDef hidden display: none;
 ```
-<!--- KNIT example-nodes-and-component-11.txt -->您可以将此节点用于以下目的：
+<!--- KNIT example-nodes-and-component-11.txt -->
+
+您可以将此节点用于以下目的：
 
 - 执行由 LLM 请求的工具。
 - 响应 LLM 决策处理特定操作。
@@ -923,7 +929,9 @@ graph LR
     edge(nodeStart forwardTo textNode)
     edge(textNode forwardTo nodeFinish)
     ```
-    <!--- KNIT example-nodes-and-component-12.kt -->=== "Java"
+    <!--- KNIT example-nodes-and-component-12.kt -->
+
+=== "Java"
     
     <!--- INCLUDE
     import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
@@ -1277,9 +1285,9 @@ API 允许您通过可选参数微调执行：- runMode：控制任务期间工�
             .onIsInstance(Message.Assistant.class)
             .transformed(Message.Assistant::getContent)
             .build());
-
         strategy.edge(nodeExecuteTool, nodeSendToolResult);
-```        strategy.edge(AIAgentEdge.builder()
+
+        strategy.edge(AIAgentEdge.builder()
             .from(nodeSendToolResult)
             .to(strategy.nodeFinish)
             .onIsInstance(Message.Assistant.class)

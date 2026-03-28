@@ -105,11 +105,11 @@ RAG 解决了传统 LLM 的几个限制：
     <!--- KNIT example-ranked-document-storage-java-01.java -->
 
 
-### Providing relevance search for use by AI agents
+### 为AI代理提供相关性搜索 { #providing-relevance-search-for-use-by-ai-agents }
 
-Once you have a ranked document storage system, you can use it to provide relevant context to an AI agent for answering user queries. This enhances the agent's ability to provide accurate and contextually appropriate responses.
+一旦你拥有了一个经过排序的文档存储系统，就可以利用它为AI智能体提供相关上下文，以回答用户查询。这能增强智能体提供准确且符合情境的回复能力。
 
-Here is an example of how to implement the defined RAG system for an AI agent to be able to answer queries by getting information from the document storage:
+以下是一个示例，展示如何实现已定义的 RAG 系统，使AI代理能够通过从文档存储中获取信息来回答查询：
 
 === "Kotlin"
 
@@ -185,11 +185,11 @@ Here is an example of how to implement the defined RAG system for an AI agent to
     <!--- KNIT example-ranked-document-storage-java-02.java -->
 
 
-### Providing relevance search as a tool
+### 提供相关性搜索作为工具 { #providing-relevance-search-as-a-tool }
 
-Instead of directly providing document content as context, you can also implement a tool that allows the agent to perform relevance searches on demand. This gives the agent more flexibility in deciding when and how to use the document storage.
+除了直接提供文档内容作为上下文，您还可以实现一个工具，让代理能够按需执行相关性搜索。这使代理在决定何时以及如何使用文档存储方面具有更大的灵活性。
 
-Here is an example of how to implement a relevance search tool:
+以下是一个实现相关性搜索工具的示例：
 
 === "Kotlin"
 
@@ -279,17 +279,17 @@ Here is an example of how to implement a relevance search tool:
     ```
     <!--- KNIT example-ranked-document-storage-java-03.java -->
 
-With this approach, the agent can decide when to use the search tool based on your query. This is particularly useful for complex queries that may require information from multiple documents or when the agent needs to search for specific details.
+通过这种方法，智能体可以根据您的查询决定何时使用搜索工具。这对于可能需要从多个文档中获取信息的复杂查询，或当智能体需要搜索特定细节时尤为有用。
 
-## Existing implementations of vector storage and document embedding providers
+## 现有的向量存储和文档嵌入提供商的实现 { #existing-implementations-of-vector-storage-and-document-embedding-providers }
 
-For convenience and easier implementation of a RAG system, Koog provides several out-of-the-box implementations for vector storage, document embedding, and combined embedding and storage components.
+为方便RAG系统的实现，Koog提供了多种开箱即用的向量存储、文档嵌入以及结合嵌入与存储功能的组件实现。
 
 ### Vector storage
 
 #### InMemoryVectorStorage
 
-A simple in-memory implementation that stores documents and their vector embeddings in memory. Suitable for testing or small-scale applications.
+一个简单的内存实现，将文档及其向量嵌入存储在内存中。适用于测试或小规模应用。
 
 === "Kotlin"
 
@@ -315,11 +315,11 @@ A simple in-memory implementation that stores documents and their vector embeddi
     ```
     <!--- KNIT example-ranked-document-storage-java-04.java -->
 
-For more information, see the [InMemoryVectorStorage](api:vector-storage::ai.koog.rag.vector.InMemoryVectorStorage) reference.
+如需更多信息，请参阅 [InMemoryVectorStorage](api:vector-storage::ai.koog.rag.vector.InMemoryVectorStorage) 参考文档。
 
 #### FileVectorStorage
 
-A file-based implementation that stores documents and their vector embeddings on disk. Suitable for persistent storage across application restarts.
+一种基于文件的实现，将文档及其向量嵌入存储在磁盘上。适用于跨应用程序重启的持久化存储。
 
 === "Kotlin"
 
@@ -350,11 +350,11 @@ A file-based implementation that stores documents and their vector embeddings on
     ```
     <!--- KNIT example-ranked-document-storage-java-05.java -->
 
-For more information, see the [FileVectorStorage](api:vector-storage::ai.koog.rag.vector.FileVectorStorage) reference.
+如需更多信息，请参阅 [文件向量存储](api:vector-storage::ai.koog.rag.vector.FileVectorStorage) 参考文档。
 
 #### JVMFileVectorStorage
 
-A JVM-specific implementation of `FileVectorStorage` that works with `java.nio.file.Path`.
+一个特定于JVM的`FileVectorStorage`实现，可与`java.nio.file.Path`协同工作。
 
 === "Kotlin"
 
@@ -379,13 +379,13 @@ A JVM-specific implementation of `FileVectorStorage` that works with `java.nio.f
     ```
     <!--- KNIT example-ranked-document-storage-java-06.java -->
 
-For more information, see the [JVMFileVectorStorage](api:vector-storage::ai.koog.rag.vector.JVMFileVectorStorage) reference.
+如需更多信息，请参阅 [JVM文件向量存储](api:vector-storage::ai.koog.rag.vector.JVMFileVectorStorage) 参考文档。
 
 ### Document embedder
 
 #### TextDocumentEmbedder
 
-A generic implementation that works with any document type that can be converted to text.
+适用于任何可转换为文本的文档类型的通用实现。
 
 === "Kotlin"
 
@@ -411,11 +411,11 @@ A generic implementation that works with any document type that can be converted
     ```
     <!--- KNIT example-ranked-document-storage-java-07.java -->
 
-For more information, see the [TextDocumentEmbedder](api:vector-storage::ai.koog.rag.vector.TextDocumentEmbedder) reference.
+如需更多信息，请参阅 [文本文档嵌入器](api:vector-storage::ai.koog.rag.vector.TextDocumentEmbedder) 参考文档。
 
 #### JVMTextDocumentEmbedder
 
-A JVM-specific implementation that works with `java.nio.file.Path`.
+一个适用于`java.nio.file.Path`的JVM特定实现。
 
 === "Kotlin"
 
@@ -445,13 +445,13 @@ A JVM-specific implementation that works with `java.nio.file.Path`.
     ```
     <!--- KNIT example-ranked-document-storage-java-08.java -->
 
-For more information, see the [JVMTextDocumentEmbedder](api:vector-storage::ai.koog.rag.vector.JVMTextDocumentEmbedder) reference.
+如需更多信息，请参阅 [JVM文本文档嵌入器](api:vector-storage::ai.koog.rag.vector.JVMTextDocumentEmbedder) 参考文档。
 
 ### Combined storage implementations
 
 #### EmbeddingBasedDocumentStorage
 
-Combines a document embedder and a vector storage to provide a complete solution for storing and ranking documents.
+结合文档嵌入器和向量存储，为文档的存储与排序提供完整的解决方案。
 
 === "Kotlin"
 
@@ -490,11 +490,11 @@ Combines a document embedder and a vector storage to provide a complete solution
     ```
     <!--- KNIT example-ranked-document-storage-java-09.java -->
 
-For more information, see the [EmbeddingBasedDocumentStorage](api:vector-storage::ai.koog.rag.vector.EmbeddingBasedDocumentStorage) reference.
+如需更多信息，请参阅 [基于嵌入的文档存储](api:vector-storage::ai.koog.rag.vector.EmbeddingBasedDocumentStorage) 参考文档。
 
 #### InMemoryDocumentEmbeddingStorage
 
-An in-memory implementation of `EmbeddingBasedDocumentStorage`.
+`EmbeddingBasedDocumentStorage` 的内存中实现。
 
 === "Kotlin"
 
@@ -528,7 +528,7 @@ An in-memory implementation of `EmbeddingBasedDocumentStorage`.
     ```
     <!--- KNIT example-ranked-document-storage-java-10.java -->
 
-For more information, see the [InMemoryDocumentEmbeddingStorage](api:vector-storage::ai.koog.rag.vector.InMemoryDocumentEmbeddingStorage) reference.
+如需更多信息，请参阅 [内存文档嵌入存储](api:vector-storage::ai.koog.rag.vector.InMemoryDocumentEmbeddingStorage) 参考文档。
 
 #### FileDocumentEmbeddingStorage
 
@@ -564,7 +564,7 @@ A file-based implementation of `EmbeddingBasedDocumentStorage`.
     ```
     <!--- KNIT example-ranked-document-storage-java-11.java -->
 
-For more information, see the [FileDocumentEmbeddingStorage](api:vector-storage::ai.koog.rag.vector.FileDocumentEmbeddingStorage) reference.
+如需更多信息，请参阅 [文件文档嵌入存储](api:vector-storage::ai.koog.rag.vector.FileDocumentEmbeddingStorage) 参考文档。
 
 #### JVMFileDocumentEmbeddingStorage
 
@@ -604,11 +604,11 @@ A JVM-specific implementation of `FileDocumentEmbeddingStorage`.
     ```
     <!--- KNIT example-ranked-document-storage-java-12.java -->
 
-For more information, see the [JVMFileDocumentEmbeddingStorage](api:vector-storage::ai.koog.rag.vector.JVMFileDocumentEmbeddingStorage) reference.
+如需更多信息，请参阅 [JVM文件文档嵌入存储](api:vector-storage::ai.koog.rag.vector.JVMFileDocumentEmbeddingStorage) 参考文档。
 
 #### JVMTextFileDocumentEmbeddingStorage
 
-A JVM-specific implementation that combines `JVMTextDocumentEmbedder` and `JVMFileVectorStorage`.
+一个结合了`JVMTextDocumentEmbedder`和`JVMFileVectorStorage`的JVM特定实现。
 
 === "Kotlin"
 
@@ -643,15 +643,15 @@ A JVM-specific implementation that combines `JVMTextDocumentEmbedder` and `JVMFi
     ```
     <!--- KNIT example-ranked-document-storage-java-13.java -->
 
-For more information, see the [JVMTextFileDocumentEmbeddingStorage](api:vector-storage::ai.koog.rag.vector.JVMTextFileDocumentEmbeddingStorage) reference.
+如需更多信息，请参阅 [JVM文本文件文档嵌入存储](api:vector-storage::ai.koog.rag.vector.JVMTextFileDocumentEmbeddingStorage) 参考文档。
 
-These implementations provide a flexible and extensible framework for working with document embeddings and vector storage in various environments.
+这些实现为在不同环境中处理文档嵌入和向量存储提供了一个灵活且可扩展的框架。
 
-## Implementing your own vector storage and document embedder
+## 实现你自己的向量存储和文档嵌入器 { #implementing-your-own-vector-storage-and-document-embedder }
 
-You can extend Koog's vector storage framework by implementing your own custom document embedders and vector storage solutions. This is particularly useful when working with specialized document types or storage requirements.
+您可以扩展Koog的向量存储框架，通过实现自定义的文档嵌入器和向量存储解决方案。这在处理特殊文档类型或存储需求时尤为有用。
 
-Here's an example of implementing a custom document embedder for PDF documents:
+以下是一个为 PDF 文档实现自定义文档嵌入器的示例：
 
 === "Kotlin"
 
@@ -781,9 +781,9 @@ Here's an example of implementing a custom document embedder for PDF documents:
     ```
     <!--- KNIT example-ranked-document-storage-java-14.java -->
 
-## Implementing custom non-embedding-based RankedDocumentStorage
+## 实现自定义非嵌入式的RankedDocumentStorage { #implementing-custom-non-embedding-based-rankeddocumentstorage }
 
-While embedding-based document ranking is powerful, there are scenarios where you might want to implement a custom ranking mechanism that does not rely on embeddings. For example, you might want to rank documents based on:
+虽然基于嵌入的文档排序功能强大，但在某些场景下，您可能希望实现不依赖嵌入的自定义排序机制。例如，您可能希望根据以下因素对文档进行排序：
 
 - PageRank-like algorithms
 - Keyword frequency
@@ -791,7 +791,7 @@ While embedding-based document ranking is powerful, there are scenarios where yo
 - User interaction history
 - Domain-specific heuristics
 
-Here's an example of implementing a custom `RankedDocumentStorage` that uses a simple keyword-based ranking approach:
+这是一个实现自定义`RankedDocumentStorage`的示例，它采用了一种基于关键词的简单排序方法：
 
 === "Kotlin"
 
@@ -877,9 +877,9 @@ Here's an example of implementing a custom `RankedDocumentStorage` that uses a s
     ```
     <!--- KNIT example-ranked-document-storage-java-15.java -->
 
-This implementation ranks documents based on the frequency of keywords from the query appearing in the document text. You could extend this approach with more sophisticated algorithms like TF-IDF (Term Frequency-Inverse Document Frequency) or BM25.
+该实现根据查询关键词在文档文本中出现的频率对文档进行排序。您可以采用更复杂的算法来扩展此方法，例如TF-IDF（词频-逆文档频率）或BM25。
 
-Another example is a time-based ranking system that prioritizes recent documents:
+另一个例子是基于时间的排名系统，它会优先考虑近期文档：
 
 === "Kotlin"
 
@@ -943,6 +943,6 @@ Another example is a time-based ranking system that prioritizes recent documents
     ```
     <!--- KNIT example-ranked-document-storage-java-16.java -->
 
-By implementing the `RankedDocumentStorage` interface, you can create custom ranking mechanisms tailored to your specific use case while still leveraging the rest of the RAG infrastructure.
+通过实现`RankedDocumentStorage`接口，您可以创建针对特定使用场景定制的自定义排序机制，同时仍能利用RAG基础设施的其余部分。
 
-The flexibility of Koog's design allows you to mix and match different storage and ranking strategies to build a system that meets your specific requirements.
+Koog设计的灵活性使您能够混合搭配不同的存储和排序策略，从而构建出符合您特定需求的系统。

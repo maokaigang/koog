@@ -7,7 +7,7 @@ LLM 客户端专为直接与 LLM 提供方交互而设计。
 当您与单个 LLM 提供方协作且无需高级生命周期管理时，可以使用 LLM 客户端。
 如果您需要管理多个 LLM 提供方，请使用 [提示词执行器](prompt-executors.md)。
 
-下表展示了可用的 LLM 客户端及其功能。| LLM 提供商                                      | LLMClient                                                                                                                                                                                                   | 工具<br/>调用 | 流式响应 | 多<br/>选项 | 嵌入向量 | 内容审核 | <div style="width:50px">模型<br/>列表</div> | <div style="width:200px">备注</div>                                                                                        |
+ 下表展示了可用的 LLM 客户端及其功能。 | LLM 提供商 | LLMClient | 工具<br/>调用 | 流式响应 | 多<br/>选项 | 嵌入向量 | 内容审核 | <div style="width:50px">模型<br/>列表</div> | <div style="width:200px">备注</div> |
 |-----------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------|-----------|----------------------|------------|------------|-------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
 | [OpenAI](https://platform.openai.com/docs/overview) | [OpenAILLMClient](api:prompt-executor-openai-client::ai.koog.prompt.executor.clients.openai.OpenAILLMClient)                | ✓                | ✓         | ✓                    | ✓          | ✓[^1]      | ✓                                               |                                                                                                                             |
 | [Anthropic](https://www.anthropic.com/)             | [AnthropicLLMClient](api:prompt-executor-anthropic-client::ai.koog.prompt.executor.clients.anthropic.AnthropicLLMClient)      | ✓                | ✓         | -                    | -          | -          | -                                               | -                                                                                                                           |
@@ -102,23 +102,20 @@ LLM 客户端专为直接与 LLM 提供方交互而设计。
     ```
     <!--- KNIT example-llm-clients-java-01.java -->
 
-## Streaming responses
+## 流式响应 { #streaming-responses }
 
 !!! note
     Available for all LLM clients.
 
-When you need to process responses as they are generated, you can use the `executeStreaming()` method in Kotlin or 
-`executeStreamingWithPublisher()` in Java to stream the model output.
+当你需要实时处理生成的响应时，可以在Kotlin中使用`executeStreaming()`方法，或在Java中使用`executeStreamingWithPublisher()`来流式传输模型输出。
 
-The streaming API provides different frame types:
+流式API提供多种帧类型：
 
-- **Delta frames** (`TextDelta`, `ReasoningDelta`, `ToolCallDelta`) — incremental content that arrives in chunks
-- **Complete frames** (`TextComplete`, `ReasoningComplete`, `ToolCallComplete`) — full content after all deltas are received
-- **End frame** (`End`) — signals stream completion with finish reason
+- **增量帧**（`TextDelta`、`ReasoningDelta`、`ToolCallDelta`）——以分块形式到达的增量内容
+- **完整帧**（`TextComplete`、`ReasoningComplete`、`ToolCallComplete`）——接收所有增量数据后的完整内容
+- **结束帧** (`End`) — 表示流完成并附带结束原因
 
-For models that support reasoning (such as Claude Sonnet 4.5 or GPT-o1), reasoning frames will be emitted during 
-streaming.
-See the [Streaming API documentation](../streaming-api.md) for more details on working with frames.
+对于支持推理的模型（例如 Claude Sonnet 4.5 或 GPT-o1），在流式传输过程中会输出推理帧。有关处理帧的更多详细信息，请参阅 [流式传输 API 文档](../streaming-api.md)。
 
 === "Kotlin"
 
@@ -210,14 +207,12 @@ See the [Streaming API documentation](../streaming-api.md) for more details on w
     ```
     <!--- KNIT example-llm-clients-java-02.java -->
 
-## Multiple choices
+## 多项选择 { #multiple-choices }
 
 !!! note
-    Available for all LLM clients except `GoogleLLMClient`, `BedrockLLMClient`, and `OllamaClient`
+    适用于所有LLM客户端，但不包括`GoogleLLMClient`、`BedrockLLMClient`和`OllamaClient`
 
-You can request multiple alternative responses from the model in a single call by using the `executeMultipleChoices()` method.
-It requires additionally specifying the [`numberOfChoices`](prompt-creation/index.md#prompt-parameters) LLM parameter in the prompt
-being executed.
+您可以通过使用`executeMultipleChoices()`方法，在单次调用中请求模型的多个备选响应。这需要在执行的提示中额外指定[`numberOfChoices`](prompt-creation/index.md#prompt-parameters) LLM参数。
 
 === "Kotlin"
 
@@ -296,12 +291,12 @@ being executed.
     ```
     <!--- KNIT example-llm-clients-java-03.java -->
 
-## Listing available models
+## 列出可用模型 { #listing-available-models }
 
 !!! note
-    Available for all LLM clients except `AnthropicLLMClient`, `BedrockLLMClient`, and `OllamaClient`.
+    适用于除`AnthropicLLMClient`、`BedrockLLMClient`和`OllamaClient`之外的所有LLM客户端。
 
-To get a list of available model IDs supported by the LLM client, use the `models()` method:    
+要获取 LLM 客户端支持的可用模型 ID 列表，请使用 `models()` 方法：
 
 === "Kotlin"
 
@@ -347,8 +342,7 @@ To get a list of available model IDs supported by the LLM client, use the `model
 !!! note
     Available for `OpenAILLMClient`, `GoogleLLMClient`, `BedrockLLMClient`, `MistralAILLMClient`, and `OllamaClient`.
 
-You convert text into embedding vectors using the `embed()` method.
-Choose an embedding model and pass your text to this method:
+您可以使用 `embed()` 方法将文本转换为嵌入向量。选择一个嵌入模型，并将您的文本传递给此方法：
 
 <!--- INCLUDE
 import ai.koog.prompt.dsl.prompt
@@ -374,9 +368,9 @@ fun main() = runBlocking {
 ## Moderation
 
 !!! note
-    Available for the following LLM clients: `OpenAILLMClient`, `BedrockLLMClient`, `MistralAILLMClient`, `OllamaClient`.
+    适用于以下LLM客户端：`OpenAILLMClient`、`BedrockLLMClient`、`MistralAILLMClient`、`OllamaClient`。
 
-You can use the `moderate()` method with a moderation model to check whether a prompt contains inappropriate content:
+您可以使用`moderate()`方法配合审核模型来检查提示是否包含不当内容：
 
 === "Kotlin"
 
@@ -424,11 +418,10 @@ You can use the `moderate()` method with a moderation model to check whether a p
     ```
     <!--- KNIT example-llm-clients-java-05.java -->
 
-## Integration with prompt executors
+## 与提示执行器的集成 { #integration-with-prompt-executors }
 
-[Prompt executors](prompt-executors.md) wrap LLM clients and provide additional functionality, such as routing, fallbacks, and unified usage across providers.
-They are recommended for production use, as they offer flexibility when working with multiple providers.
+[提示执行器](prompt-executors.md) 封装 LLM 客户端并提供额外功能，例如路由、回退机制以及跨提供商的统一使用方式。建议在生产环境中使用它们，因为它们在处理多个提供商时提供了灵活性。
 
-[^1]: Supports moderation via the OpenAI Moderation API.
-[^2]: Moderation requires Guardrails configuration.
-[^3]: Supports moderation via the Mistral `v1/moderations` endpoint.
+[^1]: 支持通过 OpenAI 审核 API 进行内容审核。  
+[^2]: 内容审核需配置 Guardrails。  
+[^3]: 支持通过 Mistral `v1/moderations` 端点进行内容审核。

@@ -30,7 +30,7 @@ nav:
             - 多模态内容: prompts/prompt-creation/multimodal-content.md
           - 运行提示词:
             - LLM 客户端: prompts/llm-clients.md
-            - 提示执行器: prompts/prompt-executors.md
+            - 提示词执行器: prompts/prompt-executors.md
           - 处理故障: prompts/handling-failures.md
           - LLM 响应缓存: prompts/llm-response-caching.md
       - 策略:

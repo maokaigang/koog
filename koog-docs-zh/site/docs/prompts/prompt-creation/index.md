@@ -248,7 +248,7 @@ Kotlin DSL 和 Java 构建器 API 支持以下类型的消息，每种消息对�
                 content = """{"operation": "add", "a": 5, "b": 3}"""
             )
 
-```            // 工具结果
+            // 工具结果
             result(
                 id = "calculator_tool_id",
                 tool = "calculator",

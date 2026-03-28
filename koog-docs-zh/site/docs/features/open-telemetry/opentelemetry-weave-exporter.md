@@ -30,8 +30,7 @@ export WEAVE_PROJECT_NAME="koog-tracing"
 
 ## 配置 { #configuration }
 
-要启用 Weave 导出，请安装 **OpenTelemetry 功能** 并添加 `WeaveExporter`。  
-导出器通过 `OtlpHttpSpanExporter` 使用 Weave 的 OpenTelemetry 端点。
+要启用 Weave 导出，请安装 **OpenTelemetry 功能** 并添加 `WeaveExporter`。 导出器通过 `OtlpHttpSpanExporter` 使用 Weave 的 OpenTelemetry 端点。
 
 ### 示例：启用 Weave 追踪的智能体 { #example-agent-with-weave-tracing }
 
@@ -114,17 +113,16 @@ export WEAVE_PROJECT_NAME="koog-tracing"
     ```
     <!--- KNIT exampleWeaveExporterJava01.java -->
 
-## What gets traced
+## 什么会被追踪 { #what-gets-traced }
 
-When enabled, the Weave exporter captures the same spans as Koog’s general OpenTelemetry integration, including:
+启用后，Weave导出器会捕获与Koog通用OpenTelemetry集成相同的跨度，包括：
 
-- **Agent lifecycle events**: agent start, stop, errors
-- **LLM interactions**: prompts, completions, latency
-- **Tool calls**: execution traces for tool invocations
-- **System context**: metadata such as model name, environment, Koog version
+- **智能体生命周期事件**：启动、停止、错误
+- **LLM 交互**：提示、完成、延迟
+- **工具调用**：工具调用的执行轨迹
+- **系统上下文**：元数据，例如模型名称、环境、Koog 版本
 
-For security reasons, some content of OpenTelemetry spans is masked by default.
-To make the content available in Weave, use the [setVerbose](opentelemetry-support.md#setverbose) method in the OpenTelemetry configuration and set its `verbose` argument to `true` as follows:
+出于安全考虑，OpenTelemetry 的部分追踪内容默认会被屏蔽。若要在 Weave 中查看这些内容，请在 OpenTelemetry 配置中使用 [设置详细模式](opentelemetry-support.md#setverbose) 方法，并将其 `verbose` 参数设置为 `true`，具体操作如下：
 
 === "Kotlin"
 
@@ -185,23 +183,23 @@ To make the content available in Weave, use the [setVerbose](opentelemetry-suppo
     ```
     <!--- KNIT exampleWeaveExporterJava02.java -->
 
-When visualized in W&B Weave, the trace appears as follows:
+在 W&B Weave 中可视化时，追踪记录会呈现如下所示：
 ![W&B Weave traces](img/opentelemetry-weave-exporter-light.png#only-light)
 ![W&B Weave traces](img/opentelemetry-weave-exporter-dark.png#only-dark)
 
-For more details, see the official [Weave OpenTelemetry Docs](https://weave-docs.wandb.ai/guides/tracking/otel/).
+更多详情，请参阅官方[Weave OpenTelemetry 文档](https://weave-docs.wandb.ai/guides/tracking/otel/)。
 
 ---
 
 ## Troubleshooting
 
-### No traces appear in Weave
-- Confirm that `WEAVE_API_KEY`, `WEAVE_ENTITY`, and `WEAVE_PROJECT_NAME` are set in your environment.
-- Ensure that your W&B account has access to the specified entity and project.
+### Weave中没有出现任何追踪记录 { #no-traces-appear-in-weave }
+- 确认您的环境中已设置 `WEAVE_API_KEY`、`WEAVE_ENTITY` 和 `WEAVE_PROJECT_NAME`。
+- 确保您的 W&B 账户有权访问指定的实体和项目。
 
-### Authentication errors
-- Check that your `WEAVE_API_KEY` is valid.
-- API key must have permission to write traces for the selected entity.
+### 认证错误 { #authentication-errors }
+- 检查你的 `WEAVE_API_KEY` 是否有效。
+- API 密钥必须拥有为所选实体写入追踪的权限。
 
-### Connection issues
-- Make sure your environment has network access to W&B’s OpenTelemetry ingestion endpoints.
+### 连接问题 { #connection-issues }
+- 确保您的环境能够访问 W&B 的 OpenTelemetry 数据接收端点。

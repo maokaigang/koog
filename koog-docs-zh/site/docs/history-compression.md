@@ -168,10 +168,9 @@ AI 代理维护着包含用户消息、助手回复、工具调用和工具响�
     ```
     <!--- KNIT exampleHistoryCompressionJava01.java -->
 
-In this example, the strategy checks if the history is too long after each tool call.
-The history is compressed before sending the tool result back to the LLM. This prevents the context from growing during long conversations.
+在这个示例中，策略会在每次工具调用后检查历史记录是否过长。在将工具结果发送回 LLM 之前，历史记录会被压缩。这样可以防止在长对话过程中上下文不断增长。
 
-* To compress the history between the logical steps (subgraphs) of your strategy, you can implement your strateg as follows:
+* 要压缩策略中逻辑步骤（子图）之间的历史记录，您可以按以下方式实现策略：
 
 === "Kotlin"
 
@@ -245,11 +244,11 @@ The history is compressed before sending the tool result back to the LLM. This p
     ```
     <!--- KNIT exampleHistoryCompressionJava02.java -->
 
-In this example, the history is compressed after completing the information collection phase, but before proceeding to the decision-making phase.
+在这个示例中，历史记录在完成信息收集阶段之后、进入决策阶段之前被压缩。
 
-### History compression in a custom node
+### 自定义节点中的历史压缩 { #history-compression-in-a-custom-node }
 
-If you are implementing a custom node, you can compress history using the `replaceHistoryWithTLDR()` function as follows:
+如果您正在实现自定义节点，可以按照以下方式使用 `replaceHistoryWithTLDR()` 函数来压缩历史记录：
 
 === "Kotlin"
 
@@ -284,23 +283,21 @@ If you are implementing a custom node, you can compress history using the `repla
     ```
     <!--- KNIT example-history-compression-java-01.java -->
 
-This approach gives you more flexibility to implement compression at any point in your custom node logic, based on your specific requirements.
+这种方法让你能够根据具体需求，在自定义节点逻辑的任何环节更灵活地实现压缩功能。
 
-To learn more about custom nodes, see [Custom nodes](custom-nodes.md).
+要了解更多关于自定义节点的信息，请参阅[自定义节点](custom-nodes.md)。
 
-## History compression strategies
+## 历史压缩策略 { #history-compression-strategies }
 
-You can customize the compression process by passing an optional `strategy` parameter to `nodeLLMCompressHistory(strategy=...)` or to `replaceHistoryWithTLDR(strategy=...)`.
-The framework provides several built-in strategies.
+您可以通过向`nodeLLMCompressHistory(strategy=...)`或`replaceHistoryWithTLDR(strategy=...)`传递可选的`strategy`参数来自定义压缩过程。该框架提供了多种内置策略。
 
-### WholeHistory (Default)
+### 完整历史（默认） { #wholehistory-default }
 
-The default strategy that compresses the entire history into one TLDR message that summarizes what has been achieved so far.
-This strategy works well for most general use cases where you want to maintain awareness of the entire conversation context while reducing token usage.
+默认策略会将整个历史记录压缩为一条TLDR消息，用于总结迄今为止已完成的进展。该策略适用于大多数常规使用场景，既能保持对完整对话上下文的感知，又能有效减少令牌消耗。
 
-You can use it as follows: 
+您可以按如下方式使用：
 
-* In a strategy graph:
+* 在策略图中：
 
 === "Kotlin"
 
@@ -355,7 +352,7 @@ You can use it as follows:
     ```
     <!--- KNIT exampleHistoryCompressionJava03.java -->
 
-* In a custom node:
+* 在自定义节点中：
 
 === "Kotlin"
 
@@ -393,12 +390,11 @@ You can use it as follows:
 
 ### FromLastNMessages
 
-The strategy compresses only the last `n` messages into a TLDR message and completely discards earlier messages.
-This is useful when only the latest achievements of the agent (or the latest discovered facts, the latest context) are relevant for solving the problem.
+该策略仅将最后`n`条消息压缩为一条TLDR消息，并完全丢弃更早的消息。当只有智能体的最新成果（或最新发现的事实、最新上下文）对解决问题具有相关性时，这种方法非常有用。
 
-You can use it as follows:
+您可以按如下方式使用：
 
-* In a strategy graph:
+* 在策略图中：
 
 === "Kotlin"
 
@@ -453,7 +449,7 @@ You can use it as follows:
     ```
     <!--- KNIT exampleHistoryCompressionJava04.java -->
 
-* In a custom node:
+* 在自定义节点中：
 
 === "Kotlin"
 
@@ -492,12 +488,11 @@ You can use it as follows:
 
 ### Chunked
 
-The strategy splits the whole message history into chunks of a fixed size and compresses each chunk independently into a TLDR message.
-This is useful when you need not only the concise TLDR of what has been done so far but also want to keep track of the overall progress, and some older information might also be important.
+该策略将整个消息历史分割成固定大小的块，并将每个块独立压缩为一条TLDR消息。当你不仅需要简洁的TLDR来了解已完成的工作，还想跟踪整体进度，并且某些较早的信息可能仍然重要时，这种方法非常有用。
 
-You can use it as follows:
+您可以按如下方式使用：
 
-* In a strategy graph:
+* 在策略图中：
 
 === "Kotlin"
 
@@ -552,7 +547,7 @@ You can use it as follows:
     ```
     <!--- KNIT exampleHistoryCompressionJava05.java -->
 
-* In a custom node:
+* 在自定义节点中：
 
 === "Kotlin"
 
@@ -591,13 +586,11 @@ You can use it as follows:
 
 ### RetrieveFactsFromHistory
 
-The strategy searches for specific facts relevant to the provided list of concepts in the history and retrieves them.
-It changes the whole history to just these facts and leaves them as context for future LLM requests.
-This is useful when you have an idea of what exact facts will be relevant for the LLM to perform better on the task.
+该策略会在历史记录中搜索与所提供的概念列表相关的特定事实，并将其提取出来。它将整个历史记录简化为这些事实，并将其保留为后续LLM请求的上下文。当您明确知道哪些具体事实有助于LLM更好地执行任务时，这种方法尤为实用。
 
-You can use it as follows:
+您可以按如下方式使用：
 
-* In a strategy graph:
+* 在策略图中：
 
 === "Kotlin"
 
@@ -694,7 +687,7 @@ You can use it as follows:
     ```
     <!--- KNIT exampleHistoryCompressionJava06.java -->
 
-* In a custom node:
+* 在自定义节点中：
 
 === "Kotlin"
 
@@ -757,11 +750,11 @@ You can use it as follows:
     ```
     <!--- KNIT example-history-compression-java-05.java -->
 
-## Custom history compression strategy implementation
+## 自定义历史记录压缩策略实现 { #custom-history-compression-strategy-implementation }
 
-You can create your own history compression strategy by extending the `HistoryCompressionStrategy` abstract class and implementing the `compress` method.
+你可以通过扩展 `HistoryCompressionStrategy` 抽象类并实现 `compress` 方法来创建自己的历史压缩策略。
 
-Here is an example:
+这是一个示例：
 
 === "Kotlin"
 
@@ -815,11 +808,11 @@ Here is an example:
     ```
     <!--- KNIT example-history-compression-java-06.java -->
 
-In this example, the custom strategy filters messages that contain the word "important" and keeps only those in the compressed history.
+在这个示例中，自定义策略会筛选出包含“important”一词的消息，并仅将这些消息保留在压缩后的历史记录中。
 
-Then you can use it as follows:
+然后，您可以按如下方式使用它：
 
-* In a strategy graph:
+* 在策略图中：
 
 === "Kotlin"
 
@@ -854,7 +847,7 @@ Then you can use it as follows:
     ```
     <!--- KNIT example-history-compression-java-07.java -->
 
-* In a custom node:
+* 在自定义节点中：
 
 === "Kotlin"
 
@@ -891,14 +884,13 @@ Then you can use it as follows:
     ```
     <!--- KNIT example-history-compression-java-08.java -->
 
-##  Memory preservation during compression
+##  压缩过程中的内存保留 { #memory-preservation-during-compression }
 
-All history compression methods have the `preserveMemory` parameter that determines whether memory-related messages should be preserved during compression.
-These are messages that contain facts retrieved from memory or indicate that the memory feature is not enabled.
+所有历史压缩方法都包含 `preserveMemory` 参数，该参数决定在压缩过程中是否应保留与记忆相关的消息。这些消息包含从记忆中检索到的事实，或表明记忆功能未启用。
 
-You can use the `preserveMemory` parameter as follows:
+您可以使用 `preserveMemory` 参数如下：
 
-* In a strategy graph:
+* 在策略图中：
 
 === "Kotlin"
 
@@ -953,7 +945,7 @@ You can use the `preserveMemory` parameter as follows:
     ```
     <!--- KNIT exampleHistoryCompressionJava07.java -->
 
-* In a custom node:
+* 在自定义节点中：
 
 === "Kotlin"
 

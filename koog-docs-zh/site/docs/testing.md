@@ -1,13 +1,13 @@
-<!-- koog-zh-meta: {"last_synced_at": "2026-03-28T13:20:29+00:00", "source_path": "testing.md", "source_sha256": "47bd4d8f87c7b023126a50377aaac7a61a65fe2722a132d2b8888b8afb9a2ebe", "source_tag": "0.7.3", "translation_status": "changed"} -->
+<!-- koog-zh-meta: {"last_synced_at": "2026-03-28T16:52:54+00:00", "source_path": "testing.md", "source_sha256": "47bd4d8f87c7b023126a50377aaac7a61a65fe2722a132d2b8888b8afb9a2ebe", "source_tag": "0.7.3", "translation_status": "changed"} -->
 # 测试 { #testing }
 
 ## 概述 { #overview }
 
-测试功能为 Koog 框架中的 AI 智能体流水线、子图及工具交互测试提供了一个全面的框架。它使开发者能够创建受控的测试环境，包含模拟的 LLM（大语言模型）执行器、工具注册表和智能体环境。
+测试功能为 Koog 框架中的 AI 智能体流水线、子图以及工具交互提供了一个全面的测试框架。它使开发者能够创建受控的测试环境，包含模拟的 LLM（大语言模型）执行器、工具注册表和智能体环境。
 
 ### 目的 { #purpose }
 
-此功能的主要目的是通过以下方式，促进基于智能体的 AI 功能测试：
+此功能的主要目的是通过以下方式促进基于智能体的 AI 功能测试：
 
 - 模拟对特定提示的 LLM 响应
 - 模拟工具调用及其结果
@@ -51,12 +51,12 @@ dependencies {
 
     -->
     ```kotlin
-    // Create a mock LLM executor
+    // 创建一个模拟的 LLM 执行器
     val mockLLMApi = getMockExecutor {
-      // Mock a simple text response
+      // 模拟一个简单的文本响应
       mockLLMAnswer("Hello!") onRequestContains "Hello"
 
-      // Mock a default response
+      // 模拟一个默认响应
       mockLLMAnswer("I don't know how to answer that.").asDefaultResponse
     }
     ```
@@ -75,10 +75,8 @@ dependencies {
     import ai.koog.agents.testing.tools.MockExecutor;
     import ai.koog.prompt.executor.model.PromptExecutor;
 
-    // Create a tool registry (empty)
-    ToolRegistry toolRegistry = ToolRegistry.builder().build();
-
-    // Create a mock LLM executor
+    // 创建一个工具注册表（空）
+    ToolRegistry toolRegistry = ToolRegistry.builder().build();    // 创建模拟 LLM 执行器
     PromptExecutor mockLLMApi = MockExecutor.builder()
         .toolRegistry(toolRegistry)
         .mockLLMAnswer("Hello!").onRequestContains("Hello")
@@ -87,9 +85,9 @@ dependencies {
     ```
     <!--- KNIT example-testing-java-01.java -->
 
-### Mocking tool calls
+### 模拟工具调用 { #mocking-tool-calls }
 
-You can mock the LLM to call specific tools based on input patterns:
+你可以根据输入模式模拟 LLM 调用特定工具：
 
 === "Kotlin"
 
@@ -172,25 +170,25 @@ You can mock the LLM to call specific tools based on input patterns:
     }
     -->
     ```kotlin
-    // Mock a tool call response
+    // 模拟工具调用响应
     mockLLMToolCall(CreateTool, CreateTool.Args("solve")) onRequestEquals "Solve task"
 
-    // Mock tool behavior - simplest form without lambda
+    // 模拟工具行为 - 最简单的形式（无需 lambda）
     mockTool(PositiveToneTool) alwaysReturns "The text has a positive tone."
 
-    // Using lambda when you need to perform extra actions
+    // 当需要执行额外操作时使用 lambda
     mockTool(NegativeToneTool) alwaysTells {
-      // Perform some extra action
+      // 执行一些额外操作
       println("Negative tone tool called")
 
-      // Return the result
+      // 返回结果
       "The text has a negative tone."
     }
 
-    // Mock tool behavior based on specific arguments
+    // 基于特定参数模拟工具行为
     mockTool(AnalyzeTool) returns "Detailed analysis" onArguments AnalyzeTool.Args("analyze deeply")
 
-    // Mock tool behavior with conditional argument matching
+    // 基于条件参数匹配模拟工具行为
     mockTool(SearchTool) returns "Found results" onArgumentsMatching { args ->
       args.query.contains("important")
     }
@@ -210,16 +208,16 @@ You can mock the LLM to call specific tools based on input patterns:
     <!--- KNIT example-testing-java-02.java -->
 
 
-The examples above demonstrate different ways to mock tools, from simple to more complex ones:
+以上示例展示了从简单到复杂的不同模拟工具方法：
 
-1. `alwaysReturns`: the simplest form, directly returns a value without a lambda.
-2. `alwaysTells`: uses a lambda when you need to perform additional actions.
-3. `returns...onArguments`: returns specific results for exact argument matches.
-4. `returns...onArgumentsMatching`: returns results based on custom argument conditions.
+1. `alwaysReturns`：最简单形式，无需 lambda 直接返回值。
+2. `alwaysTells`：需要执行额外操作时使用 lambda。
+3. `returns...onArguments`：为精确参数匹配返回特定结果。
+4. `returns...onArgumentsMatching`：基于自定义参数条件返回结果。
 
-### Enabling testing mode
+### 启用测试模式 { #enabling-testing-mode }
 
-To enable the testing mode on an agent, use the `withTesting()` function within the AIAgent constructor block:
+要在智能体上启用测试模式，请在 AIAgent 构造函数块中使用 `withTesting()` 函数：
 
 === "Kotlin"
 
@@ -239,14 +237,14 @@ To enable the testing mode on an agent, use the `withTesting()` function within 
     }
     -->
     ```kotlin
-    // Create the agent with testing enabled
+    // 创建启用测试的智能体
     AIAgent(
-        promptExecutor = mockLLMApi,
-        toolRegistry = toolRegistry,
-        llmModel = llmModel
+    promptExecutor = mockLLMApi,
+    toolRegistry = toolRegistry,
+    llmModel = llmModel
     ) {
-        // Enable testing mode
-        withTesting()
+    // 启用测试模式
+    withTesting()
     }
     ```
     <!--- KNIT example-testing-04.kt -->
@@ -264,17 +262,17 @@ To enable the testing mode on an agent, use the `withTesting()` function within 
     <!--- KNIT example-testing-java-03.java -->
 
 
-## Advanced testing
+## 高级测试 { #advanced-testing }
 
-### Testing the graph structure
+### 测试图结构 { #testing-the-graph-structure }
 
-Before testing the detailed node behavior and edge connections, it is important to verify the overall structure of your agent's graph. This includes checking that all required nodes exist and are properly connected in the expected subgraphs.
+在测试详细的节点行为和边连接之前，验证智能体图的整体结构非常重要。这包括检查所有必需的节点是否存在，以及是否在预期的子图中正确连接。
 
-The Testing feature provides a comprehensive way to test your agent's graph structure. This approach is particularly valuable for complex agents with multiple subgraphs and interconnected nodes.
+测试功能提供了一种全面的方式来测试智能体的图结构。这种方法对于具有多个子图和互连节点的复杂智能体尤其有价值。
 
-#### Basic structure testing
+#### 基础结构测试 { #basic-structure-testing }
 
-Start by validating the fundamental structure of your agent's graph:
+首先验证智能体图的基本结构：
 
 === "Kotlin"
 
@@ -299,7 +297,7 @@ Start by validating the fundamental structure of your agent's graph:
     -->
     ```kotlin
     AIAgent(
-        // Constructor arguments
+        // 构造函数参数
         promptExecutor = mockLLMApi,
         toolRegistry = toolRegistry,
         llmModel = llmModel
@@ -308,23 +306,22 @@ Start by validating the fundamental structure of your agent's graph:
             val firstSubgraph = assertSubgraphByName<String, String>("first")
             val secondSubgraph = assertSubgraphByName<String, String>("second")
 
-            // Assert subgraph connections
+            // 断言子图连接
             assertEdges {
                 startNode() alwaysGoesTo firstSubgraph
                 firstSubgraph alwaysGoesTo secondSubgraph
                 secondSubgraph alwaysGoesTo finishNode()
             }
 
-            // Verify the first subgraph
+            // 验证第一个子图
             verifySubgraph(firstSubgraph) {
                 val start = startNode()
                 val finish = finishNode()
 
-                // Assert nodes by name
+                // 按名称断言节点
                 val askLLM = assertNodeByName<String, Message.Response>("callLLM")
                 val callTool = assertNodeByName<Message.Tool.Call, ReceivedToolResult>("executeTool")
-
-                // Assert node reachability
+// 断言节点可达性
                 assertReachable(start, askLLM)
                 assertReachable(askLLM, callTool)
             }
@@ -346,14 +343,13 @@ Start by validating the fundamental structure of your agent's graph:
     <!--- KNIT example-testing-java-04.java -->
 
 
-### Testing node behavior
+### 测试节点行为 { #testing-node-behavior }
 
-Node behavior testing lets you verify that nodes in your agent's graph produce the expected outputs for the given inputs. 
-This is crucial for ensuring that your agent's logic works correctly under different scenarios.
+节点行为测试允许您验证智能体图中节点在给定输入下是否产生预期输出。这对于确保智能体逻辑在不同场景下正确运行至关重要。
 
-#### Basic node testing
+#### 基础节点测试 { #basic-node-testing }
 
-Start with simple input and output validations for individual nodes:
+从针对单个节点的简单输入输出验证开始：
 
 === "Kotlin"
 
@@ -393,10 +389,10 @@ Start with simple input and output validations for individual nodes:
     ```kotlin
     assertNodes {
 
-        // Test basic text responses
+        // 测试基础文本响应
         askLLM withInput "Hello" outputs assistantMessage("Hello!")
 
-        // Test tool call responses
+        // 测试工具调用响应
         askLLM withInput "Solve task" outputs toolCallMessage(CreateTool, CreateTool.Args("solve"))
     }
     ```
@@ -415,13 +411,13 @@ Start with simple input and output validations for individual nodes:
     <!--- KNIT example-testing-java-05.java -->
 
 
-The example above shows how to test the following behavior:
-1. When the LLM node receives `Hello` as the input, it responds with a simple text message.
-2. When it receives `Solve task`, it responds with a tool call.
+以上示例展示了如何测试以下行为：
+1. 当 LLM 节点收到输入 `Hello` 时，会返回简单文本消息。
+2. 当收到输入 `Solve task` 时，会返回工具调用。
 
-#### Testing tool run nodes
+#### 测试工具运行节点 { #testing-tool-run-nodes }
 
-You can also test nodes that run tools:
+您还可以测试运行工具的节点：
 
 === "Kotlin"
 
@@ -480,7 +476,7 @@ You can also test nodes that run tools:
     -->
     ```kotlin
     assertNodes {
-        // Test tool runs with specific arguments
+        // 测试带特定参数的工具运行
         callTool withInput toolCallMessage(
             SolveTool,
             SolveTool.Args("solve")
@@ -502,11 +498,9 @@ You can also test nodes that run tools:
     <!--- KNIT example-testing-java-06.java -->
 
 
-This verifies that when the tool execution node receives a specific tool call signature, it produces the expected tool result.
+这验证了当工具执行节点收到特定工具调用签名时，是否会产生预期的工具结果。#### 高级节点测试
 
-#### Advanced node testing
-
-For more complex scenarios, you can test nodes with structured inputs and outputs:
+对于更复杂的场景，您可以测试具有结构化输入和输出的节点：
 
 === "Kotlin"
 
@@ -565,10 +559,10 @@ For more complex scenarios, you can test nodes with structured inputs and output
     -->
     ```kotlin
     assertNodes {
-        // Test with different inputs to the same node
+        // 使用不同输入测试同一节点
         askLLM withInput "Simple query" outputs assistantMessage("Simple response")
 
-        // Test with complex parameters
+        // 测试复杂参数
         askLLM withInput "Complex query with parameters" outputs toolCallMessage(
             AnalyzeTool,
             AnalyzeTool.Args(query = "parameters", depth = 3)
@@ -589,7 +583,7 @@ For more complex scenarios, you can test nodes with structured inputs and output
     ```
     <!--- KNIT example-testing-java-07.java -->
 
-You can also test complex tool call scenarios with detailed result structures:
+您还可以测试具有详细结果结构的复杂工具调用场景：
 
 === "Kotlin"
 
@@ -656,7 +650,7 @@ You can also test complex tool call scenarios with detailed result structures:
     -->
     ```kotlin
     assertNodes {
-        // Test a complex tool call with a structured result
+        // 测试具有结构化结果的复杂工具调用
         callTool withInput toolCallMessage(
             AnalyzeTool,
             AnalyzeTool.Args(query = "complex", depth = 5)
@@ -681,15 +675,15 @@ You can also test complex tool call scenarios with detailed result structures:
     ```
     <!--- KNIT example-testing-java-08.java -->
 
-These advanced tests help ensure that your nodes handle complex data structures correctly, which is essential for sophisticated agent behaviors.
+这些高级测试有助于确保您的节点正确处理复杂数据结构，这对于实现复杂的智能体行为至关重要。
 
-### Testing edge connections
+### 测试边连接
 
-Edge connections testing allows you to verify that your agent's graph correctly routes outputs from one node to the appropriate next node. This ensures that your agent follows the intended workflow paths based on different outputs.
+边连接测试允许您验证智能体图是否正确地将一个节点的输出路由到适当的下一节点。这确保了您的智能体能够根据不同的输出遵循预期的工作流路径。
 
-#### Basic edge testing
+#### 基础边测试
 
-Start with simple edge connection tests:
+从简单的边连接测试开始：
 
 === "Kotlin"
 
@@ -732,11 +726,11 @@ Start with simple edge connection tests:
     -->
     ```kotlin
     assertEdges {
-        // Test text message routing
-        askLLM withOutput assistantMessage("Hello!") goesTo giveFeedback
+    // 测试文本消息路由
+    askLLM withOutput assistantMessage("Hello!") goesTo giveFeedback
 
-        // Test tool call routing
-        askLLM withOutput toolCallMessage(CreateTool, CreateTool.Args("solve")) goesTo callTool
+    // 测试工具调用路由
+    askLLM withOutput toolCallMessage(CreateTool, CreateTool.Args("solve")) goesTo callTool
     }
     ```
     <!--- KNIT example-testing-10.kt -->
@@ -753,13 +747,13 @@ Start with simple edge connection tests:
     ```
     <!--- KNIT example-testing-java-09.java -->
 
-This example verifies the following behavior:
-1. When the LLM node outputs a simple text message, the flow is directed to the `giveFeedback` node.
-2. When it outputs a tool call, the flow is directed to the `callTool` node.
+此示例验证以下行为：
+1. 当 LLM 节点输出简单文本消息时，流程被导向 `giveFeedback` 节点。
+2. 当它输出工具调用时，流程被导向 `callTool` 节点。
 
-#### Testing conditional routing
+#### 测试条件路由 { #basic-edge-testing }
 
-You can test a more complex routing logic based on the content of outputs:
+您可以基于输出内容测试更复杂的路由逻辑：
 
 === "Kotlin"
 
@@ -797,7 +791,7 @@ You can test a more complex routing logic based on the content of outputs:
     -->
     ```kotlin
     assertEdges {
-        // Different text responses can route to different nodes
+        // 不同的文本响应可以路由到不同的节点
         askLLM withOutput assistantMessage("Need more information") goesTo askForInfo
         askLLM withOutput assistantMessage("Ready to proceed") goesTo processRequest
     }
@@ -816,9 +810,9 @@ You can test a more complex routing logic based on the content of outputs:
     ```
     <!--- KNIT example-testing-java-10.java -->
 
-#### Advanced edge testing
+#### 高级边测试 { #testing-conditional-routing }
 
-For sophisticated agents, you can test conditional routing based on structured data in tool results:
+对于复杂的智能体，您可以基于工具结果中的结构化数据测试条件路由：
 
 === "Kotlin"
 
@@ -857,7 +851,7 @@ For sophisticated agents, you can test conditional routing based on structured d
     -->
     ```kotlin
     assertEdges {
-        // Test routing based on tool result content
+        // 基于工具结果内容测试路由
         callTool withOutput toolResult(
             AnalyzeTool,
             AnalyzeTool.Args(query = "parameters", depth = 3),
@@ -879,9 +873,7 @@ For sophisticated agents, you can test conditional routing based on structured d
     ```
     <!--- KNIT example-testing-java-11.java -->
 
-You can also test complex decision paths based on different result properties:
-
-=== "Kotlin"
+您还可以基于不同的结果属性测试复杂的决策路径：=== "Kotlin"
 
     <!--- INCLUDE
     import ai.koog.agents.core.agent.AIAgent
@@ -919,7 +911,7 @@ You can also test complex decision paths based on different result properties:
     -->
     ```kotlin
     assertEdges {
-        // Route to different nodes based on confidence level
+        // 根据置信度路由到不同节点
         callTool withOutput toolResult(
             AnalyzeTool,
             AnalyzeTool.Args(query = "parameters", depth = 3),
@@ -947,15 +939,15 @@ You can also test complex decision paths based on different result properties:
     ```
     <!--- KNIT example-testing-java-12.java -->
 
-These advanced edge tests help ensure that your agent makes the correct decisions based on the content and structure of node outputs, which is essential for creating intelligent, context-aware workflows.
+这些高级边测试有助于确保您的智能体能够根据节点输出的内容和结构做出正确决策，这对于创建智能、上下文感知的工作流至关重要。
 
-## Complete testing example
+## 完整测试示例
 
-Here is a user story that demonstrates a complete testing scenario:
+以下是一个用户故事，展示了完整的测试场景：
 
-You are developing a tone analysis agent that analyzes the tone of the text and provides feedback. The agent uses tools for detecting positive, negative, and neutral tones.
+您正在开发一个语气分析智能体，用于分析文本的语气并提供反馈。该智能体使用检测积极、消极和中性语气的工具。
 
-Here is how you can test this agent:
+以下是测试该智能体的方法：
 
 === "Kotlin"
 
@@ -968,13 +960,13 @@ Here is how you can test this agent:
     ```kotlin
     @Test
     fun testToneAgent() = runTest {
-        // Create a list to track tool calls
+        // 创建列表以跟踪工具调用
         var toolCalls = mutableListOf<String>()
         var result: String? = null
 
-        // Create a tool registry
+        // 创建工具注册表
         val toolRegistry = ToolRegistry {
-            // A special tool, required with this type of agent
+            // 特殊工具，此类智能体必需
             tool(SayToUser)
 
             with(ToneTools) {
@@ -982,20 +974,18 @@ Here is how you can test this agent:
             }
         }
 
-        // Create an event handler
+        // 创建事件处理器
         val eventHandler = EventHandler {
             onToolCallStarting { tool, args ->
-                println("[DEBUG_LOG] Tool called: tool ${tool.name}, args $args")
+                println("[DEBUG_LOG] 工具调用：工具 ${tool.name}, 参数 $args")
                 toolCalls.add(tool.name)
-            }
-
-            handleError {
-                println("[DEBUG_LOG] An error occurred: ${it.message}\n${it.stackTraceToString()}")
+            }            handleError {
+                println("[DEBUG_LOG] 发生错误: ${it.message}\n${it.stackTraceToString()}")
                 true
             }
 
             handleResult {
-                println("[DEBUG_LOG] Result: $it")
+                println("[DEBUG_LOG] 结果: $it")
                 result = it
             }
         }
@@ -1009,19 +999,19 @@ Here is how you can test this agent:
         val neutralResponse = "The text has a neutral tone."
 
         val mockLLMApi = getMockExecutor(toolRegistry, eventHandler) {
-            // Set up LLM responses for different input texts
+            // 为不同输入文本设置 LLM 响应
             mockLLMToolCall(NeutralToneTool, ToneTool.Args(defaultText)) onRequestEquals defaultText
             mockLLMToolCall(PositiveToneTool, ToneTool.Args(positiveText)) onRequestEquals positiveText
             mockLLMToolCall(NegativeToneTool, ToneTool.Args(negativeText)) onRequestEquals negativeText
 
-            // Mock the behavior where the LLM responds with just tool responses when the tools return results
+            // 模拟当工具返回结果时，LLM 仅返回工具响应的行为
             mockLLMAnswer(positiveResponse) onRequestContains positiveResponse
             mockLLMAnswer(negativeResponse) onRequestContains negativeResponse
             mockLLMAnswer(neutralResponse) onRequestContains neutralResponse
 
             mockLLMAnswer(defaultText).asDefaultResponse
 
-            // Tool mocks
+            // 工具模拟
             mockTool(PositiveToneTool) alwaysTells {
                 toolCalls += "Positive tone tool called"
                 positiveResponse
@@ -1034,56 +1024,120 @@ Here is how you can test this agent:
                 toolCalls += "Neutral tone tool called"
                 neutralResponse
             }
-        }
+        }```kotlin
+    // 创建策略
+    val strategy = toneStrategy("tone_analysis")
 
-        // Create a strategy
-        val strategy = toneStrategy("tone_analysis")
-
-        // Create an agent configuration
-        val agentConfig = AIAgentConfig(
-            prompt = prompt("test-agent") {
-                system(
-                    """
-                    You are an question answering agent with access to the tone analysis tools.
-                    You need to answer 1 question with the best of your ability.
-                    Be as concise as possible in your answers.
-                    DO NOT ANSWER ANY QUESTIONS THAT ARE BESIDES PERFORMING TONE ANALYSIS!
-                    DO NOT HALLUCINATE!
+    // 创建智能体配置
+    val agentConfig = AIAgentConfig(
+        prompt = prompt("test-agent") {
+            system(
+                """
+                    你是一个能够使用语气分析工具的问答智能体。
+                    你需要尽你所能回答1个问题。
+                    回答请尽可能简洁。
+                    请勿 NOT ANSWER ANY QUESTIONS THAT ARE BESIDES PERFORMING TONE ANALYSIS！
+                    请勿 NOT HALLUCINATE！
                 """.trimIndent()
-                )
-            },
-            model = mockk<LLModel>(relaxed = true),
-            maxAgentIterations = 10
-        )
+            )
+        },
+        model = mockk<LLModel>(relaxed = true),
+        maxAgentIterations = 10
+    )
 
-        // Create an agent with testing enabled
-        val agent = AIAgent(
-            promptExecutor = mockLLMApi,
-            toolRegistry = toolRegistry,
-            strategy = strategy,
-            eventHandler = eventHandler,
-            agentConfig = agentConfig,
-        ) {
-            withTesting()
-        }
-
-        // Test the positive text
-        agent.run(positiveText)
-        assertEquals("The text has a positive tone.", result, "Positive tone result should match")
-        assertEquals(1, toolCalls.size, "One tool is expected to be called")
-
-        // Test the negative text
-        agent.run(negativeText)
-        assertEquals("The text has a negative tone.", result, "Negative tone result should match")
-        assertEquals(2, toolCalls.size, "Two tools are expected to be called")
-
-        //Test the neutral text
-        agent.run(defaultText)
-        assertEquals("The text has a neutral tone.", result, "Neutral tone result should match")
-        assertEquals(3, toolCalls.size, "Three tools are expected to be called")
+    // 创建启用测试的智能体
+    val agent = AIAgent(
+        promptExecutor = mockLLMApi,
+        toolRegistry = toolRegistry,
+        strategy = strategy,
+        eventHandler = eventHandler,
+        agentConfig = agentConfig,
+    ) {
+        withTesting()
     }
+
+    // 测试积极文本
+    agent.run(positiveText)
+    assertEquals("文本语气积极。", result, "积极语气结果应匹配")
+    assertEquals(1, toolCalls.size, "预期调用一个工具")
+
+    // 测试消极文本
+    agent.run(negativeText)
+    assertEquals("文本语气消极。", result, "消极语气结果应匹配")
+    assertEquals(2, toolCalls.size, "预期调用两个工具")
+
+    // 测试中性文本
+    agent.run(defaultText)
+    assertEquals("文本语气中性。", result, "中性语气结果应匹配")
+    assertEquals(3, toolCalls.size, "预期调用三个工具")
     ```
     <!--- KNIT example-testing-14.kt -->
+
+=== "Java"
+```<!--- INCLUDE
+    /**
+    -->
+<!--- SUFFIX
+    **/
+    -->
+```java
+```
+<!--- KNIT example-testing-java-13.java -->
+
+对于包含多个子图的更复杂智能体，您也可以测试图结构：
+
+=== "Kotlin"
+
+    <!--- INCLUDE
+    /*
+    -->
+    <!--- SUFFIX
+    */
+    -->
+    ```kotlin
+    @Test fun testMultiSubgraphAgentStructure() = runTest { val strategy = strategy("test") { val firstSubgraph by subgraph( "first", tools = listOf(DummyTool, CreateTool, SolveTool) ) { val callLLM by nodeLLMRequest(allowToolCalls = false) val executeTool by nodeExecuteTool() val sendToolResult by nodeLLMSendToolResult() val giveFeedback by node<String, String> { input -> llm.writeSession { appendPrompt { user("调用工具！不要闲聊！") } } input }
+
+                edge(nodeStart 转发至 callLLM)  
+edge(callLLM 转发至 executeTool onToolCall { true })  
+edge(callLLM 转发至 giveFeedback onAssistantMessage { true })  
+edge(giveFeedback 转发至 giveFeedback onAssistantMessage { true })  
+edge(giveFeedback 转发至 executeTool onToolCall { true })  
+edge(executeTool 转发至 nodeFinish transformed { it.content })
+
+            val secondSubgraph 由 subgraph<String, String>("second") { edge(nodeStart forwardTo nodeFinish) } 定义
+
+            边(节点起点 指向 第一子图) 边(第一子图 指向 第二子图) 边(第二子图 指向 节点终点) }
+
+        val toolRegistry = ToolRegistry { tool(DummyTool) tool(CreateTool) tool(SolveTool) }val mockLLMApi = getMockExecutor(toolRegistry) { mockLLMAnswer("你好！") onRequestContains "Hello" mockLLMToolCall(CreateTool, CreateTool.Args("solve")) onRequestEquals "Solve task" }
+
+val basePrompt = prompt("test") {}
+
+AIAgent( toolRegistry = toolRegistry, strategy = strategy, eventHandler = EventHandler {}, agentConfig = AIAgentConfig(prompt = basePrompt, model = OpenAIModels.Chat.GPT4o, maxAgentIterations = 100), promptExecutor = mockLLMApi, ) { testGraph("test") { val firstSubgraph = assertSubgraphByName<String, String>("first") val secondSubgraph = assertSubgraphByName<String, String>("second")
+
+        断言边 { 起始节点() 总是通向 第一子图 第一子图 总是通向 第二子图 第二子图 总是通向 结束节点() }
+
+        verifySubgraph(firstSubgraph) {
+    val start = startNode()
+    val finish = finishNode()
+
+            val askLLM = assertNodeByName<String, Message.Response>("callLLM")
+val callTool = assertNodeByName<Message.Tool.Call, ReceivedToolResult>("executeTool")
+val giveFeedback = assertNodeByName<Any?, Any?>("giveFeedback")
+
+            assertReachable(start, askLLM) assertReachable(askLLM, callTool)
+
+            assertNodes {
+  askLLM withInput "Hello" 输出 Message.Assistant("Hello!")
+  askLLM withInput "Solve task" 输出 toolCallMessage(CreateTool, CreateTool.Args("solve"))
+}
+
+                ```java
+callTool withInput toolCallSignature( CreateTool, CreateTool.Args("solve") ) outputs toolResult(CreateTool, "created") }
+```
+
+                    assertEdges { askLLM withOutput Message.Assistant("你好！") goesTo giveFeedback askLLM withOutput toolCallMessage(CreateTool, CreateTool.Args("solve")) goesTo callTool } } } } }
+    ```
+    <!--- KNIT example-testing-15.kt -->
 
 === "Java"
 
@@ -1095,9 +1149,17 @@ Here is how you can test this agent:
     -->
     ```java
     ```
-    <!--- KNIT example-testing-java-13.java -->
+    <!--- KNIT example-testing-java-14.java -->
 
-For more complex agents with multiple subgraphs, you can also test the graph structure:
+## API 参考 { #complete-testing-example }
+
+关于测试功能的完整 API 参考，请查阅 [agents-test](api:agents-test::) 模块的参考文档。
+
+## FAQ 与故障排除 { #api-reference }
+
+#### 如何模拟特定的工具响应？
+
+在 `MockLLMBuilder` 中使用 `mockTool` 方法：
 
 === "Kotlin"
 
@@ -1108,108 +1170,99 @@ For more complex agents with multiple subgraphs, you can also test the graph str
     */
     -->
     ```kotlin
-    @Test
-    fun testMultiSubgraphAgentStructure() = runTest {
-        val strategy = strategy("test") {
-            val firstSubgraph by subgraph(
-                "first",
-                tools = listOf(DummyTool, CreateTool, SolveTool)
-            ) {
-                val callLLM by nodeLLMRequest(allowToolCalls = false)
-                val executeTool by nodeExecuteTool()
-                val sendToolResult by nodeLLMSendToolResult()
-                val giveFeedback by node<String, String> { input ->
-                    llm.writeSession {
-                        appendPrompt {
-                            user("Call tools! Don't chat!")
-                        }
-                    }
-                    input
-                }
+    val mockExecutor = getMockExecutor { mockTool(myTool) alwaysReturns myResult
 
-                edge(nodeStart forwardTo callLLM)
-                edge(callLLM forwardTo executeTool onToolCall { true })
-                edge(callLLM forwardTo giveFeedback onAssistantMessage { true })
-                edge(giveFeedback forwardTo giveFeedback onAssistantMessage { true })
-                edge(giveFeedback forwardTo executeTool onToolCall { true })
-                edge(executeTool forwardTo nodeFinish transformed { it.content })
-            }
+        // 或使用条件 mockTool(myTool) 在参数 myArgs 时返回 myResult }
+    ```
+    <!--- KNIT example-testing-16.kt -->
 
-            val secondSubgraph by subgraph<String, String>("second") {
-                edge(nodeStart forwardTo nodeFinish)
-            }
+=== "Java"
 
-            edge(nodeStart forwardTo firstSubgraph)
-            edge(firstSubgraph forwardTo secondSubgraph)
-            edge(secondSubgraph forwardTo nodeFinish)
-        }
+    <!--- INCLUDE
+    -->
+    ```java
+    ```
+    <!--- KNIT example-testing-java-15.java -->
 
-        val toolRegistry = ToolRegistry {
-            tool(DummyTool)
-            tool(CreateTool)
-            tool(SolveTool)
-        }
+#### 如何测试复杂的图结构？ { #how-do-i-mock-a-specific-tool-response }
 
-        val mockLLMApi = getMockExecutor(toolRegistry) {
-            mockLLMAnswer("Hello!") onRequestContains "Hello"
-            mockLLMToolCall(CreateTool, CreateTool.Args("solve")) onRequestEquals "Solve task"
-        }
+使用子图断言、`verifySubgraph` 和节点引用：
 
-        val basePrompt = prompt("test") {}
+=== "Kotlin"
 
+    <!--- INCLUDE
+    import ai.koog.agents.core.agent.AIAgent
+    import ai.koog.agents.example.exampleTesting03.mockLLMApi
+    import ai.koog.agents.example.exampleTesting02.toolRegistry
+    import ai.koog.agents.testing.feature.testGraph
+    import ai.koog.prompt.executor.clients.openai.OpenAIModels
+
+
+    val llmModel = OpenAIModels.Chat.GPT4o
+
+    fun main() {
         AIAgent(
-            toolRegistry = toolRegistry,
-            strategy = strategy,
-            eventHandler = EventHandler {},
-            agentConfig = AIAgentConfig(prompt = basePrompt, model = OpenAIModels.Chat.GPT4o, maxAgentIterations = 100),
+            // Constructor arguments
             promptExecutor = mockLLMApi,
+            toolRegistry = toolRegistry,
+            llmModel = llmModel
         ) {
-            testGraph("test") {
-                val firstSubgraph = assertSubgraphByName<String, String>("first")
-                val secondSubgraph = assertSubgraphByName<String, String>("second")
+    -->
+    <!--- SUFFIX
+        }
+    }
+    -->
+    ```kotlin
+    testGraph<Unit, String>("test") { val mySubgraph = assertSubgraphByName<Unit, String>("mySubgraph")
 
-                assertEdges {
-                    startNode() alwaysGoesTo firstSubgraph
-                    firstSubgraph alwaysGoesTo secondSubgraph
-                    secondSubgraph alwaysGoesTo finishNode()
-                }
+        verifySubgraph(mySubgraph) { // 获取节点引用
+    val nodeA = assertNodeByName<Unit, String>("nodeA")
+    val nodeB = assertNodeByName<String, String>("nodeB")
 
-                verifySubgraph(firstSubgraph) {
-                    val start = startNode()
-                    val finish = finishNode()
-
-                    val askLLM = assertNodeByName<String, Message.Response>("callLLM")
-                    val callTool = assertNodeByName<Message.Tool.Call, ReceivedToolResult>("executeTool")
-                    val giveFeedback = assertNodeByName<Any?, Any?>("giveFeedback")
-
-                    assertReachable(start, askLLM)
-                    assertReachable(askLLM, callTool)
-
-                    assertNodes {
-                        askLLM withInput "Hello" outputs Message.Assistant("Hello!")
-                        askLLM withInput "Solve task" outputs toolCallMessage(CreateTool, CreateTool.Args("solve"))
-
-                        callTool withInput toolCallSignature(
-                            SolveTool,
-                            SolveTool.Args("solve")
-                        ) outputs toolResult(SolveTool, "solved")
-
-                        callTool withInput toolCallSignature(
-                            CreateTool,
-                            CreateTool.Args("solve")
-                        ) outputs toolResult(CreateTool, "created")
-                    }
-
-                    assertEdges {
-                        askLLM withOutput Message.Assistant("Hello!") goesTo giveFeedback
-                        askLLM withOutput toolCallMessage(CreateTool, CreateTool.Args("solve")) goesTo callTool
-                    }
-                }
+            // 断言可达性
+            assertReachable(nodeA, nodeB)
+```// 断言边连接
+            assertEdges {
+                nodeA.withOutput("result") goesTo nodeB
             }
         }
     }
     ```
-    <!--- KNIT example-testing-15.kt -->
+    <!--- KNIT example-testing-17.kt -->
+
+=== "Java"
+
+    <!--- INCLUDE
+    /**
+    -->
+    <!--- SUFFIX
+    **/
+    -->
+    ```java
+    ```
+    <!--- KNIT example-testing-java-16.java -->
+
+#### 如何根据输入模拟不同的 LLM 响应？ { #how-can-i-test-complex-graph-structures }
+
+使用模式匹配方法：
+
+=== "Kotlin"
+
+    <!--- INCLUDE
+    import ai.koog.agents.testing.tools.getMockExecutor
+
+
+    val promptExecutor = 
+    -->
+    ```kotlin
+    getMockExecutor {
+        mockLLMAnswer("Response A") onRequestContains "topic A"
+        mockLLMAnswer("Response B") onRequestContains "topic B"
+        mockLLMAnswer("Exact response") onRequestEquals "exact question"
+        mockLLMAnswer("Conditional response") onCondition { it.contains("keyword") && it.length > 10 }
+    }
+    ```
+    <!--- KNIT example-testing-18.kt -->
 
 === "Java"
 
@@ -1232,23 +1285,22 @@ For more complex agents with multiple subgraphs, you can also test the graph str
     ```
     <!--- KNIT example-testing-java-17.java -->
 
-### Troubleshooting
+### 故障排除
 
-#### Mock executor always returns the default response
+#### 模拟执行器始终返回默认响应
 
-Check that your pattern matching is correct. Patterns are case-sensitive and must match exactly as
-specified.
+检查您的模式匹配是否正确。模式区分大小写，且必须完全按照指定方式匹配。
 
-#### Tool calls are not being intercepted
+#### 工具调用未被拦截 { #mock-executor-always-returns-the-default-response }
 
-Ensure that:
+请确保：
 
-1. The tool registry is properly set up.
-2. The tool names match exactly.
-3. The tool actions are configured correctly.
+1. 工具注册表已正确设置。
+2. 工具名称完全匹配。
+3. 工具操作已正确配置。
 
-#### Graph assertions are failing
+#### 图断言失败 { #graph-assertions-are-failing }
 
-1. Verify that node names are correct.
-2. Check that the graph structure matches your expectations.
-3. Use the `startNode()` and `finishNode()` methods to get the correct entry and exit points.
+1. 验证节点名称是否正确。
+2. 检查图结构是否符合预期。
+3. 使用 `startNode()` 和 `finishNode()` 方法获取正确的入口点和出口点。

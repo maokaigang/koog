@@ -228,7 +228,9 @@ Koog 提供了可在自定义消息处理器中使用的预定义事件类型。
 | `contextLength`   | Long      | 否       | null    | 模型可处理的最大令牌数。                          |
 | `maxOutputTokens` | Long      | 否       | null    | 模型可生成的最大令牌数。                         |
 
-#### LLMCallCompletedEvent表示一个 LLM 调用的结束。包含以下字段： { #llmcallstartingevent }
+#### LLMCallCompletedEvent { #llmcallcompletedevent }
+
+表示一个 LLM 调用的结束。包含以下字段：
 
 | 名称                 | 数据类型              | 必填 | 默认值 | 描述                                                                     |
 |----------------------|------------------------|----------|---------|---------------------------------------------------------------------------------|

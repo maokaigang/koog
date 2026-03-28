@@ -414,7 +414,9 @@ val agentStrategy = strategy("weather-forecast") {
 ```
 <!--- KNIT example-structured-data-10.kt -->
 
-#### 完整代码示例以下是使用结构化输出 API 的完整示例： { #full-code-sample }
+#### 完整代码示例 { #full-code-sample }
+
+以下是使用结构化输出 API 的完整示例：
 
 <!--- INCLUDE
 import ai.koog.agents.core.agent.AIAgent

@@ -118,7 +118,9 @@ EventHandler 功能通过 `EventHandler` 类与智能体工作流集成，
         }
     }
     ```
-    <!--- KNIT example-event-handlers-02.kt -->=== "Java"
+    <!--- KNIT example-event-handlers-02.kt -->
+
+=== "Java"
 
     <!--- INCLUDE
     /**

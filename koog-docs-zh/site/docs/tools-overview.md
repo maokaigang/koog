@@ -1,4 +1,4 @@
-<!-- koog-zh-meta: {"last_synced_at": "2026-03-28T13:11:03+00:00", "source_path": "tools-overview.md", "source_sha256": "98d76c9ca65b44f4b7babc58ae65179fb4f2226555bc2b01b673374363ad5533", "source_tag": "0.7.3", "translation_status": "changed"} -->
+<!-- koog-zh-meta: {"last_synced_at": "2026-03-28T16:25:41+00:00", "source_path": "tools-overview.md", "source_sha256": "98d76c9ca65b44f4b7babc58ae65179fb4f2226555bc2b01b673374363ad5533", "source_tag": "0.7.3", "translation_status": "changed"} -->
 # 概述 { #overview }
 
 代理使用工具来执行特定任务或访问外部系统。
@@ -76,7 +76,7 @@ Koog 框架中有三种类型的工具：
     ```
     <!--- KNIT example-tools-overview-java-01.java -->
 
-To merge multiple tool registries, do the following:
+要合并多个工具注册表，请执行以下操作：
 
 === "Kotlin"
 
@@ -140,9 +140,9 @@ To merge multiple tool registries, do the following:
     ```
     <!--- KNIT example-tools-overview-java-02.java -->
 
-### Passing tools to an agent
+### 向代理传递工具 { #passing-tools-to-an-agent }
 
-To enable an agent to use a tool, you need to provide a tool registry that contains this tool as an argument when creating the agent:
+要让智能体能够使用工具，你需要在创建智能体时提供一个包含该工具的工具注册表作为参数：
 
 === "Kotlin"
 
@@ -185,29 +185,26 @@ To enable an agent to use a tool, you need to provide a tool registry that conta
     ```
     <!--- KNIT example-tools-overview-java-03.java -->
 
-### Calling tools
+### 调用工具 { #calling-tools }
 
-There are several ways to call tools within your agent code. The recommended approach is to use the provided methods
-in the agent context rather than calling tools directly, as this ensures proper handling of tool operation within the
-agent environment.
+在您的代理代码中调用工具有多种方式。推荐的方法是使用代理上下文中提供的方法，而非直接调用工具，这能确保在代理环境中正确处理工具操作。
 
 !!! tip
-    Ensure you have implemented proper [error handling](features/agent-event-handlers.md) in your tools to prevent agent failure.
+    确保您的工具中已正确实现[错误处理](features/agent-event-handlers.md)，以防止代理失败。
 
-The tools are called within a specific session context represented by `AIAgentLLMWriteSession`.
-It provides several methods for calling tools so that you can:
+工具在特定的会话上下文中被调用，该上下文由`AIAgentLLMWriteSession`表示。它提供了多种调用工具的方法，以便您能够：
 
-- Call a tool with the given arguments.
-- Call a tool by its name and the given arguments.
-- Call a tool by the provided tool class and arguments.
-- Call a tool of the specified type with the given arguments.
-- Call a tool that returns a raw string result.
+- 使用给定参数调用工具。
+- 调用指定名称的工具及其参数。
+- 调用指定工具类及参数的工具。
+- 调用指定类型的工具并传入给定参数。
+- 调用一个返回原始字符串结果的工具。
 
-For more details, the API reference for [AIAgentLLMWriteSession](api:agents-core::ai.koog.agents.core.agent.session.AIAgentLLMWriteSession).
+更多详情，请参阅API中关于[AIAgentLLM写入会话](api:agents-core::ai.koog.agents.core.agent.session.AIAgentLLMWriteSession)的参考。
 
-#### Parallel tool calls
+#### 并行工具调用 { #parallel-tool-calls }
 
-You can also call tools in parallel using the `toParallelToolCallsRaw` extension. For example:
+你也可以使用`toParallelToolCallsRaw`扩展并行调用工具。例如：
 
 === "Kotlin"
 
@@ -271,28 +268,27 @@ You can also call tools in parallel using the `toParallelToolCallsRaw` extension
     ```
     <!--- KNIT example-tools-overview-java-04.java -->
 
-#### Calling tools from nodes
+#### 从节点调用工具 { #calling-tools-from-nodes }
 
-When building agent workflows with nodes, you can use special nodes to call tools:
+在构建基于节点的智能体工作流时，您可以使用特殊节点来调用工具：
 
-* **nodeExecuteTool**: calls a single tool call and returns its result. For details, see [API reference](api:agents-core::ai.koog.agents.core.dsl.extension.nodeExecuteTool).
+* **nodeExecuteTool**：调用单个工具调用并返回其结果。详情请参阅[API 参考](api:agents-core::ai.koog.agents.core.dsl.extension.nodeExecuteTool)。
 
-* **nodeExecuteSingleTool** that calls a specific tool with the provided arguments. For details, see [API reference](api:agents-core::ai.koog.agents.core.dsl.extension.nodeExecuteSingleTool).
+* **nodeExecuteSingleTool**，用于调用指定工具并传入相应参数。详情请参阅[API 参考](api:agents-core::ai.koog.agents.core.dsl.extension.nodeExecuteSingleTool)。
 
-* **nodeExecuteMultipleTools** that performs multiple tool calls and returns their results. For details, see [API reference](api:agents-core::ai.koog.agents.core.dsl.extension.nodeExecuteMultipleTools).
+* **nodeExecuteMultipleTools** 用于执行多个工具调用并返回其结果。详情请参阅 [API 参考](api:agents-core::ai.koog.agents.core.dsl.extension.nodeExecuteMultipleTools)。
 
-* **nodeLLMSendToolResult** that sends a tool result to the LLM and gets a response. For details, see [API reference](api:agents-core::ai.koog.agents.core.dsl.extension.nodeLLMSendToolResult).
+* **nodeLLMSendToolResult** 用于向 LLM 发送工具执行结果并获取响应。详细信息请参阅 [API 参考](api:agents-core::ai.koog.agents.core.dsl.extension.nodeLLMSendToolResult)。
 
-* **nodeLLMSendMultipleToolResults** that sends multiple tool results to the LLM. For details, see [API reference](api:agents-core::ai.koog.agents.core.dsl.extension.nodeLLMSendMultipleToolResults).
+* **nodeLLMSendMultipleToolResults**，用于向LLM发送多个工具结果。详情请参阅[API 参考](api:agents-core::ai.koog.agents.core.dsl.extension.nodeLLMSendMultipleToolResults)。
 
-## Using agents as tools
+## 将智能体用作工具 { #using-agents-as-tools }
 
-The framework provides the capability to convert any AI agent into a tool that can be used by other agents. 
-This powerful feature enables you to create hierarchical agent architectures where specialized agents can be called as tools by higher-level orchestrating agents.
+该框架提供了将任何AI智能体转换为可供其他智能体使用的工具的能力。这一强大功能使您能够创建分层智能体架构，其中专门的智能体可作为工具被更高层级的协调智能体调用。
 
-### Converting agents to tools
+### 将代理转换为工具 { #converting-agents-to-tools }
 
-To convert an agent into a tool, use the `AIAgentService` and the `createAgentTool()` extension function:
+要将代理转换为工具，请使用 `AIAgentService` 和 `createAgentTool()` 扩展函数：
 
 === "Kotlin"
 
@@ -341,9 +337,9 @@ To convert an agent into a tool, use the `AIAgentService` and the `createAgentTo
     <!--- KNIT example-tools-overview-java-05.java -->
 
 
-### Using agent tools in other agents
+### 在其他智能体中使用智能体工具 { #using-agent-tools-in-other-agents }
 
-Once converted to a tool, you can add the agent tool to another agent's tool registry:
+转换为工具后，你可以将该代理工具添加到另一个代理的工具注册表中：
 
 === "Kotlin"
 
@@ -382,16 +378,16 @@ Once converted to a tool, you can add the agent tool to another agent's tool reg
     <!--- KNIT example-tools-overview-java-06.java -->
 
 
-### Agent tool execution
+### 代理工具执行 { #agent-tool-execution }
 
-When an agent tool is called:
+当调用代理工具时：
 
-1. The arguments are deserialized according to the input descriptor.
-2. The wrapped agent is executed with the deserialized input.
-3. The agent's output is serialized and returned as the tool result.
+1. 参数根据输入描述符进行反序列化。
+2. 包装后的代理使用反序列化后的输入执行。
+3. 代理的输出经过序列化后作为工具结果返回。
 
-### Benefits of agents as tools
+### 作为工具的智能体优势 { #benefits-of-agents-as-tools }
 
-- **Modularity**: Break complex workflows into specialized agents.
-- **Reusability**: Use the same specialized agent across multiple coordinator agents.
-- **Separation of concerns**: Each agent can focus on its specific domain.
+- **模块化**：将复杂工作流拆分为专门的智能体。
+- **可复用性**：在多个协调器代理中使用相同的专用代理。
+- **关注点分离**：每个代理可以专注于其特定领域。

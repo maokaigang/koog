@@ -70,10 +70,7 @@ Koog 智能体围绕以下核心概念构建：
     ```
     <!--- KNIT example-agent-config-java-01.java -->
 
-Alternatively, you can create an instance of [`AIAgentConfig`](https://api.koog.ai/agents/agents-core/ai.koog.agents.core.agent.config/-a-i-agent-config/index.html)
-to define the agent's behavior and parameters more granularly, then pass it to the agent constructor.
-This enables you to define complex prompts with multiple messages,
-conversation history, LLM parameters, and additional execution parameters.
+或者，您可以创建一个 [`AIAgentConfig`](https://api.koog.ai/agents/agents-core/ai.koog.agents.core.agent.config/-a-i-agent-config/index.html) 实例来更细致地定义代理的行为和参数，然后将其传递给代理构造函数。这样您就可以定义包含多条消息、对话历史、LLM 参数以及其他执行参数的复杂提示。
 
 === "Kotlin"
 
@@ -141,21 +138,21 @@ conversation history, LLM parameters, and additional execution parameters.
     ```
     <!--- KNIT example-agent-config-java-02.java -->
 
-Here are the parameters of `AIAgentConfig`:
+以下是 `AIAgentConfig` 的参数：
 
-- `prompt` defines the initial [prompt](../prompts/prompt-creation/index.md) and [LLM parameters](../llm-parameters.md).
+- `prompt` 定义了初始的 [提示](../prompts/prompt-creation/index.md) 和 [LLM 参数](../llm-parameters.md)。
 
-- `model` specifies the language model with which the agent interacts.
-  You can use one of the predefined models or [create a custom model configuration](../model-capabilities.md#creating-a-model-llmodel-configuration).
+- `model` 指定了代理与之交互的语言模型。
+  您可以使用预定义的模型之一或[创建自定义模型配置](../model-capabilities.md#creating-a-model-llmodel-configuration)。
 
-- `maxAgentIterations` limits the maximum number of steps the agent can take before it terminates.
-  Each step is a [node](../nodes-and-components.md) in the agent's workflow.
+- `maxAgentIterations` 限制了代理在终止前可以执行的最大步数。
+  每个步骤都是智能体工作流中的一个[节点](../nodes-and-components.md)。
 
-- `missingToolsConversionStrategy` defines a strategy for handling missing tools during agent execution.
+- `missingToolsConversionStrategy` 定义了一种在代理执行过程中处理缺失工具的策略。
 
-[//]: # (TODO write about missing tools in the TOols section and link from here)
+[//]: # (TODO 在工具部分撰写关于缺失工具的内容，并从此处链接)
 
-- `responseProcessor` can be used to define a custom response processor.
-  For example, it can moderate and validate the response content, change the response format, or log the response.
+- `responseProcessor` 可用于定义自定义响应处理器。
+  例如，它可以审核和验证响应内容、更改响应格式或记录响应。
 
-[//]: # (TODO write about response processing somewhere?)
+[//]: # (TODO 是否需要在某处撰写关于响应处理的内容？)

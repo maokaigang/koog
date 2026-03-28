@@ -1,7 +1,8 @@
-<!-- koog-zh-meta: {"last_synced_at": "2026-03-28T12:49:39+00:00", "source_path": "a2a-koog-integration.md", "source_sha256": "a5c28e05c7ba37416bfeb404ff6c4f5bfd6fb81b4962f4202812ce9756d5b36d", "source_tag": "0.7.3", "translation_status": "changed"} -->
+<!-- koog-zh-meta: {"last_synced_at": "2026-03-28T16:29:03+00:00", "source_path": "a2a-koog-integration.md", "source_sha256": "a5c28e05c7ba37416bfeb404ff6c4f5bfd6fb81b4962f4202812ce9756d5b36d", "source_tag": "0.7.3", "translation_status": "changed"} -->
 # A2A 与 Koog 集成 { #a2a-and-koog-integration }
 
-Koog 提供与 A2A 协议的无缝集成，允许您将 Koog 智能体暴露为 A2A 服务器，并将 Koog 智能体连接到其他符合 A2A 规范的智能体。
+Koog 提供与 A2A 协议的无缝集成，允许您将 Koog 智能体暴露为 A2A 服务器，并将
+Koog 智能体连接到其他符合 A2A 规范的智能体。
 
 ## 依赖项 { #dependencies }
 
@@ -9,7 +10,7 @@ A2A Koog 集成需要根据您的使用场景添加特定的功能模块：
 
 ### 用于将 Koog 智能体暴露为 A2A 服务器 { #for-exposing-koog-agents-as-a2a-servers }
 
-在您的 `build.gradle.kts` 中添加以下依赖项：
+将以下依赖项添加到您的 `build.gradle.kts`：
 
 ```kotlin
 dependencies {
@@ -26,7 +27,7 @@ dependencies {
 
 ### 用于将 Koog 智能体连接到 A2A 智能体 { #for-connecting-koog-agents-to-a2a-agents }
 
-在您的 `build.gradle.kts` 中添加以下依赖项：
+将以下依赖项添加到您的 `build.gradle.kts`：
 
 ```kotlin
 dependencies {
@@ -184,7 +185,8 @@ private suspend fun A2AAgentServer.sendTaskUpdate(
 ## A2AAgentServer 功能机制 { #a2aagentserver-feature-mechanism }
 
 `A2AAgentServer` 是一个 Koog 智能体功能，可实现 Koog 智能体与 A2A 协议之间的无缝集成。
-`A2AAgentServer` 功能提供对 `RequestContext` 和 `SessionEventProcessor` 实体的访问，这些实体用于在 Koog 智能体内与 A2A 客户端通信。
+`A2AAgentServer` 功能提供对 `RequestContext` 和 `SessionEventProcessor` 实体的访问，这些实体用于
+在 Koog 智能体内与 A2A 客户端通信。
 
 要安装该功能，请在智能体上调用 `install` 函数，并传入 `A2AAgentServer` 功能以及 `RequestContext` 和 `SessionEventProcessor`：
 ```kotlin
@@ -207,7 +209,7 @@ withA2AAgentServer {
 ```
 
 ### 启动 A2A 服务器 { #start-a2a-server }
-运行服务器后，Koog 智能体将通过 A2A 协议被发现和访问。
+启动服务器后，Koog 智能体将通过 A2A 协议被发现和访问。
 
 ```kotlin
 val agentCard = AgentCard(

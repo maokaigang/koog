@@ -258,7 +258,9 @@ if (greeting.size > 1) {
 ```
 <!--- KNIT example-agent-memory-08.kt -->
 
-#### 使用记忆节点AgentMemory 功能提供了以下预定义记忆节点，可用于智能体策略： { #using-memory-nodes }
+#### 使用记忆节点 { #using-memory-nodes }
+
+AgentMemory 功能提供了以下预定义记忆节点，可用于智能体策略：
 
 * [nodeLoadAllFactsFromMemory](api:agents-features-memory::ai.koog.agents.memory.feature.nodes.nodeLoadAllFactsFromMemory)：从记忆中加载给定概念下关于主体的所有事实。
 * [nodeLoadFromMemory](api:agents-features-memory::ai.koog.agents.memory.feature.nodes.nodeLoadFromMemory)：从记忆中加载给定概念下的特定事实。
@@ -489,7 +491,9 @@ AgentMemory 功能包含多种处理边界情况的机制：
 
 5. **事实类型处理**：该功能支持单一事实和多个事实，并对每种类型进行适当处理。
 
-## API 文档有关 AgentMemory 功能的完整 API 参考，请参阅 [agents-features-memory](api:agents-features-memory::) 模块的参考文档。 { #api-documentation }
+## API 文档 { #api-documentation }
+
+有关 AgentMemory 功能的完整 API 参考，请参阅 [agents-features-memory](api:agents-features-memory::) 模块的参考文档。
 
 特定包的 API 文档：
 
