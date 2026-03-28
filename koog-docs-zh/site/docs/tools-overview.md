@@ -37,34 +37,14 @@ Koog 框架中有三种类型的工具：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.tools.ToolRegistry
-    import ai.koog.agents.core.tools.annotations.Tool
-    import ai.koog.agents.core.tools.reflect.ToolSet
-    class MyToolSet : ToolSet {
-        @Tool
-        fun myTool(): String {
-            // Tool implementation
-            return "Result"
-        }
-    }
-    val myTool = MyToolSet()
-    -->
     ```kotlin
     val toolRegistry = ToolRegistry {
         tools(myTool)
     }
     ```
-    <!--- KNIT example-tools-overview-01.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     // Create an instance of your ToolSet
     MyToolSet myTool = new MyToolSet();
@@ -74,33 +54,11 @@ Koog 框架中有三种类型的工具：
         .tools(myTool)
         .build();
     ```
-    <!--- KNIT example-tools-overview-java-01.java -->
 
 要合并多个工具注册表，请执行以下操作：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.tools.ToolRegistry
-    import ai.koog.agents.core.tools.annotations.Tool
-    import ai.koog.agents.core.tools.reflect.ToolSet
-    class FirstToolSet : ToolSet {
-        @Tool
-        fun firstSampleTool(): String {
-            // Tool implementation
-            return "First result"
-        }
-    }
-    class SecondToolSet : ToolSet {
-        @Tool
-        fun secondSampleTool(): String {
-            // Tool implementation
-            return "Second result"
-        }
-    }
-    val firstSampleTool = FirstToolSet()
-    val secondSampleTool = SecondToolSet()
-    -->
     ```kotlin
     val firstToolRegistry = ToolRegistry {
         tools(firstSampleTool)
@@ -112,16 +70,9 @@ Koog 框架中有三种类型的工具：
     
     val newRegistry = firstToolRegistry + secondToolRegistry
     ```
-    <!--- KNIT example-tools-overview-02.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     // Create instances of your ToolSets
     FirstToolSet firstSampleTool = new FirstToolSet();
@@ -138,7 +89,6 @@ Koog 框架中有三种类型的工具：
 
     ToolRegistry newRegistry = firstToolRegistry.plus(secondToolRegistry);
     ```
-    <!--- KNIT example-tools-overview-java-02.java -->
 
 ### 向代理传递工具 { #passing-tools-to-an-agent }
 
@@ -146,12 +96,6 @@ Koog 框架中有三种类型的工具：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.example.exampleToolsOverview01.toolRegistry
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    -->
     ```kotlin
     // Agent initialization
     val agent = AIAgent(
@@ -162,16 +106,9 @@ Koog 框架中有三种类型的工具：
         toolRegistry = toolRegistry
     )
     ```
-    <!--- KNIT example-tools-overview-03.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     AIAgent<String, String> agent = AIAgent.builder()
         .promptExecutor(simpleOpenAIExecutor(System.getenv("OPENAI_API_KEY")))
@@ -183,7 +120,6 @@ Koog 框架中有三种类型的工具：
         )
         .build();
     ```
-    <!--- KNIT example-tools-overview-java-03.java -->
 
 ### 调用工具 { #calling-tools }
 
@@ -208,15 +144,6 @@ Koog 框架中有三种类型的工具：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.tools.SimpleTool
-    import kotlinx.coroutines.flow.collect
-    import kotlinx.coroutines.flow.flow
-    import ai.koog.serialization.typeToken
-    import kotlinx.serialization.Serializable
-    -->
     ```kotlin
     @Serializable
     data class Book(
@@ -254,19 +181,11 @@ Koog 框架中有三种类型的工具：
     }
     
     ```
-    <!--- KNIT example-tools-overview-04.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-tools-overview-java-04.java -->
 
 #### 从节点调用工具 { #calling-tools-from-nodes }
 
@@ -292,19 +211,6 @@ Koog 框架中有三种类型的工具：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.core.agent.AIAgentService
-    import ai.koog.agents.core.agent.createAgentTool
-    import ai.koog.agents.core.tools.ToolParameterDescriptor
-    import ai.koog.agents.core.tools.ToolParameterType
-    import ai.koog.agents.core.tools.ToolRegistry
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    import ai.koog.serialization.typeToken
-    const val apiKey = ""
-    val analysisToolRegistry = ToolRegistry {}
-    -->
     ```kotlin
     // Create a specialized agent service, responsible for creating financial analysis agents.
     val analysisAgentService = AIAgentService(
@@ -322,20 +228,11 @@ Koog 框架中有三种类型的工具：
         inputType = typeToken<String>(),
     )
     ```
-    <!--- KNIT example-tools-overview-05.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-tools-overview-java-05.java -->
-
 
 ### 在其他智能体中使用智能体工具 { #using-agent-tools-in-other-agents }
 
@@ -343,14 +240,6 @@ Koog 框架中有三种类型的工具：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.core.tools.ToolRegistry
-    import ai.koog.agents.example.exampleToolsOverview05.analysisAgentTool
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    const val apiKey = ""
-    -->
     ```kotlin
     // Create a coordinator agent that can use specialized agents as tools
     val coordinatorAgent = AIAgent(
@@ -363,20 +252,11 @@ Koog 框架中有三种类型的工具：
         }
     )
     ```
-    <!--- KNIT example-tools-overview-06.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-tools-overview-java-06.java -->
-
 
 ### 代理工具执行 { #agent-tool-execution }
 

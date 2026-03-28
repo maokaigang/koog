@@ -36,13 +36,6 @@ Koog 中的 OpenTelemetry 功能会自动为各种代理事件创建跨度，包
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    val promptExecutor = simpleOpenAIExecutor("openai-api-key")
-    -->
     ```kotlin
     val agent = AIAgent(
         promptExecutor = promptExecutor,
@@ -55,25 +48,9 @@ Koog 中的 OpenTelemetry 功能会自动为各种代理事件创建跨度，包
         }
     )
     ```
-    <!--- KNIT example-opentelemetry-support-01.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent;
-    import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry;
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels;
-    import ai.koog.prompt.executor.model.PromptExecutor;
-    public class exampleOpentelemetrySupportJava01 {
-        public static void main(String[] args) {
-            var promptExecutor = PromptExecutor.builder()
-                .openAI("openai-api-key")
-                .build();
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var agent = AIAgent.builder()
         .promptExecutor(promptExecutor)
@@ -84,7 +61,6 @@ Koog 中的 OpenTelemetry 功能会自动为各种代理事件创建跨度，包
         })
         .build();
     ```
-    <!--- KNIT exampleOpentelemetrySupportJava01.java -->
 
 ## Configuration { #configuration }
 
@@ -109,22 +85,6 @@ items. Here is an example of installing the OpenTelemetry feature with a basic s
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    import io.opentelemetry.exporter.logging.LoggingSpanExporter
-    val promptExecutor = simpleOpenAIExecutor("openai-api-key")
-    val agent = AIAgent(
-        promptExecutor = promptExecutor,
-        llmModel = OpenAIModels.Chat.GPT4o,
-        systemPrompt = "You are a helpful assistant."
-    ) {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     install(OpenTelemetry) {
         // Set your service configuration
@@ -134,33 +94,9 @@ items. Here is an example of installing the OpenTelemetry feature with a basic s
         addSpanExporter(LoggingSpanExporter.create())
     }
     ```
-    <!--- KNIT example-opentelemetry-support-02.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent;
-    import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry;
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels;
-    import ai.koog.prompt.executor.model.PromptExecutor;
-    import io.opentelemetry.exporter.logging.LoggingSpanExporter;
-    public class exampleOpentelemetrySupportJava02 {
-        public static void main(String[] args) {
-            var promptExecutor = PromptExecutor.builder()
-                .openAI("openai-api-key")
-                .build();
-            
-            var agent = AIAgent.builder()
-                .promptExecutor(promptExecutor)
-                .llmModel(OpenAIModels.Chat.GPT4o)
-                .systemPrompt("You are a helpful assistant.")
-                .
-    -->
-    <!--- SUFFIX
-                .build();
-        }
-    }
-    -->
     ```java
     install(OpenTelemetry.Feature, config -> {
         // Set your service configuration
@@ -170,7 +106,6 @@ items. Here is an example of installing the OpenTelemetry feature with a basic s
         config.addSpanExporter(LoggingSpanExporter.create());
     })
     ```
-    <!--- KNIT exampleOpentelemetrySupportJava02.java -->
 
 For a reference of available methods, see the sections below.
 
@@ -247,24 +182,6 @@ For more advanced configuration, you can also customize the following configurat
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    import io.opentelemetry.api.common.AttributeKey
-    import io.opentelemetry.exporter.logging.LoggingSpanExporter
-    import io.opentelemetry.sdk.trace.samplers.Sampler
-    val promptExecutor = simpleOpenAIExecutor("openai-api-key")
-    val agent = AIAgent(
-        promptExecutor = promptExecutor,
-        llmModel = OpenAIModels.Chat.GPT4o,
-        systemPrompt = "You are a helpful assistant."
-    ) {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     install(OpenTelemetry) {
         // Set your service configuration
@@ -282,35 +199,9 @@ For more advanced configuration, you can also customize the following configurat
         )
     }
     ```
-    <!--- KNIT example-opentelemetry-support-03.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent;
-    import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry;
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels;
-    import ai.koog.prompt.executor.model.PromptExecutor;
-    import io.opentelemetry.api.common.AttributeKey;
-    import io.opentelemetry.exporter.logging.LoggingSpanExporter;
-    import io.opentelemetry.sdk.trace.samplers.Sampler;
-    import java.util.Map;
-    public class exampleOpentelemetrySupportJava03 {
-        public static void main(String[] args) {
-            var promptExecutor = PromptExecutor.builder()
-                .openAI("openai-api-key")
-                .build();
-            var agent = AIAgent.builder()
-                .promptExecutor(promptExecutor)
-                .llmModel(OpenAIModels.Chat.GPT4o)
-                .systemPrompt("You are a helpful assistant.")
-                .
-    -->
-    <!--- SUFFIX
-                .build();
-        }
-    }
-    -->
     ```java
     install(OpenTelemetry.Feature, config -> {
         // Set your service configuration
@@ -328,7 +219,6 @@ For more advanced configuration, you can also customize the following configurat
         ));
     })
     ```
-    <!--- KNIT exampleOpentelemetrySupportJava03.java -->
 
 #### Sampler { #sampler }
 
@@ -362,64 +252,19 @@ takes a key and a value as its arguments.
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    import io.opentelemetry.api.common.AttributeKey
-    val promptExecutor = simpleOpenAIExecutor("openai-api-key")
-    val agent = AIAgent(
-        promptExecutor = promptExecutor,
-        llmModel = OpenAIModels.Chat.GPT4o,
-        systemPrompt = "You are a helpful assistant.",
-        installFeatures = {
-            install(OpenTelemetry) {
-    -->
-    <!--- SUFFIX
-            }
-        }
-    )
-    -->
     ```kotlin
     addResourceAttributes(mapOf(
         AttributeKey.stringKey("custom.attribute") to "custom-value")
     )
     ```
-    <!--- KNIT example-opentelemetry-support-04.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent;
-    import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry;
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels;
-    import ai.koog.prompt.executor.model.PromptExecutor;
-    import io.opentelemetry.api.common.AttributeKey;
-    import java.util.Map;
-    public class exampleOpentelemetrySupportJava04 {
-        public static void main(String[] args) {
-            var promptExecutor = PromptExecutor.builder()
-                .openAI("openai-api-key")
-                .build();
-            var agent = AIAgent.builder()
-                .promptExecutor(promptExecutor)
-                .llmModel(OpenAIModels.Chat.GPT4o)
-                .systemPrompt("You are a helpful assistant.")
-                .install(OpenTelemetry.Feature, config -> {
-    -->
-    <!--- SUFFIX
-                })
-                .build();
-        }
-    }
-    -->
     ```java
     config.addResourceAttributes(Map.of(
         AttributeKey.stringKey("custom.attribute"), "custom-value"
     ));
     ```
-    <!--- KNIT exampleOpentelemetrySupportJava04.java -->
 
 ## Span types and attributes { #span-types-and-attributes }
 
@@ -448,7 +293,6 @@ CreateAgentSpan
                 NodeExecuteSpan
                     InferenceSpan
 ```
-<!--- KNIT example-opentelemetry-support-01.txt -->
 
 ### Span attributes { #span-attributes }
 
@@ -517,22 +361,6 @@ This type of export is useful for development and debugging purposes.
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    import io.opentelemetry.exporter.logging.LoggingSpanExporter
-    val promptExecutor = simpleOpenAIExecutor("openai-api-key")
-    val agent = AIAgent(
-        promptExecutor = promptExecutor,
-        llmModel = OpenAIModels.Chat.GPT4o,
-        systemPrompt = "You are a helpful assistant."
-    ) {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     install(OpenTelemetry) {
         // Add the logging exporter
@@ -540,32 +368,9 @@ This type of export is useful for development and debugging purposes.
         // Add more exporters as needed
     }
     ```
-    <!--- KNIT example-opentelemetry-support-05.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent;
-    import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry;
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels;
-    import ai.koog.prompt.executor.model.PromptExecutor;
-    import io.opentelemetry.exporter.logging.LoggingSpanExporter;
-    public class exampleOpentelemetrySupportJava05 {
-        public static void main(String[] args) {
-            var promptExecutor = PromptExecutor.builder()
-                .openAI("openai-api-key")
-                .build();
-            var agent = AIAgent.builder()
-                .promptExecutor(promptExecutor)
-                .llmModel(OpenAIModels.Chat.GPT4o)
-                .systemPrompt("You are a helpful assistant.")
-                .
-    -->
-    <!--- SUFFIX
-                .build();
-        }
-    }
-    -->
     ```java
     install(OpenTelemetry.Feature, config -> {
         // Add the logging exporter
@@ -573,7 +378,6 @@ This type of export is useful for development and debugging purposes.
         // Add more exporters as needed
     })
     ```
-    <!--- KNIT exampleOpentelemetrySupportJava05.java -->
 
 ### OpenTelemetry HTTP exporter { #opentelemetry-http-exporter }
 
@@ -582,24 +386,6 @@ OpenTelemetry HTTP exporter (`OtlpHttpSpanExporter`) is a part of the `opentelem
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    import io.opentelemetry.exporter.otlp.http.trace.OtlpHttpSpanExporter
-    import java.util.concurrent.TimeUnit
-    val promptExecutor = simpleOpenAIExecutor("openai-api-key")
-    const val AUTH_STRING = ""
-    val agent = AIAgent(
-        promptExecutor = promptExecutor,
-        llmModel = OpenAIModels.Chat.GPT4o,
-        systemPrompt = "You are a helpful assistant."
-    ) {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     install(OpenTelemetry) {
         // Add OpenTelemetry HTTP exporter 
@@ -615,34 +401,9 @@ OpenTelemetry HTTP exporter (`OtlpHttpSpanExporter`) is a part of the `opentelem
         )
     }
     ```
-    <!--- KNIT example-opentelemetry-support-06.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent;
-    import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry;
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels;
-    import ai.koog.prompt.executor.model.PromptExecutor;
-    import io.opentelemetry.exporter.otlp.http.trace.OtlpHttpSpanExporter;
-    import java.util.concurrent.TimeUnit;
-    public class exampleOpentelemetrySupportJava06 {
-        public static void main(String[] args) {
-            var promptExecutor = PromptExecutor.builder()
-                .openAI("openai-api-key")
-                .build();
-            String AUTH_STRING = "";
-            var agent = AIAgent.builder()
-                .promptExecutor(promptExecutor)
-                .llmModel(OpenAIModels.Chat.GPT4o)
-                .systemPrompt("You are a helpful assistant.")
-                .
-    -->
-    <!--- SUFFIX
-                .build();
-        }
-    }
-    -->
     ```java
     install(OpenTelemetry.Feature, config -> {
         // Add OpenTelemetry HTTP exporter
@@ -658,7 +419,6 @@ OpenTelemetry HTTP exporter (`OtlpHttpSpanExporter`) is a part of the `opentelem
         );
     })
     ```
-    <!--- KNIT exampleOpentelemetrySupportJava06.java -->
 
 ### OpenTelemetry gRPC exporter { #opentelemetry-grpc-exporter }
 
@@ -669,22 +429,6 @@ lets you define the host and port of the backend, collector, or endpoint that re
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    import io.opentelemetry.exporter.otlp.trace.OtlpGrpcSpanExporter
-    val promptExecutor = simpleOpenAIExecutor("openai-api-key")
-    val agent = AIAgent(
-        promptExecutor = promptExecutor,
-        llmModel = OpenAIModels.Chat.GPT4o,
-        systemPrompt = "You are a helpful assistant."
-    ) {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     install(OpenTelemetry) {
         // Add OpenTelemetry gRPC exporter 
@@ -696,32 +440,9 @@ lets you define the host and port of the backend, collector, or endpoint that re
         )
     }
     ```
-    <!--- KNIT example-opentelemetry-support-07.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent;
-    import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry;
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels;
-    import ai.koog.prompt.executor.model.PromptExecutor;
-    import io.opentelemetry.exporter.otlp.trace.OtlpGrpcSpanExporter;
-    public class exampleOpentelemetrySupportJava07 {
-        public static void main(String[] args) {
-            var promptExecutor = PromptExecutor.builder()
-                .openAI("openai-api-key")
-                .build();
-            var agent = AIAgent.builder()
-                .promptExecutor(promptExecutor)
-                .llmModel(OpenAIModels.Chat.GPT4o)
-                .systemPrompt("You are a helpful assistant.")
-                .
-    -->
-    <!--- SUFFIX
-                .build();
-        }
-    }
-    -->
     ```java
     install(OpenTelemetry.Feature, config -> {
         // Add OpenTelemetry gRPC exporter
@@ -733,7 +454,6 @@ lets you define the host and port of the backend, collector, or endpoint that re
         );
     })
     ```
-    <!--- KNIT exampleOpentelemetrySupportJava07.java -->
 
 ## Integration with Langfuse { #integration-with-langfuse }
 
@@ -743,21 +463,6 @@ You can configure Koog to export OpenTelemetry traces directly to Langfuse using
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor 
-    val promptExecutor = simpleOpenAIExecutor("openai-api-key")
-    val agent = AIAgent(
-        promptExecutor = promptExecutor,
-        llmModel = OpenAIModels.Chat.GPT4o,
-        systemPrompt = "You are a helpful assistant."
-    ) {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     install(OpenTelemetry) {
         addLangfuseExporter(
@@ -767,31 +472,9 @@ You can configure Koog to export OpenTelemetry traces directly to Langfuse using
         )
     }
     ```
-    <!--- KNIT example-opentelemetry-support-08.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent;
-    import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry;
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels;
-    import ai.koog.prompt.executor.model.PromptExecutor;
-    public class exampleOpentelemetrySupportJava08 {
-        public static void main(String[] args) {
-            var promptExecutor = PromptExecutor.builder()
-                .openAI("openai-api-key")
-                .build();
-            var agent = AIAgent.builder()
-                .promptExecutor(promptExecutor)
-                .llmModel(OpenAIModels.Chat.GPT4o)
-                .systemPrompt("You are a helpful assistant.")
-                .
-    -->
-    <!--- SUFFIX
-                .build();
-        }
-    }
-    -->
     ```java
     install(OpenTelemetry.Feature, config -> {
         config.addLangfuseExporter(
@@ -803,7 +486,6 @@ You can configure Koog to export OpenTelemetry traces directly to Langfuse using
         );
     })
     ```
-    <!--- KNIT exampleOpentelemetrySupportJava08.java -->
 
 Please read the [full documentation](opentelemetry-langfuse-exporter.md) about integration with Langfuse.
 
@@ -813,21 +495,6 @@ W&B Weave provides trace visualization and analytics for LLM/agent workloads. In
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    val promptExecutor = simpleOpenAIExecutor("openai-api-key")
-    val agent = AIAgent(
-        promptExecutor = promptExecutor,
-        llmModel = OpenAIModels.Chat.GPT4o,
-        systemPrompt = "You are a helpful assistant."
-    ) {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     install(OpenTelemetry) {
         addWeaveExporter(
@@ -838,31 +505,9 @@ W&B Weave provides trace visualization and analytics for LLM/agent workloads. In
         )
     }
     ```
-    <!--- KNIT example-opentelemetry-support-09.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent;
-    import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry;
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels;
-    import ai.koog.prompt.executor.model.PromptExecutor;
-    public class exampleOpentelemetrySupportJava09 {
-        public static void main(String[] args) {
-            var promptExecutor = PromptExecutor.builder()
-                .openAI("openai-api-key")
-                .build();
-            var agent = AIAgent.builder()
-                .promptExecutor(promptExecutor)
-                .llmModel(OpenAIModels.Chat.GPT4o)
-                .systemPrompt("You are a helpful assistant.")
-                .
-    -->
-    <!--- SUFFIX
-                .build();
-        }
-    }
-    -->
     ```java
     install(OpenTelemetry.Feature, config -> {
         config.addWeaveExporter(
@@ -873,7 +518,6 @@ W&B Weave provides trace visualization and analytics for LLM/agent workloads. In
         );
     })
     ```
-    <!--- KNIT exampleOpentelemetrySupportJava09.java -->
 
 Please read the [full documentation](opentelemetry-weave-exporter.md) about integration with W&B Weave.
 
@@ -890,7 +534,6 @@ To test OpenTelemetry with Koog and Jaeger, start the Jaeger OpenTelemetry all-i
 ```bash
 docker compose up -d
 ```
-<!--- KNIT example-opentelemetry-support-02.txt -->
 
 The provided Docker Compose YAML file includes the following content:
 
@@ -906,7 +549,6 @@ services:
       - "4317:4317"
       - "16686:16686"
 ```
-<!--- KNIT example-opentelemetry-support-03.txt -->
 
 To access the Jaeger UI and view your traces, open `http://localhost:16686`.
 
@@ -920,19 +562,6 @@ Here is the full code sample:
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry
-    import ai.koog.utils.io.use
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    import io.opentelemetry.exporter.logging.LoggingSpanExporter
-    import io.opentelemetry.exporter.otlp.trace.OtlpGrpcSpanExporter
-    import kotlinx.coroutines.runBlocking
-    val promptExecutor = simpleOpenAIExecutor("openai-api-key")
-    -->
-    <!--- SUFFIX
-    --> 
     ```kotlin
     fun main() = runBlocking {
         val agent = AIAgent(
@@ -963,25 +592,9 @@ Here is the full code sample:
         }
     }
     ```
-    <!--- KNIT example-opentelemetry-support-10.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent;
-    import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry;
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels;
-    import ai.koog.prompt.executor.model.PromptExecutor;
-    import io.opentelemetry.exporter.logging.LoggingSpanExporter;
-    import io.opentelemetry.exporter.otlp.trace.OtlpGrpcSpanExporter;
-    public class exampleOpentelemetrySupportJava10 {
-        static PromptExecutor promptExecutor = PromptExecutor.builder()
-            .openAI("openai-api-key")
-            .build();
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```java
     public static void main(String[] args) {
         var agent = AIAgent.builder()
@@ -1011,7 +624,6 @@ Here is the full code sample:
         );
     }
     ```
-    <!--- KNIT exampleOpentelemetrySupportJava10.java -->
 
 ## Troubleshooting { #troubleshooting }
 
@@ -1082,23 +694,6 @@ Where `{target}` is the tool name or prompt name when applicable. Examples:
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry
-    import ai.koog.agents.mcp.McpToolRegistryProvider
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    import ai.koog.utils.io.use
-    import io.opentelemetry.exporter.logging.LoggingSpanExporter
-    import kotlinx.coroutines.runBlocking
-    fun main() {
-        runBlocking {
-            val promptExecutor = simpleOpenAIExecutor("openai-api-key")
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```kotlin
     // Create MCP tools registry
     val toolRegistry = McpToolRegistryProvider.fromSseUrl("http://localhost:3000")
@@ -1121,6 +716,5 @@ Where `{target}` is the tool name or prompt name when applicable. Examples:
         it.run("Use the search tool to find information")
     }
     ```
-    <!--- KNIT example-opentelemetry-support-11.kt -->
 
 This setup provides complete observability for MCP operations with minimal code changes, following OpenTelemetry best practices and semantic conventions.

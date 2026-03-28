@@ -22,30 +22,17 @@ Koog 提供了三种主要类型的提示词执行器，它们都实现了 [`Pro
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.prompt.executor.clients.openai.OpenAILLMClient
-    import ai.koog.prompt.executor.llms.MultiLLMPromptExecutor
-    -->
-
     ```kotlin
     val openAIClient = OpenAILLMClient(System.getenv("OPENAI_API_KEY"))
     val promptExecutor = MultiLLMPromptExecutor(openAIClient)
     ```
-    <!--- KNIT example-prompt-executors-01.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     OpenAILLMClient openAIClient = new OpenAILLMClient(System.getenv("OPENAI_API_KEY"));
     MultiLLMPromptExecutor promptExecutor = new MultiLLMPromptExecutor(openAIClient);
     ```
-    <!--- KNIT example-prompt-executors-java-01.java -->
 
 ## Creating a multi-provider executor { #creating-a-multi-provider-executor }
 
@@ -57,13 +44,6 @@ Koog 提供了三种主要类型的提示词执行器，它们都实现了 [`Pro
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.prompt.executor.clients.openai.OpenAILLMClient
-    import ai.koog.prompt.executor.ollama.client.OllamaClient
-    import ai.koog.prompt.executor.llms.MultiLLMPromptExecutor
-    import ai.koog.prompt.llm.LLMProvider
-    -->
-
     ```kotlin
     val openAIClient = OpenAILLMClient(System.getenv("OPENAI_API_KEY"))
     val ollamaClient = OllamaClient()
@@ -73,23 +53,15 @@ Koog 提供了三种主要类型的提示词执行器，它们都实现了 [`Pro
         LLMProvider.Ollama to ollamaClient
     )
     ```
-    <!--- KNIT example-prompt-executors-02.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     OpenAILLMClient openAIClient = new OpenAILLMClient(System.getenv("OPENAI_API_KEY"));
     OllamaClient ollamaClient = new OllamaClient();
 
     MultiLLMPromptExecutor promptExecutor = new MultiLLMPromptExecutor(openAIClient, ollamaClient);
     ```
-    <!--- KNIT example-prompt-executors-java-02.java -->
 
 ## Creating a routing executor { #creating-a-routing-executor }
 
@@ -106,12 +78,6 @@ Koog 提供了三种主要类型的提示词执行器，它们都实现了 [`Pro
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.prompt.executor.clients.openai.OpenAILLMClient
-    import ai.koog.prompt.executor.clients.anthropic.AnthropicLLMClient
-    import ai.koog.prompt.executor.llms.RoundRobinRouter
-    import ai.koog.prompt.executor.llms.RoutingLLMPromptExecutor
-    -->
     ```kotlin
     // Create multiple client instances
     val openAI1 = OpenAILLMClient(apiKey = "openai-key-1")
@@ -124,16 +90,9 @@ Koog 提供了三种主要类型的提示词执行器，它们都实现了 [`Pro
     // Create routing executor
     val routingExecutor = RoutingLLMPromptExecutor(router)
     ```
-    <!--- KNIT example-prompt-executors-03.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     // Create multiple client instances
     OpenAILLMClient openAI1 = new OpenAILLMClient("openai-key-1");
@@ -146,7 +105,6 @@ Koog 提供了三种主要类型的提示词执行器，它们都实现了 [`Pro
     // Create routing executor
     RoutingLLMPromptExecutor routingExecutor = new RoutingLLMPromptExecutor(router);
     ```
-    <!--- KNIT example-prompt-executors-java-03.java -->
 
 当您通过此执行器运行提示时，对OpenAI模型的请求将采用轮询策略在`openAI1`和`openAI2`之间交替进行。而对Anthropic模型的请求始终会发送至单一的`anthropic`客户端，因为轮询机制会为每个服务提供商维护独立的计数器。
 
@@ -177,34 +135,17 @@ the predefined executors will return a PromptExecutor instance configured with a
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    import ai.koog.prompt.executor.llms.MultiLLMPromptExecutor
-    import ai.koog.prompt.executor.clients.anthropic.AnthropicLLMClient
-    import ai.koog.prompt.executor.clients.google.GoogleLLMClient
-    import ai.koog.prompt.executor.clients.openai.OpenAILLMClient
-    import kotlinx.coroutines.runBlocking
-    -->
-
     ```kotlin
     // Create an OpenAI executor
     val promptExecutor = simpleOpenAIExecutor("OPENAI_API_KEY")
     ```
-    <!--- KNIT example-prompt-executors-04.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     // Create an OpenAI executor
     PromptExecutor openAIExecutor = simpleOpenAIExecutor("OPENAI_API_KEY");
     ```
-    <!--- KNIT example-prompt-executors-java-04.java -->
 
 ## Running a prompt { #running-a-prompt }
 
@@ -217,19 +158,6 @@ the predefined executors will return a PromptExecutor instance configured with a
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.prompt.dsl.prompt
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import kotlinx.coroutines.runBlocking
-    fun main() {
-        runBlocking {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
-
     ```kotlin
     // Create an OpenAI executor
     val promptExecutor = simpleOpenAIExecutor("OPENAI_API_KEY")
@@ -240,16 +168,9 @@ the predefined executors will return a PromptExecutor instance configured with a
         model = OpenAIModels.Chat.GPT4o
     )
     ```
-    <!--- KNIT example-prompt-executors-05.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     // Create an OpenAI executor
     PromptExecutor promptExecutor = simpleOpenAIExecutor("OPENAI_API_KEY");
@@ -262,7 +183,6 @@ the predefined executors will return a PromptExecutor instance configured with a
     // Run the prompt
     List<Message.Response> response = promptExecutor.execute(prompt, OpenAIModels.Chat.GPT4o);
     ```
-    <!--- KNIT example-prompt-executors-java-05.java -->
 
 这将使用`GPT4o`模型运行提示并返回响应。
 
@@ -281,22 +201,6 @@ the predefined executors will return a PromptExecutor instance configured with a
 以下是切换提供商的示例：
 
 === "Kotlin"
-
-    <!--- INCLUDE
-    import ai.koog.prompt.executor.llms.MultiLLMPromptExecutor
-    import ai.koog.prompt.executor.clients.anthropic.AnthropicLLMClient
-    import ai.koog.prompt.executor.clients.google.GoogleLLMClient
-    import ai.koog.prompt.executor.clients.openai.OpenAILLMClient
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.clients.anthropic.AnthropicModels
-    import ai.koog.prompt.llm.LLMProvider
-    import ai.koog.prompt.dsl.prompt
-    import kotlinx.coroutines.runBlocking
-    fun main() = runBlocking {
-    -->
-    <!--- SUFFIX
-    }
-    -->
 
     ```kotlin
     // Create LLM clients for OpenAI, Anthropic, and Google providers
@@ -320,16 +224,9 @@ the predefined executors will return a PromptExecutor instance configured with a
     // Run the prompt with an Anthropic model; the prompt executor automatically switches to the Anthropic client
     val anthropicResult = executor.execute(p, AnthropicModels.Sonnet_4_5)
     ```
-    <!--- KNIT example-prompt-executors-06.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     // Create LLM clients for OpenAI, Anthropic, and Google providers
     OpenAILLMClient openAIClient = new OpenAILLMClient("OPENAI_API_KEY");
@@ -356,7 +253,6 @@ the predefined executors will return a PromptExecutor instance configured with a
     // Run the prompt with an Anthropic model; the prompt executor automatically switches to the Anthropic client
     List<Message.Response> anthropicResult = promptExecutor.execute(prompt, AnthropicModels.Sonnet_4_5);
     ```
-    <!--- KNIT example-prompt-executors-java-06.java -->
 
 您可以选择配置一个备用的 LLM 提供者和模型，以便在请求的客户端不可用时使用。具体详情请参阅 [配置回退机制](#configuring-fallbacks)。
 
@@ -367,14 +263,6 @@ the predefined executors will return a PromptExecutor instance configured with a
 要配置回退机制，请在创建 `MultiLLMPromptExecutor` 或 `RoutingLLMPromptExecutor` 时传入回退设置：
 
 === "Kotlin"
-
-    <!--- INCLUDE
-    import ai.koog.prompt.executor.llms.MultiLLMPromptExecutor
-    import ai.koog.prompt.executor.clients.openai.OpenAILLMClient
-    import ai.koog.prompt.executor.ollama.client.OllamaClient
-    import ai.koog.prompt.executor.ollama.client.OllamaModels
-    import ai.koog.prompt.llm.LLMProvider
-    -->
 
     ```kotlin
     val openAIClient = OpenAILLMClient(System.getenv("OPENAI_API_KEY"))
@@ -389,16 +277,9 @@ the predefined executors will return a PromptExecutor instance configured with a
         )
     )
     ```
-    <!--- KNIT example-prompt-executors-07.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     OpenAILLMClient openAIClient = new OpenAILLMClient(System.getenv("OPENAI_API_KEY"));
     OllamaClient ollamaClient = new OllamaClient();
@@ -414,36 +295,10 @@ the predefined executors will return a PromptExecutor instance configured with a
         )
     );
     ```
-    <!--- KNIT example-prompt-executors-java-07.java -->
 
 如果您传递的模型来自LLM提供商，且该模型未包含在`MultiLLMPromptExecutor`中，提示执行器将使用备用模型：
 
 === "Kotlin"
-
-    <!--- INCLUDE
-    import ai.koog.prompt.dsl.prompt
-    import ai.koog.prompt.executor.llms.MultiLLMPromptExecutor
-    import ai.koog.prompt.executor.clients.openai.OpenAILLMClient
-    import ai.koog.prompt.executor.ollama.client.OllamaClient
-    import ai.koog.prompt.executor.clients.google.GoogleModels
-    import ai.koog.prompt.executor.ollama.client.OllamaModels
-    import ai.koog.prompt.llm.LLMProvider
-    import kotlinx.coroutines.runBlocking
-    val openAIClient = OpenAILLMClient(System.getenv("OPENAI_API_KEY"))
-    val ollamaClient = OllamaClient()
-    val multiExecutor = MultiLLMPromptExecutor(
-        LLMProvider.OpenAI to openAIClient,
-        LLMProvider.Ollama to ollamaClient,
-        fallback = MultiLLMPromptExecutor.FallbackPromptExecutorSettings(
-            fallbackProvider = LLMProvider.Ollama,
-            fallbackModel = OllamaModels.Meta.LLAMA_3_2
-        )
-    )
-    fun main() = runBlocking {
-    -->
-    <!--- SUFFIX
-    }
-    -->
 
     ```kotlin
     // Create a prompt
@@ -451,16 +306,9 @@ the predefined executors will return a PromptExecutor instance configured with a
     // If you pass a Google model, the prompt executor will use the fallback model, as the Google client is not included
     val response = multiExecutor.execute(p, GoogleModels.Gemini2_5Pro)
     ```
-    <!--- KNIT example-prompt-executors-08.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     // Create a prompt
     Prompt p = Prompt.builder("demo")
@@ -470,12 +318,7 @@ the predefined executors will return a PromptExecutor instance configured with a
     // If you pass a Google model, the prompt executor will use the fallback model, as the Google client is not included
     List<Message.Response> response = multiExecutor.execute(p, GoogleModels.Gemini2_5Pro);
     ```
-    <!--- KNIT example-prompt-executors-java-08.java -->
 
 !!! note
     仅针对`execute()`和`executeMultipleChoices()`方法提供回退机制。
-
-
-
-
 

@@ -22,32 +22,21 @@
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.prompt.dsl.prompt
-    -->
     ```kotlin
     val myPrompt = prompt("hello-koog") {
         system("You are a helpful assistant.")
         user("What is Koog?")
     }
     ```
-    <!--- KNIT example-prompts-01.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     var myPrompt = Prompt.builder("hello-koog")
         .system("You are a helpful assistant.")
         .user("What is Koog?")
         .build();
     ```
-    <!--- KNIT example-prompts-java-01.java -->
 
 !!! note
     AI智能体可以接收简单的文本提示作为输入。它们会自动将文本提示转换为Prompt对象，并发送给LLM执行。这对于[基础代理](../agents/basic-agents.md)非常有用，因为它只需要运行单个请求，无需复杂的对话逻辑。
@@ -68,7 +57,6 @@ flowchart TB
     C -->|"returns response"| B
     B -->|"returns result"| D
 ```
-<!--- KNIT example-prompts-01.txt -->
 
 <div class="grid cards" markdown>
 
@@ -123,17 +111,6 @@ Koog 允许您在运行提示时优化性能并处理故障。
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    import kotlinx.coroutines.runBlocking
-    val apiKey = System.getenv("OPENAI_API_KEY")
-    fun main() = runBlocking {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     // Create an agent
     val agent = AIAgent(
@@ -145,16 +122,9 @@ Koog 允许您在运行提示时优化性能并处理故障。
     // Run the agent
     val result = agent.run("What is Koog?")
     ```
-    <!--- KNIT example-prompts-02.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     AIAgent<String, String> agent = AIAgent.builder()
         .promptExecutor(simpleOpenAIExecutor(System.getenv("OPENAI_API_KEY")))
@@ -164,7 +134,6 @@ Koog 允许您在运行提示时优化性能并处理故障。
 
     var result = agent.run("What is Koog?");
     ```
-    <!--- KNIT example-prompts-java-02.java -->
 
 在这个示例中，代理自动将文本提示转换为 Prompt 对象，并将其发送给提示执行器：
 
@@ -186,7 +155,6 @@ flowchart TB
     E -->|"result to"| B
     B -->|"result to"| A
 ```
-<!--- KNIT example-prompts-02.txt -->
 
 对于更高级的配置，您也可以使用 [AIAgentConfig](api:agents-core::ai.koog.agents.core.agent.config.AIAgentConfig) 来定义代理的初始提示。
 

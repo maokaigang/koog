@@ -26,22 +26,6 @@ Koog 中的并行节点执行包含以下所述的方法与数据结构。
 
 要启动节点的并行执行，请按以下格式使用 `parallel` 方法：
 
-<!--- INCLUDE
-import ai.koog.agents.core.dsl.builder.strategy
-import ai.koog.agents.core.dsl.builder.node
-import ai.koog.agents.core.dsl.builder.parallel
-
-typealias Input = Unit
-typealias Output = String
-
-val strategy = strategy<String, String>("strategy_name") {
-   val firstNode by node<Input, Output>() { "first" }
-   val secondNode by node<Input, Output>() { "second" }
-   val thirdNode by node<Input, Output>() { "third" }
--->
-<!--- SUFFIX
-}
--->
 ```kotlin
 val nodeName by parallel<Input, Output>(
    firstNode, secondNode, thirdNode /* Add more nodes if needed */
@@ -50,26 +34,9 @@ val nodeName by parallel<Input, Output>(
    selectByMax { it.length }
 }
 ```
-<!--- KNIT example-parallel-node-execution-01.kt -->
 
 以下是一个实际示例，并行运行三个节点并选择长度最大的结果：
 
-<!--- INCLUDE
-import ai.koog.agents.core.dsl.builder.strategy
-import ai.koog.agents.core.dsl.builder.node
-import ai.koog.agents.core.dsl.builder.parallel
-
-typealias Input = String
-typealias Output = Int
-
-val strategy = strategy<String, String>("strategy_name") {
-   val nodeCalcTokens by node<Input, Output>() { 1 }
-   val nodeCalcSymbols by node<Input, Output>() { 2 }
-   val nodeCalcWords by node<Input, Output>() { 3 }
--->
-<!--- SUFFIX
-}
--->
 ```kotlin
 val calc by parallel<String, Int>(
    nodeCalcTokens, nodeCalcSymbols, nodeCalcWords,
@@ -77,7 +44,6 @@ val calc by parallel<String, Int>(
    selectByMax { it }
 }
 ```
-<!--- KNIT example-parallel-node-execution-02.kt -->
 
 以上代码并行运行 `nodeCalcTokens`、`nodeCalcSymbols` 和 `nodeCalcWords` 节点，并返回具有最大值的那个结果。
 
@@ -94,22 +60,6 @@ val calc by parallel<String, Int>(
 
 根据谓词函数选择结果：
 
-<!--- INCLUDE
-import ai.koog.agents.core.dsl.builder.strategy
-import ai.koog.agents.core.dsl.builder.node
-import ai.koog.agents.core.dsl.builder.parallel
-
-typealias Input = String
-typealias Output = String
-
-val strategy = strategy<String, String>("strategy_name") {
-   val nodeOpenAI by node<Input, Output>() { "openai" }
-   val nodeAnthropicSonnet by node<Input, Output>() { "sonnet" }
-   val nodeAnthropicOpus by node<Input, Output>() { "opus" }
--->
-<!--- SUFFIX
-}
--->
 ```kotlin
 val nodeSelectJoke by parallel<String, String>(
    nodeOpenAI, nodeAnthropicSonnet, nodeAnthropicOpus,
@@ -117,7 +67,6 @@ val nodeSelectJoke by parallel<String, String>(
    selectBy { it.contains("programmer") }
 }
 ```
-<!--- KNIT example-parallel-node-execution-03.kt -->
 
 此操作选择第一个包含“programmer”单词的笑话。
 
@@ -125,22 +74,6 @@ val nodeSelectJoke by parallel<String, String>(
 
 根据比较函数选择最大值结果：
 
-<!--- INCLUDE
-import ai.koog.agents.core.dsl.builder.strategy
-import ai.koog.agents.core.dsl.builder.node
-import ai.koog.agents.core.dsl.builder.parallel
-
-typealias Input = String
-typealias Output = String
-
-val strategy = strategy<String, String>("strategy_name") {
-   val nodeOpenAI by node<Input, Output>() { "openai" }
-   val nodeAnthropicSonnet by node<Input, Output>() { "sonnet" }
-   val nodeAnthropicOpus by node<Input, Output>() { "opus" }
--->
-<!--- SUFFIX
-}
--->
 ```kotlin
 val nodeLongestJoke by parallel<String, String>(
    nodeOpenAI, nodeAnthropicSonnet, nodeAnthropicOpus,
@@ -148,7 +81,6 @@ val nodeLongestJoke by parallel<String, String>(
    selectByMax { it.length }
 }
 ```
-<!--- KNIT example-parallel-node-execution-04.kt -->
 
 此操作选择长度最长的笑话。
 
@@ -156,28 +88,6 @@ val nodeLongestJoke by parallel<String, String>(
 
 根据选择函数返回的索引选择结果：
 
-<!--- INCLUDE
-import ai.koog.agents.core.dsl.builder.strategy
-import ai.koog.agents.core.dsl.builder.node
-import ai.koog.agents.core.dsl.builder.parallel
-import ai.koog.prompt.executor.clients.openai.OpenAIModels
-import ai.koog.prompt.structure.json.JsonStructure
-
-typealias Input = String
-typealias Output = String
-
-data class JokeRating(
-   val bestJokeIndex: Int,
-)
-
-val strategy = strategy<String, String>("strategy_name") {
-   val nodeOpenAI by node<Input, Output>() { "openai" }
-   val nodeAnthropicSonnet by node<Input, Output>() { "sonnet" }
-   val nodeAnthropicOpus by node<Input, Output>() { "opus" }
--->
-<!--- SUFFIX
-}
--->
 ```kotlin
 val nodeBestJoke by parallel<String, String>(
    nodeOpenAI, nodeAnthropicSonnet, nodeAnthropicOpus,
@@ -196,7 +106,6 @@ val nodeBestJoke by parallel<String, String>(
    }
 }
 ```
-<!--- KNIT example-parallel-node-execution-05.kt -->
 
 此示例通过另一个 LLM 调用来确定最佳笑话的索引。
 
@@ -204,22 +113,6 @@ val nodeBestJoke by parallel<String, String>(
 
 使用操作函数将结果折叠为单个值：
 
-<!--- INCLUDE
-import ai.koog.agents.core.dsl.builder.strategy
-import ai.koog.agents.core.dsl.builder.node
-import ai.koog.agents.core.dsl.builder.parallel
-
-typealias Input = String
-typealias Output = String
-
-val strategy = strategy<String, String>("strategy_name") {
-   val nodeOpenAI by node<Input, Output>() { "openai" }
-   val nodeAnthropicSonnet by node<Input, Output>() { "sonnet" }
-   val nodeAnthropicOpus by node<Input, Output>() { "opus" }
--->
-<!--- SUFFIX
-}
--->
 ```kotlin
 val nodeAllJokes by parallel<String, String>(
    nodeOpenAI, nodeAnthropicSonnet, nodeAnthropicOpus,
@@ -227,7 +120,6 @@ val nodeAllJokes by parallel<String, String>(
    fold("Jokes:\n") { result, joke -> "$result\n$joke" }
 }
 ```
-<!--- KNIT example-parallel-node-execution-06.kt -->
 
 此操作将所有笑话合并为单个字符串。
 
@@ -235,21 +127,6 @@ val nodeAllJokes by parallel<String, String>(
 
 以下完整示例演示如何使用并行执行从不同 LLM 模型生成笑话并选择最佳结果：
 
-<!--- INCLUDE
-import ai.koog.agents.core.dsl.builder.strategy
-import ai.koog.agents.core.dsl.builder.node
-import ai.koog.agents.core.dsl.builder.parallel
-import ai.koog.prompt.dsl.prompt
-import ai.koog.prompt.executor.clients.anthropic.AnthropicModels
-import ai.koog.prompt.executor.clients.openai.OpenAIModels
-
-typealias Input = String
-typealias Output = String
-
-data class JokeRating(
-   val bestJokeIndex: Int,
-)
--->
 ```kotlin
 val strategy = strategy("best-joke") {
    // Define nodes for different LLM models
@@ -323,7 +200,6 @@ val strategy = strategy("best-joke") {
    nodeStart then nodeGenerateBestJoke then nodeFinish
 }
 ```
-<!--- KNIT example-parallel-node-execution-07.kt -->
 
 ## 最佳实践 { #best-practices }
 

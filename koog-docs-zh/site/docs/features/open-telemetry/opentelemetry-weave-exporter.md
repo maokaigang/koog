@@ -26,7 +26,6 @@ export WEAVE_API_KEY="<your-api-key>"
 export WEAVE_ENTITY="<your-entity>"
 export WEAVE_PROJECT_NAME="koog-tracing"
 ```
-<!--- KNIT example-weave-exporter-01.txt -->
 
 ## 配置 { #configuration }
 
@@ -36,14 +35,6 @@ export WEAVE_PROJECT_NAME="koog-tracing"
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    import kotlinx.coroutines.runBlocking
-    val promptExecutor = simpleOpenAIExecutor("openai-api-key")
-    -->
     ```kotlin
     fun main() = runBlocking {
         val entity = System.getenv()["WEAVE_ENTITY"] 
@@ -68,24 +59,9 @@ export WEAVE_PROJECT_NAME="koog-tracing"
         println("Result: $result\nSee traces on https://wandb.ai/$entity/$projectName/weave/traces")
     }
     ```
-    <!--- KNIT example-weave-exporter-01.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent;
-    import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry;
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels;
-    import ai.koog.prompt.executor.model.PromptExecutor;
-    import java.util.Optional;
-    public class exampleWeaveExporterJava01 {
-        static PromptExecutor promptExecutor = PromptExecutor.builder()
-            .openAI("openai-api-key")
-            .build();
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```java
     public static void main(String[] args) {
         var entity = Optional.ofNullable(System.getenv("WEAVE_ENTITY"))
@@ -111,7 +87,6 @@ export WEAVE_PROJECT_NAME="koog-tracing"
         System.out.println("Result: " + result + "\nSee traces on https://wandb.ai/" + entity + "/" + projectName + "/weave/traces");
     }
     ```
-    <!--- KNIT exampleWeaveExporterJava01.java -->
 
 ## 什么会被追踪 { #what-gets-traced }
 
@@ -126,62 +101,21 @@ export WEAVE_PROJECT_NAME="koog-tracing"
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    val promptExecutor = simpleOpenAIExecutor("openai-api-key")
-    val agent = AIAgent(
-        promptExecutor = promptExecutor,
-        llmModel = OpenAIModels.Chat.GPT4o,
-        systemPrompt = "You are a helpful assistant."
-    ) {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     install(OpenTelemetry) {
         addWeaveExporter()
         setVerbose(true)
     }
     ```
-    <!--- KNIT example-weave-exporter-02.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent;
-    import ai.koog.agents.features.opentelemetry.attribute.CustomAttribute;
-    import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry;
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels;
-    import ai.koog.prompt.executor.model.PromptExecutor;
-    import java.util.List;
-    import java.util.UUID;
-    public class exampleWeaveExporterJava02 {
-        public static void main(String[] args) {
-            var promptExecutor = PromptExecutor.builder()
-                .openAI("openai-api-key")
-                .build();
-            var agent = AIAgent.builder()
-                .promptExecutor(promptExecutor)
-                .systemPrompt("You are a helpful assistant.")
-                .llmModel(OpenAIModels.Chat.GPT4oMini)
-                .
-    -->
-    <!--- SUFFIX
-            .build();
-        }
-    }
-    -->
     ```java
     install(OpenTelemetry.Feature, config -> {
         config.addWeaveExporter();
         config.setVerbose(true);
     })
     ```
-    <!--- KNIT exampleWeaveExporterJava02.java -->
 
 在 W&B Weave 中可视化时，追踪记录会呈现如下所示：
 ![W&B Weave traces](img/opentelemetry-weave-exporter-light.png#only-light)

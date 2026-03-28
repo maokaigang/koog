@@ -55,18 +55,6 @@ Koog 的 **流式传输 API** 允许你将 **LLM 输出** 作为 `Flow<StreamFra
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.prompt.streaming.StreamFrame
-    
-    val strategy = strategy<String, String>("strategy_name") {
-        val node by node<Unit, Unit> {
-    -->
-    <!--- SUFFIX
-       }
-    }
-    -->
     ```kotlin
     llm.writeSession {
         appendPrompt { user("Tell me a joke, then call a tool with JSON args.") }
@@ -88,20 +76,11 @@ Koog 的 **流式传输 API** 允许你将 **LLM 输出** 作为 `Flow<StreamFra
         }
     }
     ```
-    <!--- KNIT example-streaming-api-01.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-streaming-api-java-01.java -->
-
 
 需要注意的是，你可以通过直接处理原始字符串流来解析输出。这种方法能让你在解析过程中获得更大的灵活性和控制力。
 
@@ -109,17 +88,6 @@ Koog 的 **流式传输 API** 允许你将 **LLM 输出** 作为 `Flow<StreamFra
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.prompt.structure.markdown.MarkdownStructureDefinition
-    val strategy = strategy<String, String>("strategy_name") {
-        val node by node<Unit, Unit> {
-    -->
-    <!--- SUFFIX
-       }
-    }
-    -->
     ```kotlin
     fun markdownBookDefinition(): MarkdownStructureDefinition {
         return MarkdownStructureDefinition("name", schema = { /*...*/ })
@@ -136,36 +104,16 @@ Koog 的 **流式传输 API** 允许你将 **LLM 输出** 作为 `Flow<StreamFra
         }
     }
     ```
-    <!--- KNIT example-streaming-api-02.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-streaming-api-java-02.java -->
 
 ### 使用推理框架 { #working-with-reasoning-frames }
 
 支持推理的模型（如Claude Sonnet 4.5或GPT-o1）在流式传输过程中会输出推理帧。您可以同时访问推理过程及其总结：
 
-<!--- INCLUDE
-import ai.koog.agents.core.dsl.builder.strategy
-import ai.koog.agents.core.dsl.builder.node
-import ai.koog.prompt.streaming.StreamFrame
-
-val strategy = strategy<String, String>("strategy_name") {
-    val node by node<Unit, Unit> {
--->
-<!--- SUFFIX
-   }
-}
--->
 ```kotlin
 llm.writeSession {
     appendPrompt { user("Solve this complex problem: ...") }
@@ -198,7 +146,6 @@ llm.writeSession {
     }
 }
 ```
-<!--- KNIT example-streaming-api-reasoning-01.kt -->
 
 ### 处理原始文本流（派生） { #working-with-a-raw-text-stream-derived }
 
@@ -206,18 +153,6 @@ llm.writeSession {
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.prompt.streaming.filterTextOnly
-    import ai.koog.prompt.streaming.collectText
-    val strategy = strategy<String, String>("strategy_name") {
-        val node by node<Unit, Unit> {
-    -->
-    <!--- SUFFIX
-       }
-    }
-    -->
     ```kotlin
     llm.writeSession {
         val frames = requestLLMStreaming()
@@ -230,19 +165,11 @@ llm.writeSession {
         println("\n---\n$fullText")
     }
     ```
-    <!--- KNIT example-streaming-api-03.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-streaming-api-java-03.java -->
 
 ### 在事件处理器中监听流事件 { #listening-to-stream-events-in-event-handlers }
 
@@ -250,19 +177,6 @@ llm.writeSession {
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.agent.GraphAIAgent
-    import ai.koog.agents.features.eventHandler.feature.handleEvents
-    import ai.koog.prompt.streaming.StreamFrame
-    import ai.koog.prompt.structure.markdown.MarkdownStructureDefinition
-    
-    fun GraphAIAgent.FeatureContext.installStreamingApi() {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     handleEvents {
         onToolCallStarting { context ->
@@ -283,19 +197,11 @@ llm.writeSession {
         }
     }
     ```
-    <!--- KNIT example-streaming-api-04.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-streaming-api-java-04.java -->
 
 ### Converting frames to `Message.Response`
 
@@ -326,9 +232,6 @@ llm.writeSession {
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import kotlinx.serialization.Serializable
-    -->
     ```kotlin
     @Serializable
     data class Book(
@@ -337,16 +240,9 @@ llm.writeSession {
         val description: String
     )
     ```
-    <!--- KNIT example-streaming-api-05.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     // A simple Java POJO equivalent to the Kotlin @Serializable data class.
     public class Book {
@@ -361,7 +257,6 @@ llm.writeSession {
         }
     }
     ```
-    <!--- KNIT exampleStreamingApiJava01.java -->
 
 #### 2. 定义 Markdown 结构 { #2-define-the-markdown-structure }
 
@@ -369,10 +264,6 @@ llm.writeSession {
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.prompt.markdown.markdown
-    import ai.koog.prompt.structure.markdown.MarkdownStructureDefinition
-    -->
     ```kotlin
     fun markdownBookDefinition(): MarkdownStructureDefinition {
         return MarkdownStructureDefinition("bookList", schema = {
@@ -394,19 +285,11 @@ llm.writeSession {
         })
     }
     ```
-    <!--- KNIT example-streaming-api-06.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-streaming-api-java-05.java -->
 
 #### 3. 为你的数据结构创建一个解析器 { #3-create-a-parser-for-your-data-structure }
 
@@ -414,18 +297,6 @@ llm.writeSession {
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.example.exampleStreamingApi05.Book
-    import ai.koog.prompt.structure.markdown.markdownStreamingParser
-    import kotlinx.coroutines.flow.Flow
-    import kotlinx.coroutines.flow.flow
-    fun parseMarkdownStreamToBooks(markdownStream: Flow<String>): Flow<Book> {
-        return flow {
-    -->
-    <!--- SUFFIX
-       }
-    }
-    -->
     ```kotlin
     markdownStreamingParser {
         // Handle level 1 headings (level ranges from 1 to 6)
@@ -440,32 +311,16 @@ llm.writeSession {
         onFinishStream { remainingText -> }
     }
     ```
-    <!--- KNIT example-streaming-api-07.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-streaming-api-java-06.java -->
 
 利用已定义的处理程序，您可以实现一个解析Markdown流并利用`markdownStreamingParser`函数输出数据对象的函数。
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.example.exampleStreamingApi05.Book
-    import ai.koog.prompt.structure.markdown.markdownStreamingParser
-    import ai.koog.prompt.streaming.StreamFrame
-    import ai.koog.prompt.streaming.filterTextOnly
-    import kotlinx.coroutines.flow.Flow
-    import kotlinx.coroutines.flow.flow
-    -->
     ```kotlin
     fun parseMarkdownStreamToBooks(markdownStream: Flow<StreamFrame>): Flow<Book> {
        return flow {
@@ -504,32 +359,16 @@ llm.writeSession {
        }
     }
     ```
-    <!--- KNIT example-streaming-api-08.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-streaming-api-java-07.java -->
 
 #### 4. 在您的智能体策略中应用解析器 { #4-use-the-parser-in-your-agent-strategy }
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.forwardTo
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.example.exampleStreamingApi05.Book
-    import ai.koog.agents.example.exampleStreamingApi06.markdownBookDefinition
-    import ai.koog.agents.example.exampleStreamingApi08.parseMarkdownStreamToBooks
-    -->
     ```kotlin
     val agentStrategy = strategy<String, List<Book>>("library-assistant") {
        // Describe the node containing the output stream parsing
@@ -555,19 +394,11 @@ llm.writeSession {
        edge(getMdOutput forwardTo nodeFinish)
     }
     ```
-    <!--- KNIT example-streaming-api-09.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-streaming-api-java-08.java -->
 
 ### 高级用法：工具流式调用 { #advanced-usage-streaming-with-tools }
 
@@ -577,13 +408,6 @@ llm.writeSession {
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.tools.SimpleTool
-    import ai.koog.agents.core.tools.ToolDescriptor
-    import ai.koog.agents.example.exampleStreamingApi05.Book
-    import ai.koog.serialization.typeToken
-    import kotlinx.serialization.Serializable
-    -->
     ```kotlin
     @Serializable
     data class Book(
@@ -606,29 +430,16 @@ llm.writeSession {
         }
     }
     ```
-    <!--- KNIT example-streaming-api-10.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    -->
     ```java
     ```
-    <!--- KNIT example-streaming-api-java-09.java -->
 
 ### 2. 使用工具处理流式数据 { #2-use-the-tool-with-streaming-data }
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.forwardTo
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.example.exampleStreamingApi06.markdownBookDefinition
-    import ai.koog.agents.example.exampleStreamingApi08.parseMarkdownStreamToBooks
-    import ai.koog.agents.example.exampleStreamingApi10.BookTool
-    import ai.koog.agents.core.agent.session.callToolRaw
-    -->
     ```kotlin
     val agentStrategy = strategy<String, Unit>("library-assistant") {
        val getMdOutput by node<String, Unit> { input ->
@@ -658,30 +469,14 @@ llm.writeSession {
        edge(getMdOutput forwardTo nodeFinish)
      }
     ```
-    <!--- KNIT example-streaming-api-11.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-streaming-api-java-10.java -->
 
 ### 3. 在您的智能体配置中注册该工具 { #3-register-the-tool-in-your-agent-configuration }
 
-<!--- INCLUDE
-import ai.koog.agents.core.agent.AIAgent
-import ai.koog.agents.core.tools.ToolRegistry
-import ai.koog.agents.example.exampleStreamingApi10.BookTool
-import ai.koog.prompt.executor.clients.openai.OpenAIModels
-import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-
--->
 ```kotlin
 val toolRegistry = ToolRegistry {
     tool(BookTool())
@@ -693,7 +488,6 @@ val runner = AIAgent(
     toolRegistry = toolRegistry
 )
 ```
-<!--- KNIT example-streaming-api-12.kt -->
 
 ## Best practices
 

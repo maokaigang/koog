@@ -28,12 +28,6 @@ LLM 可决定是否调用提供的工具。
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    import kotlinx.coroutines.runBlocking
-    -->
     ```kotlin
     val agent = AIAgent(
         promptExecutor = simpleOpenAIExecutor(System.getenv("OPENAI_API_KEY")),
@@ -49,23 +43,9 @@ LLM 可决定是否调用提供的工具。
         println(result)
     }
     ```
-    <!--- KNIT example-basic-01.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent;
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels;
-    
-    import static ai.koog.prompt.executor.llms.all.SimplePromptExecutorsKt.simpleOpenAIExecutor;
-
-    class exampleBasicJava01 {
-        public static void main(String[] args) {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     AIAgent<String, String> agent = AIAgent.builder()
         .promptExecutor(simpleOpenAIExecutor(System.getenv("OPENAI_API_KEY")))
@@ -79,7 +59,6 @@ LLM 可决定是否调用提供的工具。
     String result = agent.run("Hello! How can you help me?");
     System.out.println(result);
     ```
-    <!--- KNIT exampleBasicJava01.java -->
 
 代理将返回一个通用答案，例如：
 
@@ -96,7 +75,6 @@ I can assist with a wide range of topics and tasks. Here are some examples:
 
 What's on your mind? Do you have a specific question, topic, or task you'd like to tackle?
 ```
-<!--- KNIT example-basic-01.txt -->
 
 ## Add a system prompt
 
@@ -104,11 +82,6 @@ What's on your mind? Do you have a specific question, topic, or task you'd like 
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    -->
     ```kotlin
     val agent = AIAgent(
         promptExecutor = simpleOpenAIExecutor(System.getenv("YOUR_API_KEY")),
@@ -116,23 +89,9 @@ What's on your mind? Do you have a specific question, topic, or task you'd like 
         llmModel = OpenAIModels.Chat.GPT4o
     )
     ```
-    <!--- KNIT example-basic-02.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent;
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels;
-    
-    import static ai.koog.prompt.executor.llms.all.SimplePromptExecutorsKt.simpleOpenAIExecutor;
-
-    class exampleBasicJava02 {
-        public static void main(String[] args) {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     AIAgent<String, String> agent = AIAgent.builder()
         .promptExecutor(simpleOpenAIExecutor(System.getenv("OPENAI_API_KEY")))
@@ -140,7 +99,6 @@ What's on your mind? Do you have a specific question, topic, or task you'd like 
         .llmModel(OpenAIModels.Chat.GPT4o)
         .build();
     ```
-    <!--- KNIT exampleBasicJava02.java -->
 
 系统提示中的指令将指导代理的响应：
 
@@ -149,7 +107,6 @@ I'm here to help you navigate the wild world of internet memes!
 
 What's on your mind? Are you trying to understand a specific meme, need help finding a popular joke, or perhaps want some recommendations for trending memes? Let me know, and I'll do my best to provide you with some LOLs!
 ```
-<!--- KNIT example-basic-02.txt -->
 
 ## Configure LLM output
 
@@ -157,11 +114,6 @@ What's on your mind? Are you trying to understand a specific meme, need help fin
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    -->
     ```kotlin
     val agent = AIAgent(
         promptExecutor = simpleOpenAIExecutor(System.getenv("YOUR_API_KEY")),
@@ -170,23 +122,9 @@ What's on your mind? Are you trying to understand a specific meme, need help fin
         temperature = 0.7
     )
     ```
-    <!--- KNIT example-basic-java-01.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent;
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels;
-    
-    import static ai.koog.prompt.executor.llms.all.SimplePromptExecutorsKt.simpleOpenAIExecutor;
-
-    class exampleBasicJava03 {
-        public static void main(String[] args) {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     AIAgent<String, String> agent = AIAgent.builder()
         .promptExecutor(simpleOpenAIExecutor(System.getenv("OPENAI_API_KEY")))
@@ -195,7 +133,6 @@ What's on your mind? Are you trying to understand a specific meme, need help fin
         .temperature(0.7)
         .build();
     ```
-    <!--- KNIT exampleBasicJava03.java -->
 
 以下是不同温度值下的响应示例：
 
@@ -204,7 +141,6 @@ What's on your mind? Are you trying to understand a specific meme, need help fin
     ```text
     I'm here to help you navigate the wild world of internet memes! Whether you're looking for explanations, examples, or just want to share a meme with someone, I'm your go-to expert. What's on your mind? Got a specific meme in mind that's got you curious? Or maybe you need some meme-related advice? Fire away!
     ```
-    <!--- KNIT example-basic-03.txt -->
 
 === "0.7"
 
@@ -213,7 +149,6 @@ What's on your mind? Are you trying to understand a specific meme, need help fin
     
     What's on your mind? Need help understanding a specific meme, finding a popular joke or trend, or maybe even creating your own meme? Let's get this meme party started!
     ```
-    <!--- KNIT example-basic-04.txt -->
 
 === "1.0"
 
@@ -224,7 +159,6 @@ What's on your mind? Are you trying to understand a specific meme, need help fin
     
     Do you have a specific question about memes (e.g., "What does this meme mean?"), or are you looking for some meme-related recommendations (e.g., "Can you recommend a funny meme to share with friends?"). Let me know how I can help!
     ```
-    <!--- KNIT example-basic-05.txt -->
 
 ## Add tools
 
@@ -234,14 +168,6 @@ What's on your mind? Are you trying to understand a specific meme, need help fin
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.core.tools.ToolRegistry
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    import ai.koog.agents.core.tools.annotations.LLMDescription
-    import ai.koog.agents.core.tools.annotations.Tool
-    -->
     ```kotlin
     @Tool
     @LLMDescription("Ask the user a question by sending it to stdout and return the answer from stdin")
@@ -267,31 +193,11 @@ What's on your mind? Are you trying to understand a specific meme, need help fin
         }
     )
     ```
-    <!--- KNIT example-basic-03.kt -->
 
     在示例中，`askUser` 是一个工具，它通过控制台的打印和读取来帮助代理与用户保持对话。如果代理决定向用户提问，它可以调用这个工具，该工具通过 `println()` 写入 `stdout`，并通过 `readln()` 从 `stdin` 读取。
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent;
-    import ai.koog.agents.core.tools.ToolRegistry;
-    import ai.koog.agents.core.tools.annotations.LLMDescription;
-    import ai.koog.agents.core.tools.annotations.Tool;
-    import ai.koog.agents.core.tools.reflect.ToolSet;
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels;
-    
-    import java.util.Scanner;
-    
-    import static ai.koog.prompt.executor.llms.all.SimplePromptExecutorsKt.simpleOpenAIExecutor;
-
-    class exampleBasicJava04 {
-        public static void main(String[] args) {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     // Create a ToolSet class
     class UserConversationTools implements ToolSet {
@@ -325,7 +231,6 @@ What's on your mind? Are you trying to understand a specific meme, need help fin
         .toolRegistry(toolRegistry)
         .build();
     ```
-    <!--- KNIT exampleBasicJava04.java -->
 
     在示例中，`askUser` 是一个工具，它通过控制台的打印和读取来帮助代理与用户保持对话。
 
@@ -356,7 +261,6 @@ Examples of Doge memes might include:
 
 The meme is known for its lighthearted and playful tone, and is often used to express excitement, happiness, or silliness. The meme has since become a cultural phenomenon, with countless variations and parodies emerging online.
 ```
-<!--- KNIT example-basic-06.txt -->
 
 ## Adjust agent iterations
 
@@ -364,23 +268,6 @@ The meme is known for its lighthearted and playful tone, and is often used to ex
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.core.tools.ToolRegistry
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    import ai.koog.agents.core.tools.annotations.LLMDescription
-    import ai.koog.agents.core.tools.annotations.Tool
-    @Tool
-    @LLMDescription("Asks the user a question by sending it to stdout and returns the answer from stdin")
-    fun askUser(
-        @LLMDescription("Question from the agent")
-        question: String
-    ): String {
-        println(question)
-        return readln()
-    }
-    -->
     ```kotlin
     val agent = AIAgent(
         promptExecutor = simpleOpenAIExecutor(System.getenv("YOUR_API_KEY")),
@@ -393,29 +280,9 @@ The meme is known for its lighthearted and playful tone, and is often used to ex
         maxIterations = 10
     )
     ```
-    <!--- KNIT example-basic-04.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent;
-    import ai.koog.agents.core.tools.ToolRegistry;
-    import ai.koog.agents.core.tools.annotations.LLMDescription;
-    import ai.koog.agents.core.tools.annotations.Tool;
-    import ai.koog.agents.core.tools.reflect.ToolSet;
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels;
-    
-    import java.util.Scanner;
-    
-    import static ai.koog.prompt.executor.llms.all.SimplePromptExecutorsKt.simpleOpenAIExecutor;
-
-    class exampleBasicJava05 {
-        public static void main(String[] args) {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     // Create a ToolSet class
     class UserConversationTools implements ToolSet {
@@ -447,7 +314,6 @@ The meme is known for its lighthearted and playful tone, and is often used to ex
         .maxIterations(10)
         .build();
     ```
-    <!--- KNIT exampleBasicJava05.java -->
 
 !!! tip
 
@@ -461,24 +327,6 @@ The meme is known for its lighthearted and playful tone, and is often used to ex
 
     在智能体构造函数的 lambda 表达式内调用 `handleEvents()` 函数来安装该功能并注册事件处理器：
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.core.tools.ToolRegistry
-    import ai.koog.agents.features.eventHandler.feature.handleEvents
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    import ai.koog.agents.core.tools.annotations.LLMDescription
-    import ai.koog.agents.core.tools.annotations.Tool
-    @Tool
-    @LLMDescription("Asks the user a question by sending it to stdout and returns the answer from stdin")
-    fun askUser(
-        @LLMDescription("Question from the agent")
-        question: String
-    ): String {
-        println(question)
-        return readln()
-    }
-    -->
     ```kotlin
     val agent = AIAgent(
         promptExecutor = simpleOpenAIExecutor(System.getenv("YOUR_API_KEY")),
@@ -498,7 +346,6 @@ The meme is known for its lighthearted and playful tone, and is often used to ex
         }
     }
     ```
-    <!--- KNIT example-basic-05.kt -->
 
 === "Java"
     使用智能体构建器上的 `.install()` 方法，通过 `EventHandler.Feature` 注册事件处理器：<!--- INCLUDE import ai.koog.agents.core.agent.AIAgent; import ai.koog.agents.core.tools.ToolRegistry; import ai.koog.agents.core.tools.annotations.LLMDescription; import ai.koog.agents.core.tools.annotations.Tool; import ai.koog.agents.core.tools.reflect.ToolSet; import ai.koog.agents.features.eventHandler.feature.EventHandler; import ai.koog.prompt.executor.clients.openai.OpenAIModels;
@@ -509,10 +356,6 @@ The meme is known for its lighthearted and playful tone, and is often used to ex
     import static ai.koog.prompt.executor.llms.all.SimplePromptExecutorsKt.simpleOpenAIExecutor;
 
     class exampleBasicJava06 { public static void main(String[] args) { -->
-<!--- SUFFIX
-        }
-    }
-    -->
 ```java
 // 创建一个 ToolSet 类
 class UserConversationTools implements ToolSet {
@@ -550,14 +393,12 @@ AIAgent<String, String> agent = AIAgent.builder()
     })
     .build();
 ```
-<!--- KNIT exampleBasicJava06.java -->
 
 当智能体调用 `askUser` 工具时，现在将输出类似以下内容：
 
 ```text
 Tool called: askUser with args {"question":"Which meme would you like me to explain?"}
 ```
-<!--- KNIT example-basic-07.txt -->
 
 有关 Koog 智能体功能的更多信息，请参阅[功能](../features/index.md)。
 

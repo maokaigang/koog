@@ -55,10 +55,6 @@ MCP 服务器支持 stdio 和 SSE 传输机制与代理通信，因此您可以�
 
 当 MCP 服务器作为独立进程运行时，使用此协议。以下是通过 stdio 传输设置 MCP 连接的示例：
 
-<!--- INCLUDE
-import ai.koog.agents.mcp.McpToolRegistryProvider
-import ai.koog.agents.mcp.defaultStdioTransport
--->
 ```kotlin
 // Start an MCP server (for example, as a process)
 val process = ProcessBuilder("path/to/mcp/server").start()
@@ -66,20 +62,15 @@ val process = ProcessBuilder("path/to/mcp/server").start()
 // Create the stdio transport 
 val transport = McpToolRegistryProvider.defaultStdioTransport(process)
 ```
-<!--- KNIT example-model-context-protocol-01.kt -->
 
 #### 使用 SSE 连接 { #connect-with-sse }
 
 当 MCP 服务器作为 Web 服务运行时，使用此协议。以下是通过 SSE 传输设置 MCP 连接的示例：
 
-<!--- INCLUDE
-import ai.koog.agents.mcp.McpToolRegistryProvider
--->
 ```kotlin
 // Create the SSE transport
 val transport = McpToolRegistryProvider.defaultSseTransport("http://localhost:8931")
 ```
-<!--- KNIT example-model-context-protocol-02.kt -->
 
 ### 2. 创建工具注册表 { #2-create-a-tool-registry }
 
@@ -87,19 +78,6 @@ val transport = McpToolRegistryProvider.defaultSseTransport("http://localhost:89
 
 * 使用提供的传输机制进行通信。例如：
 
-<!--- INCLUDE
-import ai.koog.agents.example.exampleModelContextProtocol01.transport
-import ai.koog.agents.mcp.metadata.McpServerInfo
-import ai.koog.agents.mcp.McpToolRegistryProvider
-import kotlinx.coroutines.runBlocking
-
-fun main() {
-    runBlocking {
--->
-<!--- SUFFIX
-    }
-}
--->
 ```kotlin
 // Create a tool registry with tools from the MCP server
 val toolRegistry = McpToolRegistryProvider.fromTransport(
@@ -109,25 +87,8 @@ val toolRegistry = McpToolRegistryProvider.fromTransport(
     version = "1.0.0"
 )
 ```
-<!--- KNIT example-model-context-protocol-03.kt -->
 
 * 使用连接到 MCP 服务器的 MCP 客户端。例如：
-<!--- INCLUDE
-import ai.koog.agents.mcp.metadata.McpServerInfo
-import ai.koog.agents.mcp.McpToolRegistryProvider
-import io.modelcontextprotocol.kotlin.sdk.types.Implementation
-import io.modelcontextprotocol.kotlin.sdk.client.Client
-import kotlinx.coroutines.runBlocking
-
-val existingMcpClient = Client(clientInfo = Implementation(name = "mcpClient", version = "dev"))
-
-fun main() {
-    runBlocking {
--->
-<!--- SUFFIX
-    }
-}
--->
 ```kotlin
 // Create a tool registry from an existing MCP client
 val toolRegistry = McpToolRegistryProvider.fromClient(
@@ -135,36 +96,10 @@ val toolRegistry = McpToolRegistryProvider.fromClient(
     serverInfo = McpServerInfo(url = "http://localhost:8931")
 )
 ```
-<!--- KNIT example-model-context-protocol-04.kt -->
 
 ### 3. 与您的代理集成 { #3-integrate-with-your-agent }
 
 要在您的 Koog 代理中使用 MCP 工具，您需要将工具注册表注册到代理：
-<!--- INCLUDE
-import ai.koog.agents.core.agent.AIAgent
-import ai.koog.agents.core.agent.singleRunStrategy
-import ai.koog.prompt.executor.clients.openai.OpenAIModels
-import ai.koog.prompt.executor.llms.all.simpleOllamaAIExecutor
-import kotlinx.coroutines.runBlocking
-import ai.koog.agents.mcp.metadata.McpServerInfo
-import ai.koog.agents.mcp.McpToolRegistryProvider
-import ai.koog.agents.example.exampleModelContextProtocol04.existingMcpClient
-
-
-val executor = simpleOllamaAIExecutor()
-val strategy = singleRunStrategy()
-
-fun main() {
-    runBlocking {
-        val toolRegistry = McpToolRegistryProvider.fromClient(
-            mcpClient = existingMcpClient,
-            serverInfo = McpServerInfo(url = "http://localhost:8931")
-        )
--->
-<!--- SUFFIX
-    }
-}
--->
 ```kotlin
 // Create an agent with the tools
 val agent = AIAgent(
@@ -177,7 +112,6 @@ val agent = AIAgent(
 // Run the agent with a task that uses an MCP tool
 val result = agent.run("Use the MCP tool to perform a task")
 ```
-<!--- KNIT example-model-context-protocol-05.kt -->
 
 [//]: # (## 直接使用 MCP 工具)
 
@@ -292,23 +226,6 @@ val result = agent.run("Use the MCP tool to perform a task")
 
 此示例演示了如何使用 MCP 连接到 [Google 地图](https://mcp.so/server/google-maps/modelcontextprotocol) 服务器以获取地理数据：
 
-<!--- INCLUDE
-import ai.koog.agents.core.agent.AIAgent
-import ai.koog.agents.mcp.McpToolRegistryProvider
-import ai.koog.agents.mcp.fromProcess
-import ai.koog.prompt.executor.clients.openai.OpenAIModels
-import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-import kotlinx.coroutines.runBlocking
-
-const val googleMapsApiKey = ""
-const val openAIApiToken = ""
-fun main() {
-    runBlocking { 
--->
-<!--- SUFFIX
-    }
-}
--->
 ```kotlin
 // Start the Docker container with the Google Maps MCP server
 val process = ProcessBuilder(
@@ -328,29 +245,11 @@ val agent = AIAgent(
 )
 agent.run("Get elevation of the Jetbrains Office in Munich, Germany?")
 ```
-<!--- KNIT example-model-context-protocol-06.kt -->
 
 ### Playwright MCP 集成 { #playwright-mcp-integration }
 
 此示例演示了如何使用 MCP 连接到 [Playwright](https://mcp.so/server/playwright-mcp/microsoft) 服务器以进行网页自动化：
 
-<!--- INCLUDE
-import ai.koog.agents.core.agent.AIAgent
-import ai.koog.agents.mcp.McpToolRegistryProvider
-import ai.koog.prompt.executor.clients.openai.OpenAIModels
-import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-import kotlinx.coroutines.runBlocking
-
-
-val openAIApiToken = ""
-
-fun main() {
-    runBlocking { 
--->
-<!--- SUFFIX
-    }
-}
--->
 ```kotlin
 // Start the Playwright MCP server
 val process = ProcessBuilder(
@@ -368,4 +267,3 @@ val agent = AIAgent(
 )
 agent.run("Open a browser, navigate to jetbrains.com, accept all cookies, click AI in toolbar")
 ```
-<!--- KNIT example-model-context-protocol-07.kt -->

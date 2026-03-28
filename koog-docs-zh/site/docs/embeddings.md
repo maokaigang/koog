@@ -22,12 +22,6 @@
 要使用本地模型的嵌入功能，您需要在系统上安装并运行 Ollama。
 有关安装和运行说明，请参阅 [官方 Ollama GitHub 仓库](https://github.com/ollama/ollama)。
 
-<!--- INCLUDE
-import ai.koog.embeddings.local.LLMEmbedder
-import ai.koog.prompt.executor.ollama.client.OllamaModels
-import ai.koog.prompt.executor.ollama.client.OllamaClient
-import kotlinx.coroutines.runBlocking
--->
 ```kotlin
 fun main() {
     runBlocking {
@@ -42,7 +36,6 @@ fun main() {
     }
 }
 ```
-<!--- KNIT example-embeddings-01.kt -->
 
 要使用 Ollama 嵌入模型，请确保满足以下先决条件：
 
@@ -51,7 +44,6 @@ fun main() {
     ```bash
     ollama pull <ollama-model-id>
     ```
-    <!--- KNIT example-embeddings-01.txt -->
 
     将 `<ollama-model-id>` 替换为特定模型的 Ollama 标识符。有关可用嵌入模型及其标识符的更多信息，请参阅 [Ollama 模型概览](#ollama-models-overview)。
 
@@ -81,11 +73,6 @@ fun main() {
 
 要使用 OpenAI 嵌入模型创建嵌入，请使用 `OpenAILLMClient` 实例的 `embed` 方法，如下例所示。
 
-<!--- INCLUDE
-import ai.koog.embeddings.local.LLMEmbedder
-import ai.koog.prompt.executor.clients.openai.OpenAILLMClient
-import ai.koog.prompt.executor.clients.openai.OpenAIModels
--->
 ```kotlin
 suspend fun openAIEmbed(text: String) {
     // Get the OpenAI API token from the OPENAI_KEY environment variable
@@ -100,19 +87,11 @@ suspend fun openAIEmbed(text: String) {
     println(embedding)
 }
 ```
-<!--- KNIT example-embeddings-02.kt -->
 
 ## AWS Bedrock 嵌入 { #openai-embeddings }
 
 要使用 AWS Bedrock 嵌入模型创建嵌入，请使用 `BedrockLLMClient` 实例的 `embed` 方法以及您选择的模型。示例：
 
-<!--- INCLUDE
-import ai.koog.embeddings.local.LLMEmbedder
-import ai.koog.prompt.executor.clients.bedrock.BedrockClientSettings
-import ai.koog.prompt.executor.clients.bedrock.BedrockLLMClient
-import ai.koog.prompt.executor.clients.bedrock.BedrockModels
-import aws.sdk.kotlin.runtime.auth.credentials.StaticCredentialsProvider
--->
 ```kotlin
 suspend fun bedrockEmbed(text: String) {
     // Get AWS credentials from environment/configuration
@@ -137,7 +116,6 @@ suspend fun bedrockEmbed(text: String) {
     println(embedding)
 }
 ```
-<!--- KNIT example-embeddings-03.kt -->
 
 ### 支持的 AWS Bedrock 嵌入模型
 
@@ -158,9 +136,6 @@ suspend fun bedrockEmbed(text: String) {
 
 比较代码片段与自然语言描述，以找到语义匹配：
 
-<!--- INCLUDE
-import ai.koog.embeddings.base.Embedder
--->
 ```kotlin
 suspend fun compareCodeToText(embedder: Embedder) { // Embedder type
     // Code snippet
@@ -194,15 +169,11 @@ suspend fun compareCodeToText(embedder: Embedder) { // Embedder type
     }
 }
 ```
-<!--- KNIT example-embeddings-04.kt -->
 
 ### 代码到代码比较 { #code-to-text-comparison }
 
 比较代码片段以找到语义相似性，无论语法差异如何：
 
-<!--- INCLUDE
-import ai.koog.embeddings.base.Embedder
--->
 ```kotlin
 suspend fun compareCodeToCode(embedder: Embedder) { // Embedder type
     // Two implementations of the same algorithm in different languages
@@ -256,7 +227,6 @@ suspend fun compareCodeToCode(embedder: Embedder) { // Embedder type
     }
 }
 ```
-<!--- KNIT example-embeddings-05.kt -->
 
 ## API 文档
 

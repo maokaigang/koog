@@ -29,7 +29,6 @@
 @Target(AnnotationTarget.FUNCTION)
 public annotation class Tool(val customName: String = "")
 ```
-<!--- KNIT example-annotation-based-tools-01.txt -->
 
 ### 参数 { #parameters }
 
@@ -43,10 +42,6 @@ public annotation class Tool(val customName: String = "")
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.tools.annotations.Tool
-    import ai.koog.agents.core.tools.reflect.ToolSet
-    -->
     ```kotlin
     class MyToolSet : ToolSet {
         @Tool
@@ -62,16 +57,9 @@ public annotation class Tool(val customName: String = "")
         }
     }
     ```
-    <!--- KNIT example-annotation-based-tools-01.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     public class MyToolSet implements ToolSet {
         @Tool
@@ -87,7 +75,6 @@ public annotation class Tool(val customName: String = "")
         }
     }
     ```
-    <!--- KNIT example-annotation-based-tools-java-01.java -->
 
 ## @LLMDescription 注解 { #llmdescription-annotation }
 
@@ -105,7 +92,6 @@ public annotation class Tool(val customName: String = "")
 )
 public annotation class LLMDescription(val description: String)
 ```
-<!--- KNIT example-annotation-based-tools-02.txt -->
 
 ### 参数 { #parameters }
 
@@ -121,10 +107,6 @@ public annotation class LLMDescription(val description: String)
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.tools.annotations.LLMDescription
-    import ai.koog.agents.core.tools.annotations.Tool
-    -->
     ```kotlin
     @Tool
     @LLMDescription("Performs a specific operation and returns the result")
@@ -133,16 +115,9 @@ public annotation class LLMDescription(val description: String)
         return "Result"
     }
     ```
-    <!--- KNIT example-annotation-based-tools-02.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     @Tool
     @LLMDescription(description = "Performs a specific operation and returns the result")
@@ -151,17 +126,12 @@ public annotation class LLMDescription(val description: String)
         return "Result";
     }
     ```
-    <!--- KNIT example-annotation-based-tools-java-02.java -->
 
     
 * 参数层级：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.tools.annotations.LLMDescription
-    import ai.koog.agents.core.tools.annotations.Tool
-    -->
     ```kotlin
     @Tool
     @LLMDescription("Processes input data")
@@ -176,16 +146,9 @@ public annotation class LLMDescription(val description: String)
         return "Processed: $input with config: $config"
     }
     ```
-    <!--- KNIT example-annotation-based-tools-03.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     @Tool
     @LLMDescription(description = "Processes input data")
@@ -197,8 +160,6 @@ public annotation class LLMDescription(val description: String)
         return "Processed: " + input + " with config: " + config;
     }
     ```
-    <!--- KNIT example-annotation-based-tools-java-03.java -->
-
 
 ## 创建工具 { #creating-a-tool }
 
@@ -209,30 +170,19 @@ public annotation class LLMDescription(val description: String)
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.tools.reflect.ToolSet
-    -->
     ```kotlin
     class MyFirstToolSet : ToolSet {
         // Tools will go here
     }
     ```
-    <!--- KNIT example-annotation-based-tools-04.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     public class MyFirstToolSet implements ToolSet {
         // Tools will go here
     }
     ```
-    <!--- KNIT example-annotation-based-tools-java-04.java -->
 
 ### 2. 添加工具函数 { #2-add-tool-functions }
 
@@ -240,10 +190,6 @@ public annotation class LLMDescription(val description: String)
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.tools.annotations.Tool
-    import ai.koog.agents.core.tools.reflect.ToolSet
-    -->
     ```kotlin
     class MyFirstToolSet : ToolSet {
         @Tool
@@ -253,16 +199,9 @@ public annotation class LLMDescription(val description: String)
         }
     }
     ```
-    <!--- KNIT example-annotation-based-tools-05.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     public class MyFirstToolSet implements ToolSet {
         @Tool
@@ -272,7 +211,6 @@ public annotation class LLMDescription(val description: String)
         }
     }
     ```
-    <!--- KNIT example-annotation-based-tools-java-05.java -->
 
 ### 3. 添加描述 { #3-add-descriptions }
 
@@ -280,11 +218,6 @@ public annotation class LLMDescription(val description: String)
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.tools.reflect.ToolSet
-    import ai.koog.agents.core.tools.annotations.LLMDescription
-    import ai.koog.agents.core.tools.annotations.Tool
-    -->
     ```kotlin
     @LLMDescription("Tools for getting weather information")
     class MyFirstToolSet : ToolSet {
@@ -299,16 +232,9 @@ public annotation class LLMDescription(val description: String)
         }
     }
     ```
-    <!--- KNIT example-annotation-based-tools-06.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     @LLMDescription(description = "Tools for getting weather information")
     public class MyFirstToolSet implements ToolSet {
@@ -322,7 +248,6 @@ public annotation class LLMDescription(val description: String)
         }
     }
     ```
-    <!--- KNIT example-annotation-based-tools-java-06.java -->
 
 ### 4. 与智能体一起使用您的工具 { #4-use-your-tools-with-an-agent }
 
@@ -330,15 +255,6 @@ public annotation class LLMDescription(val description: String)
 
 === "Kotlin"
     
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.core.tools.ToolRegistry
-    import ai.koog.agents.example.exampleAnnotationBasedTools06.MyFirstToolSet
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    import kotlinx.coroutines.runBlocking
-    const val apiToken = ""
-    -->
     ```kotlin
     fun main() {
         runBlocking {
@@ -361,16 +277,9 @@ public annotation class LLMDescription(val description: String)
         }
     }
     ```
-    <!--- KNIT example-annotation-based-tools-07.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     String apiToken = System.getenv("OPENAI_API_KEY");
 
@@ -393,7 +302,6 @@ public annotation class LLMDescription(val description: String)
     String result = agent.run("纽约的天气怎么样？");
     System.out.println(result);
     ```
-    <!--- KNIT example-annotation-based-tools-java-07.java -->
 
 ## 使用示例 { #usage-examples }
 
@@ -405,19 +313,6 @@ public annotation class LLMDescription(val description: String)
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.tools.reflect.ToolSet
-    import ai.koog.agents.core.tools.annotations.LLMDescription
-    import ai.koog.agents.core.tools.annotations.Tool
-    class Switch(private var state: Boolean) {
-        fun switch(state: Boolean) {
-            this.state = state
-        }
-        fun isOn(): Boolean {
-            return state
-        }
-    }
-    -->
     ```kotlin
     @LLMDescription("用于控制开关的工具")
     class SwitchTools(val switch: Switch) : ToolSet {
@@ -438,16 +333,9 @@ public annotation class LLMDescription(val description: String)
         }
     }
     ```
-    <!--- KNIT example-annotation-based-tools-08.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     public class Switch {
         private boolean state;
@@ -490,7 +378,6 @@ public annotation class LLMDescription(val description: String)
         }
     }
     ```
-    <!--- KNIT example-annotation-based-tools-java-08.java -->
 
 当 LLM 需要控制开关时，它可以从提供的描述中理解以下信息：
 
@@ -505,11 +392,6 @@ public annotation class LLMDescription(val description: String)
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.tools.reflect.ToolSet
-    import ai.koog.agents.core.tools.annotations.LLMDescription
-    import ai.koog.agents.core.tools.annotations.Tool
-    -->
     ```kotlin
     @LLMDescription("用于对设备执行诊断和故障排除的工具")
     class DiagnosticToolSet : ToolSet {
@@ -537,16 +419,9 @@ public annotation class LLMDescription(val description: String)
     }
 }
 ```
-<!--- KNIT example-annotation-based-tools-09.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     @LLMDescription(description = "用于对设备执行诊断和故障排除的工具集")
     public class DiagnosticToolSet implements ToolSet {
@@ -575,8 +450,6 @@ public annotation class LLMDescription(val description: String)
         }
     }
     ```
-    <!--- KNIT example-annotation-based-tools-java-09.java -->
-
 
 ## 最佳实践 { #best-practices }
 

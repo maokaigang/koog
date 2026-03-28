@@ -26,7 +26,6 @@ dependencies {
     implementation("ai.koog:koog-spring-boot-starter:$koogVersion")
 }
 ```
-<!--- KNIT example-spring-boot-01.txt -->
 
 或者对于 Maven
 ```xml
@@ -36,7 +35,6 @@ dependencies {
     <version>$koogVersion</version>
 </dependency>
 ```
-<!--- KNIT example-spring-boot-02.txt -->
 
 请确保您的 Kotlin 或 Java 项目满足以下条件：
 - Spring Boot 3（需要 Java 17 或更高版本）
@@ -76,7 +74,6 @@ ai.koog.mistral.base-url=https://api.mistral.ai
 ai.koog.ollama.enabled=true
 ai.koog.ollama.base-url=http://127.0.0.1:11434
 ```
-<!--- KNIT example-spring-boot-03.txt -->
 
 或者使用 YAML 格式（`application.yml`）：
 
@@ -111,7 +108,6 @@ ai:
             enabled: true # Set it to `true` explicitly to activate !!!
             base-url: http://127.0.0.1:11434
 ```
-<!--- KNIT example-spring-boot-04.txt -->
 
 `ai.koog.PROVIDER.api-key` 和 `ai.koog.PROVIDER.enabled` 属性都用于激活提供商。
 
@@ -179,7 +175,6 @@ ai:
     data class ChatRequest(val message: String)
     data class ChatResponse(val response: String)
     ```
-    <!--- KNIT example-spring-boot-kotlin-01.txt -->
 
 === "Java"
 
@@ -228,7 +223,6 @@ ai:
     record ChatResponse(String response) {
     }
     ```
-    <!--- KNIT example-spring-boot-java-01.txt -->
 
 Spring Framework injected the executor for Anthropic by bean name (`anthropicExecutor`),
 but you can also inject multiple `PromptExecutor` beans using `@Qualifier` annotation (see "Multiple beans error" below).
@@ -278,7 +272,6 @@ After configuring multiple LLM providers you can send request to multiple LLMs v
         }
     }
     ```
-    <!--- KNIT example-spring-boot-kotlin-02.txt -->
 
 === "Java"
 
@@ -327,7 +320,6 @@ After configuring multiple LLM providers you can send request to multiple LLMs v
         }
     }
     ```
-    <!--- KNIT example-spring-boot-java-02.txt -->
 
 You can also register your own `MultiLLMPromptExecutor` bean and pass a `FallbackPromptExecutorSettings` to it.
 To override the auto-configuration for your beans you can use `@Primary` annotation.
@@ -388,7 +380,6 @@ The auto-configuration creates the following beans (when configured):
         // ...
     }
     ```
-    <!--- KNIT example-spring-boot-kotlin-03.txt -->
 
 === "Java"
 
@@ -406,7 +397,6 @@ The auto-configuration creates the following beans (when configured):
         // ...
     }
     ```
-    <!--- KNIT example-spring-boot-java-03.txt -->
 
 **Error: API key is required but not provided**
 

@@ -37,20 +37,6 @@ AI 代理维护着包含用户消息、助手回复、工具调用和工具响�
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.context.AIAgentContext
-    import ai.koog.agents.core.dsl.builder.forwardTo
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.builder.subgraph
-    import ai.koog.agents.core.dsl.extension.nodeExecuteTool
-    import ai.koog.agents.core.dsl.extension.nodeLLMCompressHistory
-    import ai.koog.agents.core.dsl.extension.nodeLLMRequest
-    import ai.koog.agents.core.dsl.extension.nodeLLMSendToolResult
-    import ai.koog.agents.core.dsl.extension.onAssistantMessage
-    import ai.koog.agents.core.dsl.extension.onToolCall
-    import ai.koog.agents.core.environment.ReceivedToolResult
-    -->
     ```kotlin
     // Define that the history is too long if there are more than 100 messages
     private suspend fun AIAgentContext.historyIsTooLong(): Boolean = llm.readSession { prompt.messages.size > 100 }
@@ -77,23 +63,9 @@ AI 代理维护着包含用户消息、助手回复、工具调用和工具响�
         edge(sendToolResult forwardTo nodeFinish onAssistantMessage { true })
     }
     ```
-    <!--- KNIT example-history-compression-01.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentEdge;
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    import ai.koog.agents.core.environment.ReceivedToolResult;
-    import ai.koog.prompt.message.Message;
-    class exampleHistoryCompressionJava01 {
-        public static void main(String[] args) {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var graph = AIAgentGraphStrategy.builder("execute-with-history-compression")
         .withInput(String.class)
@@ -166,7 +138,6 @@ AI 代理维护着包含用户消息、助手回复、工具调用和工具响�
         .transformed(Message.Assistant::getContent)
         .build());
     ```
-    <!--- KNIT exampleHistoryCompressionJava01.java -->
 
 在这个示例中，策略会在每次工具调用后检查历史记录是否过长。在将工具结果发送回 LLM 之前，历史记录会被压缩。这样可以防止在长对话过程中上下文不断增长。
 
@@ -174,12 +145,6 @@ AI 代理维护着包含用户消息、助手回复、工具调用和工具响�
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.builder.subgraph
-    import ai.koog.agents.core.dsl.extension.nodeLLMCompressHistory
-    -->
     ```kotlin
     val strategy = strategy<String, String>("execute-with-history-compression") {
         val collectInformation by subgraph<String, String> {
@@ -193,22 +158,9 @@ AI 代理维护着包含用户消息、助手回复、工具调用和工具响�
         nodeStart then collectInformation then compressHistory then makeTheDecision
     }
     ```
-    <!--- KNIT example-history-compression-02.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    import ai.koog.agents.core.agent.entity.AIAgentSubgraph;
-    import java.util.Collections;
-    class exampleHistoryCompressionJava02 {
-        public static void main(String[] args) {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var graph = AIAgentGraphStrategy.builder("execute-with-history-compression")
         .withInput(String.class)
@@ -242,7 +194,6 @@ AI 代理维护着包含用户消息、助手回复、工具调用和工具响�
     graph.edge(compressHistory, makeTheDecision);
     graph.edge(makeTheDecision, graph.nodeFinish);
     ```
-    <!--- KNIT exampleHistoryCompressionJava02.java -->
 
 在这个示例中，历史记录在完成信息收集阶段之后、进入决策阶段之前被压缩。
 
@@ -252,36 +203,16 @@ AI 代理维护着包含用户消息、助手回复、工具调用和工具响�
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.builder.subgraph
-    import ai.koog.agents.core.dsl.extension.replaceHistoryWithTLDR
-    val strategy = strategy<String, String>("strategy_name") {
-        val node by node<Unit, Unit> {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```kotlin
     llm.writeSession {
         replaceHistoryWithTLDR()
     }
     ```
-    <!--- KNIT example-history-compression-03.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-history-compression-java-01.java -->
 
 这种方法让你能够根据具体需求，在自定义节点逻辑的任何环节更灵活地实现压缩功能。
 
@@ -301,44 +232,14 @@ AI 代理维护着包含用户消息、助手回复、工具调用和工具响�
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.builder.subgraph
-    import ai.koog.agents.core.dsl.extension.HistoryCompressionStrategy
-    import ai.koog.agents.core.dsl.extension.nodeLLMCompressHistory
-    typealias ProcessedInput = String
-    val strategy = strategy<String, String>("strategy_name") {
-        val node by node<Unit, Unit> {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```kotlin
     val compressHistory by nodeLLMCompressHistory<ProcessedInput>(
         strategy = HistoryCompressionStrategy.WholeHistory
     )
     ```
-    <!--- KNIT example-history-compression-04.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    import ai.koog.agents.core.agent.entity.AIAgentSubgraph;
-    import ai.koog.agents.core.dsl.extension.HistoryCompressionStrategy;
-    class exampleHistoryCompressionJava03 {
-        public static void main(String[] args) {
-            var graph = AIAgentGraphStrategy.builder("execute-with-history-compression")
-                .withInput(String.class)
-                .withOutput(String.class);
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     // Using WholeHistory strategy in a compression node
     var compressHistory = AIAgentNode
@@ -350,43 +251,21 @@ AI 代理维护着包含用户消息、助手回复、工具调用和工具响�
     // Note: This example only shows the node creation.
     // You would need to add edges and other nodes to complete the graph.
     ```
-    <!--- KNIT exampleHistoryCompressionJava03.java -->
 
 * 在自定义节点中：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.builder.subgraph
-    import ai.koog.agents.core.dsl.extension.HistoryCompressionStrategy
-    import ai.koog.agents.core.dsl.extension.replaceHistoryWithTLDR
-    val strategy = strategy<String, String>("strategy_name") {
-        val node by node<Unit, Unit> {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```kotlin
     llm.writeSession {
         replaceHistoryWithTLDR(strategy = HistoryCompressionStrategy.WholeHistory)
     }
     ```
-    <!--- KNIT example-history-compression-05.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-history-compression-java-02.java -->
 
 ### FromLastNMessages
 
@@ -398,44 +277,14 @@ AI 代理维护着包含用户消息、助手回复、工具调用和工具响�
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.builder.subgraph
-    import ai.koog.agents.core.dsl.extension.HistoryCompressionStrategy
-    import ai.koog.agents.core.dsl.extension.nodeLLMCompressHistory
-    typealias ProcessedInput = String
-    val strategy = strategy<String, String>("strategy_name") {
-    val node by node<Unit, Unit> {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```kotlin
     val compressHistory by nodeLLMCompressHistory<ProcessedInput>(
         strategy = HistoryCompressionStrategy.FromLastNMessages(5)
     )
     ```
-    <!--- KNIT example-history-compression-06.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    import ai.koog.agents.core.agent.entity.AIAgentSubgraph;
-    import ai.koog.agents.core.dsl.extension.HistoryCompressionStrategy;
-    class exampleHistoryCompressionJava04 {
-        public static void main(String[] args) {
-            var graph = AIAgentGraphStrategy.builder("execute-with-history-compression")
-                .withInput(String.class)
-                .withOutput(String.class);
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     // Using FromLastNMessages strategy to compress only the last 5 messages
     var compressHistory = AIAgentNode
@@ -447,44 +296,21 @@ AI 代理维护着包含用户消息、助手回复、工具调用和工具响�
     // Note: This example only shows the node creation.
     // You would need to add edges and other nodes to complete the graph.
     ```
-    <!--- KNIT exampleHistoryCompressionJava04.java -->
 
 * 在自定义节点中：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.builder.subgraph
-    import ai.koog.agents.core.dsl.extension.HistoryCompressionStrategy
-    import ai.koog.agents.core.dsl.extension.replaceHistoryWithTLDR
-    typealias ProcessedInput = String
-    val strategy = strategy<String, String>("strategy_name") {
-    val node by node<Unit, Unit> {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```kotlin
     llm.writeSession {
         replaceHistoryWithTLDR(strategy = HistoryCompressionStrategy.FromLastNMessages(5))
     }
     ```
-    <!--- KNIT example-history-compression-07.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-history-compression-java-03.java -->
 
 ### Chunked
 
@@ -496,44 +322,14 @@ AI 代理维护着包含用户消息、助手回复、工具调用和工具响�
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.builder.subgraph
-    import ai.koog.agents.core.dsl.extension.HistoryCompressionStrategy
-    import ai.koog.agents.core.dsl.extension.nodeLLMCompressHistory
-    typealias ProcessedInput = String
-    val strategy = strategy<String, String>("strategy_name") {
-    val node by node<Unit, Unit> {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```kotlin
     val compressHistory by nodeLLMCompressHistory<ProcessedInput>(
         strategy = HistoryCompressionStrategy.Chunked(10)
     )
     ```
-    <!--- KNIT example-history-compression-08.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    import ai.koog.agents.core.agent.entity.AIAgentSubgraph;
-    import ai.koog.agents.core.dsl.extension.HistoryCompressionStrategy;
-    class exampleHistoryCompressionJava05 {
-    public static void main(String[] args) {
-        var graph = AIAgentGraphStrategy.builder("execute-with-history-compression")
-            .withInput(String.class)
-            .withOutput(String.class);
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     // Using Chunked strategy to compress history in chunks of 10 messages
     var compressHistory = AIAgentNode
@@ -545,44 +341,21 @@ AI 代理维护着包含用户消息、助手回复、工具调用和工具响�
     // Note: This example only shows the node creation.
     // You would need to add edges and other nodes to complete the graph.
     ```
-    <!--- KNIT exampleHistoryCompressionJava05.java -->
 
 * 在自定义节点中：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.builder.subgraph
-    import ai.koog.agents.core.dsl.extension.HistoryCompressionStrategy
-    import ai.koog.agents.core.dsl.extension.replaceHistoryWithTLDR
-    typealias ProcessedInput = String
-    val strategy = strategy<String, String>("strategy_name") {
-    val node by node<Unit, Unit> {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```kotlin
     llm.writeSession {
         replaceHistoryWithTLDR(strategy = HistoryCompressionStrategy.Chunked(10))
     }
     ```
-    <!--- KNIT example-history-compression-09.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-history-compression-java-04.java -->
 
 ### RetrieveFactsFromHistory
 
@@ -594,22 +367,6 @@ AI 代理维护着包含用户消息、助手回复、工具调用和工具响�
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.builder.subgraph
-    import ai.koog.agents.core.dsl.extension.nodeLLMCompressHistory
-    import ai.koog.agents.memory.feature.history.RetrieveFactsFromHistory
-    import ai.koog.agents.memory.model.Concept
-    import ai.koog.agents.memory.model.FactType
-    typealias ProcessedInput = String
-    val strategy = strategy<String, String>("strategy_name") {
-    val node by node<Unit, Unit> {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```kotlin
     val compressHistory by nodeLLMCompressHistory<ProcessedInput>(
         strategy = RetrieveFactsFromHistory(
@@ -637,27 +394,9 @@ AI 代理维护着包含用户消息、助手回复、工具调用和工具响�
         )
     )
     ```
-    <!--- KNIT example-history-compression-10.kt -->
 
 === "Java"
     
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    import ai.koog.agents.core.environment.ReceivedToolResult;
-    import ai.koog.agents.memory.feature.history.RetrieveFactsFromHistory;
-    import ai.koog.agents.memory.model.Concept;
-    import ai.koog.agents.memory.model.FactType;
-    class exampleHistoryCompressionJava06 {
-    public static void main(String[] args) {
-        var graph = AIAgentGraphStrategy.builder("execute-with-history-compression")
-            .withInput(String.class)
-            .withOutput(String.class);
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     // Using RetrieveFactsFromHistory strategy to extract specific facts
     var compressHistory = AIAgentNode
@@ -685,28 +424,11 @@ AI 代理维护着包含用户消息、助手回复、工具调用和工具响�
         // Note: This example only shows the node creation.
         // You would need to add edges and other nodes to complete the graph.
     ```
-    <!--- KNIT exampleHistoryCompressionJava06.java -->
 
 * 在自定义节点中：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.builder.subgraph
-    import ai.koog.agents.core.dsl.extension.replaceHistoryWithTLDR
-    import ai.koog.agents.memory.feature.history.RetrieveFactsFromHistory
-    import ai.koog.agents.memory.model.Concept
-    import ai.koog.agents.memory.model.FactType
-    typealias ProcessedInput = String
-    val strategy = strategy<String, String>("strategy_name") {
-    val node by node<Unit, Unit> {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```kotlin
     llm.writeSession {
         replaceHistoryWithTLDR(
@@ -736,19 +458,11 @@ AI 代理维护着包含用户消息、助手回复、工具调用和工具响�
         )
     }
     ```
-    <!--- KNIT example-history-compression-11.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-history-compression-java-05.java -->
 
 ## 自定义历史记录压缩策略实现 { #custom-history-compression-strategy-implementation }
 
@@ -758,11 +472,6 @@ AI 代理维护着包含用户消息、助手回复、工具调用和工具响�
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.session.AIAgentLLMWriteSession
-    import ai.koog.agents.core.dsl.extension.HistoryCompressionStrategy
-    import ai.koog.prompt.message.Message
-    -->
     ```kotlin
     class MyCustomCompressionStrategy : HistoryCompressionStrategy() {
         override suspend fun compress(
@@ -794,19 +503,11 @@ AI 代理维护着包含用户消息、助手回复、工具调用和工具响�
         }
     }
     ```
-    <!--- KNIT example-history-compression-12.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-history-compression-java-06.java -->
 
 在这个示例中，自定义策略会筛选出包含“important”一词的消息，并仅将这些消息保留在压缩后的历史记录中。
 
@@ -816,73 +517,31 @@ AI 代理维护着包含用户消息、助手回复、工具调用和工具响�
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.builder.subgraph
-    import ai.koog.agents.core.dsl.extension.nodeLLMCompressHistory
-    import ai.koog.agents.example.exampleHistoryCompression12.MyCustomCompressionStrategy
-    typealias ProcessedInput = String
-    val strategy = strategy<String, String>("strategy_name") {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     val compressHistory by nodeLLMCompressHistory<ProcessedInput>(
         strategy = MyCustomCompressionStrategy()
     )
     ```
-    <!--- KNIT example-history-compression-13.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-history-compression-java-07.java -->
 
 * 在自定义节点中：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.builder.subgraph
-    import ai.koog.agents.core.dsl.extension.replaceHistoryWithTLDR
-    import ai.koog.agents.example.exampleHistoryCompression12.MyCustomCompressionStrategy
-    typealias ProcessedInput = String
-    val strategy = strategy<String, String>("strategy_name") {
-    val node by node<Unit, Unit> {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```kotlin
     llm.writeSession {
         replaceHistoryWithTLDR(strategy = MyCustomCompressionStrategy())
     }
     ```
-    <!--- KNIT example-history-compression-14.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-history-compression-java-08.java -->
 
 ##  压缩过程中的内存保留 { #memory-preservation-during-compression }
 
@@ -894,43 +553,15 @@ AI 代理维护着包含用户消息、助手回复、工具调用和工具响�
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.builder.subgraph
-    import ai.koog.agents.core.dsl.extension.HistoryCompressionStrategy
-    import ai.koog.agents.core.dsl.extension.nodeLLMCompressHistory
-    typealias ProcessedInput = String
-    val strategy = strategy<String, String>("strategy_name") {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     val compressHistory by nodeLLMCompressHistory<ProcessedInput>(
         strategy = HistoryCompressionStrategy.WholeHistory,
         preserveMemory = true
     )
     ```
-    <!--- KNIT example-history-compression-15.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    import ai.koog.agents.core.agent.entity.AIAgentSubgraph;
-    import ai.koog.agents.core.dsl.extension.HistoryCompressionStrategy;
-    class exampleHistoryCompressionJava07 {
-    public static void main(String[] args) {
-        var graph = AIAgentGraphStrategy.builder("execute-with-history-compression")
-            .withInput(String.class)
-            .withOutput(String.class);
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     // Using WholeHistory strategy with preserveMemory=true
     var compressHistory = AIAgentNode
@@ -943,26 +574,11 @@ AI 代理维护着包含用户消息、助手回复、工具调用和工具响�
     // Note: This example only shows the node creation.
     // You would need to add edges and other nodes to complete the graph.
     ```
-    <!--- KNIT exampleHistoryCompressionJava07.java -->
 
 * 在自定义节点中：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.builder.subgraph
-    import ai.koog.agents.core.dsl.extension.HistoryCompressionStrategy
-    import ai.koog.agents.core.dsl.extension.replaceHistoryWithTLDR
-    typealias ProcessedInput = String
-    val strategy = strategy<String, String>("strategy_name") {
-    val node by node<Unit, Unit> {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```kotlin
     llm.writeSession {
         replaceHistoryWithTLDR(
@@ -971,16 +587,8 @@ AI 代理维护着包含用户消息、助手回复、工具调用和工具响�
         )
     }
     ```
-    <!--- KNIT example-history-compression-16.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-history-compression-java-09.java -->

@@ -31,19 +31,6 @@ EventHandler 功能通过 `EventHandler` 类与智能体工作流集成，
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.features.eventHandler.feature.handleEvents
-    import ai.koog.prompt.executor.llms.all.simpleOllamaAIExecutor
-    import ai.koog.prompt.executor.ollama.client.OllamaModels
-    val agent = AIAgent(
-        promptExecutor = simpleOllamaAIExecutor(),
-        llmModel = OllamaModels.Meta.LLAMA_3_2,
-    ) {
-    -->
-    <!--- SUFFIX 
-    } 
-    -->
     ```kotlin
     handleEvents {
         // 处理工具调用
@@ -58,16 +45,9 @@ EventHandler 功能通过 `EventHandler` 类与智能体工作流集成，
         // 其他事件处理器
     }
     ```
-    <!--- KNIT example-event-handlers-01.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     AIAgent<String, String> agent = AIAgent.builder()
         .promptExecutor(simpleOllamaAIExecutor("http://localhost:11434"))
@@ -84,7 +64,6 @@ EventHandler 功能通过 `EventHandler` 类与智能体工作流集成，
         })
         .build();
     ```
-    <!--- KNIT example-event-handlers-java-01.java -->
 
 有关事件处理器配置的更多详细信息，请参阅 [API 参考](api:agents-features-event-handler::ai.koog.agents.features.eventHandler.feature.EventHandlerConfig)。
 
@@ -93,12 +72,6 @@ EventHandler 功能通过 `EventHandler` 类与智能体工作流集成，
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.features.eventHandler.feature.handleEvents
-    import ai.koog.prompt.executor.llms.all.simpleOllamaAIExecutor
-    import ai.koog.prompt.executor.ollama.client.OllamaModels
-    -->
     ```kotlin
     val agent = AIAgent(
         promptExecutor = simpleOllamaAIExecutor(),
@@ -118,16 +91,9 @@ EventHandler 功能通过 `EventHandler` 类与智能体工作流集成，
         }
     }
     ```
-    <!--- KNIT example-event-handlers-02.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     AIAgent<String, String> agent = AIAgent.builder()
         .promptExecutor(simpleOllamaAIExecutor("http://localhost:11434"))
@@ -144,4 +110,3 @@ EventHandler 功能通过 `EventHandler` 类与智能体工作流集成，
         })
         .build();
     ```
-    <!--- KNIT example-event-handlers-java-02.java -->

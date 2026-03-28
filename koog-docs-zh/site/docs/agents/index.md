@@ -35,11 +35,6 @@ Koog 智能体围绕以下核心概念构建：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    -->
     ```kotlin
     val agent = AIAgent(
         promptExecutor = simpleOpenAIExecutor(System.getenv("YOUR_API_KEY")),
@@ -49,16 +44,9 @@ Koog 智能体围绕以下核心概念构建：
         maxIterations = 10
     )
     ```
-    <!--- KNIT example-agent-config-01.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     AIAgent<String, String> agent = AIAgent.builder()
         .promptExecutor(simpleOpenAIExecutor(System.getenv("YOUR_API_KEY")))
@@ -68,20 +56,11 @@ Koog 智能体围绕以下核心概念构建：
         .maxIterations(10)
         .build();
     ```
-    <!--- KNIT example-agent-config-java-01.java -->
 
 或者，您可以创建一个 [`AIAgentConfig`](https://api.koog.ai/agents/agents-core/ai.koog.agents.core.agent.config/-a-i-agent-config/index.html) 实例来更细致地定义代理的行为和参数，然后将其传递给代理构造函数。这样您就可以定义包含多条消息、对话历史、LLM 参数以及其他执行参数的复杂提示。
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.core.agent.config.AIAgentConfig
-    import ai.koog.prompt.dsl.prompt
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    import ai.koog.prompt.params.LLMParams
-    -->
     ```kotlin
     val agentConfig = AIAgentConfig(
         prompt = prompt(
@@ -101,16 +80,9 @@ Koog 智能体围绕以下核心概念构建：
         agentConfig = agentConfig
     )
     ```
-    <!--- KNIT example-agent-config-02.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     Prompt prompt = Prompt.builder("assistant")
         .system("You are a helpful assistant.")
@@ -136,7 +108,6 @@ Koog 智能体围绕以下核心概念构建：
         .agentConfig(agentConfig)
         .build();
     ```
-    <!--- KNIT example-agent-config-java-02.java -->
 
 以下是 `AIAgentConfig` 的参数：
 

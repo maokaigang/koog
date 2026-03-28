@@ -81,21 +81,6 @@ Koog提供两种主要的内容审核方法：直接在`LLMClient`实例上进�
 
 您可以直接在LLMClient实例上使用`moderate`方法：
 
-<!--- INCLUDE
-import ai.koog.prompt.dsl.prompt
-import ai.koog.prompt.executor.clients.openai.OpenAILLMClient
-import ai.koog.prompt.executor.clients.openai.OpenAIModels
-import kotlinx.coroutines.runBlocking
-
-const val apiKey = "YOUR_OPENAI_API_KEY"
-
-fun main() {
-    runBlocking {
--->
-<!--- SUFFIX
-    }
-}
--->
 ```kotlin
 // Example with OpenAI client
 val openAIClient = OpenAILLMClient(apiKey)
@@ -113,7 +98,6 @@ if (result.isHarmful) {
     // Proceed with processing the prompt
 } 
 ```
-<!--- KNIT example-content-moderation-01.kt -->
 
 `moderate` 方法接受以下参数：
 
@@ -126,19 +110,6 @@ if (result.isHarmful) {
 
 以下是通过 Ollama 使用 Llama Guard 3 模型进行内容审核的示例：
 
-<!--- INCLUDE
-import ai.koog.prompt.dsl.prompt
-import ai.koog.prompt.executor.ollama.client.OllamaClient
-import ai.koog.prompt.executor.ollama.client.OllamaModels
-import kotlinx.coroutines.runBlocking
-
-fun main() {
-    runBlocking {
--->
-<!--- SUFFIX
-    }
-}
--->
 ```kotlin
 // Example with Ollama client
 val ollamaClient = OllamaClient()
@@ -156,31 +127,11 @@ if (result.isHarmful) {
     // Proceed with processing the prompt
 }
 ```
-<!--- KNIT example-content-moderation-02.kt -->
 
 ### 使用 PromptExecutor 进行审核 { #moderation-with-promptexecutor }
 
 你也可以在 PromptExecutor 上使用 `moderate` 方法，该方法将根据模型的提供商使用相应的 LLMClient：
 
-<!--- INCLUDE
-import ai.koog.prompt.dsl.prompt
-import ai.koog.prompt.executor.clients.openai.OpenAILLMClient
-import ai.koog.prompt.executor.clients.openai.OpenAIModels
-import ai.koog.prompt.executor.llms.MultiLLMPromptExecutor
-import ai.koog.prompt.executor.ollama.client.OllamaClient
-import ai.koog.prompt.llm.LLMProvider
-import ai.koog.prompt.executor.ollama.client.OllamaModels
-import kotlinx.coroutines.runBlocking
-
-const val openAIApiKey = "YOUR_OPENAI_API_KEY"
-
-fun main() {
-    runBlocking {
--->
-<!--- SUFFIX
-    }
-}
--->
 ```kotlin
 // Create a multi-provider executor
 val executor = MultiLLMPromptExecutor(
@@ -203,7 +154,6 @@ if (openAIResult.isHarmful || ollamaResult.isHarmful) {
     // Handle harmful content
 }
 ```
-<!--- KNIT example-content-moderation-03.kt -->
 
 `moderate` 方法接受以下参数：
 
@@ -218,10 +168,6 @@ if (openAIResult.isHarmful || ollamaResult.isHarmful) {
 
 审核过程返回一个具有以下结构的 `ModerationResult` 对象：
 
-<!--- INCLUDE
-import ai.koog.prompt.dsl.ModerationCategory
-import kotlinx.serialization.Serializable
--->
 ```kotlin
 @Serializable
 public data class ModerationResult(
@@ -252,7 +198,6 @@ public data class ModerationResult(
     }
 }
 ```
-<!--- KNIT example-content-moderation-04.kt -->
 
 一个 `ModerationResult` 对象包含以下属性：
 
@@ -262,7 +207,6 @@ public data class ModerationResult(
 | `categories`     | Map&lt;ModerationCategory, Boolean&gt;               | 是      |            | 一个将审核类别映射到布尔值的映射，指示哪些类别被标记。 |
 | `categoryScores` | Map&lt;ModerationCategory, Double&gt;                | 否       | emptyMap() | 一个将审核类别映射到置信度分数（0.0 到 1.0）的映射。                          |
 | `categoryAppliedInputTypes` | Map&lt;ModerationCategory, List&lt;InputType&gt;&gt; | 否       | emptyMap()           | 一个指示哪些输入类型（`TEXT` 或 `IMAGE`）触发了每个类别的映射。                |
-
 
 ## 审核类别 { #moderation-categories }
 
@@ -415,17 +359,8 @@ OpenAI 提供了具体的 `/moderations` API，该接口以以下 JSON 格式返
   }
 }
 ```
-<!--- KNIT example-content-moderation-01.txt -->
 
 在 Koog 中，上述响应的结构对应以下响应：
-<!--- INCLUDE
-import ai.koog.prompt.dsl.ModerationCategory
-import ai.koog.prompt.dsl.ModerationCategoryResult
-import ai.koog.prompt.dsl.ModerationResult
-import ai.koog.prompt.dsl.ModerationResult.InputType
-
-val result =
--->
 ```kotlin
 ModerationResult(
     isHarmful = true,
@@ -446,7 +381,6 @@ ModerationResult(
     )
 )
 ```
-<!--- KNIT example-content-moderation-05.kt -->
 
 ### OpenAI 审核示例（安全内容） { #openai-moderation-example-harmful-content }
 
@@ -486,17 +420,9 @@ ModerationResult(
   "categoryAppliedInputTypes": {}
 }
 ```
-<!--- KNIT example-content-moderation-02.txt -->
 
 在 Koog 中，上述 OpenAI 响应呈现如下：
 
-<!--- INCLUDE
-import ai.koog.prompt.dsl.ModerationCategory
-import ai.koog.prompt.dsl.ModerationCategoryResult
-import ai.koog.prompt.dsl.ModerationResult
-
-val result =
--->
 ```kotlin
 ModerationResult(
     isHarmful = false,
@@ -517,7 +443,6 @@ ModerationResult(
     )
 )
 ```
-<!--- KNIT example-content-moderation-06.kt -->
 
 ### Ollama 审核示例（有害内容） { #openai-moderation-example-safe-content }
 
@@ -533,17 +458,9 @@ Ollama 审核模型（例如 `llama-guard3`）会返回纯文本结果（助手�
 unsafe
 S1,S10
 ```
-<!--- KNIT example-content-moderation-03.txt -->
 
 这在 Koog 中转换为以下结果：
 
-<!--- INCLUDE
-import ai.koog.prompt.dsl.ModerationCategory
-import ai.koog.prompt.dsl.ModerationCategoryResult
-import ai.koog.prompt.dsl.ModerationResult
-
-val result =
--->
 ```kotlin
 ModerationResult(
     isHarmful = true,
@@ -564,7 +481,6 @@ ModerationResult(
     )
 )
 ```
-<!--- KNIT example-content-moderation-07.kt -->
 
 ### Ollama 审核示例（安全内容） { #ollama-moderation-example-harmful-content }
 
@@ -573,17 +489,9 @@ ModerationResult(
 ```text
 safe
 ```
-<!--- KNIT example-content-moderation-04.txt -->
 
 Koog 以下列方式转换该响应：
 
-<!--- INCLUDE
-import ai.koog.prompt.dsl.ModerationCategory
-import ai.koog.prompt.dsl.ModerationCategoryResult
-import ai.koog.prompt.dsl.ModerationResult
-
-val result =
--->
 ```kotlin
 ModerationResult(
     isHarmful = false,
@@ -604,4 +512,3 @@ ModerationResult(
     )
 )
 ```
-<!--- KNIT example-content-moderation-08.kt -->

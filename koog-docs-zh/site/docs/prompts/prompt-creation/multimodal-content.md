@@ -27,15 +27,6 @@ Koog允许您在`user`消息中向LLM发送图像、音频、视频和文件以�
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.prompt.dsl.prompt
-    import kotlinx.io.files.Path
-    val prompt = prompt("image_analysis") {
-    -->
-    <!--- SUFFIX
-    }
-    -->
-
     ```kotlin
     user {
         +"Describe these images:"
@@ -46,16 +37,9 @@ Koog允许您在`user`消息中向LLM发送图像、音频、视频和文件以�
         +"Focus on the main subjects."
     }
     ```
-    <!--- KNIT example-multimodal-content-01.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ContentPartsBuilder partsBuilder = new ContentPartsBuilder();
     partsBuilder.text("Describe these images:");
@@ -66,7 +50,6 @@ Koog允许您在`user`消息中向LLM发送图像、音频、视频和文件以�
         .user(partsBuilder.build())
         .build();
     ```
-    <!--- KNIT example-multimodal-content-java-01.java -->
 
 在Kotlin中，`+`操作符会向用户消息中添加文本内容以及附件。在Java中，请使用`ContentPartsBuilder`的`text()`方法。
 
@@ -79,16 +62,6 @@ Koog允许您在`user`消息中向LLM发送图像、音频、视频和文件以�
 包含文本消息和自定义配置附件列表的`user`消息通用格式如下：
 
 === "Kotlin"
-
-    <!--- INCLUDE
-    import ai.koog.prompt.dsl.prompt
-    import ai.koog.prompt.message.AttachmentContent
-    import ai.koog.prompt.message.ContentPart
-    val prompt = prompt("custom_image") {
-    -->
-    <!--- SUFFIX
-    }
-    -->
 
     ```kotlin
     user {
@@ -103,16 +76,9 @@ Koog允许您在`user`消息中向LLM发送图像、音频、视频和文件以�
         )
     }
     ```
-    <!--- KNIT example-multimodal-content-02.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     Prompt prompt = Prompt.builder("custom_image")
         .user(List.of(
@@ -126,7 +92,6 @@ Koog允许您在`user`消息中向LLM发送图像、音频、视频和文件以�
         ))
         .build();
     ```
-    <!--- KNIT example-multimodal-content-java-02.java -->
 
 Koog 为每种媒体类型提供了实现 `ContentPart.Attachment` 接口的专用类：
 
@@ -152,36 +117,27 @@ AttachmentContent接口的实现定义了提供给LLM作为输入的内容类型
     ```kotlin
     AttachmentContent.URL("https://example.com/image.png")
     ```
-    <!--- KNIT example-multimodal-content-01.txt -->
 
 - [`AttachmentContent.Binary.Bytes`](api:prompt-model::ai.koog.prompt.message.AttachmentContent.Binary) 将文件内容定义为字节数组：
     ```kotlin
     AttachmentContent.Binary.Bytes(byteArrayOf(/* ... */))
     ```
-    <!--- KNIT example-multimodal-content-02.txt -->
 
 - [`AttachmentContent.Binary.Base64`](api:prompt-model::ai.koog.prompt.message.AttachmentContent.Binary) 将文件内容定义为包含文件数据的 Base64 编码字符串：
     ```kotlin
     AttachmentContent.Binary.Base64("iVBORw0KGgoAAAANS...")
     ```
-    <!--- KNIT example-multimodal-content-03.txt -->
 
 - [`AttachmentContent.PlainText`](api:prompt-model::ai.koog.prompt.message.AttachmentContent.PlainText) 将文件内容定义为纯文本（仅适用于 [`ContentPart.File`](api:prompt-model::ai.koog.prompt.message.ContentPart.File)）：
     ```kotlin
     AttachmentContent.PlainText("This is the file content.")
     ```
-    <!--- KNIT example-multimodal-content-04.txt -->
 
 ### 混合附件 { #mixed-attachments }
 
 除了在单独的提示或消息中提供不同类型的附件外，您还可以在单个`user()`消息中提供多种混合类型的附件：
 
 === "Kotlin"
-
-    <!--- INCLUDE
-    import ai.koog.prompt.dsl.prompt
-    import kotlinx.io.files.Path
-    -->
 
     ```kotlin
     val prompt = prompt("mixed_content") {
@@ -195,16 +151,9 @@ AttachmentContent接口的实现定义了提供给LLM作为输入的内容类型
         }
     }
     ```
-    <!--- KNIT example-multimodal-content-03.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     Prompt prompt = Prompt.builder("mixed_content_example")
     .system("You are a helpful assistant.")
@@ -226,7 +175,6 @@ AttachmentContent接口的实现定义了提供给LLM作为输入的内容类型
     ))
     .build();
     ```
-    <!--- KNIT example-multimodal-content-java-03.java -->
 
 ## 下一步 { #next-steps }
 

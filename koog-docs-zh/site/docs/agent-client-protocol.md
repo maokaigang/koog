@@ -34,14 +34,6 @@ dependencies {
 
 为了将 Koog 代理的内部[事件系统](agent-events.md)与 ACP 协议桥接起来，请安装 `ai.koog.agents.features.acp.AcpAgent` 功能。安装后，它会监听生命周期事件（例如工具调用或 LLM 响应），并将其发送到 ACP 客户端。
 
-<!--- CLEAR -->
-<!--- INCLUDE
-import ai.koog.agents.core.agent.AIAgent
-import ai.koog.agents.features.acp.AcpAgent
-import ai.koog.prompt.executor.clients.openai.OpenAIModels
-import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-
--->
 ```kotlin
 val agent = AIAgent(
     promptExecutor = simpleOpenAIExecutor(System.getenv("OPENAI_API_KEY")),
@@ -55,7 +47,6 @@ val agent = AIAgent(
     }
 }
 ```
-<!--- KNIT example-agent-client-protocol-01.kt -->
 
 关键配置选项：
 
@@ -83,29 +74,6 @@ val agent = AIAgent(
 
 === "AgentSession"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.core.agent.config.AIAgentConfig
-    import ai.koog.agents.features.acp.AcpAgent
-    import ai.koog.agents.features.acp.toKoogMessage
-    import ai.koog.prompt.dsl.Prompt
-    import ai.koog.prompt.dsl.prompt
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.model.PromptExecutor
-    import com.agentclientprotocol.agent.AgentSession
-    import com.agentclientprotocol.common.Event
-    import com.agentclientprotocol.model.ContentBlock
-    import com.agentclientprotocol.model.SessionId
-    import com.agentclientprotocol.protocol.Protocol
-    import kotlinx.coroutines.Deferred
-    import kotlinx.coroutines.async
-    import kotlinx.coroutines.flow.Flow
-    import kotlinx.coroutines.flow.channelFlow
-    import kotlinx.coroutines.sync.Mutex
-    import kotlinx.coroutines.sync.withLock
-    import kotlin.time.Clock
-    import kotlinx.serialization.json.JsonElement
-    -->
     ```kotlin
     class MyAgentSession(
         override val sessionId: SessionId,
@@ -159,43 +127,9 @@ val agent = AIAgent(
         }
     }
     ```
-    <!--- KNIT example-agent-client-protocol-02.kt -->
 
 === "AgentSupport"
 
-    <!--- INCLUDE
-    import ai.koog.prompt.executor.model.PromptExecutor
-    import com.agentclientprotocol.agent.AgentInfo
-    import com.agentclientprotocol.agent.AgentSession
-    import com.agentclientprotocol.agent.AgentSupport
-    import com.agentclientprotocol.client.ClientInfo
-    import com.agentclientprotocol.common.Event
-    import com.agentclientprotocol.common.SessionCreationParameters
-    import com.agentclientprotocol.model.AgentCapabilities
-    import com.agentclientprotocol.model.ContentBlock
-    import com.agentclientprotocol.model.LATEST_PROTOCOL_VERSION
-    import com.agentclientprotocol.model.PromptCapabilities
-    import com.agentclientprotocol.model.SessionId
-    import com.agentclientprotocol.protocol.Protocol
-    import kotlinx.coroutines.flow.Flow
-    import kotlinx.serialization.json.JsonElement
-    import kotlin.time.Clock
-    import kotlin.uuid.ExperimentalUuidApi
-    import kotlin.uuid.Uuid
-    class MyAgentSession(
-        override val sessionId: SessionId,
-        private val promptExecutor: PromptExecutor,
-        private val protocol: Protocol,
-        private val clock: Clock
-    ): AgentSession {
-        override suspend fun prompt(
-            content: List<ContentBlock>,
-            _meta: JsonElement?
-        ): Flow<Event> {
-            TODO("Not yet implemented")
-        }
-    }
-    -->
     ```kotlin
     class MyAgentSupport(
         private val promptExecutor: PromptExecutor,
@@ -228,7 +162,6 @@ val agent = AIAgent(
         }
     }
     ```
-    <!--- KNIT example-agent-client-protocol-03.kt -->
 
 ## Event streaming { #event-streaming }
 
@@ -246,14 +179,6 @@ ACP 客户端将用户输入作为 [`ContentBlock`](https://agentclientprotocol.
 
 示例中的`AgentSession`定义了一个私有函数，用于在ACP会话中扩展初始代理提示。
 
-<!--- INCLUDE
-import ai.koog.agents.features.acp.toKoogMessage
-import ai.koog.prompt.dsl.Prompt
-import com.agentclientprotocol.model.ContentBlock
-import kotlin.time.Clock
-
-val clock: Clock = Clock.System
--->
 ```kotlin
 private fun Prompt.appendPrompt(content: List<ContentBlock>): Prompt {
     return withMessages { messages ->
@@ -261,7 +186,6 @@ private fun Prompt.appendPrompt(content: List<ContentBlock>): Prompt {
     }
 }
 ```
-<!--- KNIT example-agent-client-protocol-04.kt -->
 
 !!! note
 
@@ -318,15 +242,6 @@ private fun Prompt.appendPrompt(content: List<ContentBlock>): Prompt {
 
 你可以在一个`AIAgentContext`内部完成此操作，例如，在一个节点中：
 
-<!--- INCLUDE
-import ai.koog.agents.core.dsl.builder.strategy
-import ai.koog.agents.core.dsl.builder.node
-import ai.koog.agents.features.acp.withAcpAgent
-import com.agentclientprotocol.common.Event
-import com.agentclientprotocol.model.Plan
-import com.agentclientprotocol.model.SessionUpdate
-import com.agentclientprotocol.protocol.sendRequest
--->
 ```kotlin
 val plan: Plan = TODO()
 
@@ -342,19 +257,9 @@ val strategy = strategy<Unit, Unit>("my-strategy") {
     }
 }
 ```
-<!--- KNIT example-agent-client-protocol-05.kt -->
 
 你也可以访问底层的 `protocol` 来向客户端发送自定义请求，例如身份验证请求：
 
-<!--- INCLUDE
-import ai.koog.agents.core.dsl.builder.strategy
-import ai.koog.agents.core.dsl.builder.node
-import ai.koog.agents.features.acp.withAcpAgent
-import com.agentclientprotocol.model.AcpMethod
-import com.agentclientprotocol.model.AuthMethodId
-import com.agentclientprotocol.model.AuthenticateRequest
-import com.agentclientprotocol.protocol.sendRequest
--->
 ```kotlin
 val strategy = strategy<Unit, Unit>("my-strategy") {
     val node by node<Unit, Unit> {
@@ -367,7 +272,6 @@ val strategy = strategy<Unit, Unit>("my-strategy") {
     }
 }
 ```
-<!--- KNIT example-agent-client-protocol-06.kt -->
 
 ## Examples { #examples }
 
@@ -425,6 +329,5 @@ val strategy = strategy<Unit, Unit>("my-strategy") {
 7. 该代理将在 **AI 聊天** 工具窗口中变为可用。
 
 有关向您的IDE添加自定义代理的更多信息，请参阅[AI 助手文档](https://www.jetbrains.com/help/ai-assistant/acp.html#add-custom-agent)和[这篇博客文章](https://blog.jetbrains.com/ai/2026/02/koog-x-acp-connect-an-agent-to-your-ide-and-more/)。
-
 
 [Agent Client Protocol]: https://agentclientprotocol.com [ACP Kotlin SDK]: https://github.com/agentclientprotocol/kotlin-sdk

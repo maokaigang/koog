@@ -33,6 +33,7 @@ UPSTREAM_PYTHON_VERSION = Path("docs/.python-version")
 UPSTREAM_UV_LOCK = Path("docs/uv.lock")
 UPSTREAM_LICENSE = Path("LICENSE.txt")
 META_PATTERN = re.compile(r"^<!-- koog-zh-meta: (?P<meta>\{.*\}) -->\n?", re.DOTALL)
+KNIT_COMMENT_RE = re.compile(r"(?ms)^[ \t]*<!---.*?-->[ \t]*\n?")
 STATUS_ORDER = ("new", "changed", "outdated", "deleted", "reviewed")
 LOCAL_EXTRA_FILES = {
     "stylesheets/translation-extra.css",
@@ -168,19 +169,24 @@ def list_files(base: Path) -> list[Path]:
     return sorted(path for path in base.rglob("*") if path.is_file())
 
 
+def strip_knit_comments(text: str) -> str:
+    stripped = KNIT_COMMENT_RE.sub("", text)
+    return re.sub(r"\n{3,}", "\n\n", stripped)
+
+
 def load_site_doc(path: Path) -> SiteDocument:
     text = read_text(path)
     match = META_PATTERN.match(text)
     if not match:
-        return SiteDocument(path=path, meta=None, body=text)
+        return SiteDocument(path=path, meta=None, body=strip_knit_comments(text))
     meta = json.loads(match.group("meta"))
-    body = text[match.end() :]
+    body = strip_knit_comments(text[match.end() :])
     return SiteDocument(path=path, meta=meta, body=body)
 
 
 def dump_site_doc(meta: dict[str, str], body: str) -> str:
     meta_json = json.dumps(meta, ensure_ascii=False, sort_keys=True)
-    return f"<!-- koog-zh-meta: {meta_json} -->\n{body}"
+    return f"<!-- koog-zh-meta: {meta_json} -->\n{strip_knit_comments(body)}"
 
 
 def find_repo_root(path: Path) -> Path:
@@ -473,7 +479,7 @@ def sync_upstream(args: argparse.Namespace) -> None:
     for relative, source_sha in markdown_map.items():
         upstream_path = UPSTREAM_DIR / "docs" / relative
         site_path = SITE_DOCS_DIR / relative
-        upstream_body = read_text(upstream_path)
+        upstream_body = strip_knit_comments(read_text(upstream_path))
         meta = {
             "source_path": relative,
             "source_sha256": source_sha,

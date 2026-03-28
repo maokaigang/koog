@@ -11,17 +11,6 @@
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.ToolSelectionStrategy
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.builder.subgraph
-    typealias StrategyInput = Unit
-    typealias StrategyOutput = Unit
-    typealias Input = Unit
-    typealias Output = Unit
-    val strategy =
-    -->
     ```kotlin
     strategy<StrategyInput, StrategyOutput>("strategy-name") {
         val subgraphIdentifier by subgraph<Input, Output>(
@@ -34,21 +23,9 @@
         nodeStart then subgraphIdentifier then nodeFinish
     }
     ```
-    <!--- KNIT example-custom-subgraphs-01.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
-    import ai.koog.agents.core.agent.entity.AIAgentSubgraph;
-    import ai.koog.agents.core.agent.entity.ToolSelectionStrategy;
-    class exampleCustomSubgraphsJava01 {
-        public static void main(String[] args) {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var strategyBuilder = AIAgentGraphStrategy.builder("strategy-name")
         .withInput(String.class)
@@ -68,28 +45,11 @@
         .edge(subgraphIdentifier, strategyBuilder.nodeFinish)
         .build();
     ```
-    <!--- KNIT exampleCustomSubgraphsJava01.java -->
-
 
 * 具有指定工具列表的子图（来自已定义工具注册表的工具子集）：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.ToolSelectionStrategy
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.builder.subgraph
-    import ai.koog.agents.ext.tool.AskUser
-    import ai.koog.agents.ext.tool.SayToUser
-    typealias StrategyInput = Unit
-    typealias StrategyOutput = Unit
-    typealias Input = Unit
-    typealias Output = Unit
-    val firstTool = SayToUser
-    val secondTool = AskUser
-    val strategy =
-    -->
     ```kotlin
     strategy<StrategyInput, StrategyOutput>("strategy-name") {
        val subgraphIdentifier by subgraph<Input, Output>(
@@ -100,25 +60,9 @@
         }
     }
     ```
-    <!--- KNIT example-custom-subgraphs-02.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
-    import ai.koog.agents.core.agent.entity.AIAgentSubgraph;
-    import ai.koog.agents.ext.tool.AskUser;
-    import ai.koog.agents.ext.tool.SayToUser;
-    import java.util.List;
-    class exampleCustomSubgraphsJava02 {
-        public static void main(String[] args) {
-            var firstTool = SayToUser.INSTANCE;
-            var secondTool = AskUser.INSTANCE;
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var strategyBuilder = AIAgentGraphStrategy.builder("strategy-name")
         .withInput(String.class)
@@ -138,7 +82,6 @@
         .edge(subgraphIdentifier, strategyBuilder.nodeFinish)
         .build();
     ```
-    <!--- KNIT exampleCustomSubgraphsJava02.java -->
 
 有关参数和参数值的更多信息，请参阅`subgraph` [API 参考](api:agents-core::ai.koog.agents.core.dsl.builder.AIAgentSubgraphBuilderBase.subgraph)。有关工具的更多信息，请参阅[工具](tools-overview.md)。
 
@@ -146,18 +89,6 @@
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.forwardTo
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.builder.subgraph
-    import ai.koog.agents.core.dsl.extension.*
-    import ai.koog.agents.ext.tool.AskUser
-    import ai.koog.agents.ext.tool.SayToUser
-    val firstTool = SayToUser
-    val secondTool = AskUser
-    val strategy =
-    -->
     ```kotlin
     strategy<String, String>("my-strategy") {
        val mySubgraph by subgraph<String, String>(
@@ -175,28 +106,9 @@
         }
     }
     ```
-    <!--- KNIT example-custom-subgraphs-03.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentEdge;
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    import ai.koog.agents.core.agent.entity.AIAgentSubgraph;
-    import ai.koog.agents.ext.tool.AskUser;
-    import ai.koog.agents.ext.tool.SayToUser;
-    import ai.koog.prompt.message.Message;
-    import java.util.List;
-    class exampleCustomSubgraphsJava03 {
-        public static void main(String[] args) {
-            var firstTool = SayToUser.INSTANCE;
-            var secondTool = AskUser.INSTANCE;
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var strategyBuilder = AIAgentGraphStrategy.builder("my-strategy")
             .withInput(String.class)
@@ -238,7 +150,6 @@
         .edge(mySubgraph, strategyBuilder.nodeFinish)
         .build();
     ```
-    <!--- KNIT exampleCustomSubgraphsJava03.java -->
 
 ### 在子图中配置工具 { #configuring-tools-in-a-subgraph }
 
@@ -248,16 +159,6 @@
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.builder.subgraph
-    import ai.koog.agents.ext.tool.AskUser
-    val strategy = strategy<String, String>("my-strategy") {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     val mySubgraph by subgraph<String, String>(
        tools = listOf(AskUser)
@@ -265,21 +166,9 @@
         // Subgraph definition
      }
     ```
-    <!--- KNIT example-custom-subgraphs-04.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentSubgraph;
-    import ai.koog.agents.ext.tool.AskUser;
-    import java.util.List;
-    class exampleCustomSubgraphsJava04 {
-        public static void main(String[] args) {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var mySubgraph = AIAgentSubgraph.builder()
         .limitedTools(List.of(AskUser.INSTANCE))
@@ -290,23 +179,11 @@
         })
         .build();
     ```
-    <!--- KNIT exampleCustomSubgraphsJava04.java -->
 
 * 来自工具注册表：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.builder.subgraph
-    import ai.koog.agents.core.tools.ToolRegistry
-    val toolRegistry = ToolRegistry.EMPTY
-    val strategy = strategy<String, String>("my-strategy") {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     val mySubgraph by subgraph<String, String>(
         tools = listOf(toolRegistry.getTool("AskUser"))
@@ -314,22 +191,9 @@
         // Subgraph definition
     }
     ```
-    <!--- KNIT example-custom-subgraphs-05.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentSubgraph;
-    import ai.koog.agents.core.tools.ToolRegistry;
-    import java.util.List;
-    class exampleCustomSubgraphsJava05 {
-        public static void main(String[] args) {
-            var toolRegistry = ToolRegistry.builder().build();
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var mySubgraph = AIAgentSubgraph.builder()
         .limitedTools(List.of(toolRegistry.getTool("AskUser")))
@@ -340,44 +204,20 @@
         })
         .build();
     ```
-    <!--- KNIT exampleCustomSubgraphsJava05.java -->
 
 * 动态执行期间：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.builder.subgraph
-    val strategy = strategy<String, String>("my-strategy") {
-        val node by node<Unit, Unit>("node_name") {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```kotlin
     // Make a set of tools
     this.llm.writeSession {
         tools = tools.filter { it.name in listOf("first_tool_name", "second_tool_name") }
     }
     ```
-    <!--- KNIT example-custom-subgraphs-06.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    import java.util.List;
-    import java.util.stream.Collectors;
-    class exampleCustomSubgraphsJava06 {
-        public static void main(String[] args) {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var node = AIAgentNode.builder("node_name")
         .withInput(String.class)
@@ -394,7 +234,6 @@
         })
         .build();
     ```
-    <!--- KNIT exampleCustomSubgraphsJava06.java -->
 
 ## 高级子图技术 { #advanced-subgraph-techniques }
 
@@ -404,19 +243,6 @@
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.builder.subgraph
-    import ai.koog.agents.ext.tool.AskUser
-    import ai.koog.agents.ext.tool.SayToUser
-    typealias A = Unit
-    typealias B = Unit
-    typealias C = Unit
-    val firstTool = AskUser
-    val secondTool = SayToUser
-    val strategy =
-    -->
     ```kotlin
     strategy("complex-workflow") {
        val inputProcessing by subgraph<String, A>(
@@ -445,25 +271,9 @@
 
     }
     ```
-    <!--- KNIT example-custom-subgraphs-07.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
-    import ai.koog.agents.core.agent.entity.AIAgentSubgraph;
-    import ai.koog.agents.ext.tool.AskUser;
-    import ai.koog.agents.ext.tool.SayToUser;
-    import java.util.List;
-    class exampleCustomSubgraphsJava07 {
-        public static void main(String[] args) {
-            var firstTool = AskUser.INSTANCE;
-            var secondTool = SayToUser.INSTANCE;
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var strategyBuilder = AIAgentGraphStrategy.builder("complex-workflow")
             .withInput(String.class)
@@ -511,7 +321,6 @@
         .edge(responseGeneration, strategyBuilder.nodeFinish)
         .build();
     ```
-    <!--- KNIT exampleCustomSubgraphsJava07.java -->
 
 ## 最佳实践 { #best-practices }
 
@@ -549,55 +358,6 @@
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.forwardTo
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.builder.subgraph
-    import ai.koog.agents.core.dsl.extension.nodeExecuteTool
-    import ai.koog.agents.core.dsl.extension.nodeLLMRequest
-    import ai.koog.agents.core.dsl.extension.nodeLLMSendToolResult
-    import ai.koog.agents.core.dsl.extension.onAssistantMessage
-    import ai.koog.agents.core.dsl.extension.onToolCall
-    import ai.koog.agents.core.tools.SimpleTool
-    import ai.koog.agents.core.tools.ToolDescriptor
-    import ai.koog.prompt.dsl.prompt
-    import ai.koog.serialization.typeToken
-    import kotlinx.serialization.Serializable
-    class WebSearchTool: SimpleTool<WebSearchTool.Args>(
-        argsType = typeToken<Args>(),
-        name = "web_search",
-        description = "Search on the web"
-    ) {
-        @Serializable
-        class Args(val query: String)
-        override suspend fun execute(args: Args): String {
-            return "Searching for ${args.query} on the web..."
-        }
-    }
-    class DoAction: SimpleTool<DoAction.Args>(
-        argsType = typeToken<Args>(),
-        name = "do_action",
-        description = "Do something"
-    ) {
-        @Serializable
-        class Args(val action: String)
-        override suspend fun execute(args: Args): String {
-            return "Doing action..."
-        }
-    }
-    class DoAnotherAction: SimpleTool<DoAnotherAction.Args>(
-        argsType = typeToken<Args>(),
-        name = "do_another_action",
-        description = "Do something other"
-    ) {
-        @Serializable
-        class Args(val action: String)
-        override suspend fun execute(args: Args): String {
-            return "Doing another action..."
-        }
-    }
-    -->
     ```kotlin
     // Define the agent strategy
     val strategy = strategy<String, String>("assistant") {
@@ -675,47 +435,9 @@
         nodeStart then researchSubgraph then planSubgraph then executeSubgraph then nodeFinish
     }
     ```
-    <!--- KNIT example-custom-subgraphs-08.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentEdge;
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    import ai.koog.agents.core.agent.entity.AIAgentSubgraph;
-    import ai.koog.agents.core.tools.annotations.LLMDescription;
-    import ai.koog.agents.core.tools.annotations.Tool;
-    import ai.koog.agents.core.tools.reflect.ToolSet;
-    import ai.koog.prompt.dsl.Prompt;
-    import ai.koog.prompt.message.Message;
-    import java.util.Collections;
-    public class exampleCustomSubgraphsJava08 {
-        static class WebSearchToolSet implements ToolSet {
-            @Tool
-            @LLMDescription("Search on the web")
-            public String webSearch(@LLMDescription("The search query") String query) {
-                return "Searching for " + query + " on the web...";
-            }
-        }
-        static class ActionToolSet implements ToolSet {
-            @Tool
-            @LLMDescription("Do something")
-            public String doAction(@LLMDescription("The action to perform") String action) {
-                return "Doing action...";
-            }
-            @Tool
-            @LLMDescription("Do something other")
-            public String doAnotherAction(@LLMDescription("The action to perform") String action) {
-                return "Doing another action...";
-            }
-        }
-        public static void main(String[] args) {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     // Define the agent strategy
     var strategyBuilder = AIAgentGraphStrategy.builder("assistant")
@@ -858,4 +580,3 @@
         .edge(executeSubgraph, strategyBuilder.nodeFinish)
         .build();
     ```
-    <!--- KNIT exampleCustomSubgraphsJava08.java -->

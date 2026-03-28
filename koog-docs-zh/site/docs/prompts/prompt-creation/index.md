@@ -12,31 +12,19 @@ Kotlin 中的 `prompt()` 函数或 Java 中的 `Prompt.builder()` 创建一个�
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.prompt.dsl.prompt
-    -->
-
     ```kotlin
     val prompt = prompt("unique_prompt_id") {
         // 消息列表
     }
     ```
-    <!--- KNIT example-creating-prompts-01.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     Prompt prompt = Prompt.builder("unique_prompt_id")
         // 消息列表
         .build();
     ```
-    <!--- KNIT example-creating-prompts-java-01.java -->
 
 ## 消息类型 { #message-types }
 
@@ -49,10 +37,6 @@ Kotlin DSL 和 Java 构建器 API 支持以下类型的消息，每种消息对�
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.prompt.dsl.prompt
-    -->
-
     ```kotlin
     val prompt = prompt("unique_prompt_id") {
         // 添加系统消息以设置上下文
@@ -63,16 +47,9 @@ Kotlin DSL 和 Java 构建器 API 支持以下类型的消息，每种消息对�
         assistant("The result is 8.")
     }
     ```
-    <!--- KNIT example-creating-prompts-02.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     Prompt prompt = Prompt.builder("unique_prompt_id")
         // 添加系统消息以设置上下文
@@ -83,7 +60,6 @@ Kotlin DSL 和 Java 构建器 API 支持以下类型的消息，每种消息对�
         .assistant("The result is 8.")
         .build();
     ```
-    <!--- KNIT example-creating-prompts-java-02.java -->
 
 ### 系统消息 { #system-message }
 
@@ -93,39 +69,23 @@ Kotlin DSL 和 Java 构建器 API 支持以下类型的消息，每种消息对�
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.prompt.dsl.prompt
-    -->
-
     ```kotlin
     val prompt = prompt("system_message") {
         system("You are a helpful assistant that explains technical concepts.")
     }
     ```
-    <!--- KNIT example-creating-prompts-03.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     Prompt prompt = Prompt.builder("system_message")
         .system("You are a helpful assistant that explains technical concepts.")
         .build();
     ```
-    <!--- KNIT example-creating-prompts-java-03.java -->
 
 ### 用户消息 { #user-messages }
 
 用户消息表示来自用户的输入。要创建用户消息，请将字符串作为参数提供给 `user()` Kotlin 函数或 Java 方法：=== "Kotlin"
-
-    <!--- INCLUDE
-    import ai.koog.prompt.dsl.prompt
-    -->
 
     ```kotlin
     val prompt = prompt("user_message") {
@@ -133,24 +93,15 @@ Kotlin DSL 和 Java 构建器 API 支持以下类型的消息，每种消息对�
         user("What is Koog?")
     }
     ```
-    <!--- KNIT example-creating-prompts-04.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     Prompt prompt = Prompt.builder("user_message")
         .system("You are a helpful assistant.")
         .user("What is Koog?")
         .build();
     ```
-    <!--- KNIT example-creating-prompts-java-04.java -->
-
 
 大多数用户消息包含纯文本，但也可以包含多模态内容，例如图像、音频、视频和文档。
 有关详细信息和示例，请参阅[多模态内容](multimodal-content.md)。
@@ -162,10 +113,6 @@ Kotlin DSL 和 Java 构建器 API 支持以下类型的消息，每种消息对�
 要创建助手消息，请将字符串作为参数传递给`assistant()` Kotlin函数或Java方法：
 
 === "Kotlin"
-
-    <!--- INCLUDE
-    import ai.koog.prompt.dsl.prompt
-    -->
 
     ```kotlin
     val prompt = prompt("article_review") {
@@ -187,16 +134,9 @@ Kotlin DSL 和 Java 构建器 API 支持以下类型的消息，每种消息对�
         user("The article is interesting and helpful.")
     }
     ```
-    <!--- KNIT example-creating-prompts-05.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     Prompt prompt = Prompt.builder("article_review")
         .system("Evaluate the article.")
@@ -217,8 +157,6 @@ Kotlin DSL 和 Java 构建器 API 支持以下类型的消息，每种消息对�
         .user("The article is interesting and helpful.")
         .build();
     ```
-    <!--- KNIT example-creating-prompts-java-05.java -->
-
 
 ### 工具消息 { #tool-messages }
 
@@ -231,10 +169,6 @@ Kotlin DSL 和 Java 构建器 API 支持以下类型的消息，每种消息对�
 要创建工具消息，请在Kotlin中调用`tool()`函数，或在Java中调用`toolCall()`和`toolResult()`方法：
 
 === "Kotlin"
-
-    <!--- INCLUDE
-    import ai.koog.prompt.dsl.prompt
-    -->
 
     ```kotlin
     val prompt = prompt("calculator_example") {
@@ -261,16 +195,9 @@ Kotlin DSL 和 Java 构建器 API 支持以下类型的消息，每种消息对�
         user("4 + 5 等于多少？")
     }
     ```
-    <!--- KNIT example-creating-prompts-06.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     Prompt prompt = Prompt.builder("calculator_example")
         .system("你是一个可以使用工具的助手。")
@@ -284,8 +211,6 @@ Kotlin DSL 和 Java 构建器 API 支持以下类型的消息，每种消息对�
         .user("4 + 5 等于多少？")
         .build();
     ```
-    <!--- KNIT example-creating-prompts-java-06.java -->
-
 
 ## 文本消息构建器 { #text-message-builders }
 
@@ -295,10 +220,6 @@ Kotlin DSL 和 Java 构建器 API 支持以下类型的消息，每种消息对�
 构建 `system()`、`user()` 或 `assistant()` 消息时，可以使用辅助的[文本构建函数](api:prompt-model::ai.koog.prompt.text.TextContentBuilder)来实现丰富的文本格式化。
 
 === "Kotlin"
-
-    <!--- INCLUDE
-    import ai.koog.prompt.dsl.prompt
-    -->
 
     ```kotlin
     val prompt = prompt("text_example") {
@@ -318,17 +239,10 @@ Kotlin DSL 和 Java 构建器 API 支持以下类型的消息，每种消息对�
         }
     }
     ```
-    <!--- KNIT example-creating-prompts-07.kt -->
 
 你也可以使用 [Markdown](api:prompt-markdown::ai.koog.prompt.markdown.markdown) 和 [XML](api:prompt-xml::ai.koog.prompt.xml.xml) 构建器来添加相应格式的内容。
 
 === "Kotlin"
-
-    <!--- INCLUDE
-    import ai.koog.prompt.dsl.prompt
-    import ai.koog.prompt.markdown.markdown
-    import ai.koog.prompt.xml.xml
-    -->
 
     ```kotlin
     val prompt = prompt("markdown_xml_example") {
@@ -356,7 +270,6 @@ Kotlin DSL 和 Java 构建器 API 支持以下类型的消息，每种消息对�
         }
     }
     ```
-    <!--- KNIT example-creating-prompts-08.kt -->
 
 !!! tip
     你可以将文本构建函数与 XML 和 Markdown 构建器混合使用。
@@ -367,11 +280,7 @@ Kotlin DSL 和 Java 构建器 API 支持以下类型的消息，每种消息对�
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.prompt.dsl.prompt
-    import ai.koog.prompt.params.LLMParams
-    import ai.koog.prompt.params.LLMParams.ToolChoice
-    -->```kotlin
+```kotlin
 val prompt = prompt(
     id = "custom_params",
     params = LLMParams(
@@ -384,16 +293,9 @@ val prompt = prompt(
     user("写一首关于冬天的歌。")
 }
 ```
-<!--- KNIT example-creating-prompts-09.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     // 首先创建参数
     LLMParams params = new LLMParams(
@@ -415,7 +317,6 @@ val prompt = prompt(
     // 将参数应用到已构建的提示词
     prompt = prompt.withParams(params);
     ```
-    <!--- KNIT example-creating-prompts-java-07.java -->
 
 支持以下参数：
 
@@ -434,10 +335,6 @@ val prompt = prompt(
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.prompt.dsl.prompt
-    -->
-
     ```kotlin
     val basePrompt = prompt("base") {
         system("你是一位乐于助人的助手。")
@@ -449,16 +346,9 @@ val prompt = prompt(
         user("天气怎么样？")
     }
     ```
-    <!--- KNIT example-creating-prompts-10.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     Prompt basePrompt = Prompt.builder("base")
         .system("你是一位乐于助人的助手。")
@@ -470,7 +360,6 @@ val prompt = prompt(
         .user("天气怎么样？")
         .build();
     ```
-    <!--- KNIT example-creating-prompts-java-08.java -->
 
 这将创建一个新的提示词，其中包含来自 `basePrompt` 的所有消息以及新的用户消息。
 

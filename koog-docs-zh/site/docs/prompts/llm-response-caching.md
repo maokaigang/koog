@@ -16,26 +16,6 @@
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.prompt.executor.clients.openai.OpenAILLMClient
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.MultiLLMPromptExecutor
-    import ai.koog.prompt.executor.cached.CachedPromptExecutor
-    import ai.koog.prompt.cache.files.FilePromptCache
-    import kotlin.system.measureTimeMillis
-    import ai.koog.prompt.dsl.prompt
-    import kotlin.io.path.Path
-    import kotlinx.coroutines.runBlocking
-    fun main() {
-        runBlocking {
-            val prompt = prompt("test") {
-                user("Hello")
-            }
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```kotlin
     // Create a prompt executor
     val client = OpenAILLMClient(System.getenv("OPENAI_API_KEY"))
@@ -63,16 +43,9 @@
     }
     println("Second execution took: ${secondTime}ms")
     ```
-    <!--- KNIT example-llm-response-caching-01.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     // Create a prompt
     Prompt prompt = Prompt.builder("test")
@@ -103,7 +76,6 @@
     System.out.println("Second response: " + secondResponse.getFirst().getContent());
     System.out.println("Second execution took: " + secondTimeMs + "ms");
     ```
-    <!--- KNIT example-llm-response-caching-java-01.java -->
 
 The example produces the following output:
 

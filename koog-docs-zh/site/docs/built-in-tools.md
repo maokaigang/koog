@@ -15,27 +15,10 @@ Koog 框架提供了内置工具，用于处理代理与用户交互的常见场
 | ListDirectoryTool | `__list_directory__`                | 以分层树结构列出目录内容，支持深度控制和通配符过滤。                          |
 | WriteFileTool     | `__write_file__`                    | 将文本内容写入文件（必要时会创建父目录）。                                                   |
 
-
 ## 注册内置工具 { #registering-built-in-tools }
 
 与任何其他工具一样，内置工具必须添加到工具注册表中才能供代理使用。示例如下：
 
-<!--- INCLUDE
-import ai.koog.agents.core.agent.AIAgent
-import ai.koog.agents.core.tools.ToolRegistry
-import ai.koog.agents.ext.tool.SayToUser
-import ai.koog.agents.ext.tool.AskUser
-import ai.koog.agents.ext.tool.ExitTool
-import ai.koog.agents.ext.tool.file.ListDirectoryTool
-import ai.koog.agents.ext.tool.file.ReadFileTool
-import ai.koog.agents.ext.tool.file.WriteFileTool
-import ai.koog.prompt.executor.clients.openai.OpenAIModels
-import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-import ai.koog.rag.base.files.JVMFileSystemProvider
-
-const val apiToken = ""
-
--->
 ```kotlin
 // Create a tool registry with all built-in tools
 val toolRegistry = ToolRegistry {
@@ -56,7 +39,6 @@ val agent = AIAgent(
 )
 
 ```
-<!--- KNIT example-built-in-tools-01.kt -->
 
 通过在 Kotlin 和 Java 的同一注册表中组合内置工具和自定义工具，您可以为代理创建全面的能力集。
 要了解更多关于自定义工具的信息，请参阅[基于注解的工具](annotation-based-tools.md)和[基于类的工具](class-based-tools.md)。

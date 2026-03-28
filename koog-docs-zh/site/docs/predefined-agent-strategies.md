@@ -31,22 +31,9 @@
 ```
 ai.koog.agents.ext.agent.chatAgentStrategy
 ```
-<!--- KNIT example-predefined-strategies-01.txt -->
 
 使用该策略时，请按以下模式创建 AI 智能体：
 
-<!--- INCLUDE
-import ai.koog.agents.core.agent.AIAgent
-import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-import ai.koog.agents.ext.agent.chatAgentStrategy
-import ai.koog.agents.core.tools.ToolRegistry
-import ai.koog.prompt.executor.clients.openai.OpenAIModels
-
-val apiKey = System.getenv("OPENAI_API_KEY") ?: error("Please set OPENAI_API_KEY environment variable")
-val promptExecutor =simpleOpenAIExecutor(apiKey)
-val toolRegistry = ToolRegistry.EMPTY
-val model =  OpenAIModels.Chat.O4Mini
--->
 ```kotlin
 val chatAgent = AIAgent(
     promptExecutor = promptExecutor,
@@ -56,7 +43,6 @@ val chatAgent = AIAgent(
     strategy = chatAgentStrategy()
 )
 ```
-<!--- KNIT example-predefined-strategies-01.kt -->
 
 ### 适用场景 { #when-to-use-the-chat-agent-strategy }
 
@@ -71,23 +57,6 @@ val chatAgent = AIAgent(
 
 以下是一个实现预定义对话智能体策略（`chatAgentStrategy`）的 AI 智能体代码示例，包含智能体可能使用的工具：
 
-<!--- INCLUDE
-import ai.koog.agents.core.agent.AIAgent
-import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-import ai.koog.agents.ext.agent.chatAgentStrategy
-import ai.koog.agents.core.tools.ToolRegistry
-import ai.koog.prompt.executor.clients.openai.OpenAIModels
-import ai.koog.agents.ext.tool.AskUser
-import ai.koog.agents.ext.tool.SayToUser
-
-typealias searchTool = AskUser
-typealias weatherTool = SayToUser
-
-val apiKey = System.getenv("OPENAI_API_KEY") ?: error("Please set OPENAI_API_KEY environment variable")
-val promptExecutor =simpleOpenAIExecutor(apiKey)
-val toolRegistry = ToolRegistry.EMPTY
-val model =  OpenAIModels.Chat.O4Mini
--->
 ```kotlin
 val chatAgent = AIAgent(
     promptExecutor = promptExecutor,
@@ -106,7 +75,6 @@ suspend fun main() {
     val result = chatAgent.run("What's the weather like today and should I bring an umbrella?")
 }
 ```
-<!--- KNIT example-predefined-strategies-02.kt -->
 
 ## ReAct 策略 { #react-strategy }
 
@@ -137,22 +105,9 @@ ReAct 策略实现以下模式：
 ```
 ai.koog.agents.ext.agent.reActStrategy
 ```
-<!--- KNIT example-predefined-strategies-02.txt -->
 
 使用该策略时，请按以下模式创建 AI 智能体：
 
-<!--- INCLUDE
-import ai.koog.agents.core.agent.AIAgent
-import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-import ai.koog.agents.ext.agent.reActStrategy
-import ai.koog.agents.core.tools.ToolRegistry
-import ai.koog.prompt.executor.clients.openai.OpenAIModels
-
-val apiKey = System.getenv("OPENAI_API_KEY") ?: error("Please set OPENAI_API_KEY environment variable")
-val promptExecutor = simpleOpenAIExecutor(apiKey)
-val toolRegistry = ToolRegistry.EMPTY
-val model =  OpenAIModels.Chat.O4Mini
--->
 ```kotlin hl_lines="5-10"
 val reActAgent = AIAgent(
     promptExecutor = promptExecutor,
@@ -166,7 +121,6 @@ val reActAgent = AIAgent(
     )
 )
 ```
-<!--- KNIT example-predefined-strategies-03.kt -->
 
 ### 参数 { #parameters }
 
@@ -193,7 +147,6 @@ I need to follow these steps:
 2. Filter out deposits (positive amounts)
 3. Calculate total spending
 ```
-<!--- KNIT example-predefined-strategies-03.txt -->
 
 #### 3. 行动与执行，第一阶段 { #3-action-and-execution-phase-1 }
 
@@ -204,7 +157,6 @@ I need to follow these steps:
 ```text
 {tool: "get_transactions", args: {startDate: "2025-05-19", endDate: "2025-06-18"}}
 ```
-<!--- KNIT example-predefined-strategies-04.txt -->
 
 工具返回的结果可能如下所示：
 
@@ -216,7 +168,6 @@ I need to follow these steps:
   {date: "2025-06-13", amount: -200.00, description: "Utilities"}
 ]
 ```
-<!--- KNIT example-predefined-strategies-05.txt -->
 
 #### 4. 推理 { #4-reasoning }
 
@@ -227,7 +178,6 @@ I have the transactions. Now I need to:
 1. Remove the salary deposit of +1000.00
 2. Sum up the remaining transactions
 ```
-<!--- KNIT example-predefined-strategies-06.txt -->
 
 #### 5. 行动与执行，第二阶段 { #5-action-and-execution-phase-2 }
 
@@ -236,14 +186,12 @@ I have the transactions. Now I need to:
 ```text
 {tool: "calculate_sum", args: {amounts: [-100.00, -500.00, -200.00]}}
 ```
-<!--- KNIT example-predefined-strategies-07.txt -->
 
 工具返回最终结果：
 
 ```text
 -800.00
 ```
-<!--- KNIT example-predefined-strategies-08.txt -->
 
 #### 6. 最终响应 { #6-final-response }
 
@@ -252,7 +200,6 @@ I have the transactions. Now I need to:
 ```text
 You spent $800.00 last month on groceries, rent, and utilities.
 ```
-<!--- KNIT example-predefined-strategies-09.txt -->
 
 ### 何时使用 ReAct 策略 { #when-to-use-the-react-strategy }
 
@@ -267,25 +214,6 @@ ReAct 策略特别适用于：
 
 以下是一个实现预定义 ReAct 策略（`reActStrategy`）的 AI 智能体代码示例，以及智能体可能使用的工具：
 
-<!--- INCLUDE
-import ai.koog.agents.core.agent.AIAgent
-import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-import ai.koog.agents.ext.agent.reActStrategy
-import ai.koog.agents.core.tools.ToolRegistry
-import ai.koog.prompt.executor.clients.openai.OpenAIModels
-import ai.koog.agents.ext.tool.AskUser
-import ai.koog.agents.ext.tool.SayToUser
-
-typealias Input = String
-
-typealias getTransactions = AskUser
-typealias calculateSum = SayToUser
-
-val apiKey = System.getenv("OPENAI_API_KEY") ?: error("Please set OPENAI_API_KEY environment variable")
-val promptExecutor = simpleOpenAIExecutor(apiKey)
-val toolRegistry = ToolRegistry.EMPTY
-val model =  OpenAIModels.Chat.O4Mini
--->
 ```kotlin
 val bankingAgent = AIAgent(
     promptExecutor = promptExecutor,
@@ -307,4 +235,3 @@ suspend fun main() {
     val result = bankingAgent.run("How much did I spend last month?")
 }
 ```
-<!--- KNIT example-predefined-strategies-04.kt -->

@@ -29,17 +29,6 @@ Koog提供以下可扩展接口用于实现自定义功能特性：
 
 以下代码示例展示了可同时安装于基于图、函数式和规划型智能体的自定义功能特性的通用实现模式：
 
-<!--- INCLUDE
-import ai.koog.agents.core.agent.config.AIAgentConfig
-import ai.koog.agents.core.agent.entity.createStorageKey
-import ai.koog.agents.core.feature.AIAgentFunctionalFeature
-import ai.koog.agents.core.feature.AIAgentGraphFeature
-import ai.koog.agents.core.feature.AIAgentPlannerFeature
-import ai.koog.agents.core.feature.config.FeatureConfig
-import ai.koog.agents.core.feature.pipeline.AIAgentFunctionalPipeline
-import ai.koog.agents.core.feature.pipeline.AIAgentGraphPipeline
-import ai.koog.agents.core.feature.pipeline.AIAgentPlannerPipeline
--->
 ```kotlin
 class MyFeature(val someProperty: String) {
     class Config : FeatureConfig() {
@@ -83,19 +72,9 @@ class MyFeature(val someProperty: String) {
     }
 }
 ```
-<!--- KNIT example-custom-features-01.kt -->
 
 创建智能体时，通过`install`方法安装您的功能特性：
 
-<!--- INCLUDE
-import ai.koog.agents.core.agent.AIAgent
-import ai.koog.prompt.executor.clients.openai.OpenAIModels
-import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-import ai.koog.agents.features.tracing.feature.Tracing
-
-val MyFeature = Tracing
-var configProperty = ""
--->
 ```kotlin
 val agent = AIAgent(
     promptExecutor = simpleOpenAIExecutor(System.getenv("OPENAI_API_KEY")),
@@ -107,7 +86,6 @@ val agent = AIAgent(
     }
 }
 ```
-<!--- KNIT example-custom-features-02.kt -->
 
 ### 流水线拦截器 { #pipeline-interceptors }
 
@@ -169,28 +147,6 @@ LLM 流式生命周期：
 
 以下示例展示了如何为功能仅允许 LLM 调用的开始和结束事件：
 
-<!--- INCLUDE
-import ai.koog.agents.core.agent.AIAgent
-import ai.koog.agents.core.feature.handler.AgentLifecycleEventType
-import ai.koog.prompt.executor.clients.openai.OpenAIModels
-import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-import ai.koog.agents.features.tracing.feature.Tracing
-
-typealias MyFeature = Tracing
-
-suspend fun main() {
-    val agent = AIAgent(
-        promptExecutor = simpleOpenAIExecutor(System.getenv("OPENAI_API_KEY")),
-        systemPrompt = "You are a helpful assistant. Answer user questions concisely.",
-        llmModel = OpenAIModels.Chat.GPT4o
-    ) {
-        install(Tracing) {
--->
-<!--- SUFFIX
-        }
-    }
-}
--->
 ```kotlin
 install(MyFeature) {
     setEventFilter { context ->
@@ -199,7 +155,6 @@ install(MyFeature) {
     }
 }
 ```
-<!--- KNIT example-custom-features-03.kt -->
 
 #### 为功能禁用事件过滤 { #disabling-event-filtering-for-a-feature }
 
@@ -209,10 +164,6 @@ install(MyFeature) {
 
 以下是如何为功能禁用事件过滤的示例：
 
-<!--- INCLUDE
-import ai.koog.agents.core.feature.config.FeatureConfig
-import ai.koog.agents.core.feature.handler.AgentLifecycleEventContext
--->
 ```kotlin
 class MyFeatureConfig : FeatureConfig() {
     override fun setEventFilter(filter: (AgentLifecycleEventContext) -> Boolean) {
@@ -221,26 +172,11 @@ class MyFeatureConfig : FeatureConfig() {
     }
 }
 ```
-<!--- KNIT example-custom-features-04.kt -->
 
 ## 示例：基础日志记录功能 { #example-a-basic-logging-feature }
 
 以下示例展示了如何实现一个记录智能体生命周期事件的基础日志记录功能。由于该功能应适用于图结构、功能和规划器智能体，为避免代码重复，所有智能体类型通用的拦截器在 `installCommon` 方法中实现。特定于各智能体类型的拦截器则在 `installGraphPipeline`、`installFunctionalPipeline` 和 `installPlannerPipeline` 方法中实现。
 
-<!--- INCLUDE
-import ai.koog.agents.core.agent.config.AIAgentConfig
-import ai.koog.agents.core.agent.entity.createStorageKey
-import ai.koog.agents.core.feature.AIAgentFunctionalFeature
-import ai.koog.agents.core.feature.AIAgentGraphFeature
-import ai.koog.agents.core.feature.AIAgentPlannerFeature
-import ai.koog.agents.core.feature.config.FeatureConfig
-import ai.koog.agents.core.feature.pipeline.AIAgentFunctionalPipeline
-import ai.koog.agents.core.feature.pipeline.AIAgentGraphPipeline
-import ai.koog.agents.core.feature.pipeline.AIAgentPlannerPipeline
-import ai.koog.agents.core.feature.pipeline.AIAgentPipeline
-import io.github.oshai.kotlinlogging.KLogger
-import io.github.oshai.kotlinlogging.KotlinLogging
--->
 ```kotlin
 class LoggingFeature(val loggerName: String) {
     class Config : FeatureConfig() {
@@ -331,121 +267,9 @@ class LoggingFeature(val loggerName: String) {
     }
 }
 ```
-<!--- KNIT example-custom-features-05.kt -->
 
 以下是在代理中安装自定义日志功能的示例。该示例展示了基本功能安装过程，同时包含自定义配置属性 `loggerName`，可用于指定日志记录器的名称：
 
-<!--- INCLUDE
-import ai.koog.agents.core.agent.AIAgent
-import ai.koog.agents.core.agent.config.AIAgentConfig
-import ai.koog.agents.core.agent.entity.createStorageKey
-import ai.koog.agents.core.feature.AIAgentFunctionalFeature
-import ai.koog.agents.core.feature.AIAgentGraphFeature
-import ai.koog.agents.core.feature.AIAgentPlannerFeature
-import ai.koog.agents.core.feature.config.FeatureConfig
-import ai.koog.agents.core.feature.pipeline.AIAgentFunctionalPipeline
-import ai.koog.agents.core.feature.pipeline.AIAgentGraphPipeline
-import ai.koog.agents.core.feature.pipeline.AIAgentPlannerPipeline
-import ai.koog.agents.core.feature.pipeline.AIAgentPipeline
-import ai.koog.prompt.executor.clients.openai.OpenAIModels
-import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-import io.github.oshai.kotlinlogging.KLogger
-import io.github.oshai.kotlinlogging.KotlinLogging
-
-class LoggingFeature(val loggerName: String) {
-    class Config : FeatureConfig() {
-        var loggerName: String = "agent-logs"
-    }
-
-    companion object Feature :
-        AIAgentGraphFeature<Config, LoggingFeature>,
-        AIAgentFunctionalFeature<Config, LoggingFeature>,
-        AIAgentPlannerFeature<Config, LoggingFeature> {
-
-        override val key = createStorageKey<LoggingFeature>("logging-feature")
-
-        override fun createInitialConfig(agentConfig: AIAgentConfig): Config = Config()
-
-        override fun install(config: Config, pipeline: AIAgentGraphPipeline) : LoggingFeature {
-            val logging = LoggingFeature(config.loggerName)
-            val logger = KotlinLogging.logger(config.loggerName)
-
-            installGraphPipeline(pipeline, logger)
-
-            return logging
-        }
-
-        override fun install(config: Config, pipeline: AIAgentFunctionalPipeline) : LoggingFeature {
-            val logging = LoggingFeature(config.loggerName)
-            val logger = KotlinLogging.logger(config.loggerName)
-
-            installFunctionalPipeline(pipeline, logger)
-
-            return logging
-        }
-
-        override fun install(config: Config, pipeline: AIAgentPlannerPipeline) : LoggingFeature {
-            val logging = LoggingFeature(config.loggerName)
-            val logger = KotlinLogging.logger(config.loggerName)
-
-            installPlannerPipeline(pipeline, logger)
-
-            return logging
-        }
-
-        private fun installCommon(
-            pipeline: AIAgentPipeline,
-            logger: KLogger,
-        ) {
-            pipeline.interceptAgentStarting(this) { e ->
-                logger.info { "Agent starting: runId=${e.runId}" }
-            }
-            pipeline.interceptStrategyStarting(this) { e ->
-                logger.info { "Strategy ${e.strategy.name} starting" }
-            }
-            pipeline.interceptLLMCallStarting(this) { e ->
-                logger.info { "Making LLM call with ${e.tools.size} tools" }
-            }
-            pipeline.interceptLLMCallCompleted(this) { e ->
-                logger.info { "Received ${e.responses.size} response(s)" }
-            }
-        }
-
-        private fun installGraphPipeline(
-            pipeline: AIAgentGraphPipeline,
-            logger: KLogger,
-        ) {
-            installCommon(pipeline, logger)
-
-            pipeline.interceptNodeExecutionStarting(this) { e ->
-                logger.info { "Node ${e.node.name} input: ${e.input}" }
-            }
-            pipeline.interceptNodeExecutionCompleted(this) { e ->
-                logger.info { "Node ${e.node.name} output: ${e.output}" }
-            }
-        }
-
-        private fun installFunctionalPipeline(
-            pipeline: AIAgentFunctionalPipeline,
-            logger: KLogger
-        ) {
-            installCommon(pipeline, logger)
-        }
-
-        private fun installPlannerPipeline(
-            pipeline: AIAgentPlannerPipeline,
-            logger: KLogger
-        ) {
-            installCommon(pipeline, logger)
-        }
-    }
-}
-
-suspend fun main() {
--->
-<!--- SUFFIX
-}
--->
 ```kotlin
 val agent = AIAgent(
     promptExecutor = simpleOpenAIExecutor(System.getenv("OPENAI_API_KEY")),
@@ -459,4 +283,3 @@ val agent = AIAgent(
 
 agent.run("What is Kotlin?")
 ```
-<!--- KNIT example-custom-features-06.kt -->

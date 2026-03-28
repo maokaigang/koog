@@ -51,15 +51,6 @@ Koog 框架提供以下实现工具的方法：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.tools.Tool
-    import ai.koog.agents.core.tools.ToolDescriptor
-    import ai.koog.agents.core.tools.ToolParameterDescriptor
-    import ai.koog.agents.core.tools.ToolParameterType
-    import ai.koog.serialization.typeToken
-    import kotlinx.serialization.Serializable
-    import ai.koog.agents.core.tools.annotations.LLMDescription
-    -->
     ```kotlin
     // Implement a simple calculator tool that adds two digits
     object CalculatorTool : Tool<CalculatorTool.Args, Int>(
@@ -87,7 +78,6 @@ Koog 框架提供以下实现工具的方法：
         override suspend fun execute(args: Args): Int = args.digit1 + args.digit2
     }
     ```
-    <!--- KNIT example-class-based-tools-01.kt -->
 
 在实现你的工具后，你需要将其添加到工具注册表，然后与智能体配合使用。详情请参阅[工具注册表](tools-overview.md#tool-registry)。
 
@@ -118,12 +108,6 @@ Koog 框架提供以下实现工具的方法：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.tools.SimpleTool
-    import ai.koog.agents.core.tools.annotations.LLMDescription
-    import ai.koog.serialization.typeToken
-    import kotlinx.serialization.Serializable
-    -->
     ```kotlin
     // Create a tool that casts a string expression to a double value
     object CastToDoubleTool : SimpleTool<CastToDoubleTool.Args>(
@@ -151,7 +135,6 @@ Koog 框架提供以下实现工具的方法：
         }
     }
     ```
-    <!--- KNIT example-class-based-tools-02.kt -->
 
 ### 基于注解的方法（Java） { #annotation-based-methods-java }
 
@@ -163,12 +146,6 @@ Koog 框架提供以下实现工具的方法：
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     // Java equivalent: implement the tool as a Java method and register it via ToolRegistry.builder().
     // This is the recommended Java interop path instead of subclassing the Kotlin Tool base class.
@@ -195,18 +172,11 @@ Koog 框架提供以下实现工具的方法：
     // Note: Subclassing the Kotlin Tool<TArgs, TResult> and overriding a suspend execute(...) from Java is not supported.
     // The Java interop uses reflection-based registration of Java methods as tools.
     ```
-    <!--- KNIT example-class-based-tools-java-01.java -->
 
 以下是Java中工具实现的一个示例，相当于在Kotlin中使用`SimpleTool`类。此示例实现了一个返回文本结果的简单工具。
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     // Java equivalent of SimpleTool: provide a Java method and register it as a tool.
     public final class CastToDoubleTool {
@@ -235,7 +205,6 @@ Koog 框架提供以下实现工具的方法：
     }
     // Note: Extending Kotlin SimpleTool<TArgs> from Java is not required; registering a Java method is the idiomatic approach.
     ```
-    <!--- KNIT example-class-based-tools-java-02.java -->
 
 ### 以自定义格式向 LLM 发送工具结果 { #sending-tool-result-to-llm-in-custom-format }
 
@@ -256,16 +225,6 @@ For Java:
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.tools.Tool
-    import ai.koog.agents.core.tools.ToolDescriptor
-    import ai.koog.agents.core.tools.ToolParameterDescriptor
-    import ai.koog.agents.core.tools.ToolParameterType
-    import ai.koog.serialization.typeToken
-    import kotlinx.serialization.Serializable
-    import ai.koog.agents.core.tools.annotations.LLMDescription
-    import ai.koog.prompt.markdown.markdown
-    -->
     ```kotlin
     // A tool that edits file
     object EditFile : Tool<EditFile.Args, EditFile.Result>(
@@ -320,16 +279,9 @@ For Java:
         }
     }
     ```
-    <!--- KNIT example-class-based-tools-03.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     import ai.koog.agents.core.tools.ToolRegistry;
     import ai.koog.agents.core.tools.annotations.LLMDescription;
@@ -365,6 +317,5 @@ For Java:
     // Note: If you need a structured custom Result object from Java, you must expose a Kotlin @Serializable type
     // or another serializer-aware type. Returning String works out-of-the-box with Koog's Java interop.
     ```
-    <!--- KNIT example-class-based-tools-java-03.java -->
 
 在 Kotlin 或 Java 中实现你的工具后，你需要将其添加到工具注册表中，然后通过代理来使用它。详情请参阅 [工具注册表](tools-overview.md#tool-registry)。

@@ -33,20 +33,6 @@
 3. 配置消息过滤器（可选）。
 4. 将消息处理器添加到该功能中。
 
-<!--- INCLUDE
-import ai.koog.agents.core.agent.AIAgent
-import ai.koog.agents.core.feature.model.events.LLMCallCompletedEvent
-import ai.koog.agents.core.feature.model.events.ToolCallStartingEvent
-import ai.koog.agents.features.tracing.feature.Tracing
-import ai.koog.agents.features.tracing.writer.TraceFeatureMessageFileWriter
-import ai.koog.agents.features.tracing.writer.TraceFeatureMessageLogWriter
-import ai.koog.prompt.executor.llms.all.simpleOllamaAIExecutor
-import ai.koog.prompt.executor.ollama.client.OllamaModels
-import io.github.oshai.kotlinlogging.KotlinLogging
-import kotlinx.io.buffered
-import kotlinx.io.files.Path
-import kotlinx.io.files.SystemFileSystem
--->
 ```kotlin
 // Defining a logger/file that will be used as a destination of trace messages 
 val logger = KotlinLogging.logger { }
@@ -68,35 +54,12 @@ val agent = AIAgent(
     }
 }
 ```
-<!--- KNIT example-tracing-01.kt -->
 
 ### 消息过滤 { #message-filtering }
 
 您可以处理所有现有事件，或根据特定条件选择其中一部分。
 消息过滤器允许您控制处理哪些事件。这对于专注于智能体运行的特定方面非常有用：
 
-<!--- INCLUDE
-import ai.koog.agents.core.agent.AIAgent
-import ai.koog.agents.core.feature.model.events.*
-import ai.koog.agents.example.exampleTracing01.outputPath
-import ai.koog.agents.features.tracing.feature.Tracing
-import ai.koog.agents.features.tracing.writer.TraceFeatureMessageFileWriter
-import ai.koog.prompt.executor.llms.all.simpleOllamaAIExecutor
-import ai.koog.prompt.executor.ollama.client.OllamaModels
-import kotlinx.io.buffered
-import kotlinx.io.files.Path
-import kotlinx.io.files.SystemFileSystem
-
-val agent = AIAgent(
-    promptExecutor = simpleOllamaAIExecutor(),
-    llmModel = OllamaModels.Meta.LLAMA_3_2,
-) {
-    install(Tracing) {
--->
-<!--- SUFFIX
-   }
-}
--->
 ```kotlin
 
 val fileWriter = TraceFeatureMessageFileWriter(
@@ -124,7 +87,6 @@ fileWriter.setMessageFilter { message ->
     message is NodeExecutionStartingEvent || message is NodeExecutionCompletedEvent
 }
 ```
-<!--- KNIT example-tracing-02.kt -->
 
 ### 大量追踪数据 { #large-trace-volumes }
 
@@ -175,21 +137,11 @@ Tracing
     ├── ToolCallFailedEvent
     └── ToolCallCompletedEvent
 ```
-<!--- KNIT example-tracing-01.txt -->
 
 ## 示例与快速入门 { #examples-and-quickstarts }
 
 ### 基础追踪到日志记录器 { #basic-tracing-to-logger }
 
-<!--- INCLUDE
-import ai.koog.agents.core.agent.AIAgent
-import ai.koog.agents.features.tracing.feature.Tracing
-import ai.koog.agents.features.tracing.writer.TraceFeatureMessageLogWriter
-import ai.koog.prompt.executor.llms.all.simpleOllamaAIExecutor
-import ai.koog.prompt.executor.ollama.client.OllamaModels
-import io.github.oshai.kotlinlogging.KotlinLogging
-import kotlinx.coroutines.runBlocking
--->
 ```kotlin
 // Create a logger
 val logger = KotlinLogging.logger { }
@@ -211,7 +163,6 @@ fun main() {
     }
 }
 ```
-<!--- KNIT example-tracing-03.kt -->
 
 ## 错误处理与边界情况 { #error-handling-and-edge-cases }
 
@@ -222,7 +173,6 @@ fun main() {
 ```
 Tracing Feature. No feature out stream providers are defined. Trace streaming has no target.
 ```
-<!--- KNIT example-tracing-02.txt -->
 
 该功能仍会拦截事件，但不会对其进行处理或输出到任何地方。
 
@@ -230,27 +180,6 @@ Tracing Feature. No feature out stream providers are defined. Trace streaming ha
 
 消息处理器可能持有需要正确释放的资源（如文件句柄）。使用 `use` 扩展函数确保正确清理：
 
-<!--- INCLUDE
-import ai.koog.agents.core.agent.AIAgent
-import ai.koog.agents.example.exampleTracing01.outputPath
-import ai.koog.agents.features.tracing.feature.Tracing
-import ai.koog.agents.features.tracing.writer.TraceFeatureMessageFileWriter
-import ai.koog.prompt.executor.llms.all.simpleOllamaAIExecutor
-import ai.koog.prompt.executor.ollama.client.OllamaModels
-import kotlinx.coroutines.runBlocking
-import kotlinx.io.buffered
-import kotlinx.io.files.Path
-import kotlinx.io.files.SystemFileSystem
-
-const val input = "What's the weather like in New York?"
-
-fun main() {
-   runBlocking {
--->
-<!--- SUFFIX
-   }
-}
--->
 ```kotlin
 // Creating an agent
 val agent = AIAgent(
@@ -270,43 +199,9 @@ val agent = AIAgent(
 agent.run(input)
 // Writer will be automatically closed when the block exits
 ```
-<!--- KNIT example-tracing-04.kt -->
 
 ### 追踪特定事件到文件 { #tracing-specific-events-to-file }
 
-<!--- INCLUDE
-import ai.koog.agents.core.agent.AIAgent
-import ai.koog.agents.core.feature.model.events.LLMCallCompletedEvent
-import ai.koog.agents.core.feature.model.events.LLMCallStartingEvent
-import ai.koog.agents.example.exampleTracing01.outputPath
-import ai.koog.agents.features.tracing.feature.Tracing
-import ai.koog.agents.features.tracing.writer.TraceFeatureMessageFileWriter
-import ai.koog.prompt.executor.llms.all.simpleOllamaAIExecutor
-import ai.koog.prompt.executor.ollama.client.OllamaModels
-import kotlinx.coroutines.runBlocking
-import kotlinx.io.buffered
-import kotlinx.io.files.Path
-import kotlinx.io.files.SystemFileSystem
-
-const val input = "What's the weather like in New York?"
-
-fun main() {
-    runBlocking {
-        // Creating an agent
-        val agent = AIAgent(
-            promptExecutor = simpleOllamaAIExecutor(),
-            llmModel = OllamaModels.Meta.LLAMA_3_2,
-        ) {
-            val writer = TraceFeatureMessageFileWriter(
-                outputPath,
-                { path: Path -> SystemFileSystem.sink(path).buffered() }
-            )
--->
-<!--- SUFFIX
-        }
-    }
-}
--->
 ```kotlin
 install(Tracing) {
     
@@ -322,7 +217,6 @@ install(Tracing) {
     }
 }
 ```
-<!--- KNIT example-tracing-05.kt -->
 
 ### 追踪特定事件到远程端点 { #tracing-specific-events-to-remote-endpoint }
 
@@ -341,10 +235,6 @@ const val host = "localhost"
 
 fun main() {
    runBlocking {
--->
-<!--- SUFFIX
-   }
-}
 -->
 ```kotlin
 // Creating an agent
@@ -365,31 +255,9 @@ val agent = AIAgent(
 agent.run(input)
 // Writer will be automatically closed when the block exits
 ```
-<!--- KNIT example-tracing-06.kt -->
 
 在客户端，您可以使用 `FeatureMessageRemoteClient` 来接收事件并对其进行反序列化。
 
-<!--- INCLUDE
-import ai.koog.agents.core.feature.model.events.AgentCompletedEvent
-import ai.koog.agents.core.feature.model.events.DefinedFeatureEvent
-import ai.koog.agents.core.feature.remote.client.config.DefaultClientConnectionConfig
-import ai.koog.agents.core.feature.remote.client.FeatureMessageRemoteClient
-import ai.koog.utils.io.use
-import io.ktor.http.*
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.consumeAsFlow
-
-const val input = "What's the weather like in New York?"
-const val port = 4991
-const val host = "localhost"
-
-fun main() {
-   runBlocking {
--->
-<!--- SUFFIX
-   }
-}
--->
 ```kotlin
 val clientConfig = DefaultClientConnectionConfig(host = host, port = port, protocol = URLProtocol.HTTP)
 val agentEvents = mutableListOf<DefinedFeatureEvent>()
@@ -415,7 +283,6 @@ val clientJob = launch {
 
 listOf(clientJob).joinAll()
 ```
-<!--- KNIT example-tracing-07.kt -->
 
 ## API 文档 { #api-documentation }
 

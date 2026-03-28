@@ -27,15 +27,6 @@
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.snapshot.feature.Persistence
-    import ai.koog.agents.snapshot.providers.InMemoryPersistenceStorageProvider
-    import ai.koog.prompt.executor.llms.all.simpleOllamaAIExecutor
-    import ai.koog.prompt.executor.ollama.client.OllamaModels
-    import ai.koog.agents.core.agent.context.RollbackStrategy
-    val executor = simpleOllamaAIExecutor()
-    -->
     
     ```kotlin
     val agent = AIAgent(
@@ -48,16 +39,9 @@
         }
     }
     ```
-    <!--- KNIT example-agent-persistence-01.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     AIAgent<String, String> agent = AIAgent.<String, String>builder()
         .promptExecutor(SimplePromptExecutorsKt.simpleOllamaAIExecutor("http://localhost:11434"))
@@ -68,7 +52,6 @@
         })
     .build();
     ```
-    <!--- KNIT example-agent-persistence-java-01.java -->
 
 ## 配置选项 { #configuration-options }
 
@@ -84,35 +67,14 @@ Agent Persistence 功能提供三种主要配置选项：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.snapshot.feature.Persistence
-    import ai.koog.agents.snapshot.providers.InMemoryPersistenceStorageProvider
-    import ai.koog.prompt.executor.llms.all.simpleOllamaAIExecutor
-    import ai.koog.prompt.executor.ollama.client.OllamaModels
-    val agent = AIAgent(
-        promptExecutor = simpleOllamaAIExecutor(),
-        llmModel = OllamaModels.Meta.LLAMA_3_2,
-    ) {
-    -->
-    <!--- SUFFIX 
-    } 
-    -->
     ```kotlin
     install(Persistence) {
         storage = InMemoryPersistenceStorageProvider()
     }
     ```
-    <!--- KNIT example-agent-persistence-02.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     AIAgent<String, String> agent = AIAgent.<String, String>builder()
         .promptExecutor(SimplePromptExecutorsKt.simpleOllamaAIExecutor("http://localhost:11434"))
@@ -122,7 +84,6 @@ Agent Persistence 功能提供三种主要配置选项：
         })
         .build();
     ```
-    <!--- KNIT example-agent-persistence-java-02.java -->
 
 该框架包含以下内置提供程序：
 
@@ -138,36 +99,15 @@ Agent Persistence 功能提供三种主要配置选项：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.snapshot.feature.Persistence
-    import ai.koog.agents.snapshot.providers.InMemoryPersistenceStorageProvider
-    import ai.koog.prompt.executor.llms.all.simpleOllamaAIExecutor
-    import ai.koog.prompt.executor.ollama.client.OllamaModels
-    val agent = AIAgent(
-        promptExecutor = simpleOllamaAIExecutor(),
-        llmModel = OllamaModels.Meta.LLAMA_3_2,
-    ) {
-    -->
-    <!--- SUFFIX 
-    } 
-    -->
     
     ```kotlin
     install(Persistence) {
         enableAutomaticPersistence = false
     }
     ```
-    <!--- KNIT example-agent-persistence-03.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     AIAgent<String, String> agent = AIAgent.<String, String>builder()
         .promptExecutor(SimplePromptExecutorsKt.simpleOllamaAIExecutor("http://localhost:11434"))
@@ -177,7 +117,6 @@ Agent Persistence 功能提供三种主要配置选项：
         })
         .build();
     ```
-    <!--- KNIT example-agent-persistence-java-03.java -->
 
 如果禁用了持续持久化，您仍然可以手动创建检查点。
 
@@ -189,14 +128,6 @@ Agent Persistence 功能提供三种主要配置选项：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.context.AIAgentContext
-    import ai.koog.agents.snapshot.feature.persistence
-    import ai.koog.serialization.typeToken
-    
-    const val outputData = "some-output-data"
-    val outputType = typeToken<String>()
-    -->
     ```kotlin
     suspend fun example(context: AIAgentContext) {
         // Create a checkpoint with the current state
@@ -213,19 +144,11 @@ Agent Persistence 功能提供三种主要配置选项：
         val checkpointId = checkpoint?.checkpointId
     }
     ```
-    <!--- KNIT example-agent-persistence-04.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-agent-persistence-java-04.java -->
 
 ### 从检查点恢复 { #restoring-from-a-checkpoint }
 
@@ -233,10 +156,6 @@ Agent Persistence 功能提供三种主要配置选项：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.context.AIAgentContext
-    import ai.koog.agents.snapshot.feature.persistence
-    -->
     ```kotlin
     suspend fun example(context: AIAgentContext, checkpointId: String) {
         // Roll back to a specific checkpoint
@@ -246,19 +165,11 @@ Agent Persistence 功能提供三种主要配置选项：
         context.persistence().rollbackToLatestCheckpoint(context)
     }
     ```
-    <!--- KNIT example-agent-persistence-05.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-agent-persistence-java-05.java -->
 
 #### 回滚工具产生的所有副作用 { #rolling-back-all-side-effects-produced-by-tools }
 
@@ -274,7 +185,6 @@ tool call: createUser "Alex"
 tool call: createUser "Daniel"
 tool call: createUser "Maria"
 ```
- <!--- KNIT example-agent-persistence-01.txt -->
 
 现在您希望回滚到某个检查点。仅恢复代理的状态（包括消息历史和策略图节点）不足以完全还原检查点之前的世界状态。您还需要恢复工具调用所产生的副作用。在我们的示例中，这意味着需要从数据库中删除 `Maria` 和 `Daniel`。
 
@@ -282,23 +192,6 @@ tool call: createUser "Maria"
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.snapshot.feature.Persistence
-    import ai.koog.agents.snapshot.providers.InMemoryPersistenceStorageProvider
-    import ai.koog.prompt.executor.llms.all.simpleOllamaAIExecutor
-    import ai.koog.prompt.executor.ollama.client.OllamaModels
-    import ai.koog.agents.snapshot.feature.RollbackToolRegistry
-    fun createUser(name: String) {}
-    fun removeUser(name: String) {}
-    val agent = AIAgent(
-        promptExecutor = simpleOllamaAIExecutor(),
-        llmModel = OllamaModels.Meta.LLAMA_3_2,
-    ) {
-    -->
-    <!--- SUFFIX 
-    } 
-    -->
     ```kotlin
     install(Persistence) {
         enableAutomaticPersistence = true
@@ -311,19 +204,11 @@ tool call: createUser "Maria"
         }
     }
     ```
-    <!--- KNIT example-agent-persistence-06.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-agent-persistence-java-06.java -->
 
 ### 使用扩展函数 { #using-extension-functions }
 
@@ -331,13 +216,6 @@ Agent Persistence 功能为处理检查点提供了便捷的扩展函数：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.context.AIAgentContext
-    import ai.koog.agents.example.exampleAgentPersistence04.outputData
-    import ai.koog.agents.example.exampleAgentPersistence04.outputType
-    import ai.koog.agents.snapshot.feature.persistence
-    import ai.koog.agents.snapshot.feature.withPersistence
-    -->
     ```kotlin
     suspend fun example(context: AIAgentContext) {
         // Access the checkpoint feature
@@ -357,19 +235,11 @@ Agent Persistence 功能为处理检查点提供了便捷的扩展函数：
         }
     }
     ```
-    <!--- KNIT example-agent-persistence-07.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-agent-persistence-java-07.java -->
 
 ## 高级用法 { #advanced-usage }
 
@@ -379,15 +249,6 @@ Agent Persistence 功能为处理检查点提供了便捷的扩展函数：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.snapshot.feature.AgentCheckpointData
-    import ai.koog.agents.snapshot.providers.PersistenceStorageProvider
-    /*
-    // KNIT: Ignore example
-    -->
-    <!--- SUFFIX
-    */
-    -->
     ```kotlin
     class MyCustomStorageProvider<MyFilterType> : PersistenceStorageProvider<MyFilterType> {
         override suspend fun getCheckpoints(sessionId: String, filter: MyFilterType?): List<AgentCheckpointData> {
@@ -403,68 +264,26 @@ Agent Persistence 功能为处理检查点提供了便捷的扩展函数：
         }
     }
     ```
-    <!--- KNIT example-agent-persistence-08.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-agent-persistence-java-08.java -->
 
 要在功能配置中使用您的自定义提供程序，请在代理中配置代理持久化功能时将其设置为存储。
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.snapshot.feature.AgentCheckpointData
-    import ai.koog.agents.snapshot.feature.Persistence
-    import ai.koog.agents.snapshot.providers.PersistenceStorageProvider
-    import ai.koog.prompt.executor.llms.all.simpleOllamaAIExecutor
-    import ai.koog.prompt.executor.ollama.client.OllamaModels
-    class MyCustomStorageProvider<MyFilterType> : PersistenceStorageProvider<MyFilterType> {
-        override suspend fun getCheckpoints(sessionId: String, filter: MyFilterType?): List<AgentCheckpointData> {
-            TODO("Not yet implemented")
-        }
-        override suspend fun saveCheckpoint(sessionId: String, agentCheckpointData: AgentCheckpointData) {
-            TODO("Not yet implemented")
-        }
-        override suspend fun getLatestCheckpoint(sessionId: String, filter: MyFilterType?): AgentCheckpointData? {
-            TODO("Not yet implemented")
-        }
-    }
-    val agent = AIAgent(
-        promptExecutor = simpleOllamaAIExecutor(),
-        llmModel = OllamaModels.Meta.LLAMA_3_2,
-    ) {
-    -->
-    <!--- SUFFIX 
-    } 
-    -->
     ```kotlin
     install(Persistence) {
         storage = MyCustomStorageProvider<Any>()
     }
     ```
-    <!--- KNIT example-agent-persistence-09.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-agent-persistence-java-09.java -->
 
 ### 设置执行点 { #setting-execution-points }
 
@@ -472,16 +291,6 @@ Agent Persistence 功能为处理检查点提供了便捷的扩展函数：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.context.AIAgentContext
-    import ai.koog.agents.snapshot.feature.persistence
-    import ai.koog.prompt.message.Message.User
-    import ai.koog.serialization.JSONPrimitive
-    
-    val customInput = JSONPrimitive("custom-input")
-    val customOutput = JSONPrimitive("custom-output")
-    val customMessageHistory = emptyList<User>()
-    -->
     ```kotlin
     fun example(context: AIAgentContext) {
         // You can set the execution point before some node and provide an input for it:
@@ -502,18 +311,10 @@ Agent Persistence 功能为处理检查点提供了便捷的扩展函数：
     }
 
     ```
-    <!--- KNIT example-agent-persistence-10.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-agent-persistence-java-10.java -->
 
 这允许对智能体状态进行更精细的控制，而不仅仅是从检查点恢复。

@@ -44,23 +44,6 @@ RAG 解决了传统 LLM 的几个限制：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.embeddings.local.LLMEmbedder
-    import ai.koog.prompt.executor.ollama.client.OllamaModels
-    import ai.koog.prompt.executor.ollama.client.OllamaClient
-    import ai.koog.rag.base.mostRelevantDocuments
-    import ai.koog.rag.vector.EmbeddingBasedDocumentStorage
-    import ai.koog.rag.vector.InMemoryVectorStorage
-    import ai.koog.rag.vector.JVMTextDocumentEmbedder
-    import kotlinx.coroutines.runBlocking
-    import java.nio.file.Path
-    fun main() {
-        runBlocking {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```kotlin
     // Create an embedder using Ollama
     val embedder = LLMEmbedder(OllamaClient(), OllamaModels.Embeddings.NOMIC_EMBED_TEXT)
@@ -90,20 +73,11 @@ RAG 解决了传统 LLM 的几个限制：
         // Process the file content as needed
     }
     ```
-    <!--- KNIT example-ranked-document-storage-01.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-ranked-document-storage-java-01.java -->
-
 
 ### 为AI代理提供相关性搜索 { #providing-relevance-search-for-use-by-ai-agents }
 
@@ -113,30 +87,6 @@ RAG 解决了传统 LLM 的几个限制：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.core.agent.config.AIAgentConfig
-    import ai.koog.embeddings.local.LLMEmbedder
-    import ai.koog.prompt.executor.ollama.client.OllamaModels
-    import ai.koog.prompt.dsl.prompt
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    import ai.koog.prompt.executor.ollama.client.OllamaClient
-    import ai.koog.rag.base.mostRelevantDocuments
-    import ai.koog.rag.vector.EmbeddingBasedDocumentStorage
-    import ai.koog.rag.vector.InMemoryVectorStorage
-    import ai.koog.rag.vector.JVMTextDocumentEmbedder
-    import kotlin.io.path.pathString
-    // Create an embedder using Ollama
-    val embedder = LLMEmbedder(OllamaClient(), OllamaModels.Embeddings.NOMIC_EMBED_TEXT)
-    // You may also use OpenAI embeddings with:
-    // val embedder = LLMEmbedder(OpenAILLMClient("API_KEY"), OpenAIModels.Embeddings.TextEmbeddingAda3Large)
-    // Create a JVM-specific document embedder
-    val documentEmbedder = JVMTextDocumentEmbedder(embedder)
-    // Create a ranked document storage using in-memory vector storage
-    val rankedDocumentStorage = EmbeddingBasedDocumentStorage(documentEmbedder, InMemoryVectorStorage())
-    const val apiKey = "apikey"
-    -->
     ```kotlin
     suspend fun solveUserRequest(query: String) {
         // Retrieve top-5 documents from the document provider
@@ -162,7 +112,6 @@ RAG 解决了传统 LLM 的几个限制：
             llmModel = OpenAIModels.Chat.GPT4o
         )
 
-
         // Run the agent to get a response
         val response = agent.run(query)
 
@@ -170,20 +119,11 @@ RAG 解决了传统 LLM 的几个限制：
         println("Agent response: $response")
     }
     ```
-    <!--- KNIT example-ranked-document-storage-02.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-ranked-document-storage-java-02.java -->
-
 
 ### 提供相关性搜索作为工具 { #providing-relevance-search-as-a-tool }
 
@@ -193,33 +133,6 @@ RAG 解决了传统 LLM 的几个限制：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.core.tools.ToolRegistry
-    import ai.koog.agents.core.tools.annotations.LLMDescription
-    import ai.koog.agents.core.tools.annotations.Tool
-    import ai.koog.agents.core.tools.reflect.asTool
-    import ai.koog.embeddings.local.LLMEmbedder
-    import ai.koog.prompt.executor.ollama.client.OllamaModels
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    import ai.koog.prompt.executor.ollama.client.OllamaClient
-    import ai.koog.rag.base.mostRelevantDocuments
-    import ai.koog.rag.vector.EmbeddingBasedDocumentStorage
-    import ai.koog.rag.vector.InMemoryVectorStorage
-    import ai.koog.rag.vector.JVMTextDocumentEmbedder
-    import kotlinx.coroutines.runBlocking
-    import java.nio.file.Files
-    // Create an embedder using Ollama
-    val embedder = LLMEmbedder(OllamaClient(), OllamaModels.Embeddings.NOMIC_EMBED_TEXT)
-    // You may also use OpenAI embeddings with:
-    // val embedder = LLMEmbedder(OpenAILLMClient("API_KEY"), OpenAIModels.Embeddings.TextEmbeddingAda3Large)
-    // Create a JVM-specific document embedder
-    val documentEmbedder = JVMTextDocumentEmbedder(embedder)
-    // Create a ranked document storage using in-memory vector storage
-    val rankedDocumentStorage = EmbeddingBasedDocumentStorage(documentEmbedder, InMemoryVectorStorage())
-    const val apiKey = "apikey"
-    -->
     ```kotlin
     @Tool
     @LLMDescription("Search for relevant documents about any topic (if exists). Returns the content of the most relevant documents.")
@@ -265,19 +178,11 @@ RAG 解决了传统 LLM 的几个限制：
         }
     }
     ```
-    <!--- KNIT example-ranked-document-storage-03.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-ranked-document-storage-java-03.java -->
 
 通过这种方法，智能体可以根据您的查询决定何时使用搜索工具。这对于可能需要从多个文档中获取信息的复杂查询，或当智能体需要搜索特定细节时尤为有用。
 
@@ -293,27 +198,15 @@ RAG 解决了传统 LLM 的几个限制：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.rag.vector.InMemoryVectorStorage
-    import java.nio.file.Path
-    -->
     ```kotlin
     val inMemoryStorage = InMemoryVectorStorage<Path>()
     ```
-    <!--- KNIT example-ranked-document-storage-04.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     InMemoryVectorStorage<Path> inMemoryStorage = new InMemoryVectorStorage<>();
     ```
-    <!--- KNIT example-ranked-document-storage-java-04.java -->
 
 如需更多信息，请参阅 [InMemoryVectorStorage](api:vector-storage::ai.koog.rag.vector.InMemoryVectorStorage) 参考文档。
 
@@ -323,12 +216,6 @@ RAG 解决了传统 LLM 的几个限制：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    /*
-    -->
-    <!--- SUFFIX
-    */
-    -->
     ```kotlin
     val fileStorage = FileVectorStorage<Document, Path>(
        documentReader = documentProvider,
@@ -336,19 +223,11 @@ RAG 解决了传统 LLM 的几个限制：
        root = rootPath
     )
     ```
-    <!--- KNIT example-ranked-document-storage-05.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-ranked-document-storage-java-05.java -->
 
 如需更多信息，请参阅 [文件向量存储](api:vector-storage::ai.koog.rag.vector.FileVectorStorage) 参考文档。
 
@@ -358,26 +237,14 @@ RAG 解决了传统 LLM 的几个限制：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.rag.vector.JVMFileVectorStorage
-    import java.nio.file.Path
-    -->
     ```kotlin
     val jvmFileStorage = JVMFileVectorStorage(root = Path.of("/path/to/storage"))
     ```
-    <!--- KNIT example-ranked-document-storage-06.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-ranked-document-storage-java-06.java -->
 
 如需更多信息，请参阅 [JVM文件向量存储](api:vector-storage::ai.koog.rag.vector.JVMFileVectorStorage) 参考文档。
 
@@ -389,27 +256,17 @@ RAG 解决了传统 LLM 的几个限制：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    /*
-    -->
-    <!--- SUFFIX
-    */
-    -->
     ```kotlin
     val textEmbedder = TextDocumentEmbedder<Document, Path>(
        documentReader = documentProvider,
        embedder = embedder
     )
     ```
-    <!--- KNIT example-ranked-document-storage-07.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    -->
     ```java
     ```
-    <!--- KNIT example-ranked-document-storage-java-07.java -->
 
 如需更多信息，请参阅 [文本文档嵌入器](api:vector-storage::ai.koog.rag.vector.TextDocumentEmbedder) 参考文档。
 
@@ -419,31 +276,17 @@ RAG 解决了传统 LLM 的几个限制：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.embeddings.local.LLMEmbedder
-    import ai.koog.prompt.executor.ollama.client.OllamaModels
-    import ai.koog.prompt.executor.ollama.client.OllamaClient
-    import ai.koog.rag.vector.JVMTextDocumentEmbedder
-    -->
     ```kotlin
     val embedder = LLMEmbedder(OllamaClient(), OllamaModels.Embeddings.NOMIC_EMBED_TEXT)
     val jvmTextEmbedder = JVMTextDocumentEmbedder(embedder = embedder)
     ```
-    <!--- KNIT example-ranked-document-storage-08.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     LLMEmbedder embedder = new LLMEmbedder(new OllamaClient("http://localhost:11434"), OllamaModels.Embeddings.NOMIC_EMBED_TEXT);
     JVMTextDocumentEmbedder jvmTextEmbedder = new JVMTextDocumentEmbedder(embedder);
     ```
-    <!--- KNIT example-ranked-document-storage-java-08.java -->
 
 如需更多信息，请参阅 [JVM文本文档嵌入器](api:vector-storage::ai.koog.rag.vector.JVMTextDocumentEmbedder) 参考文档。
 
@@ -455,29 +298,15 @@ RAG 解决了传统 LLM 的几个限制：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.example.exampleRankedDocumentStorage02.documentEmbedder
-    import ai.koog.rag.vector.EmbeddingBasedDocumentStorage
-    import ai.koog.rag.vector.InMemoryVectorStorage
-    import java.nio.file.Path
-    val vectorStorage = InMemoryVectorStorage<Path>()
-    -->
     ```kotlin
     val embeddingStorage = EmbeddingBasedDocumentStorage(
         embedder = documentEmbedder,
         storage = vectorStorage
     )
     ```
-    <!--- KNIT example-ranked-document-storage-09.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     LLMEmbedder embedder = new LLMEmbedder(new OllamaClient("http://localhost:11434"), OllamaModels.Embeddings.NOMIC_EMBED_TEXT);
     JVMTextDocumentEmbedder documentEmbedder = new JVMTextDocumentEmbedder(embedder);
@@ -488,7 +317,6 @@ RAG 解决了传统 LLM 的几个限制：
         vectorStorage
     );
     ```
-    <!--- KNIT example-ranked-document-storage-java-09.java -->
 
 如需更多信息，请参阅 [基于嵌入的文档存储](api:vector-storage::ai.koog.rag.vector.EmbeddingBasedDocumentStorage) 参考文档。
 
@@ -498,27 +326,14 @@ RAG 解决了传统 LLM 的几个限制：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.example.exampleRankedDocumentStorage03.documentEmbedder
-    import ai.koog.rag.vector.InMemoryDocumentEmbeddingStorage
-    import java.nio.file.Path
-    typealias Document = Path
-    -->
     ```kotlin
     val inMemoryEmbeddingStorage = InMemoryDocumentEmbeddingStorage<Document>(
         embedder = documentEmbedder
     )
     ```
-    <!--- KNIT example-ranked-document-storage-10.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     LLMEmbedder embedder = new LLMEmbedder(new OllamaClient("http://localhost:11434"), OllamaModels.Embeddings.NOMIC_EMBED_TEXT);
     JVMTextDocumentEmbedder documentEmbedder = new JVMTextDocumentEmbedder(embedder);
@@ -526,7 +341,6 @@ RAG 解决了传统 LLM 的几个限制：
     InMemoryDocumentEmbeddingStorage<Path> inMemoryEmbeddingStorage =
         new InMemoryDocumentEmbeddingStorage<>(documentEmbedder);
     ```
-    <!--- KNIT example-ranked-document-storage-java-10.java -->
 
 如需更多信息，请参阅 [内存文档嵌入存储](api:vector-storage::ai.koog.rag.vector.InMemoryDocumentEmbeddingStorage) 参考文档。
 
@@ -536,12 +350,6 @@ A file-based implementation of `EmbeddingBasedDocumentStorage`.
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    /*
-    -->
-    <!--- SUFFIX
-    */
-    -->
     ```kotlin
     val fileEmbeddingStorage = FileDocumentEmbeddingStorage<Document, Path>(
        embedder = documentEmbedder,
@@ -550,19 +358,11 @@ A file-based implementation of `EmbeddingBasedDocumentStorage`.
        root = rootPath
     )
     ```
-    <!--- KNIT example-ranked-document-storage-11.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-ranked-document-storage-java-11.java -->
 
 如需更多信息，请参阅 [文件文档嵌入存储](api:vector-storage::ai.koog.rag.vector.FileDocumentEmbeddingStorage) 参考文档。
 
@@ -572,27 +372,15 @@ A JVM-specific implementation of `FileDocumentEmbeddingStorage`.
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.example.exampleRankedDocumentStorage03.documentEmbedder
-    import ai.koog.rag.vector.JVMFileDocumentEmbeddingStorage
-    import java.nio.file.Path
-    -->
     ```kotlin
     val jvmFileEmbeddingStorage = JVMFileDocumentEmbeddingStorage(
        embedder = documentEmbedder,
        root = Path.of("/path/to/storage")
     )
     ```
-    <!--- KNIT example-ranked-document-storage-12.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     LLMEmbedder embedder = new LLMEmbedder(new OllamaClient("http://localhost:11434"), OllamaModels.Embeddings.NOMIC_EMBED_TEXT);
     JVMTextDocumentEmbedder documentEmbedder = new JVMTextDocumentEmbedder(embedder);
@@ -602,7 +390,6 @@ A JVM-specific implementation of `FileDocumentEmbeddingStorage`.
        Path.of("/path/to/storage")
     );
     ```
-    <!--- KNIT example-ranked-document-storage-java-12.java -->
 
 如需更多信息，请参阅 [JVM文件文档嵌入存储](api:vector-storage::ai.koog.rag.vector.JVMFileDocumentEmbeddingStorage) 参考文档。
 
@@ -612,27 +399,15 @@ A JVM-specific implementation of `FileDocumentEmbeddingStorage`.
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.example.exampleRankedDocumentStorage08.embedder
-    import ai.koog.rag.vector.JVMTextFileDocumentEmbeddingStorage
-    import java.nio.file.Path
-    -->
     ```kotlin
     val jvmTextFileEmbeddingStorage = JVMTextFileDocumentEmbeddingStorage(
        embedder = embedder,
        root = Path.of("/path/to/storage")
     )
     ```
-    <!--- KNIT example-ranked-document-storage-13.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     LLMEmbedder embedder = new LLMEmbedder(new OllamaClient("http://localhost:11434"), OllamaModels.Embeddings.NOMIC_EMBED_TEXT);
 
@@ -641,7 +416,6 @@ A JVM-specific implementation of `FileDocumentEmbeddingStorage`.
        Path.of("/path/to/storage")
     );
     ```
-    <!--- KNIT example-ranked-document-storage-java-13.java -->
 
 如需更多信息，请参阅 [JVM文本文件文档嵌入存储](api:vector-storage::ai.koog.rag.vector.JVMTextFileDocumentEmbeddingStorage) 参考文档。
 
@@ -655,23 +429,6 @@ A JVM-specific implementation of `FileDocumentEmbeddingStorage`.
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.embeddings.base.Embedder
-    import ai.koog.embeddings.base.Vector
-    import ai.koog.embeddings.local.LLMEmbedder
-    import ai.koog.prompt.executor.ollama.client.OllamaModels
-    import ai.koog.prompt.executor.ollama.client.OllamaClient
-    import ai.koog.rag.base.RankedDocument
-    import ai.koog.rag.base.RankedDocumentStorage
-    import ai.koog.rag.base.files.DocumentProvider
-    import ai.koog.rag.base.mostRelevantDocuments
-    import ai.koog.rag.vector.DocumentEmbedder
-    import ai.koog.rag.vector.InMemoryVectorStorage
-    import ai.koog.rag.vector.VectorStorage
-    import kotlinx.coroutines.flow.Flow
-    import kotlinx.coroutines.flow.flow
-    import java.nio.file.Path
-    -->
     ```kotlin
     // Define a PDFDocument class
     class PDFDocument(private val path: Path) {
@@ -767,19 +524,11 @@ A JVM-specific implementation of `FileDocumentEmbeddingStorage`.
 
     }
     ```
-    <!--- KNIT example-ranked-document-storage-14.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-ranked-document-storage-java-14.java -->
 
 ## 实现自定义非嵌入式的RankedDocumentStorage { #implementing-custom-non-embedding-based-rankeddocumentstorage }
 
@@ -795,15 +544,6 @@ A JVM-specific implementation of `FileDocumentEmbeddingStorage`.
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.rag.base.DocumentStorage
-    import ai.koog.rag.base.RankedDocument
-    import ai.koog.rag.base.RankedDocumentStorage
-    import ai.koog.rag.base.files.DocumentProvider
-    import kotlinx.coroutines.flow.Flow
-    import kotlinx.coroutines.flow.flow
-    import java.nio.file.Path
-    -->
     ```kotlin
     class KeywordBasedDocumentStorage<Document>(
         private val documentProvider: DocumentProvider<Path, Document>,
@@ -863,19 +603,11 @@ A JVM-specific implementation of `FileDocumentEmbeddingStorage`.
         }
     }
     ```
-    <!--- KNIT example-ranked-document-storage-15.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-ranked-document-storage-java-15.java -->
 
 该实现根据查询关键词在文档文本中出现的频率对文档进行排序。您可以采用更复杂的算法来扩展此方法，例如TF-IDF（词频-逆文档频率）或BM25。
 
@@ -883,14 +615,6 @@ A JVM-specific implementation of `FileDocumentEmbeddingStorage`.
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.rag.base.DocumentStorage
-    import ai.koog.rag.base.RankedDocument
-    import ai.koog.rag.base.RankedDocumentStorage
-    import kotlinx.coroutines.flow.Flow
-    import kotlinx.coroutines.flow.flow
-    import java.lang.System.currentTimeMillis
-    -->
     ```kotlin
     class TimeBasedDocumentStorage<Document>(
         private val storage: DocumentStorage<Document>,
@@ -929,19 +653,11 @@ A JVM-specific implementation of `FileDocumentEmbeddingStorage`.
         }
     }
     ```
-    <!--- KNIT example-ranked-document-storage-16.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-ranked-document-storage-java-16.java -->
 
 通过实现`RankedDocumentStorage`接口，您可以创建针对特定使用场景定制的自定义排序机制，同时仍能利用RAG基础设施的其余部分。
 

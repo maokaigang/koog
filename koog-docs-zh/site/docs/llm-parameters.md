@@ -13,10 +13,6 @@ LLM 参数是配置选项，可让您微调语言模型生成响应的方式。�
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.prompt.dsl.prompt
-    import ai.koog.prompt.params.LLMParams
-    -->
     ```kotlin
     val prompt = prompt(
         id = "dev-assistant",
@@ -32,16 +28,9 @@ LLM 参数是配置选项，可让您微调语言模型生成响应的方式。�
         user("Tell me about Kotlin")
     }
     ```
-    <!--- KNIT example-llm-parameters-01.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     Prompt prompt = Prompt.builder("dev-assistant")
         .withParams(new LLMParams(
@@ -58,28 +47,11 @@ LLM 参数是配置选项，可让您微调语言模型生成响应的方式。�
         .user("Tell me about Kotlin")
         .build();
     ```
-    <!--- KNIT example-llm-parameters-java-01.java -->
 
 有关提示创建的更多信息，请参阅[提示](prompts/prompt-creation/index.md)。
 
 - 创建子图时：=== "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.ToolCalls
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.ext.tool.SayToUser
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.agents.ext.agent.subgraphWithTask
-    import ai.koog.prompt.params.LLMParams
-    val searchTool = SayToUser
-    val calculatorTool = SayToUser
-    val weatherTool = SayToUser
-    val strategy = strategy<String, String>("strategy_name") {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     val processQuery by subgraphWithTask<String, String>(
         tools = listOf(searchTool, calculatorTool, weatherTool),
@@ -98,20 +70,11 @@ LLM 参数是配置选项，可让您微调语言模型生成响应的方式。�
         """
     }
     ```
-    <!--- KNIT example-llm-parameters-02.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-llm-parameters-java-02.java -->
-
 
 有关 Koog 中现有子图类型的更多信息，请参阅[预定义子图](nodes-and-components.md#predefined-subgraphs)。要了解如何创建和实现自定义子图，请参阅[自定义子图](custom-subgraphs.md)。
 
@@ -119,17 +82,6 @@ LLM 参数是配置选项，可让您微调语言模型生成响应的方式。�
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.prompt.params.LLMParams
-    val strategy = strategy<Unit, Unit>("strategy-name") {
-    val node by node<Unit, Unit> {
-    -->
-    <!--- SUFFIX
-       }
-    }
-    -->
     ```kotlin
     llm.writeSession {
         changeLLMParams(
@@ -140,19 +92,11 @@ LLM 参数是配置选项，可让您微调语言模型生成响应的方式。�
         )
     }
     ```
-    <!--- KNIT example-llm-parameters-03.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     ```
-    <!--- KNIT example-llm-parameters-java-03.java -->
 
 有关会话的更多信息，请参阅[LLM 会话与手动历史记录管理](sessions.md)。
 
@@ -192,12 +136,6 @@ JSON 模式允许您从语言模型请求结构化的 JSON 数据。Koog 支持�
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.prompt.params.LLMParams
-    import kotlinx.serialization.json.JsonObject
-    import kotlinx.serialization.json.JsonArray
-    import kotlinx.serialization.json.JsonPrimitive
-    -->
     ```kotlin
     // 使用基础的 JSON 模式创建参数
     val jsonParams = LLMParams(
@@ -224,16 +162,9 @@ JSON 模式允许您从语言模型请求结构化的 JSON 数据。Koog 支持�
     )
     )
     ```
-    <!--- KNIT example-llm-parameters-04.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     // 使用基础的 JSON 模式创建参数
     LLMParams jsonParams = new LLMParams(
@@ -266,18 +197,11 @@ JSON 模式允许您从语言模型请求结构化的 JSON 数据。Koog 支持�
     null         // additionalProperties
     );
     ```
-    <!--- KNIT example-llm-parameters-java-04.java -->
 
 2) **标准 JSON 模式** (`LLMParams.Schema.JSON.Standard`)：表示符合 [json-schema.org](https://json-schema.org/) 的标准 JSON 模式。此格式是官方 JSON 模式规范的一个真子集。请注意，不同 LLM 提供商的实现风格可能有所不同，因为并非所有提供商都支持完整的 JSON 模式。
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.prompt.params.LLMParams
-    import kotlinx.serialization.json.JsonObject
-    import kotlinx.serialization.json.JsonPrimitive
-    import kotlinx.serialization.json.JsonArray
-    -->
     ```kotlin
     // 使用标准的 JSON 模式创建参数
     val standardJsonParams = LLMParams(
@@ -308,13 +232,9 @@ JSON 模式允许您从语言模型请求结构化的 JSON 数据。Koog 支持�
     )
     )
     ```
-    <!--- KNIT example-llm-parameters-05.kt -->
 
 === "Java"    <!--- INCLUDE
     /**
-    -->
-    <!--- SUFFIX
-    **/
     -->
     ```java
     // 使用标准的 JSON 模式创建参数
@@ -357,7 +277,6 @@ JSON 模式允许您从语言模型请求结构化的 JSON 数据。Koog 支持�
         null         // 附加属性
     );
     ```
-    <!--- KNIT example-llm-parameters-java-05.java -->
 
     ## 工具选择
 
@@ -373,24 +292,14 @@ JSON 模式允许您从语言模型请求结构化的 JSON 数据。Koog 支持�
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.prompt.params.LLMParams
-    -->
     ```kotlin
     val specificToolParams = LLMParams(
         toolChoice = LLMParams.ToolChoice.Named(name = "calculator")
     )
     ```
-    <!--- KNIT example-llm-parameters-06.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     LLMParams specificToolParams = new LLMParams(
         null,        // temperature
@@ -403,7 +312,6 @@ JSON 模式允许您从语言模型请求结构化的 JSON 数据。Koog 支持�
         null         // additionalProperties
     );
     ```
-    <!--- KNIT example-llm-parameters-java-06.java -->
 
 ## 供应商特定参数 { #tool-choice }
 
@@ -470,9 +378,6 @@ Koog 支持某些 LLM 供应商的供应商特定参数。这些参数扩展了�
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.prompt.executor.clients.openrouter.OpenRouterParams
-    -->
     ```kotlin
     val openRouterParams = OpenRouterParams(
         temperature = 0.7,
@@ -486,16 +391,9 @@ Koog 支持某些 LLM 供应商的供应商特定参数。这些参数扩展了�
         transforms = listOf("middle-out")
     )
     ```
-    <!--- KNIT example-llm-parameters-07.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     OpenRouterParams openRouterParams = new OpenRouterParams(
         0.7,         // temperature
@@ -522,7 +420,6 @@ Koog 支持某些 LLM 供应商的供应商特定参数。这些参数扩展了�
         Arrays.asList("middle-out") // transforms
     );
     ```
-    <!--- KNIT example-llm-parameters-java-07.java -->
 
 ## 使用示例 { #provider-specific-parameters }
 
@@ -530,9 +427,6 @@ Koog 支持某些 LLM 供应商的供应商特定参数。这些参数扩展了�
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.prompt.params.LLMParams
-    -->
     ```kotlin
     // 一组基础参数，长度有限
     val basicParams = LLMParams(
@@ -541,16 +435,9 @@ Koog 支持某些 LLM 供应商的供应商特定参数。这些参数扩展了�
     toolChoice = LLMParams.ToolChoice.Auto
     )
     ```
-    <!--- KNIT example-llm-parameters-08.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     // 一组基础参数，长度有限
     LLMParams basicParams = new LLMParams(
@@ -564,7 +451,6 @@ Koog 支持某些 LLM 供应商的供应商特定参数。这些参数扩展了�
         null         // additionalProperties
     );
     ```
-    <!--- KNIT example-llm-parameters-java-08.java -->
 
 ### 推理控制 { #basic-usage }
 
@@ -574,25 +460,14 @@ Koog 支持某些 LLM 供应商的供应商特定参数。这些参数扩展了�
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.prompt.executor.clients.openai.OpenAIChatParams
-    import ai.koog.prompt.executor.clients.openai.base.models.ReasoningEffort
-    -->
     ```kotlin
     val openAIReasoningEffortParams = OpenAIChatParams(
         reasoningEffort = ReasoningEffort.MEDIUM
     )
     ```
-    <!--- KNIT example-llm-parameters-09.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     OpenAIChatParams openAIReasoningEffortParams = new OpenAIChatParams(
     null,        // temperature
@@ -619,32 +494,20 @@ Koog 支持某些 LLM 供应商的供应商特定参数。这些参数扩展了�
     null         // webSearchOptions
     );
     ```
-    <!--- KNIT example-llm-parameters-java-09.java -->
 
 此外，当在无状态模式下使用 OpenAI Responses API 时，您需要维护推理项的加密历史记录，并在每次对话轮次中将其发送给模型。加密操作在 OpenAI 端完成，您需要通过将请求中的 `include` 参数设置为 `reasoning.encrypted_content` 来请求加密的推理令牌。
 随后，您可以在后续对话轮次中将加密的推理令牌传回给模型。
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.prompt.executor.clients.openai.OpenAIResponsesParams
-    import ai.koog.prompt.executor.clients.openai.models.OpenAIInclude
-    -->
     ```kotlin
     val openAIStatelessReasoningParams = OpenAIResponsesParams(
         include = listOf(OpenAIInclude.REASONING_ENCRYPTED_CONTENT)
     )
     ```
-    <!--- KNIT example-llm-parameters-10.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     OpenAIResponsesParams openAIStatelessReasoningParams = new OpenAIResponsesParams(
     null,        // temperature
@@ -670,7 +533,6 @@ Koog 支持某些 LLM 供应商的供应商特定参数。这些参数扩展了�
     null         // truncation
     );
     ```
-    <!--- KNIT example-llm-parameters-java-10.java -->
 
 ### 自定义参数 { #reasoning-control }
 
@@ -678,10 +540,6 @@ Koog 支持某些 LLM 供应商的供应商特定参数。这些参数扩展了�
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.prompt.params.LLMParams
-    import ai.koog.prompt.params.additionalPropertiesOf
-    -->
     ```kotlin
     // 为特定模型提供商添加自定义参数
     val customParams = LLMParams(
@@ -692,16 +550,9 @@ Koog 支持某些 LLM 供应商的供应商特定参数。这些参数扩展了�
         )
     )
     ```
-    <!--- KNIT example-llm-parameters-11.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     // 为特定模型提供商添加自定义参数
     LLMParams customParams = new LLMParams(
@@ -719,7 +570,6 @@ Koog 支持某些 LLM 供应商的供应商特定参数。这些参数扩展了�
     )
     );
     ```
-    <!--- KNIT example-llm-parameters-java-11.java -->
 
 ### 设置与覆盖参数 { #custom-parameters }
 
@@ -727,9 +577,6 @@ Koog 支持某些 LLM 供应商的供应商特定参数。这些参数扩展了�
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.prompt.params.LLMParams
-    -->
     ```kotlin
     // 定义默认参数
     val defaultParams = LLMParams(
@@ -744,16 +591,9 @@ Koog 支持某些 LLM 供应商的供应商特定参数。这些参数扩展了�
         numberOfChoices = 3
     ).default(defaultParams)
     ```
-    <!--- KNIT example-llm-parameters-12.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     // 定义默认参数
     LLMParams defaultParams = new LLMParams(
@@ -778,15 +618,11 @@ Koog 支持某些 LLM 供应商的供应商特定参数。这些参数扩展了�
         null         // additionalProperties
     ).applyDefaults(defaultParams);
     ```
-    <!--- KNIT example-llm-parameters-java-12.java -->
 
 生成的 `overrideParams` 集合中的值等效于以下内容：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.prompt.params.LLMParams
-    -->
     ```kotlin
     val overrideParams = LLMParams(
         temperature = 0.2,
@@ -795,16 +631,9 @@ Koog 支持某些 LLM 供应商的供应商特定参数。这些参数扩展了�
         numberOfChoices = 3
     )
     ```
-    <!--- KNIT example-llm-parameters-13.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     LLMParams overrideParams = new LLMParams(
         0.2,         // temperature
@@ -817,4 +646,3 @@ Koog 支持某些 LLM 供应商的供应商特定参数。这些参数扩展了�
         null         // additionalProperties
     );
     ```
-    <!--- KNIT example-llm-parameters-java-13.java -->

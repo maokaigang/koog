@@ -32,45 +32,15 @@ Koog 框架提供了预定义节点，同时也允许您使用 `node` 函数创�
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.forwardTo
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.builder.parallel
-    import ai.koog.agents.core.dsl.builder.subgraph
-    val strategy = strategy<String, String>("strategy_name") {
-            val sourceNode by node<String, String> { input -> input }
-            val targetNode by node<String, String> { input -> input }
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     edge(sourceNode forwardTo targetNode)
     ```
-    <!--- KNIT example-custom-strategy-graphs-01.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    class exampleCustomStrategyGraphsJava01 {
-        public static void main(String[] args) {
-            var strategy = AIAgentGraphStrategy.builder("strategyName")
-                .withInput(String.class)
-                .withOutput(String.class);
-            var sourceNode = AIAgentNode.doNothing(String.class);
-            var targetNode = AIAgentNode.doNothing(String.class);
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     strategy.edge(sourceNode, targetNode);
     ```
-    <!--- KNIT exampleCustomStrategyGraphsJava01.java -->
 
 #### 条件 { #conditions }
 
@@ -88,45 +58,15 @@ Koog 框架提供了预定义节点，同时也允许您使用 `node` 函数创�
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.forwardTo
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.builder.parallel
-    import ai.koog.agents.core.dsl.builder.subgraph
-    val strategy = strategy<String, String>("strategy_name") {
-            val sourceNode by node<String, String> { input -> input }
-            val targetNode by node<String, String> { input -> input }
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     edge(sourceNode forwardTo targetNode 
             onCondition { input -> input.length > 10 }
             transformed { input -> input.uppercase() }
     )
     ```
-    <!--- KNIT example-custom-strategy-graphs-02.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentEdge;
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    class exampleCustomStrategyGraphsJava02 {
-        public static void main(String[] args) {
-            var strategy = AIAgentGraphStrategy.builder("strategyName")
-                .withInput(String.class)
-                .withOutput(String.class);
-            var sourceNode = AIAgentNode.doNothing(String.class);
-            var targetNode = AIAgentNode.doNothing(String.class);
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     strategy.edge(AIAgentEdge.builder()
         .from(sourceNode)
@@ -135,7 +75,6 @@ Koog 框架提供了预定义节点，同时也允许您使用 `node` 函数创�
         .transformed(input -> input.toUpperCase())
         .build());
     ```
-    <!--- KNIT exampleCustomStrategyGraphsJava02.java -->
 
 ### 子图 { #subgraphs }
 
@@ -144,18 +83,6 @@ Koog 框架提供了预定义节点，同时也允许您使用 `node` 函数创�
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.builder.parallel
-    import ai.koog.agents.core.dsl.builder.subgraph
-    typealias Input = String
-    typealias Output = Int
-    typealias FirstInput = String
-    typealias FirstOutput = Int
-    typealias SecondInput = String
-    typealias SecondOutput = Int
-    -->
     ```kotlin
     val strategy = strategy<Input, Output>("strategy-name") {
         val firstSubgraph by subgraph<FirstInput, FirstOutput>("first") {
@@ -166,23 +93,9 @@ Koog 框架提供了预定义节点，同时也允许您使用 `node` 函数创�
         }
     }
     ```
-    <!--- KNIT example-custom-strategy-graphs-03.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentSubgraph;
-    class exampleCustomStrategyGraphsJava03 {
-        class FirstInput {}
-        class FirstOutput {}
-        class SecondInput {}
-        class SecondOutput {}
-        public static void main(String[] args) {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var firstSubgraph = AIAgentSubgraph.builder("first")
         .withInput(FirstInput.class)
@@ -200,25 +113,12 @@ Koog 框架提供了预定义节点，同时也允许您使用 `node` 函数创�
         })
         .build();
     ```
-    <!--- KNIT exampleCustomStrategyGraphsJava03.java -->
 
 子图可以使用工具注册表中的任意工具。
 不过，您也可以从该注册表中指定一组仅供子图使用的工具子集，并将其作为参数传给 `subgraph` 函数：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.builder.parallel
-    import ai.koog.agents.core.dsl.builder.subgraph
-    import ai.koog.agents.ext.tool.SayToUser
-    typealias Input = String
-    typealias Output = Int
-    typealias FirstInput = String
-    typealias FirstOutput = Int
-    val someTool = SayToUser
-    -->
     ```kotlin
     val strategy = strategy<Input, Output>("strategy-name") {
         val firstSubgraph by subgraph<FirstInput, FirstOutput>(
@@ -230,23 +130,9 @@ Koog 框架提供了预定义节点，同时也允许您使用 `node` 函数创�
        // Define other subgraphs
     }
     ```
-    <!--- KNIT example-custom-strategy-graphs-04.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentSubgraph;
-    import ai.koog.agents.core.tools.reflect.ToolSet;
-    class exampleCustomStrategyGraphsJava04 {
-        class FirstInput {}
-        class FirstOutput {}
-        static ToolSet someTools = null;
-        public static void main(String[] args) {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var firstSubgraph = AIAgentSubgraph.builder("first")
         .withInput(FirstInput.class)
@@ -257,7 +143,6 @@ Koog 框架提供了预定义节点，同时也允许您使用 `node` 函数创�
         })
         .build();
     ```
-    <!--- KNIT exampleCustomStrategyGraphsJava04.java -->
 
 ## 基础策略图创建 { #basic-strategy-graph-creation }
 
@@ -272,23 +157,10 @@ Koog 框架提供了预定义节点，同时也允许您使用 `node` 函数创�
 
 ![basic-strategy-graph](img/basic-strategy-graph.png)
 
-
 下面是一个基础策略图示例：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.forwardTo
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.builder.parallel
-    import ai.koog.agents.core.dsl.builder.subgraph
-    import ai.koog.agents.core.dsl.extension.nodeExecuteTool
-    import ai.koog.agents.core.dsl.extension.nodeLLMRequest
-    import ai.koog.agents.core.dsl.extension.nodeLLMSendToolResult
-    import ai.koog.agents.core.dsl.extension.onAssistantMessage
-    import ai.koog.agents.core.dsl.extension.onToolCall
-    -->
     ```kotlin
     val myStrategy = strategy<String, String>("my-strategy") {
         val nodeCallLLM by nodeLLMRequest()
@@ -303,22 +175,9 @@ Koog 框架提供了预定义节点，同时也允许您使用 `node` 函数创�
         edge(sendToolResult forwardTo executeToolCall onToolCall { true })
     }
     ```
-    <!--- KNIT example-custom-strategy-graphs-05.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentEdge;
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    import ai.koog.prompt.message.Message;
-    class exampleCustomStrategyGraphsJava05 {
-        public static void main(String[] args) {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var graph = AIAgentGraphStrategy.builder("single_run")
         .withInput(String.class)
@@ -360,7 +219,6 @@ Koog 框架提供了预定义节点，同时也允许您使用 `node` 函数创�
 
     var strategy = graph.build();
     ```
-    <!--- KNIT exampleCustomStrategyGraphsJava05.java -->
 
 ## 策略图可视化 { #visualizing-strategy-graph }
 
@@ -370,63 +228,19 @@ Koog 框架提供了预定义节点，同时也允许您使用 `node` 函数创�
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.asMermaidDiagram
-    import ai.koog.agents.core.dsl.builder.forwardTo
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.builder.parallel
-    import ai.koog.agents.core.dsl.builder.subgraph
-    import ai.koog.agents.core.dsl.extension.nodeExecuteTool
-    import ai.koog.agents.core.dsl.extension.nodeLLMRequest
-    import ai.koog.agents.core.dsl.extension.nodeLLMSendToolResult
-    import ai.koog.agents.core.dsl.extension.onAssistantMessage
-    import ai.koog.agents.core.dsl.extension.onToolCall
-    fun main() {
-        val myStrategy = strategy("my-strategy") {
-            val nodeCallLLM by nodeLLMRequest()
-            val executeToolCall by nodeExecuteTool()
-            val sendToolResult by nodeLLMSendToolResult()
-            edge(nodeStart forwardTo nodeCallLLM)
-            edge(nodeCallLLM forwardTo nodeFinish onAssistantMessage { true })
-            edge(nodeCallLLM forwardTo executeToolCall onToolCall { true })
-            edge(executeToolCall forwardTo sendToolResult)
-            edge(sendToolResult forwardTo nodeFinish onAssistantMessage { true })
-            edge(sendToolResult forwardTo executeToolCall onToolCall { true })
-        }
-    -->
-    <!--- SUFFIX
-    }
-    -->
     
     ```kotlin
     val mermaidDiagram: String = myStrategy.asMermaidDiagram()
     
     println(mermaidDiagram)
     ```
-    <!--- KNIT example-custom-strategy-graphs-06.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.MermaidDiagramGenerator;
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
-    class exampleCustomStrategyGraphsJava06 {
-        public static void main(String[] args) {
-            var myStrategy = AIAgentGraphStrategy.builder("single_run")
-                .withInput(String.class)
-                .withOutput(String.class)
-                .build();
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var mermaidDiagram = MermaidDiagramGenerator.INSTANCE.generate(myStrategy);
     System.out.println(mermaidDiagram);
     ```
-    <!--- KNIT exampleCustomStrategyGraphsJava06.java -->
 
 输出如下：
 ```mermaid
@@ -445,7 +259,6 @@ stateDiagram
     sendToolResult --> [*] : transformed
     sendToolResult --> executeToolCall : onCondition
 ```
-<!--- KNIT example-custom-strategy-graphs-01.txt -->
 
 ## 高级策略技巧 { #advanced-strategy-techniques }
 
@@ -457,22 +270,6 @@ stateDiagram
 
 对于需要并行执行多个工具的工作流，您可以使用 `nodeExecuteMultipleTools` 节点：
 
-<!--- INCLUDE
-import ai.koog.agents.core.dsl.builder.forwardTo
-import ai.koog.agents.core.dsl.builder.strategy
-import ai.koog.agents.core.dsl.builder.node
-import ai.koog.agents.core.dsl.builder.parallel
-import ai.koog.agents.core.dsl.builder.subgraph
-import ai.koog.agents.core.dsl.extension.nodeExecuteMultipleTools
-import ai.koog.agents.core.dsl.extension.nodeLLMSendMultipleToolResults
-import ai.koog.prompt.message.Message
-
-val strategy = strategy<String, String>("strategy_name") {
-    val someNode by node<String, List<Message.Tool.Call>> { emptyList() }
--->
-<!--- SUFFIX
-}
--->
 ```kotlin
 val executeMultipleTools by nodeExecuteMultipleTools()
 val processMultipleResults by nodeLLMSendMultipleToolResults()
@@ -480,20 +277,12 @@ val processMultipleResults by nodeLLMSendMultipleToolResults()
 edge(someNode forwardTo executeMultipleTools)
 edge(executeMultipleTools forwardTo processMultipleResults)
 ```
-<!--- KNIT example-custom-strategy-graphs-07.kt -->
 
 您也可以对流式数据使用 `toParallelToolCallsRaw` 扩展函数：
 
-<!--- INCLUDE
-/*
--->
-<!--- SUFFIX
-*/
--->
 ```kotlin
 parseMarkdownStreamToBooks(markdownStream).toParallelToolCallsRaw(BookTool::class).collect()
 ```
-<!--- KNIT example-custom-strategy-graphs-08.kt -->
 
 更多信息请参见 [工具](tools-overview.md#parallel-tool-calls)。
 
@@ -503,21 +292,6 @@ parseMarkdownStreamToBooks(markdownStream).toParallelToolCallsRaw(BookTool::clas
 
 要启动并行节点运行，请使用 `parallel` 方法：
 
-<!--- INCLUDE
-import ai.koog.agents.core.dsl.builder.strategy
-import ai.koog.agents.core.dsl.builder.node
-import ai.koog.agents.core.dsl.builder.parallel
-import ai.koog.agents.core.dsl.builder.subgraph
-
-val strategy = strategy<String, String>("strategy_name") {
-    val nodeCalcTokens by node<String, Int> { 42 }
-    val nodeCalcSymbols by node<String, Int> { 42 }
-    val nodeCalcWords by node<String, Int> { 42 }
-
--->
-<!--- SUFFIX
-}
--->
 ```kotlin
 val calc by parallel<String, Int>(
     nodeCalcTokens, nodeCalcSymbols, nodeCalcWords,
@@ -525,7 +299,6 @@ val calc by parallel<String, Int>(
     selectByMax { it }
 }
 ```
-<!--- KNIT example-custom-strategy-graphs-09.kt -->
 
 上述代码创建了一个名为 `calc` 的节点，它会并行运行 `nodeCalcTokens`、`nodeCalcSymbols` 和 `nodeCalcWords` 节点，
 并以 `AsyncParallelResult` 实例的形式返回结果。
@@ -536,19 +309,6 @@ val calc by parallel<String, Int>(
 
 对于需要根据特定条件走不同路径的复杂工作流，您可以使用条件分支：
 
-<!--- INCLUDE
-import ai.koog.agents.core.dsl.builder.forwardTo
-import ai.koog.agents.core.dsl.builder.strategy
-import ai.koog.agents.core.dsl.builder.node
-import ai.koog.agents.core.dsl.builder.parallel
-import ai.koog.agents.core.dsl.builder.subgraph
-
-val strategy = strategy<String, String>("strategy_name") {
-    val someNode by node<String, String> { it }
--->
-<!--- SUFFIX
-}
--->
 ```kotlin
 val branchA by node<String, String> { input ->
     // Logic for branch A
@@ -569,7 +329,6 @@ edge(
             onCondition { input -> input.contains("B") }
 )
 ```
-<!--- KNIT example-custom-strategy-graphs-10.kt -->
 
 ## 最佳实践 { #best-practices }
 
@@ -590,22 +349,6 @@ edge(
 
 语气分析策略是一个很好的基于工具的策略示例，其中包含历史压缩：
 
-<!--- INCLUDE
-import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy
-import ai.koog.agents.core.dsl.builder.forwardTo
-import ai.koog.agents.core.dsl.builder.strategy
-import ai.koog.agents.core.dsl.builder.node
-import ai.koog.agents.core.dsl.builder.parallel
-import ai.koog.agents.core.dsl.builder.subgraph
-import ai.koog.agents.core.dsl.extension.nodeExecuteTool
-import ai.koog.agents.core.dsl.extension.nodeLLMCompressHistory
-import ai.koog.agents.core.dsl.extension.nodeLLMRequest
-import ai.koog.agents.core.dsl.extension.nodeLLMSendToolResult
-import ai.koog.agents.core.dsl.extension.onAssistantMessage
-import ai.koog.agents.core.dsl.extension.onToolCall
-import ai.koog.agents.core.environment.ReceivedToolResult
-import ai.koog.agents.core.tools.ToolRegistry
--->
 ```kotlin
 fun toneStrategy(name: String, toolRegistry: ToolRegistry): AIAgentGraphStrategy<String, String> {
     return strategy(name) {
@@ -657,7 +400,6 @@ fun toneStrategy(name: String, toolRegistry: ToolRegistry): AIAgentGraphStrategy
     }
 }
 ```
-<!--- KNIT example-custom-strategy-graphs-11.kt -->
 
 该策略的执行流程如下：
 

@@ -142,7 +142,6 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
         ```cmd
         setx MISTRAL_API_KEY "your-api-key"
         ``` 
-        <!--- KNIT example-getting-started-01.txt -->
 
 === "Ollama"
 
@@ -156,12 +155,6 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
 
     === "Kotlin"
 
-        <!--- INCLUDE
-        import ai.koog.agents.core.agent.AIAgent
-        import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-        import ai.koog.prompt.executor.clients.openai.OpenAIModels
-        import kotlinx.coroutines.runBlocking
-        -->
         ```kotlin
         fun main() = runBlocking {
             // Get the OpenAI API key from the OPENAI_API_KEY environment variable
@@ -179,16 +172,9 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
             println(result)
         }
         ```
-        <!--- KNIT example-getting-started-01.kt -->
 
     === "Java"
 
-        <!--- INCLUDE
-        /**
-        -->
-        <!--- SUFFIX
-        **/
-        -->
         ```java
         // Get the OpenAI API key from the OPENAI_API_KEY environment variable
         String apiKey = System.getenv("OPENAI_API_KEY");
@@ -206,7 +192,6 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
         String result = agent.run("Hello! How can you help me?");
         System.out.println(result);
         ```
-        <!--- KNIT example-getting-started-java-01.java -->
 
     示例可能会输出以下内容：
     
@@ -224,7 +209,6 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
 
     Let me know what you need help with—I’m here for you!
     ```
-    <!--- KNIT example-getting-started-02.txt -->
 
 === "Anthropic"
 
@@ -232,12 +216,6 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
 
     === "Kotlin"
 
-        <!--- INCLUDE
-        import ai.koog.agents.core.agent.AIAgent
-        import ai.koog.prompt.executor.llms.all.simpleAnthropicExecutor
-        import ai.koog.prompt.executor.clients.anthropic.AnthropicModels
-        import kotlinx.coroutines.runBlocking
-        -->
         ```kotlin
         fun main() = runBlocking {
             // Get the Anthropic API key from the ANTHROPIC_API_KEY environment variable
@@ -255,16 +233,9 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
             println(result)
         }
         ```
-        <!--- KNIT example-getting-started-02.kt -->
 
 === "Java"
 
-        <!--- INCLUDE
-        /**
-        -->
-        <!--- SUFFIX
-        **/
-        -->
         ```java
         // Get the Anthropic API key from the ANTHROPIC_API_KEY environment variable
         String apiKey = System.getenv("ANTHROPIC_API_KEY");
@@ -282,7 +253,6 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
         String result = agent.run("Hello! How can you help me?");
         System.out.println(result);
         ```
-        <!--- KNIT example-getting-started-java-02.java -->
 
     该示例可以生成以下输出：
 
@@ -298,7 +268,6 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
     
     What do you need help with today?
     ```
-    <!--- KNIT example-getting-started-03.txt -->
 
 === "Google"
 
@@ -306,12 +275,6 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
 
     === "Kotlin"
 
-        <!--- INCLUDE
-        import ai.koog.agents.core.agent.AIAgent
-        import ai.koog.prompt.executor.llms.all.simpleGoogleAIExecutor
-        import ai.koog.prompt.executor.clients.google.GoogleModels
-        import kotlinx.coroutines.runBlocking
-        -->
         ```kotlin
         fun main() = runBlocking {
             // Get the Gemini API key from the GOOGLE_API_KEY environment variable
@@ -329,16 +292,9 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
             println(result)
         }
         ```
-        <!--- KNIT example-getting-started-03.kt -->
 
     === "Java"
 
-        <!--- INCLUDE
-        /**
-        -->
-        <!--- SUFFIX
-        **/
-        -->
         ```java
         // Get the Gemini API key from the GOOGLE_API_KEY environment variable
         String apiKey = System.getenv("GOOGLE_API_KEY");
@@ -356,7 +312,6 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
         String result = agent.run("Hello! How can you help me?");
         System.out.println(result);
         ```
-        <!--- KNIT example-getting-started-java-03.java -->
 
     该示例可以生成以下输出：
 
@@ -372,7 +327,6 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
 
     Just tell me what you need
     ```
-    <!--- KNIT example-getting-started-04.txt -->
 
 === "DeepSeek"
 
@@ -380,13 +334,6 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
 
     === "Kotlin"
 
-        <!--- INCLUDE
-        import ai.koog.agents.core.agent.AIAgent
-        import ai.koog.prompt.executor.clients.deepseek.DeepSeekLLMClient
-        import ai.koog.prompt.executor.llms.MultiLLMPromptExecutor
-        import ai.koog.prompt.executor.clients.deepseek.DeepSeekModels
-        import kotlinx.coroutines.runBlocking
-        -->
         ```kotlin
         fun main() = runBlocking {
             // Get the DeepSeek API key from the DEEPSEEK_API_KEY environment variable
@@ -409,16 +356,9 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
             println(result)
         }
         ```
-        <!--- KNIT example-getting-started-04.kt -->
 
     === "Java"
 
-        <!--- INCLUDE
-        /**
-        -->
-        <!--- SUFFIX
-        **/
-        -->
         ```java
         // Get the DeepSeek API key from the DEEPSEEK_API_KEY environment variable
         String apiKey = System.getenv("DEEPSEEK_API_KEY");
@@ -441,14 +381,12 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
         String result = agent.run("Hello! How can you help me?");
         System.out.println(result);
         ```
-        <!--- KNIT example-getting-started-java-04.java -->
 
     该示例可以生成以下输出：
 
     ```
     Hello! I'm here to assist you with a wide range of tasks, including answering questions, providing information, helping with problem-solving, offering creative ideas, and even just chatting. Whether you need help with research, writing, learning something new, or simply want to discuss a topic, feel free to ask—I’m happy to help! 😊
     ```
-    <!--- KNIT example-getting-started-05.txt -->
 
 === "OpenRouter"
 
@@ -456,12 +394,6 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
 
     === "Kotlin"
 
-        <!--- INCLUDE
-        import ai.koog.agents.core.agent.AIAgent
-        import ai.koog.prompt.executor.llms.all.simpleOpenRouterExecutor
-        import ai.koog.prompt.executor.clients.openrouter.OpenRouterModels
-        import kotlinx.coroutines.runBlocking
-        -->
         ```kotlin
         fun main() = runBlocking {
             // Get the OpenRouter API key from the OPENROUTER_API_KEY environment variable
@@ -479,16 +411,9 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
             println(result)
         }
         ```
-        <!--- KNIT example-getting-started-05.kt -->
 
     === "Java"
 
-        <!--- INCLUDE
-        /**
-        -->
-        <!--- SUFFIX
-        **/
-        -->
         ```java
         // Get the OpenRouter API key from the OPENROUTER_API_KEY environment variable
         String apiKey = System.getenv("OPENROUTER_API_KEY");
@@ -506,14 +431,12 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
         String result = agent.run("Hello! How can you help me?");
         System.out.println(result);
         ```
-        <!--- KNIT example-getting-started-java-05.java -->
 
     该示例可以生成以下输出：
 
     ```
     I can answer questions, help with writing, solve problems, organize tasks, and more—just let me know what you need!
     ```
-    <!--- KNIT example-getting-started-06.txt -->
 
 === "Bedrock"
 
@@ -521,12 +444,6 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
     
     === "Kotlin"
 
-        <!--- INCLUDE
-        import ai.koog.agents.core.agent.AIAgent
-        import ai.koog.prompt.executor.llms.all.simpleBedrockExecutorWithBearerToken
-        import ai.koog.prompt.executor.clients.bedrock.BedrockModels
-        import kotlinx.coroutines.runBlocking
-        -->
         ```kotlin
         fun main() = runBlocking {
             // Get the Bedrock API key from the BEDROCK_API_KEY environment variable
@@ -544,16 +461,9 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
             println(result)
         }
         ```
-        <!--- KNIT example-getting-started-06.kt -->
 
     === "Java"
 
-        <!--- INCLUDE
-        /**
-        -->
-        <!--- SUFFIX
-        **/
-        -->
         ```java
         // Get the Bedrock API key from the BEDROCK_API_KEY environment variable
         String apiKey = System.getenv("BEDROCK_API_KEY");
@@ -571,7 +481,6 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
         String result = agent.run("Hello! How can you help me?");
         System.out.println(result);
         ```
-        <!--- KNIT example-getting-started-java-06.java -->
 
     该示例可以生成以下输出：
 
@@ -589,7 +498,6 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
     
      What would you like help with today?
     ```
-    <!--- KNIT example-getting-started-07.txt -->
 
 === "Mistral"
 
@@ -597,12 +505,6 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
 
     === "Kotlin"
 
-        <!--- INCLUDE
-        import ai.koog.agents.core.agent.AIAgent
-        import ai.koog.prompt.executor.llms.all.simpleMistralAIExecutor
-        import ai.koog.prompt.executor.clients.mistralai.MistralAIModels
-        import kotlinx.coroutines.runBlocking
-        -->
         ```kotlin
         fun main() = runBlocking {
             // Get the Mistral AI API key from the MISTRAL_API_KEY environment variable
@@ -620,16 +522,9 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
             println(result)
         }
         ```
-        <!--- KNIT example-getting-started-07.kt -->
     
     === "Java"
 
-        <!--- INCLUDE
-        /**
-        -->
-        <!--- SUFFIX
-        **/
-        -->   
         ```java
         // Get the Mistral AI API key from the MISTRAL_API_KEY environment variable
         String apiKey = System.getenv("MISTRAL_API_KEY");
@@ -647,7 +542,6 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
         String result = agent.run("Hello! How can you help me?");
         System.out.println(result);
         ```
-        <!--- KNIT example-getting-started-java-07.java -->
 
     该示例可以生成以下输出：
 
@@ -665,7 +559,6 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
     
     What's on your mind? Is there something specific you'd like help with?
     ```
-    <!--- KNIT example-getting-started-08.txt -->
 
 === "Ollama"
 
@@ -673,12 +566,6 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
 
     === "Kotlin"
 
-        <!--- INCLUDE
-        import ai.koog.agents.core.agent.AIAgent
-        import ai.koog.prompt.executor.llms.all.simpleOllamaAIExecutor
-        import ai.koog.prompt.executor.ollama.client.OllamaModels
-        import kotlinx.coroutines.runBlocking
-        -->
         ```kotlin
         fun main() = runBlocking {
             // Create an agent
@@ -692,16 +579,9 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
             println(result)
         }
         ```
-        <!--- KNIT example-getting-started-08.kt -->
 
     === "Java"
 
-        <!--- INCLUDE
-        /**
-        -->
-        <!--- SUFFIX
-        **/
-        -->  
         ```java
         // Create an agent
         AIAgent<String, String> agent = AIAgent.builder()
@@ -713,14 +593,12 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
         String result = agent.run("Hello! How can you help me?");
         System.out.println(result);
         ```
-        <!--- KNIT example-getting-started-java-08.java -->
 
     该示例可以生成以下输出：
 
     ```
     I can assist with various tasks such as answering questions, providing information, and even helping with language-related tasks like proofreading or writing suggestions. What's on your mind today?
     ```
-    <!--- KNIT example-getting-started-09.txt -->
 
 ## 下一步 { #next-steps }
 

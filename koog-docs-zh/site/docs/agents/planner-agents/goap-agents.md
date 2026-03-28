@@ -43,15 +43,6 @@ GOAP 规划器围绕三个核心概念工作：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.core.agent.config.AIAgentConfig
-    import ai.koog.agents.planner.AIAgentPlannerStrategy
-    import ai.koog.agents.planner.goap.GoapAgentState
-    import ai.koog.prompt.dsl.prompt
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    -->
     ```kotlin
     // Define a state for content creation
     data class ContentState(
@@ -156,21 +147,9 @@ GOAP 规划器围绕三个核心概念工作：
         println("Final state: $result")
     }
     ```
-    <!--- KNIT example-goap-agents-01.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent;
-    import ai.koog.agents.planner.AIAgentPlannerStrategy;
-    import ai.koog.agents.planner.goap.GoapAgentState;
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels;
-    import ai.koog.prompt.executor.model.PromptExecutor;
-    class exampleGoapAgents01 {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```java
     // Define a state for content creation
     static class ContentState extends GoapAgentState<String, String> {
@@ -291,7 +270,6 @@ GOAP 规划器围绕三个核心概念工作：
         System.out.println("Final state: " + result);
     }
     ```
-    <!--- KNIT exampleGoapAgentsJava01.java -->
     
 
 ## Custom cost functions

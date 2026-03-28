@@ -21,39 +21,15 @@
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    typealias Input = String
-    typealias Output = Int
-    val returnValue = 42
-    val str = strategy<Input, Output>("my-strategy") {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     val myNode by node<Input, Output>("node_name") { input ->
         // Processing
         returnValue
     }
     ```
-    <!--- KNIT example-custom-nodes-01.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    class exampleCustomNodesJava01 {
-        static class Input {}
-        static class Output {}
-        static Output returnValue = new Output();
-        public static void main(String[] args) {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var myNode = AIAgentNode.builder("node_name")
         .withInput(Input.class)
@@ -64,39 +40,20 @@
         })
         .build();
     ```
-    <!--- KNIT exampleCustomNodesJava01.java -->
 
 上述代码定义了一个自定义节点 `myNode`，其包含预定义的 `Input` 和 `Output` 类型，并可选地接受字符串名称参数（`node_name`）。在实际示例中，这里有一个简单的节点，它接收字符串输入并返回输入的长度：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    val str = strategy<String, Int>("my-strategy") {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     val myNode by node<String, Int>("node_name") { input ->
         // Processing
         input.length
     }
     ```
-    <!--- KNIT example-custom-nodes-02.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    class exampleCustomNodesJava02 {
-        public static void main(String[] args) {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var myNode = AIAgentNode.builder("node_name")
         .withInput(String.class)
@@ -107,24 +64,11 @@
         })
         .build();
     ```
-    <!--- KNIT exampleCustomNodesJava02.java -->
 
 在 Kotlin 中创建自定义节点的另一种方式是在 `AIAgentSubgraphBuilderBase` 上定义一个扩展函数，该函数调用 `node` 函数。在 Java 中，你可以通过将节点构建器调用提取到辅助方法中来实现相同的可重用性：
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.AIAgentNodeDelegate
-    import ai.koog.agents.core.dsl.builder.AIAgentSubgraphBuilderBase
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    typealias Input = String
-    typealias Output = String
-    val strategy = strategy<String, String>("strategy_name") {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     fun AIAgentSubgraphBuilderBase<*, *>.myCustomNode(
         name: String? = null
@@ -135,19 +79,9 @@
 
     val myCustomNode by myCustomNode("node_name")
     ```
-    <!--- KNIT example-custom-nodes-03.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    class exampleCustomNodesJava03 {
-        public static void main(String[] args) {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var myCustomNode = AIAgentNode.builder("node_name")
         .withInput(String.class)
@@ -158,7 +92,6 @@
         })
         .build();
     ```
-    <!--- KNIT exampleCustomNodesJava03.java -->
 
 这会创建一个直通节点，它执行一些自定义逻辑，但将输入原样返回作为输出，不做任何修改。
 
@@ -168,18 +101,6 @@
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.AIAgentNodeDelegate
-    import ai.koog.agents.core.dsl.builder.AIAgentSubgraphBuilderBase
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    typealias Input = String
-    typealias Output = String
-    val strategy = strategy<String, String>("strategy_name") {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
         fun AIAgentSubgraphBuilderBase<*, *>.myNodeWithArguments(
         name: String? = null,
@@ -192,19 +113,9 @@
 
     val myCustomNode by myNodeWithArguments("node_name", arg1 = "value1", arg2 = 42)
     ```
-    <!--- KNIT example-custom-nodes-04.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    class exampleCustomNodesJava04 {
-        public static void main(String[] args) {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     String arg1 = "value1";
     int arg2 = 42;
@@ -218,8 +129,6 @@
         })
         .build();
     ```
-    <!--- KNIT exampleCustomNodesJava04.java -->
-
 
 ### 参数化节点 { #parameterized-nodes }
 
@@ -227,12 +136,6 @@
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.AIAgentNodeDelegate
-    import ai.koog.agents.core.dsl.builder.AIAgentSubgraphBuilderBase
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    -->
     ```kotlin
     inline fun <reified T> AIAgentSubgraphBuilderBase<*, *>.myParameterizedNode(
         name: String? = null,
@@ -246,19 +149,9 @@
         val myCustomNode by myParameterizedNode<String>("node_name")
     }
     ```
-    <!--- KNIT example-custom-nodes-05.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    class exampleCustomNodesJava05 {
-        public static void main(String[] args) {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     // In Java, specify the types explicitly when building the node
     var myCustomNode = AIAgentNode.builder("node_name")
@@ -271,7 +164,6 @@
         })
         .build();
     ```
-    <!--- KNIT exampleCustomNodesJava05.java -->
 
 ### 有状态节点 { #stateful-nodes }
 
@@ -279,13 +171,6 @@
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.AIAgentNodeDelegate
-    import ai.koog.agents.core.dsl.builder.AIAgentSubgraphBuilderBase
-    import ai.koog.agents.core.dsl.builder.node
-    typealias Input = Unit
-    typealias Output = Unit
-    -->
     ```kotlin
     fun AIAgentSubgraphBuilderBase<*, *>.myStatefulNode(
         name: String? = null
@@ -299,20 +184,9 @@
         }
     }
     ```
-    <!--- KNIT example-custom-nodes-06.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    import java.util.concurrent.atomic.AtomicInteger;
-    class exampleCustomNodesJava06 {
-        public static void main(String[] args) {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     // In Java, use AtomicInteger (or similar) since the lambda captures must be effectively final
     AtomicInteger counter = new AtomicInteger(0);
@@ -327,7 +201,6 @@
         })
         .build();
     ```
-    <!--- KNIT exampleCustomNodesJava06.java -->
 
 ## 节点输入与输出类型 { #node-input-and-output-types }
 
@@ -335,33 +208,15 @@
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    val strategy = strategy<String, String>("strategy_name") {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     val stringToIntNode by node<String, Int>("node_name") { input: String ->
         // Processing
         input.toInt() // Convert string to integer
     }
     ```
-    <!--- KNIT example-custom-nodes-07.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    class exampleCustomNodesJava07 {
-        public static void main(String[] args) {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var stringToIntNode = AIAgentNode.builder("node_name")
         .withInput(String.class)
@@ -372,7 +227,6 @@
         })
         .build();
     ```
-    <!--- KNIT exampleCustomNodesJava07.java -->
 
 !!! note
     The input and output types determine how the node can be connected to other nodes in the workflow. Nodes can only be connected if the output type of the source node is compatible with the input type of the target node.
@@ -399,33 +253,15 @@
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    val strategy = strategy<String, String>("strategy_name") {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     val loggingNode by node<String, String>("node_name") { input ->
         println("Processing input: $input")
         input // Return the input as the output
     }
     ```
-    <!--- KNIT example-custom-nodes-08.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    class exampleCustomNodesJava08 {
-        public static void main(String[] args) {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var loggingNode = AIAgentNode.builder("node_name")
         .withInput(String.class)
@@ -436,7 +272,6 @@
         })
         .build();
     ```
-    <!--- KNIT exampleCustomNodesJava08.java -->
 
 ### 转换节点 { #transformation-nodes }
 
@@ -444,33 +279,15 @@
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    val strategy = strategy<String, String>("strategy_name") {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     val upperCaseNode by node<String, String>("node_name") { input ->
         println("Processing input: $input")
         input.uppercase() // Transform the input to uppercase
     }
     ```
-    <!--- KNIT example-custom-nodes-09.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    class exampleCustomNodesJava09 {
-        public static void main(String[] args) {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var upperCaseNode = AIAgentNode.builder("node_name")
         .withInput(String.class)
@@ -481,7 +298,6 @@
         })
         .build();
     ```
-    <!--- KNIT exampleCustomNodesJava09.java -->
 
 ### LLM 交互节点 { #llm-interaction-nodes }
 
@@ -489,14 +305,6 @@
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    val strategy = strategy<String, String>("strategy_name") {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     val summarizeTextNode by node<String, String>("node_name") { input ->
         llm.writeSession {
@@ -509,20 +317,9 @@
         }
     }
     ```
-    <!--- KNIT example-custom-nodes-10.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    import ai.koog.prompt.message.Message;
-    class exampleCustomNodesJava10 {
-        public static void main(String[] args) {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     // In Java, LLM interaction is handled using pre-built factory nodes.
     // AIAgentNode.llmRequest() creates a node that sends the input string as a user
@@ -537,7 +334,6 @@
         .withAction((response, ctx) -> response.getContent())
         .build();
     ```
-    <!--- KNIT exampleCustomNodesJava10.java -->
 
 !!! note
     上面的Kotlin示例展示了对LLM会话的细粒度控制（自定义提示词构建、显式调用`requestLLMWithoutTools`）。而Java API提供了更高级的工厂方法，例如`AIAgentNode.llmRequest()`，它能自动处理提示词构建——输入字符串直接作为用户消息。对于大多数使用场景这已经足够；若需高级提示词定制，可通过组合多个节点或使用自定义子图来实现。
@@ -546,23 +342,6 @@
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.prompt.message.Message
-    import ai.koog.prompt.message.ResponseMetaInfo
-    import kotlin.time.Clock
-    import kotlinx.serialization.Serializable
-    import kotlinx.serialization.json.Json
-    import java.util.*
-    val toolName = "my-custom-tool"
-    @Serializable
-    data class ToolArgs(val arg1: String, val arg2: Int)
-    val strategy = strategy<String, String>("strategy_name") {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     val nodeExecuteCustomTool by node<String, String>("node_name") { input ->
         val toolCall = Message.Tool.Call(
@@ -576,19 +355,9 @@
         result.content
     }
     ```
-    <!--- KNIT example-custom-nodes-11.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentSubgraph;
-    class exampleCustomNodesJava11 {
-        public static void main(String[] args) {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     // In Java, direct tool execution (as shown in the Kotlin example) is not available
     // through the Java builder API. Instead, use a subgraph that delegates tool calls
@@ -599,7 +368,6 @@
         .withTask(input -> "Use my_tool with input: " + input)
         .build();
     ```
-    <!--- KNIT exampleCustomNodesJava11.java -->
 
 !!! note
     Kotlin示例展示了通过手动构建`Message.Tool.Call`并调用`environment.executeTool()`来实现底层工具执行。而Java API则提倡采用更高级的方法，即使用带有`withTask()`的子图，由LLM自动编排工具调用。若要限制可用工具的范围，可在`.withInput()`前链入`.limitedTools(List.of(myTool))`。

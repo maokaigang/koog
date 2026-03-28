@@ -28,14 +28,6 @@ LLM 客户端专为直接与 LLM 提供方交互而设计。
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.prompt.dsl.prompt
-    import ai.koog.prompt.executor.clients.openai.OpenAILLMClient
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.params.LLMParams
-    import kotlinx.coroutines.runBlocking
-    -->
-
     ```kotlin
     fun main() = runBlocking {
         // Create an OpenAI client
@@ -63,16 +55,9 @@ LLM 客户端专为直接与 LLM 提供方交互而设计。
         println(response)
     }
     ```
-    <!--- KNIT example-llm-clients-01.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     // Create an OpenAI client
     String apiKey = System.getenv("OPENAI_API_KEY");
@@ -100,7 +85,6 @@ LLM 客户端专为直接与 LLM 提供方交互而设计。
 
     client.close();
     ```
-    <!--- KNIT example-llm-clients-java-01.java -->
 
 ## 流式响应 { #streaming-responses }
 
@@ -119,17 +103,6 @@ LLM 客户端专为直接与 LLM 提供方交互而设计。
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.prompt.dsl.prompt
-    import ai.koog.prompt.executor.clients.openai.OpenAILLMClient
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.streaming.StreamFrame
-    import kotlinx.coroutines.runBlocking
-    fun main() = runBlocking {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     // Set up the OpenAI client with your API key
     val token = System.getenv("OPENAI_API_KEY")
@@ -150,16 +123,9 @@ LLM 客户端专为直接与 LLM 提供方交互而设计。
         }
     }
     ```
-    <!--- KNIT example-llm-clients-02.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     // Set up the OpenAI client with your API key
     String token = System.getenv("OPENAI_API_KEY");
@@ -205,7 +171,6 @@ LLM 客户端专为直接与 LLM 提供方交互而设计。
         public void onComplete() { }
     });
     ```
-    <!--- KNIT example-llm-clients-java-02.java -->
 
 ## 多项选择 { #multiple-choices }
 
@@ -216,13 +181,6 @@ LLM 客户端专为直接与 LLM 提供方交互而设计。
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.prompt.dsl.prompt
-    import ai.koog.prompt.executor.clients.openai.OpenAILLMClient
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.params.LLMParams
-    import kotlinx.coroutines.runBlocking
-    -->
     ```kotlin
     fun main() = runBlocking {
         val apiKey = System.getenv("OPENAI_API_KEY")
@@ -242,16 +200,9 @@ LLM 客户端专为直接与 LLM 提供方交互而设计。
         }
     }
     ```
-    <!--- KNIT example-llm-clients-03.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     String apiKey = System.getenv("OPENAI_API_KEY");
     OpenAILLMClient client = new OpenAILLMClient(apiKey);
@@ -289,7 +240,6 @@ LLM 客户端专为直接与 LLM 提供方交互而设计。
         System.out.println("Line #" + (i + 1) + ": " + text.toString().trim());
     }
     ```
-    <!--- KNIT example-llm-clients-java-03.java -->
 
 ## 列出可用模型 { #listing-available-models }
 
@@ -300,13 +250,6 @@ LLM 客户端专为直接与 LLM 提供方交互而设计。
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.prompt.dsl.prompt
-    import ai.koog.prompt.executor.clients.openai.OpenAILLMClient
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.llm.LLModel
-    import kotlinx.coroutines.runBlocking
-    -->
     ```kotlin
     fun main() = runBlocking {
         val apiKey = System.getenv("OPENAI_API_KEY")
@@ -316,16 +259,9 @@ LLM 客户端专为直接与 LLM 提供方交互而设计。
         models.forEach { println(it.id) }
     }
     ```
-    <!--- KNIT example-llm-clients-04.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     String apiKey = System.getenv("OPENAI_API_KEY");
     OpenAILLMClient client = new OpenAILLMClient(apiKey);
@@ -335,7 +271,6 @@ LLM 客户端专为直接与 LLM 提供方交互而设计。
         System.out.println(model.getId());
     }
     ```
-    <!--- KNIT example-llm-clients-java-04.java -->
 
 ## Embeddings
 
@@ -344,12 +279,6 @@ LLM 客户端专为直接与 LLM 提供方交互而设计。
 
 您可以使用 `embed()` 方法将文本转换为嵌入向量。选择一个嵌入模型，并将您的文本传递给此方法：
 
-<!--- INCLUDE
-import ai.koog.prompt.dsl.prompt
-import ai.koog.prompt.executor.clients.openai.OpenAILLMClient
-import ai.koog.prompt.executor.clients.openai.OpenAIModels
-import kotlinx.coroutines.runBlocking
--->
 ```kotlin
 fun main() = runBlocking {
     val apiKey = System.getenv("OPENAI_API_KEY")
@@ -363,7 +292,6 @@ fun main() = runBlocking {
     println("Embedding size: ${embedding.size}")
 }
 ```
-<!--- KNIT example-llm-clients-05.kt -->
 
 ## Moderation
 
@@ -374,12 +302,6 @@ fun main() = runBlocking {
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.prompt.dsl.prompt
-    import ai.koog.prompt.executor.clients.openai.OpenAILLMClient
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import kotlinx.coroutines.runBlocking
-    -->
     ```kotlin
     fun main() = runBlocking {
         val apiKey = System.getenv("OPENAI_API_KEY")
@@ -395,16 +317,9 @@ fun main() = runBlocking {
         println(result)
     }
     ```
-    <!--- KNIT example-llm-clients-06.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```java
     String apiKey = System.getenv("OPENAI_API_KEY");
     OpenAILLMClient client = new OpenAILLMClient(apiKey);
@@ -416,7 +331,6 @@ fun main() = runBlocking {
     ModerationResult result = client.moderate(prompt, OpenAIModels.Moderation.Omni);
     System.out.println(result);
     ```
-    <!--- KNIT example-llm-clients-java-05.java -->
 
 ## 与提示执行器的集成 { #integration-with-prompt-executors }
 

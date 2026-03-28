@@ -24,13 +24,6 @@ Koog 使用一个轻量级、与库无关的序列化层，将工具参数和结
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.serialization.JSONElement
-    import ai.koog.serialization.JSONSerializer
-    import ai.koog.serialization.kotlinx.KotlinxSerializer
-    import ai.koog.serialization.typeToken
-    import kotlinx.serialization.Serializable
-    -->
     ```kotlin
     @Serializable
     data class User(val name: String, val age: Int)
@@ -54,22 +47,9 @@ Koog 使用一个轻量级、与库无关的序列化层，将工具参数和结
     val jsonElement: JSONElement = serializer.decodeJSONElementFromString(jsonString)
     val backToString: String = serializer.encodeJSONElementToString(jsonElement)
     ```
-    <!--- KNIT example-serialization-01.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.serialization.JSONElement;
-    import ai.koog.serialization.TypeToken;
-    import ai.koog.serialization.jackson.JacksonSerializer;
-    import com.fasterxml.jackson.annotation.JsonProperty;
-    public class exampleSerializationJava01 {
-        public static void main(String[] args) {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     // Jackson-serializable class
     record User(
@@ -96,8 +76,6 @@ Koog 使用一个轻量级、与库无关的序列化层，将工具参数和结
     JSONElement jsonElement = serializer.decodeJSONElementFromString(jsonString);
     String backToString = serializer.encodeJSONElementToString(jsonElement);
     ```
-    <!--- KNIT exampleSerializationJava01.java -->
-
 
 ## 类型标记 { #type-tokens }
 
@@ -105,9 +83,6 @@ Koog 使用一个轻量级、与库无关的序列化层，将工具参数和结
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.serialization.typeToken
-    -->
     ```kotlin
     data class MyClass(val value: String)
 
@@ -120,21 +95,9 @@ Koog 使用一个轻量级、与库无关的序列化层，将工具参数和结
     // Generic type — preserves type arguments at runtime
     val tokenGeneric = typeToken<List<String>>()
     ```
-    <!--- KNIT example-serialization-02.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.serialization.TypeCapture;
-    import ai.koog.serialization.TypeToken;
-    import java.util.List;
-    public class exampleSerializationJava02 {
-        public static void main(String[] args) {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     record MyClass(
         String value
@@ -146,7 +109,6 @@ Koog 使用一个轻量级、与库无关的序列化层，将工具参数和结
     // Generic type — use TypeCapture to preserve type arguments
     TypeToken tokenGeneric = TypeToken.of(new TypeCapture<List<String>>() {});
     ```
-    <!--- KNIT exampleSerializationJava02.java -->
 
 ## `JSONElement` — 库无关的 JSON 树 { #jsonelement-library-agnostic-json-tree }
 
@@ -162,7 +124,6 @@ JSONElement
     ├── JSONLiteral  – string, number, or boolean
     └── JSONNull     – JSON null singleton
 ```
-<!--- KNIT example-serialization-01.txt -->
 
 ### 库类型的转换 { #conversion-to-and-from-library-types }
 
@@ -171,14 +132,6 @@ JSONElement
 ### 构建与读取元素 { #building-and-reading-elements }
 
 === "Kotlin"
-
-    <!--- INCLUDE
-    import ai.koog.serialization.JSONArray
-    import ai.koog.serialization.JSONLiteral
-    import ai.koog.serialization.JSONNull
-    import ai.koog.serialization.JSONObject
-    import ai.koog.serialization.JSONPrimitive
-    -->
 
     ```kotlin
     val obj = JSONObject(
@@ -195,23 +148,9 @@ JSONElement
     val nameContent: String = (obj.entries["name"] as JSONPrimitive).content  // "Alice"
     val age: Int? = (obj.entries["age"] as JSONPrimitive).intOrNull // 30
     ```
-    <!--- KNIT example-serialization-03.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.serialization.JSONArray;
-    import ai.koog.serialization.JSONObject;
-    import ai.koog.serialization.JSONPrimitive;
-    import java.util.List;
-    import java.util.Map;
-    public class exampleSerializationJava03 {
-        public static void main(String[] args) {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     JSONObject obj = new JSONObject(
         Map.of(
@@ -227,7 +166,6 @@ JSONElement
     String nameContent = ((JSONPrimitive) obj.getEntries().get("name")).getContent();  // "Alice"
     Integer age = ((JSONPrimitive) obj.getEntries().get("age")).getIntOrNull(); // 30
     ```
-    <!--- KNIT exampleSerializationJava03.java -->
 
 ## 支持的序列化器 { #supported-serializers }
 
@@ -237,11 +175,6 @@ JSONElement
 - **支持库**: kotlinx-serialization
 
 === "Kotlin"
-
-    <!--- INCLUDE
-    import ai.koog.serialization.kotlinx.KotlinxSerializer
-    import kotlinx.serialization.json.Json
-    -->
 
     ```kotlin
     // Default instance — uses Json.Default
@@ -256,20 +189,10 @@ JSONElement
     )
     ```
 
-    <!--- KNIT example-serialization-04.kt -->
-
 您也可以在 Koog 的 `JSONElement` 与 kotlinx-serialization 的 `JsonElement` 之间进行转换。
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.serialization.JSONElement
-    import ai.koog.serialization.JSONObject
-    import ai.koog.serialization.JSONPrimitive
-    import ai.koog.serialization.kotlinx.toKoogJSONElement
-    import ai.koog.serialization.kotlinx.toKotlinxJsonElement
-    import kotlinx.serialization.json.JsonElement
-    -->
     ```kotlin
     val koogJson: JSONElement = JSONObject(
         mapOf(
@@ -283,8 +206,6 @@ JSONElement
     // Convert to Koog dynamic JSON instance
     val koogJsonConverted: JSONElement = kotlinxJson.toKoogJSONElement()
     ```
-    <!--- KNIT example-serialization-05.kt -->
-
 
 ### `JacksonSerializer` (仅限JVM) { #jacksonserializer-jvm-only }
 
@@ -298,17 +219,10 @@ dependencies {
     implementation("ai.koog:serialization-jackson:<version>")
 }
 ```
-<!--- KNIT example-serialization-02.txt -->
 
 然后创建序列化器：
 
 === "Kotlin"
-
-    <!--- INCLUDE
-    import ai.koog.serialization.jackson.JacksonSerializer
-    import com.fasterxml.jackson.databind.DeserializationFeature
-    import com.fasterxml.jackson.databind.ObjectMapper
-    -->
 
     ```kotlin
     // Default instance — uses a fresh ObjectMapper with JSONElementModule pre-registered
@@ -321,21 +235,9 @@ dependencies {
         }
     )
     ```
-    <!--- KNIT example-serialization-06.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.serialization.jackson.JacksonSerializer;
-    import com.fasterxml.jackson.databind.DeserializationFeature;
-    import com.fasterxml.jackson.databind.ObjectMapper;
-    public class exampleSerializationJava04 {
-        public static void main(String[] args) {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     // Default instance — uses a fresh ObjectMapper with JSONElementModule pre-registered
     var defaultSerializer = new JacksonSerializer();
@@ -345,7 +247,6 @@ dependencies {
     objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     var customSerializer = new JacksonSerializer(objectMapper);
     ```
-    <!--- KNIT exampleSerializationJava04.java -->
 
 !!! note
     `JacksonSerializer` 会自动在它用于正确序列化/反序列化 `JSONElement` 类型的 `ObjectMapper` 上注册 `JSONElementModule`。
@@ -354,14 +255,6 @@ dependencies {
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.serialization.JSONElement
-    import ai.koog.serialization.JSONObject
-    import ai.koog.serialization.JSONPrimitive
-    import ai.koog.serialization.jackson.toJacksonJsonNode
-    import ai.koog.serialization.jackson.toKoogJSONElement
-    import com.fasterxml.jackson.databind.JsonNode
-    -->
     ```kotlin
     val koogJson: JSONElement = JSONObject(
         mapOf(
@@ -375,24 +268,9 @@ dependencies {
     // Convert to Koog dynamic JSON instance
     val koogJsonConverted: JSONElement = jacksonJson.toKoogJSONElement()
     ```
-    <!--- KNIT example-serialization-07.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.serialization.JSONElement;
-    import ai.koog.serialization.JSONObject;
-    import ai.koog.serialization.JSONPrimitive;
-    import ai.koog.serialization.jackson.JacksonJSONElementMappers;
-    import com.fasterxml.jackson.databind.JsonNode;
-    import java.util.Map;
-    public class exampleSerializationJava05 {
-        public static void main(String[] args) {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     JSONElement koogJson = new JSONObject(
         Map.of(
@@ -406,8 +284,6 @@ dependencies {
     // Convert to Koog dynamic JSON instance
     JSONElement koogJsonConverted = JacksonJSONElementMappers.toKoogJSONElement(jacksonJson);
     ```
-    <!--- KNIT exampleSerializationJava05.java -->
-
 
 ## 在 `AIAgentConfig` 中配置序列化器 { #configuring-the-serializer-in-aiagentconfig }
 
@@ -415,13 +291,6 @@ dependencies {
 
     在构造 `AIAgentConfig` 时传入 `serializer` 参数。
     如果省略，则使用 `KotlinxSerializer`。
-
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.config.AIAgentConfig
-    import ai.koog.prompt.dsl.prompt
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.serialization.jackson.JacksonSerializer
-    -->
 
     ```kotlin
     val agentConfig = AIAgentConfig(
@@ -434,25 +303,11 @@ dependencies {
     )
     ```
 
-    <!--- KNIT example-serialization-08.kt -->
-
 === "Java"
 
     在构造 `AIAgentConfig` 时传入 `serializer` 参数。
     如果省略，则使用 `JacksonSerializer`。
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.config.AIAgentConfig;
-    import ai.koog.prompt.dsl.Prompt;
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels;
-    import ai.koog.serialization.jackson.JacksonSerializer;
-    public class exampleSerializationJava06 {
-        public static void main(String[] args) {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var agentConfig = AIAgentConfig.builder()
         .model(OpenAIModels.Chat.GPT4o)
@@ -465,7 +320,6 @@ dependencies {
         .serializer(new JacksonSerializer())
         .build();
     ```
-    <!--- KNIT exampleSerializationJava06.java -->
 
 ## 工具如何与序列化器交互 { #how-tools-interact-with-the-serializer }
 

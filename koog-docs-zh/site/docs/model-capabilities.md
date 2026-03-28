@@ -87,13 +87,6 @@ LLM 能力代表了大型语言模型可以支持的特定功能或特性。在 
 
 以下代码展示了具有核心功能的基本LLM配置：
 
-<!--- INCLUDE
-import ai.koog.prompt.llm.LLMCapability
-import ai.koog.prompt.llm.LLMProvider
-import ai.koog.prompt.llm.LLModel
-
--->
-
 ```kotlin
 val basicModel = LLModel(
     provider = LLMProvider.OpenAI,
@@ -107,16 +100,7 @@ val basicModel = LLModel(
 )
 ```
 
-<!--- KNIT example-model-capabilities-01.kt -->
-
 以下模型配置是具有视觉功能的多模态LLM：
-
-<!--- INCLUDE
-import ai.koog.prompt.llm.LLMCapability
-import ai.koog.prompt.llm.LLMProvider
-import ai.koog.prompt.llm.LLModel
-
--->
 
 ```kotlin
 val visionModel = LLModel(
@@ -132,16 +116,7 @@ val visionModel = LLModel(
 )
 ```
 
-<!--- KNIT example-model-capabilities-02.kt -->
-
 具有音频处理功能的LLM：
-
-<!--- INCLUDE
-import ai.koog.prompt.llm.LLMCapability
-import ai.koog.prompt.llm.LLMProvider
-import ai.koog.prompt.llm.LLModel
-
--->
 
 ```kotlin
 val audioModel = LLModel(
@@ -156,34 +131,14 @@ val audioModel = LLModel(
 )
 ```
 
-<!--- KNIT example-model-capabilities-03.kt -->
-
-
 除了将模型创建为`LLModel`实例并必须指定所有相关参数外，Koog还包含一组预定义模型及其支持功能的配置。
 要使用预定义的Ollama模型，请按如下方式指定：
-
-<!--- INCLUDE
-import ai.koog.prompt.executor.ollama.client.OllamaModels
-
--->
 
 ```kotlin
 val metaModel = OllamaModels.Meta.LLAMA_3_2
 ```
 
-<!--- KNIT example-model-capabilities-04.kt -->
-
-
 要检查模型是否支持特定功能，请使用`contains`方法检查`capabilities`列表中是否存在该功能：
-
-<!--- INCLUDE
-import ai.koog.prompt.llm.LLMCapability
-import ai.koog.prompt.executor.ollama.client.OllamaModels
-
-val basicModel = OllamaModels.Meta.LLAMA_3_2
-val visionModel = OllamaModels.Meta.LLAMA_3_2
-
--->
 
 ```kotlin
 // Check if models support specific capabilities
@@ -194,8 +149,6 @@ val supportsVideo = visionModel.supports(LLMCapability.Vision.Video) // false
 val jsonCapability = basicModel.capabilities?.filterIsInstance<LLMCapability.Schema.JSON>()?.firstOrNull()
 val hasFullJsonSupport = jsonCapability is LLMCapability.Schema.JSON.Standard // true
 ```
-
-<!--- KNIT example-model-capabilities-05.kt -->
 
 ### 各模型的LLM功能 { #llm-capabilities-by-model }
 

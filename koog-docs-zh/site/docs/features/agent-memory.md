@@ -23,12 +23,6 @@ AgentMemory 功能建立在分层结构之上。该结构的元素在以下部�
 ***事实*** 是存储在记忆中的独立信息片段。事实代表实际存储的信息。事实有两种类型：
 
 - **SingleFact**：与概念关联的单个值。例如，IDE 用户当前偏好的主题：
-<!--- INCLUDE
-import ai.koog.agents.memory.model.Concept
-import ai.koog.agents.memory.model.FactType
-import ai.koog.agents.memory.model.SingleFact
-import kotlin.time.Clock
--->
 ```kotlin
 // Storing favorite IDE theme (single value)
 val themeFact = SingleFact(
@@ -40,14 +34,7 @@ val themeFact = SingleFact(
     timestamp = Clock.System.now().toEpochMilliseconds(),
 )
 ```
-<!--- KNIT example-agent-memory-01.kt -->
 - **MultipleFacts**：与概念关联的多个值。例如，用户掌握的所有语言：
-<!--- INCLUDE
-import ai.koog.agents.memory.model.Concept
-import ai.koog.agents.memory.model.FactType
-import ai.koog.agents.memory.model.MultipleFacts
-import kotlin.time.Clock
--->
 ```kotlin
 // Storing programming languages (multiple values)
 val languagesFact = MultipleFacts(
@@ -60,7 +47,6 @@ val languagesFact = MultipleFacts(
     timestamp = Clock.System.now().toEpochMilliseconds(),
 )
 ```
-<!--- KNIT example-agent-memory-02.kt -->
 
 #### 概念 { #concepts }
 
@@ -81,10 +67,6 @@ val languagesFact = MultipleFacts(
 
 有一个预定义的 `MemorySubject.Everything`，您可以用作所有事实的默认主题。此外，您可以通过扩展 `MemorySubject` 抽象类来定义自己的自定义记忆主题：
 
-<!--- INCLUDE
-import ai.koog.agents.memory.model.MemorySubject
-import kotlinx.serialization.Serializable
--->
 ```kotlin
 object MemorySubjects {
     /**
@@ -112,7 +94,6 @@ object MemorySubjects {
     }
 }
 ```
-<!--- KNIT example-agent-memory-03.kt -->
 
 #### 范围 { #scopes }
 
@@ -131,12 +112,6 @@ object MemorySubjects {
 
 `AgentMemory.Config` 类是 AgentMemory 功能的配置类。
 
-<!--- INCLUDE
-import ai.koog.agents.core.feature.config.FeatureConfig
-import ai.koog.agents.memory.config.MemoryScopesProfile
-import ai.koog.agents.memory.providers.AgentMemoryProvider
-import ai.koog.agents.memory.providers.NoMemory
--->
 ```kotlin
 class Config(
     var memoryProvider: AgentMemoryProvider = NoMemory,
@@ -148,19 +123,11 @@ class Config(
     var productName: String
 ) : FeatureConfig()
 ```
-<!--- KNIT example-agent-memory-04.kt -->
 
 ### 安装 { #installation }
 
 要在智能体中安装 AgentMemory 功能，请遵循以下代码示例提供的模式。
 
-<!--- INCLUDE
-import ai.koog.agents.core.agent.AIAgent
-import ai.koog.agents.memory.feature.AgentMemory
-import ai.koog.agents.example.exampleAgentMemory06.memoryProvider
-import ai.koog.prompt.executor.llms.all.simpleOllamaAIExecutor
-import ai.koog.prompt.executor.ollama.client.OllamaModels
--->
 ```kotlin
 val agent = AIAgent(
     promptExecutor = simpleOllamaAIExecutor(),
@@ -175,7 +142,6 @@ val agent = AIAgent(
     }
 }
 ```
-<!--- KNIT example-agent-memory-05.kt -->
 
 ## 示例与快速入门 { #examples-and-quickstarts }
 
@@ -184,13 +150,6 @@ val agent = AIAgent(
 以下代码片段演示了记忆存储的基本设置，以及如何将事实保存到记忆中和从记忆中加载事实。
 
 1) 设置记忆存储
-<!--- INCLUDE
-import ai.koog.agents.memory.providers.LocalFileMemoryProvider
-import ai.koog.agents.memory.providers.LocalMemoryConfig
-import ai.koog.agents.memory.storage.SimpleStorage
-import ai.koog.rag.base.files.JVMFileSystemProvider
-import kotlin.io.path.Path
--->
 ```kotlin
 // Create a memory provider
 val memoryProvider = LocalFileMemoryProvider(
@@ -200,23 +159,8 @@ val memoryProvider = LocalFileMemoryProvider(
     root = Path("path/to/memory/root")
 )
 ```
-<!--- KNIT example-agent-memory-06.kt -->
 
 2) 将事实存储到记忆中
-<!--- INCLUDE
-import ai.koog.agents.example.exampleAgentMemory03.MemorySubjects
-import ai.koog.agents.example.exampleAgentMemory06.memoryProvider
-import ai.koog.agents.memory.model.Concept
-import ai.koog.agents.memory.model.FactType
-import ai.koog.agents.memory.model.MemoryScope
-import ai.koog.agents.memory.model.SingleFact
-import kotlin.time.Clock
-
-suspend fun main() {
--->
-<!--- SUFFIX
-}
--->
 ```kotlin
 memoryProvider.save(
     fact = SingleFact(
@@ -228,21 +172,8 @@ memoryProvider.save(
     scope = MemoryScope.Product("my-app"),
 )
 ```
-<!--- KNIT example-agent-memory-07.kt -->
 
 3) 检索事实
-<!--- INCLUDE
-import ai.koog.agents.example.exampleAgentMemory03.MemorySubjects
-import ai.koog.agents.example.exampleAgentMemory06.memoryProvider
-import ai.koog.agents.memory.model.Concept
-import ai.koog.agents.memory.model.FactType
-import ai.koog.agents.memory.model.MemoryScope
-
-suspend fun main() {
--->
-<!--- SUFFIX
-}
--->
 ```kotlin
 // Get the stored information
 val greeting = memoryProvider.load(
@@ -256,7 +187,6 @@ if (greeting.size > 1) {
     println("Information not found. First time here?")
 }
 ```
-<!--- KNIT example-agent-memory-08.kt -->
 
 #### 使用记忆节点 { #using-memory-nodes }
 
@@ -269,17 +199,6 @@ AgentMemory 功能提供了以下预定义记忆节点，可用于智能体策�
 
 以下是一个如何在智能体策略中实现节点的示例：
 
-<!--- INCLUDE
-import ai.koog.agents.core.dsl.builder.forwardTo
-import ai.koog.agents.core.dsl.builder.strategy
-import ai.koog.agents.core.dsl.builder.node
-import ai.koog.agents.core.dsl.builder.subgraph
-import ai.koog.agents.example.exampleAgentMemory03.MemorySubjects
-import ai.koog.agents.memory.feature.nodes.nodeSaveToMemoryAutoDetectFacts
-import ai.koog.agents.memory.feature.withMemory
-import ai.koog.agents.memory.model.Concept
-import ai.koog.agents.memory.model.FactType
--->
 ```kotlin
 val strategy = strategy("example-agent") {
     // Node to automatically detect and save facts
@@ -304,18 +223,11 @@ val strategy = strategy("example-agent") {
     edge(loadPreferences forwardTo nodeFinish)
 }
 ```
-<!--- KNIT example-agent-memory-09.kt -->
-
 
 #### 确保记忆安全 { #making-memory-secure }
 
 您可以使用加密技术来确保敏感信息在记忆提供者使用的加密存储中得到保护。
 
-<!--- INCLUDE
-import ai.koog.agents.memory.storage.EncryptedStorage
-import ai.koog.rag.base.files.JVMFileSystemProvider
-import ai.koog.agents.memory.storage.Aes256GCMEncryptor
--->
 ```kotlin
 // Simple encrypted storage setup
 val secureStorage = EncryptedStorage(
@@ -323,26 +235,11 @@ val secureStorage = EncryptedStorage(
     encryption = Aes256GCMEncryptor("your-secret-key")
 )
 ```
-<!--- KNIT example-agent-memory-10.kt -->
 
 #### 示例：记住用户偏好 { #example-remembering-user-preferences }
 
 以下是一个在实际场景中如何使用 AgentMemory 来记住用户偏好的示例，具体是记住用户最喜欢的编程语言。
 
-<!--- INCLUDE
-import ai.koog.agents.example.exampleAgentMemory03.MemorySubjects
-import ai.koog.agents.example.exampleAgentMemory06.memoryProvider
-import ai.koog.agents.memory.model.Concept
-import ai.koog.agents.memory.model.FactType
-import ai.koog.agents.memory.model.MemoryScope
-import ai.koog.agents.memory.model.SingleFact
-import kotlin.time.Clock
-
-suspend fun main() {
--->
-<!--- SUFFIX
-}
--->
 ```kotlin
 memoryProvider.save(
     fact = SingleFact(
@@ -354,7 +251,6 @@ memoryProvider.save(
     scope = MemoryScope.Product("my-app")
 )
 ```
-<!--- KNIT example-agent-memory-11.kt -->
 
 ### 高级用法 { #advanced-usage }
 
@@ -362,23 +258,6 @@ memoryProvider.save(
 
 您也可以在任意节点中使用来自 `withMemory` 子句的记忆。现成的 `loadFactsToAgent` 和 `saveFactsFromHistory` 高级抽象将事实保存到历史记录、从中加载事实，并更新 LLM 聊天：
 
-<!--- INCLUDE
-import ai.koog.agents.core.dsl.builder.strategy
-import ai.koog.agents.core.dsl.builder.node
-import ai.koog.agents.core.dsl.builder.subgraph
-import ai.koog.agents.example.exampleAgentMemory03.MemorySubjects
-import ai.koog.agents.memory.feature.withMemory
-import ai.koog.agents.memory.model.Concept
-import ai.koog.agents.memory.model.FactType
-import ai.koog.agents.memory.model.MemoryScope
-
-fun main() {
-    val strategy = strategy<Unit, Unit>("example-agent") {
--->
-<!--- SUFFIX
-    }
-}
--->
 ```kotlin
 val loadProjectInfo by node<Unit, Unit> {
     withMemory {
@@ -400,33 +279,16 @@ val saveProjectInfo by node<Unit, Unit> {
     }
 }
 ```
-<!--- KNIT example-agent-memory-12.kt -->
 
 #### 自动事实检测 { #automatic-fact-detection }
 
 您还可以要求 LLM 使用 `nodeSaveToMemoryAutoDetectFacts` 方法从智能体的历史记录中检测所有事实：
 
-<!--- INCLUDE
-import ai.koog.agents.core.dsl.builder.strategy
-import ai.koog.agents.core.dsl.builder.node
-import ai.koog.agents.core.dsl.builder.subgraph
-import ai.koog.agents.example.exampleAgentMemory03.MemorySubjects
-import ai.koog.agents.memory.feature.nodes.nodeSaveToMemoryAutoDetectFacts
-
-fun main() {
-    val strategy = strategy<Unit, Unit>("example-agent") {
-
--->
-<!--- SUFFIX
-    }
-}
--->
 ```kotlin
 val saveAutoDetect by nodeSaveToMemoryAutoDetectFacts<Unit>(
     subjects = listOf(MemorySubjects.User, MemorySubjects.Machine)
 )
 ```
-<!--- KNIT example-agent-memory-13.kt -->
 
 在上面的示例中，LLM 将搜索与用户相关的事实和与项目相关的事实，确定概念，并将其保存到记忆中。
 
@@ -442,30 +304,6 @@ val saveAutoDetect by nodeSaveToMemoryAutoDetectFacts<Unit>(
     - 将相关信息保存在同一主体下
 
 3. **处理错误**
-<!--- INCLUDE
-import ai.koog.agents.example.exampleAgentMemory03.MemorySubjects
-import ai.koog.agents.example.exampleAgentMemory06.memoryProvider
-import ai.koog.agents.memory.model.Concept
-import ai.koog.agents.memory.model.FactType
-import ai.koog.agents.memory.model.MemoryScope
-import ai.koog.agents.memory.model.SingleFact
-import kotlinx.coroutines.runBlocking
-import kotlin.time.Clock
-
-fun main() {
-    runBlocking {
-        val fact = SingleFact(
-            concept = Concept("preferred-language", "What programming language is preferred by the user?", FactType.SINGLE),
-            value = "Kotlin",
-            timestamp = Clock.System.now().toEpochMilliseconds()
-        )
-        val subject = MemorySubjects.User
-        val scope = MemoryScope.Product("my-app")
--->
-<!--- SUFFIX
-    }
-}
--->
 ```kotlin
 try {
     memoryProvider.save(fact, subject, scope)
@@ -473,7 +311,6 @@ try {
     println("Oops! Couldn't save: ${e.message}")
 }
 ```
-<!--- KNIT example-agent-memory-14.kt -->
 
 有关错误处理的更多详细信息，请参阅 [错误处理和边界情况](#error-handling-and-edge-cases)。
 
@@ -511,19 +348,6 @@ AgentMemory 功能包含多种处理边界情况的机制：
 
 要实现自定义记忆提供者，请创建一个实现 `AgentMemoryProvider` 接口的类：
 
-<!--- INCLUDE
-import ai.koog.agents.memory.model.Concept
-import ai.koog.agents.memory.model.Fact
-import ai.koog.agents.memory.model.MemoryScope
-import ai.koog.agents.memory.model.MemorySubject
-import ai.koog.agents.memory.providers.AgentMemoryProvider
-
-/* 
-// KNIT: Ignore example
--->
-<!--- SUFFIX
-*/
--->
 ```kotlin
 class MyCustomMemoryProvider : AgentMemoryProvider {
     override suspend fun save(fact: Fact, subject: MemorySubject, scope: MemoryScope) {
@@ -547,7 +371,6 @@ class MyCustomMemoryProvider : AgentMemoryProvider {
     }
 }
 ```
-<!--- KNIT example-agent-memory-15.kt -->
 
 ### 从多个主题加载时，事实如何确定优先级？ { #how-are-facts-prioritized-when-loading-from-multiple-subjects }
 
@@ -556,10 +379,6 @@ class MyCustomMemoryProvider : AgentMemoryProvider {
 ### 我可以为同一概念存储多个值吗？ { #can-i-store-multiple-values-for-the-same-concept }
 
 可以，通过使用 `MultipleFacts` 类型。定义概念时，将其 `factType` 设置为 `FactType.MULTIPLE`：
-<!--- INCLUDE
-import ai.koog.agents.memory.model.Concept
-import ai.koog.agents.memory.model.FactType
--->
 ```kotlin
 val concept = Concept(
     keyword = "user-skills",
@@ -567,6 +386,5 @@ val concept = Concept(
     factType = FactType.MULTIPLE
 )
 ```
-<!--- KNIT example-agent-memory-16.kt -->
 
 这允许您为该概念存储多个值，这些值将以列表形式检索。

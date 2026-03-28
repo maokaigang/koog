@@ -85,13 +85,6 @@ graph TB
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.chatMemory.feature.ChatMemory
-    import ai.koog.agents.chatMemory.feature.InMemoryChatHistoryProvider
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    -->
     ```kotlin
     suspend fun main() {
         val sessionId = "my-conversation"

@@ -21,39 +21,18 @@ graph LR
 
     classDef hidden display: none;
 ```
-<!--- KNIT example-nodes-and-component-01.txt -->
-
 
 以下是如何定义一个节点，它期望字符串作为输入，并返回字符串长度（整数）作为输出：
 
 === "Kotlin"
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    val strategy = strategy<String, String>("strategy_name") {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     val nodeLength by node<String, Int> { input ->
         input.length
     }
     ```
-    <!--- KNIT example-nodes-and-component-01.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    class exampleNodesAndComponentsJava01 {
-        public static void main(String[] args) {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var nodeLength = AIAgentNode.builder("nodeLength")
         .withInput(String.class)
@@ -61,7 +40,6 @@ graph LR
         .withAction((input, ctx) -> input.length())
         .build();
     ```
-    <!--- KNIT exampleNodesAndComponentsJava01.java -->
 
 更多信息，请参阅 [`node()`](api:agents-core::ai.koog.agents.core.dsl.builder.AIAgentSubgraphBuilderBase.node)。
 
@@ -84,7 +62,6 @@ graph LR
 
     classDef hidden display: none;
 ```
-<!--- KNIT example-nodes-and-component-02.txt -->
 
 你可以将此节点用于以下目的：
 
@@ -95,46 +72,21 @@ graph LR
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.forwardTo
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.extension.nodeDoNothing
-    val strategy = strategy<String, String>("strategy_name") {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     val passthrough by nodeDoNothing<String>("passthrough")
 
     edge(nodeStart forwardTo passthrough)
     edge(passthrough forwardTo nodeFinish)
     ```
-    <!--- KNIT example-nodes-and-component-02.kt -->
 
 === "Java"
     
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    class exampleNodesAndComponentsJava02 {
-        public static void main(String[] args) {
-            var strategy = AIAgentGraphStrategy.builder("strategy_name")
-                .withInput(String.class)
-                .withOutput(String.class);
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var passthrough = AIAgentNode.doNothing(String.class);
 
     strategy.edge(strategy.nodeStart, passthrough);
     strategy.edge(passthrough, strategy.nodeFinish);
     ```
-    <!--- KNIT exampleNodesAndComponentsJava02.java -->
 
 ## LLM 节点 { #llm-nodes }
 
@@ -156,7 +108,6 @@ graph LR
 
     classDef hidden display: none;
 ```
-<!--- KNIT example-nodes-and-component-03.txt -->
 
 你可以将此节点用于以下目的：
 
@@ -168,18 +119,6 @@ graph LR
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.forwardTo
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.extension.nodeAppendPrompt
-    typealias Input = Unit
-    typealias Output = Unit
-    val strategy = strategy<String, String>("strategy_name") {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     val firstNode by node<Input, Output> {
         // 将输入转换为输出
@@ -198,25 +137,9 @@ graph LR
     edge(firstNode forwardTo setupContext)
     edge(setupContext forwardTo secondNode)
     ```
-    <!--- KNIT example-nodes-and-component-03.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    class exampleNodesAndComponentsJava03 {
-        class Output {}
-        class Input extends Output { }
-        public static void main(String[] args) {
-            var strategy = AIAgentGraphStrategy.builder("strategy_name")
-                .withInput(String.class)
-                .withOutput(String.class);
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
 ```java
 var firstNode = AIAgentNode.builder()
     .withInput(Input.class)
@@ -246,7 +169,6 @@ var setupContext = AIAgentNode.builder()
 strategy.edge(firstNode, setupContext);
 strategy.edge(setupContext, secondNode);
 ```
-<!--- KNIT exampleNodesAndComponentsJava03.java -->
 
 ### nodeLLMSendMessageOnlyCallingTools { #nodellmsendmessageonlycallingtools }
 
@@ -265,7 +187,6 @@ graph LR
 
     classDef hidden display: none;
 ```
-<!--- KNIT example-nodes-and-component-04.txt -->
 
 ### nodeLLMSendMessageForceOneTool { #nodellmsendmessageforceonetool }
 
@@ -284,7 +205,6 @@ graph LR
 
     classDef hidden display: none;
 ```
-<!--- KNIT example-nodes-and-component-05.txt -->
 
 ### nodeLLMRequest { #nodellmrequest }
 
@@ -303,7 +223,6 @@ graph LR
 
     classDef hidden display: none;
 ```
-<!--- KNIT example-nodes-and-component-06.txt -->
 
 您可以将此节点用于以下目的：
 
@@ -313,50 +232,18 @@ graph LR
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.forwardTo
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.extension.nodeLLMRequest
-    import ai.koog.agents.core.dsl.extension.nodeDoNothing
-    val strategy = strategy<String, String>("strategy_name") {
-        val getUserQuestion by nodeDoNothing<String>()
-    -->
-    <!--- SUFFIX
-    }
-    -->
 ```kotlin
 val requestLLM by nodeLLMRequest("requestLLM", allowToolCalls = true)
 edge(getUserQuestion forwardTo requestLLM)
 ```
-<!--- KNIT example-nodes-and-component-04.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    class exampleNodesAndComponentsJava04 {
-        public static void main(String[] args) {
-            var strategy = AIAgentGraphStrategy.builder("strategy_name")
-                .withInput(String.class)
-                .withOutput(String.class);
-            var getUserQuestion = AIAgentNode.builder("getUserQuestion")
-                .withInput(String.class)
-                .withOutput(String.class)
-                .withAction((input, ctx) -> input)
-                .build();
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
 ```java
 var requestLLM = AIAgentNode.llmRequest(true, "requestLLM");
 
 strategy.edge(getUserQuestion, requestLLM);
 ```
-<!--- KNIT exampleNodesAndComponentsJava04.java -->
 
 ### nodeLLMRequestStructured { #nodellmrequeststructured }
 
@@ -375,7 +262,6 @@ graph LR
 
     classDef hidden display: none;
 ```
-<!--- KNIT example-nodes-and-component-07.txt -->
 
 ### 节点 LLMRequestStreaming { #nodellmrequeststreaming }
 
@@ -394,7 +280,6 @@ graph LR
 
     classDef hidden display: none;
 ```
-<!--- KNIT example-nodes-and-component-08.txt -->
 
 ### 节点 LLMRequestMultiple { #nodellmrequestmultiple }
 
@@ -413,7 +298,6 @@ graph LR
 
     classDef hidden display: none;
 ```
-<!--- KNIT example-nodes-and-component-09.txt -->
 
 您可以将此节点用于以下目的：
 
@@ -425,50 +309,18 @@ graph LR
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.forwardTo
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.extension.nodeLLMRequestMultiple
-    import ai.koog.agents.core.dsl.extension.nodeDoNothing
-    val strategy = strategy<String, String>("strategy_name") {
-        val getComplexUserQuestion by nodeDoNothing<String>()
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     val requestLLMMultipleTools by nodeLLMRequestMultiple()
     edge(getComplexUserQuestion forwardTo requestLLMMultipleTools)
     ```
-    <!--- KNIT example-nodes-and-component-05.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    class exampleNodesAndComponentsJava05 {
-        public static void main(String[] args) {
-            var strategy = AIAgentGraphStrategy.builder("strategy_name")
-                .withInput(String.class)
-                .withOutput(String.class);
-            var getComplexUserQuestion = AIAgentNode.builder("getComplexUserQuestion")
-                .withInput(String.class)
-                .withOutput(String.class)
-                .withAction((input, ctx) -> input)
-                .build();
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var requestLLMMultipleTools = AIAgentNode.llmRequestMultiple("requestLLMMultipleTools");
 
     strategy.edge(getComplexUserQuestion, requestLLMMultipleTools);
     ```
-    <!--- KNIT exampleNodesAndComponentsJava05.java -->
 
 ### 节点 LLMCompressHistory { #nodellmcompresshistory }
 
@@ -488,7 +340,6 @@ graph LR
 
     classDef hidden display: none;
 ```
-<!--- KNIT example-nodes-and-component-10.txt -->
 
 要了解更多关于历史压缩的信息，请参阅 [历史压缩](history-compression.md)。
 
@@ -502,19 +353,6 @@ graph LR
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.forwardTo
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.extension.nodeLLMCompressHistory
-    import ai.koog.agents.core.dsl.extension.nodeDoNothing
-    import ai.koog.agents.core.dsl.extension.HistoryCompressionStrategy
-    val strategy = strategy<String, String>("strategy_name") {
-        val generateHugeHistory by nodeDoNothing<String>()
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     val compressHistory by nodeLLMCompressHistory<String>(
         "compressHistory",
@@ -523,28 +361,9 @@ graph LR
     )
     edge(generateHugeHistory forwardTo compressHistory)
     ```
-    <!--- KNIT example-nodes-and-component-06.kt -->
 
 === "Java"
     
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    class exampleNodesAndComponentsJava06 {
-        public static void main(String[] args) {
-            var strategy = AIAgentGraphStrategy.builder("strategy_name")
-                .withInput(String.class)
-                .withOutput(String.class);
-            var generateHugeHistory = AIAgentNode.builder("generateHugeHistory")
-                .withInput(String.class)
-                .withOutput(String.class)
-                .withAction((input, ctx) -> input)
-                .build();
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var compressHistory = AIAgentNode.llmCompressHistory("compressHistory")
         .withInput(String.class)
@@ -552,7 +371,6 @@ graph LR
 
     strategy.edge(generateHugeHistory, compressHistory);
     ```
-    <!--- KNIT exampleNodesAndComponentsJava06.java -->
 
 ## 工具节点 { #tool-nodes }
 
@@ -573,7 +391,6 @@ graph LR
 
     classDef hidden display: none;
 ```
-<!--- KNIT example-nodes-and-component-11.txt -->
 
 您可以将此节点用于以下目的：
 
@@ -585,42 +402,14 @@ graph LR
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.forwardTo
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.extension.nodeExecuteTool
-    import ai.koog.agents.core.dsl.extension.nodeLLMRequest
-    import ai.koog.agents.core.dsl.extension.onToolCall
-    val strategy = strategy<String, String>("strategy_name") {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     val requestLLM by nodeLLMRequest()
     val executeTool by nodeExecuteTool()
     edge(requestLLM forwardTo executeTool onToolCall { true })
     ```
-    <!--- KNIT example-nodes-and-component-07.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    import ai.koog.agents.core.agent.entity.AIAgentEdge;
-    import ai.koog.prompt.message.Message;
-    class exampleNodesAndComponentsJava07 {
-        public static void main(String[] args) {
-            var strategy = AIAgentGraphStrategy.builder("strategy_name")
-                .withInput(String.class)
-                .withOutput(String.class);
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var requestLLM = AIAgentNode.llmRequest(true, "requestLLM");
     var executeTool = AIAgentNode.executeTool("executeTool");
@@ -631,7 +420,6 @@ graph LR
         .onIsInstance(Message.Tool.Call.class)
         .build());
     ```
-    <!--- KNIT exampleNodesAndComponentsJava07.java -->
 
 ### nodeLLMSendToolResult { #nodellmsendtoolresult }
 
@@ -650,7 +438,6 @@ graph LR
 
     classDef hidden display: none;
 ```
-<!--- KNIT example-nodes-and-component-12.txt -->
 
 您可以将此节点用于以下目的：
 
@@ -662,46 +449,20 @@ graph LR
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.forwardTo
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.extension.nodeExecuteTool
-    import ai.koog.agents.core.dsl.extension.nodeLLMSendToolResult
-    val strategy = strategy<String, String>("strategy_name") {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     val executeTool by nodeExecuteTool()
     val sendToolResultToLLM by nodeLLMSendToolResult()
     edge(executeTool forwardTo sendToolResultToLLM)
     ```
-    <!--- KNIT example-nodes-and-component-08.kt -->
 
 === "Java"
     
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    class exampleNodesAndComponentsJava08 {
-        public static void main(String[] args) {
-            var strategy = AIAgentGraphStrategy.builder("strategy_name")
-                .withInput(String.class)
-                .withOutput(String.class);
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var executeTool = AIAgentNode.executeTool("executeTool");
     var sendToolResultToLLM = AIAgentNode.llmSendToolResult("sendToolResultToLLM");
 
     strategy.edge(executeTool, sendToolResultToLLM);
     ```
-    <!--- KNIT exampleNodesAndComponentsJava08.java -->
 
 ### nodeExecuteMultipleTools { #nodeexecutemultipletools }
 
@@ -720,7 +481,6 @@ graph LR
 
     classDef hidden display: none;
 ```
-<!--- KNIT example-nodes-and-component-13.txt -->
 
 您可以将此节点用于以下目的：
 
@@ -732,42 +492,14 @@ graph LR
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.forwardTo
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.extension.nodeLLMRequestMultiple
-    import ai.koog.agents.core.dsl.extension.nodeExecuteMultipleTools
-    import ai.koog.agents.core.dsl.extension.onMultipleToolCalls
-    val strategy = strategy<String, String>("strategy_name") {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     val requestLLMMultipleTools by nodeLLMRequestMultiple()
     val executeMultipleTools by nodeExecuteMultipleTools()
     edge(requestLLMMultipleTools forwardTo executeMultipleTools onMultipleToolCalls { true })
     ```
-    <!--- KNIT example-nodes-and-component-09.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    import ai.koog.agents.core.agent.entity.AIAgentEdge;
-    import ai.koog.prompt.message.Message;
-    class exampleNodesAndComponentsJava09 {
-        public static void main(String[] args) {
-            var strategy = AIAgentGraphStrategy.builder("strategy_name")
-                .withInput(String.class)
-                .withOutput(String.class);
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var requestLLMMultipleTools = AIAgentNode.llmRequestMultiple("requestLLMMultipleTools");
     var executeMultipleTools = AIAgentNode.executeMultipleTools(false, "executeMultipleTools");    // 从响应列表中提取工具调用
@@ -782,7 +514,6 @@ graph LR
             .toList())
         .build());
     ```
-    <!--- KNIT exampleNodesAndComponentsJava09.java -->
 
 ### 节点LLMSendMultipleToolResults { #nodellmsendmultipletoolresults }
 
@@ -801,7 +532,6 @@ graph LR
 
     classDef hidden display: none;
 ```
-<!--- KNIT example-nodes-and-component-14.txt -->
 
 您可以使用此节点实现以下目的：
 
@@ -813,47 +543,20 @@ graph LR
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.forwardTo
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.extension.nodeLLMSendMultipleToolResults
-    import ai.koog.agents.core.dsl.extension.nodeExecuteMultipleTools
-    val strategy = strategy<String, String>("strategy_name") {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     val executeMultipleTools by nodeExecuteMultipleTools()
     val sendMultipleToolResultsToLLM by nodeLLMSendMultipleToolResults()
     edge(executeMultipleTools forwardTo sendMultipleToolResultsToLLM)
     ```
-    <!--- KNIT example-nodes-and-component-10.kt -->
 
 === "Java"
     
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    import ai.koog.prompt.message.Message;
-    class exampleNodesAndComponentsJava10 {
-        public static void main(String[] args) {
-            var strategy = AIAgentGraphStrategy.builder("strategy_name")
-                .withInput(String.class)
-                .withOutput(String.class);
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var executeMultipleTools = AIAgentNode.executeMultipleTools(false, "executeMultipleTools");
     var sendMultipleToolResultsToLLM = AIAgentNode.llmSendMultipleToolResults("sendMultipleToolResultsToLLM");
 
     strategy.edge(executeMultipleTools, sendMultipleToolResultsToLLM);
     ```
-    <!--- KNIT exampleNodesAndComponentsJava10.java -->
 
 ## 节点输出转换 { #node-output-transformation }
 
@@ -875,7 +578,6 @@ graph LR
 
     classDef hidden display: none;
 ```
-<!--- KNIT example-nodes-and-component-15.txt -->
 
 ### transform { #transform }
 
@@ -883,18 +585,11 @@ graph LR
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    /**
-    -->
-    <!--- SUFFIX
-    **/
-    -->
     ```kotlin
     inline fun <reified T> AIAgentNodeDelegate<Input, Output>.transform(
         noinline transformation: suspend (Output) -> T
     ): AIAgentNodeDelegate<Input, T>
     ```
-    <!--- KNIT example-nodes-and-component-11.kt -->
 
 === "Java"
 
@@ -903,7 +598,6 @@ graph LR
     // 手动组合具有转换逻辑的节点。
     // 有关节点转换的Java方法，请参阅以下示例。
     ```
-    <!--- KNIT example-nodes-and-component-java-01.java -->
 
 #### 自定义节点转换 { #custom-node-transformation }
 
@@ -911,16 +605,6 @@ graph LR
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.forwardTo
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.extension.nodeDoNothing
-    val strategy = strategy<String, Int>("strategy_name") {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     val textNode by nodeDoNothing<String>("textNode").transform<Int> { text ->
         text.split(" ").filter { it.isNotBlank() }.size
@@ -929,23 +613,9 @@ graph LR
     edge(nodeStart forwardTo textNode)
     edge(textNode forwardTo nodeFinish)
     ```
-    <!--- KNIT example-nodes-and-component-12.kt -->
 
 === "Java"
     
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    class exampleNodesAndComponentsJava11 {
-        public static void main(String[] args) {
-            var strategy = AIAgentGraphStrategy.builder("strategy_name")
-                .withInput(String.class)
-                .withOutput(Integer.class);
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var textNode = AIAgentNode.builder("textNode")
         .withInput(String.class)
@@ -965,7 +635,6 @@ graph LR
     strategy.edge(strategy.nodeStart, textNode);
     strategy.edge(textNode, strategy.nodeFinish);
     ```
-    <!--- KNIT exampleNodesAndComponentsJava11.java -->
 
 #### 内置节点转换 { #built-in-node-transformation }
 
@@ -973,16 +642,6 @@ graph LR
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.forwardTo
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.extension.nodeLLMRequest
-    val strategy = strategy<String, Int>("strategy_name") {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     val lengthNode by nodeLLMRequest("llmRequest").transform<Int> { assistantMessage ->
         assistantMessage.content.length
@@ -991,24 +650,9 @@ graph LR
     edge(nodeStart forwardTo lengthNode)
     edge(lengthNode forwardTo nodeFinish)
     ```
-    <!--- KNIT example-nodes-and-component-13.kt -->
 
 === "Java"
     
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    import ai.koog.prompt.message.Message;
-    class exampleNodesAndComponentsJava12 {
-        public static void main(String[] args) {
-            var strategy = AIAgentGraphStrategy.builder("strategy_name")
-                .withInput(String.class)
-                .withOutput(Integer.class);
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var llmRequest = AIAgentNode.llmRequest(true, "llmRequest");
     var lengthNode = AIAgentNode.builder("lengthNode")
@@ -1026,8 +670,6 @@ graph LR
     strategy.edge(llmRequest, lengthNode);
     strategy.edge(lengthNode, strategy.nodeFinish);
     ```
-    <!--- KNIT exampleNodesAndComponentsJava12.java -->
-
 
 ## 预定义子图 { #predefined-subgraphs }
 
@@ -1059,21 +701,6 @@ API 允许您通过可选参数微调执行：- runMode：控制任务期间工�
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.ext.tool.SayToUser
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.agents.ext.agent.subgraphWithTask
-    import ai.koog.agents.core.agent.ToolCalls
-    val searchTool = SayToUser
-    val calculatorTool = SayToUser
-    val weatherTool = SayToUser
-    val strategy = strategy<String, String>("strategy_name") {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     val processQuery by subgraphWithTask<String, String>(
         tools = listOf(searchTool, calculatorTool, weatherTool),
@@ -1088,28 +715,9 @@ API 允许您通过可选参数微调执行：- runMode：控制任务期间工�
         """
     }
     ```
-    <!--- KNIT example-nodes-and-component-14.kt -->
 
 === "Java"
     
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
-    import ai.koog.agents.core.agent.entity.AIAgentSubgraph;
-    import ai.koog.agents.ext.tool.SayToUser;
-    import java.util.List;
-    class exampleNodesAndComponentsJava13 {
-        public static void main(String[] args) {
-            var strategy = AIAgentGraphStrategy.builder("strategy_name")
-                .withInput(String.class)
-                .withOutput(String.class);
-            SayToUser searchTool = SayToUser.INSTANCE;
-            SayToUser calculatorTool = SayToUser.INSTANCE;
-            SayToUser weatherTool = SayToUser.INSTANCE;
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var processQuery = AIAgentSubgraph.builder("processQuery")
         .limitedTools(List.of(searchTool, calculatorTool, weatherTool))
@@ -1121,7 +729,6 @@ API 允许您通过可选参数微调执行：- runMode：控制任务期间工�
             userQuery)
         .build();
     ```
-    <!--- KNIT exampleNodesAndComponentsJava13.java -->
 
 ### subgraphWithVerification { #subgraphwithverification }
 
@@ -1139,21 +746,6 @@ API 允许您通过可选参数微调执行：- runMode：控制任务期间工�
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.ext.tool.SayToUser
-    import ai.koog.prompt.executor.clients.anthropic.AnthropicModels
-    import ai.koog.agents.ext.agent.subgraphWithVerification
-    import ai.koog.agents.core.agent.ToolCalls
-    val runTestsTool = SayToUser
-    val analyzeTool = SayToUser
-    val readFileTool = SayToUser
-    val strategy = strategy<String, String>("strategy_name") {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     val verifyCode by subgraphWithVerification<String>(
         tools = listOf(runTestsTool, analyzeTool, readFileTool),
@@ -1172,28 +764,9 @@ API 允许您通过可选参数微调执行：- runMode：控制任务期间工�
         """
     }
     ```
-    <!--- KNIT example-nodes-and-component-15.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
-    import ai.koog.agents.core.agent.entity.AIAgentSubgraph;
-    import ai.koog.agents.ext.tool.SayToUser;
-    import java.util.List;
-    class exampleNodesAndComponentsJava14 {
-        public static void main(String[] args) {
-            var strategy = AIAgentGraphStrategy.builder("strategy_name")
-                .withInput(String.class)
-                .withOutput(String.class);
-            SayToUser runTestsTool = SayToUser.INSTANCE;
-            SayToUser analyzeTool = SayToUser.INSTANCE;
-            SayToUser readFileTool = SayToUser.INSTANCE;
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var verifyCode = AIAgentSubgraph.builder("verifyCode")
     .limitedTools(List.of(runTestsTool, analyzeTool, readFileTool))
@@ -1207,7 +780,6 @@ API 允许您通过可选参数微调执行：- runMode：控制任务期间工�
         codeToVerify)
     .build();
     ```
-    <!--- KNIT exampleNodesAndComponentsJava14.java -->
 
 ## 预定义策略与常见策略模式 { #predefined-strategies-and-common-strategy-patterns }
 
@@ -1224,13 +796,6 @@ API 允许您通过可选参数微调执行：- runMode：控制任务期间工�
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy
-    import ai.koog.agents.core.dsl.builder.forwardTo
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.extension.*
-    -->
     ```kotlin
     public fun singleRunStrategy(): AIAgentGraphStrategy<String, String> = strategy("single_run") {
         val nodeCallLLM by nodeLLMRequest("sendInput")
@@ -1245,22 +810,9 @@ API 允许您通过可选参数微调执行：- runMode：控制任务期间工�
         edge(nodeSendToolResult forwardTo nodeExecuteTool onToolCall { true })
     }
     ```
-    <!--- KNIT example-nodes-and-component-16.kt -->
 
 === "Java"
     
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentEdge;
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    import ai.koog.prompt.message.Message;
-    class exampleNodesAndComponentsJava15 {
-    -->
-    <!--- SUFFIX
-        public static void main(String[] args) {
-        }
-    }
-    -->
     ```java
     public static AIAgentGraphStrategy<String, String> singleRunStrategy() {
         var strategy = AIAgentGraphStrategy.builder("single_run")
@@ -1303,7 +855,6 @@ API 允许您通过可选参数微调执行：- runMode：控制任务期间工�
         return strategy.build();
     }
     ```
-    <!--- KNIT exampleNodesAndComponentsJava15.java -->
 
 ### 基于工具的策略 { #tool-based-strategy }
 
@@ -1312,14 +863,6 @@ API 允许您通过可选参数微调执行：- runMode：控制任务期间工�
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy
-    import ai.koog.agents.core.dsl.builder.forwardTo
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.core.dsl.extension.*
-    import ai.koog.agents.core.tools.ToolRegistry
-    -->
     ```kotlin
     fun toolBasedStrategy(name: String, toolRegistry: ToolRegistry): AIAgentGraphStrategy<String, String> {
         return strategy(name) {
@@ -1359,23 +902,9 @@ API 允许您通过可选参数微调执行：- runMode：控制任务期间工�
         }
     }
     ```
-    <!--- KNIT example-nodes-and-component-17.kt -->
 
 === "Java"
     
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentEdge;
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    import ai.koog.prompt.message.Message;
-    import ai.koog.agents.core.tools.ToolRegistry;
-    class exampleNodesAndComponentsJava16 {
-    -->
-    <!--- SUFFIX
-        public static void main(String[] args) {
-        }
-    }
-    -->
     ```java
     public static AIAgentGraphStrategy<String, String> toolBasedStrategy(String name, ToolRegistry toolRegistry) {
         var strategy = AIAgentGraphStrategy.builder(name)
@@ -1423,23 +952,13 @@ API 允许您通过可选参数微调执行：- runMode：控制任务期间工�
         return strategy.build();
     }
     ```
-    <!--- KNIT exampleNodesAndComponentsJava16.java -->
 
 ### 流式数据策略 { #streaming-data-strategy }
 
 流式数据策略专为处理来自 LLM 的流式数据而设计。它通常请求流式数据，进行处理，并可能使用处理后的数据调用工具。
 
-
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.dsl.builder.forwardTo
-    import ai.koog.agents.core.dsl.builder.strategy
-    import ai.koog.agents.core.dsl.builder.node
-    import ai.koog.agents.example.exampleStreamingApi05.Book
-    import ai.koog.agents.example.exampleStreamingApi06.markdownBookDefinition
-    import ai.koog.agents.example.exampleStreamingApi08.parseMarkdownStreamToBooks
-    -->
     ```kotlin
     val agentStrategy = strategy<String, List<Book>>("library-assistant") {
         // 描述包含输出流解析的节点
@@ -1465,42 +984,9 @@ API 允许您通过可选参数微调执行：- runMode：控制任务期间工�
         edge(getMdOutput forwardTo nodeFinish)
     }
     ```
-    <!--- KNIT example-nodes-and-component-18.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
-    import ai.koog.agents.core.agent.entity.AIAgentNode;
-    import ai.koog.prompt.streaming.StreamFrame;
-    import ai.koog.prompt.structure.StructureDefinition;
-    import ai.koog.prompt.structure.markdown.MarkdownStructureDefinition;
-    import ai.koog.serialization.TypeCapture;
-    import ai.koog.serialization.TypeToken;
-    import java.util.ArrayList;
-    import java.util.List;
-    import java.util.concurrent.Flow;
-    class exampleNodesAndComponentsJava17 {
-        class Book {
-            String getTitle() {
-                return "";
-            }
-            String getAuthor() {
-                return "";
-            }
-        }
-        public static MarkdownStructureDefinition markdownBookDefinition() {
-            return null;
-        }
-        public static Flow.Publisher<Book> parseMarkdownStreamToBooks(Flow.Publisher<StreamFrame> markdownStream) {
-            return null;
-        }
-        public static void main(String[] args) {
-    -->
-    <!--- SUFFIX
-        }
-    }
-    -->
     ```java
     var strategy = AIAgentGraphStrategy.builder()
         .withInput(String.class)
@@ -1549,4 +1035,3 @@ API 允许您通过可选参数微调执行：- runMode：控制任务期间工�
     strategy.edge(strategy.nodeStart, getMdOutput);
     strategy.edge(getMdOutput, strategy.nodeFinish);
     ```
-    <!--- KNIT exampleNodesAndComponentsJava17.java -->

@@ -20,7 +20,6 @@ Koog 内置支持将智能体追踪数据导出到 [Langfuse](https://langfuse.c
    export LANGFUSE_PUBLIC_KEY="<your-public-key>"
    export LANGFUSE_SECRET_KEY="<your-secret-key>"
 ```
-<!--- KNIT example-langfuse-exporter-01.txt -->
 
 ## 配置 { #configuration }
 
@@ -30,14 +29,6 @@ Koog 内置支持将智能体追踪数据导出到 [Langfuse](https://langfuse.c
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    import kotlinx.coroutines.runBlocking
-    val promptExecutor = simpleOpenAIExecutor("openai-api-key")
-    -->
     ```kotlin
     fun main() = runBlocking {
         val agent = AIAgent(
@@ -56,23 +47,9 @@ Koog 内置支持将智能体追踪数据导出到 [Langfuse](https://langfuse.c
         println("Result: $result\nSee traces on the Langfuse instance")
     }
     ```
-    <!--- KNIT example-langfuse-exporter-01.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent;
-    import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry;
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels;
-    import ai.koog.prompt.executor.model.PromptExecutor;
-    public class exampleLangfuseExporterJava01 {
-        static PromptExecutor promptExecutor = PromptExecutor.builder()
-            .openAI("openai-api-key")
-            .build();
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```java
     public static void main(String[] args) {
         var agent = AIAgent.builder()
@@ -90,7 +67,6 @@ Koog 内置支持将智能体追踪数据导出到 [Langfuse](https://langfuse.c
         System.out.println("Result: " + result + "\nSee traces on the Langfuse instance");
     }
     ```
-    <!--- KNIT exampleLangfuseExporterJava01.java -->
 
 ## 追踪属性 { #trace-attributes }
 
@@ -165,16 +141,6 @@ Common attributes:
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.features.opentelemetry.attribute.CustomAttribute
-    import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    import kotlinx.coroutines.runBlocking
-    import java.util.UUID
-    val promptExecutor = simpleOpenAIExecutor("openai-api-key")
-    -->
     ```kotlin
     fun main() = runBlocking {
         val sessionId = UUID.randomUUID().toString()
@@ -201,26 +167,9 @@ Common attributes:
         agent.run("Show me a coroutine example")
     }
     ```
-    <!--- KNIT example-langfuse-exporter-02.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent;
-    import ai.koog.agents.features.opentelemetry.attribute.CustomAttribute;
-    import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry;
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels;
-    import ai.koog.prompt.executor.model.PromptExecutor;
-    import java.util.List;
-    import java.util.UUID;
-    public class exampleLangfuseExporterJava02 {
-        static PromptExecutor promptExecutor = PromptExecutor.builder()
-            .openAI("openai-api-key")
-            .build();
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```java
     public static void main(String[] args) {
         var sessionId = UUID.randomUUID().toString();
@@ -246,7 +195,6 @@ Common attributes:
         agent.run("Show me a Java API  example");
     }
     ```
-    <!--- KNIT exampleLangfuseExporterJava02.java -->
 
 ## 什么会被追踪 { #what-gets-traced }
 
@@ -263,62 +211,21 @@ Koog 还捕获了 Langfuse 显示 [智能体图](https://langfuse.com/docs/obser
 
 === "Kotlin"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent
-    import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels
-    import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-    val promptExecutor = simpleOpenAIExecutor("openai-api-key")
-    val agent = AIAgent(
-        promptExecutor = promptExecutor,
-        llmModel = OpenAIModels.Chat.GPT4o,
-        systemPrompt = "You are a helpful assistant."
-    ) {
-    -->
-    <!--- SUFFIX
-    }
-    -->
     ```kotlin
     install(OpenTelemetry) {
         addLangfuseExporter()
         setVerbose(true)
     }
     ```
-    <!--- KNIT example-langfuse-exporter-03.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
-    import ai.koog.agents.core.agent.AIAgent;
-    import ai.koog.agents.features.opentelemetry.attribute.CustomAttribute;
-    import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry;
-    import ai.koog.prompt.executor.clients.openai.OpenAIModels;
-    import ai.koog.prompt.executor.model.PromptExecutor;
-    import java.util.List;
-    import java.util.UUID;
-    public class exampleLangfuseExporterJava03 {
-        public static void main(String[] args) {
-            var promptExecutor = PromptExecutor.builder()
-                .openAI("openai-api-key")
-                .build();
-            var agent = AIAgent.builder()
-                .promptExecutor(promptExecutor)
-                .systemPrompt("You are a helpful assistant.")
-                .llmModel(OpenAIModels.Chat.GPT4oMini)
-                .
-    -->
-    <!--- SUFFIX
-            .build();
-        }
-    }
-    -->
     ```java
     install(OpenTelemetry.Feature, config -> {
         config.addLangfuseExporter();
         config.setVerbose(true);
     })
     ```
-    <!--- KNIT exampleLangfuseExporterJava03.java -->
 
 在 Langfuse 中可视化时，追踪记录显示如下：
 ![Langfuse traces](img/opentelemetry-langfuse-exporter-light.png#only-light)
