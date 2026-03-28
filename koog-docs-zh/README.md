@@ -49,6 +49,9 @@ uv sync --frozen --all-extras
 uv run mkdocs build
 ```
 
+Vercel 的 Python 环境已经自带 `uv`，不要再执行 `pip install uv`，否则会触发 PEP 668 的
+`externally-managed-environment` 错误。
+
 产物目录固定为仓库根目录下的 `dist/`。
 
 当前默认仓库链接已指向你的 fork `https://github.com/maokaigang/koog`。
