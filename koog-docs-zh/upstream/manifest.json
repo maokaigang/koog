@@ -1,0 +1,492 @@
+{
+  "tag": "0.7.3",
+  "synced_at": "2026-03-28T10:43:00+00:00",
+  "source_repo": "https://github.com/JetBrains/koog.git",
+  "files": [
+    {
+      "path": "CNAME",
+      "sha256": "ab519576f461127a052739745026196ab8cabb3a9a7bad5e061f145a2e0dad18",
+      "kind": "asset"
+    },
+    {
+      "path": "a2a-client.md",
+      "sha256": "112f6f65b4085d73ca4903aaeb5a66732d632f1c43b9520c02adc119aa5607d0",
+      "kind": "markdown"
+    },
+    {
+      "path": "a2a-koog-integration.md",
+      "sha256": "a5c28e05c7ba37416bfeb404ff6c4f5bfd6fb81b4962f4202812ce9756d5b36d",
+      "kind": "markdown"
+    },
+    {
+      "path": "a2a-protocol-overview.md",
+      "sha256": "1c309150478539f30d9579b23f94fc3d27e705d14186d2cbd65fefd9e2d4f374",
+      "kind": "markdown"
+    },
+    {
+      "path": "a2a-server.md",
+      "sha256": "ed11ef756b1734357683b2fc89abb7ab68e233e54fbda630ef4e752501f3d2d7",
+      "kind": "markdown"
+    },
+    {
+      "path": "agent-client-protocol.md",
+      "sha256": "a77a14280e4d4c5bad1e02f927f76e719a2253bfcaea321a0abdbcd558c531ce",
+      "kind": "markdown"
+    },
+    {
+      "path": "agent-events.md",
+      "sha256": "bcb7d32435432fdd5a8fabc5250ca08cd3c4c250bb08fff80d263adc7b179c4c",
+      "kind": "markdown"
+    },
+    {
+      "path": "agents/basic-agents.md",
+      "sha256": "ad9fdc835cb8b3090d6e85ad4ad36c941f77568c08b6c3b546a7b97474569362",
+      "kind": "markdown"
+    },
+    {
+      "path": "agents/functional-agents.md",
+      "sha256": "b48cc12e5b7d8b10d3d16d85b7be16da011d544bfd040f3aba85285b0ced95c6",
+      "kind": "markdown"
+    },
+    {
+      "path": "agents/graph-based-agents.md",
+      "sha256": "608d1d49268d4bab31419e1be49cd48da5d7b5049c41207321a46e5652119c0d",
+      "kind": "markdown"
+    },
+    {
+      "path": "agents/index.md",
+      "sha256": "56cf6b6937eeafea8a50ace73d572e25481d59138192ca40d34727bb5d6d9954",
+      "kind": "markdown"
+    },
+    {
+      "path": "agents/planner-agents/goap-agents.md",
+      "sha256": "1988cd49ab9eca6ea3b9ab0018767f4c80fa94b079063f66acfac0da0949fe04",
+      "kind": "markdown"
+    },
+    {
+      "path": "agents/planner-agents/index.md",
+      "sha256": "ff973ef7e37d78c71e7539666dd73cef98b89326028a1defd880ce074b4a083d",
+      "kind": "markdown"
+    },
+    {
+      "path": "agents/planner-agents/llm-based-planners.md",
+      "sha256": "c0f55f669bd9c63fc090c9c6e3e391fde62b55c8097bbf367bd0ca35780be75b",
+      "kind": "markdown"
+    },
+    {
+      "path": "annotation-based-tools.md",
+      "sha256": "c3704182e567f6a777972a92f31751fedc8f3bb279e0f3fcd4791b9e70391eba",
+      "kind": "markdown"
+    },
+    {
+      "path": "built-in-tools.md",
+      "sha256": "91cb9a0f1301b26a4e97658ba776c667798ca39e5f666f8bfd60e25e34ba9367",
+      "kind": "markdown"
+    },
+    {
+      "path": "class-based-tools.md",
+      "sha256": "b0a4fc034e0651eb5f43e630ecb9155cee45256df98e540a8b93a19cdac1e3ad",
+      "kind": "markdown"
+    },
+    {
+      "path": "content-moderation.md",
+      "sha256": "ff80f18406c1f639f474de4cabeedaa7db1647b6cd1377f476defa1ca2b16215",
+      "kind": "markdown"
+    },
+    {
+      "path": "custom-nodes.md",
+      "sha256": "8861431b1168e3a84a61d42d31879f808dad72da248447e521cdeec67901c228",
+      "kind": "markdown"
+    },
+    {
+      "path": "custom-strategy-graphs.md",
+      "sha256": "b82c9b9d73c6671504dda3feb219819fe276a9199f66f86973a9500a48902e81",
+      "kind": "markdown"
+    },
+    {
+      "path": "custom-subgraphs.md",
+      "sha256": "b833c3e32d36b8891d832b7bf3ed9a714fc3dc3b2f78489aaddda1766202e7ff",
+      "kind": "markdown"
+    },
+    {
+      "path": "data-transfer-between-nodes.md",
+      "sha256": "b17b7895d96773cbb4371394c34bc0fad66bc1d1f21db315687d260397e17482",
+      "kind": "markdown"
+    },
+    {
+      "path": "embeddings.md",
+      "sha256": "b8b7665901f313de35e840099dad9fea1b36d456f2c32feed0d145b5492eb90e",
+      "kind": "markdown"
+    },
+    {
+      "path": "examples/Attachments.md",
+      "sha256": "38794bc2dc90be72dc43bd053820c8b1c9b504e417f7edbfe81ca343bdfc2551",
+      "kind": "markdown"
+    },
+    {
+      "path": "examples/Banking.md",
+      "sha256": "83421e6a40dc2246f3a1c96fb0e17a1d5bde632dfab2f89223798a4acc8f6171",
+      "kind": "markdown"
+    },
+    {
+      "path": "examples/BedrockAgent.md",
+      "sha256": "329e8d8b5833239a7b07885d506efeace8a97c7adf3f88ca457b3b7961ca8601",
+      "kind": "markdown"
+    },
+    {
+      "path": "examples/Calculator.md",
+      "sha256": "d23f5672fd11b7bd0172d24f355feaa9be4df6489af11a855266f9e4ce9d30f2",
+      "kind": "markdown"
+    },
+    {
+      "path": "examples/Chess.md",
+      "sha256": "7701e7da1c97228b4af2c0034874d0ac59a581335617a7c3842c636400d929bf",
+      "kind": "markdown"
+    },
+    {
+      "path": "examples/GoogleMapsMcp.md",
+      "sha256": "cd76216fc578b8c505ac5a66704665613c2f42d0c9ccd193836dad099a3d732d",
+      "kind": "markdown"
+    },
+    {
+      "path": "examples/Guesser.md",
+      "sha256": "c954e262deae023106a537bd8b7c5ddd9aeaeacd3ff90f1dd2c61d5893a51ab0",
+      "kind": "markdown"
+    },
+    {
+      "path": "examples/Langfuse.md",
+      "sha256": "2341e410672564c8788b08c505d58b5cbb9879f8eec42763cd0bdb0d882b4c51",
+      "kind": "markdown"
+    },
+    {
+      "path": "examples/OpenTelemetry.md",
+      "sha256": "f87f983112b79ab18fa0d0ef4662f3776d7f8364c99153392afed561a6694357",
+      "kind": "markdown"
+    },
+    {
+      "path": "examples/PlaywrightMcp.md",
+      "sha256": "c32b312cb9569abe59fc485380b32358dda95540b2c68bd6154724ff833a5327",
+      "kind": "markdown"
+    },
+    {
+      "path": "examples/UnityMcp.md",
+      "sha256": "743d3e7192e419d54d08df73869abbe2c1a1dbe782de72d8aefe8c0c829b5b6b",
+      "kind": "markdown"
+    },
+    {
+      "path": "examples/VaccumAgent.md",
+      "sha256": "4b89dccfcdbdcb991fd69ee7e559c4da7ee27e6d067a8f452d5e3ba158e2e6f4",
+      "kind": "markdown"
+    },
+    {
+      "path": "examples/Weave.md",
+      "sha256": "013d3ffa83562aceef1327497fd2651d0111085bf88c4b2ed6deb4eeaaf07a77",
+      "kind": "markdown"
+    },
+    {
+      "path": "examples/WebMcpClient.md",
+      "sha256": "c06b0dbd4076832b1ffd47228fd8d1a6fe7cfbbf8c106f14393e064eff5926f5",
+      "kind": "markdown"
+    },
+    {
+      "path": "examples.md",
+      "sha256": "f04be6c2b389c8fe064158108d1c84cc81d9163d4d4aa04e6767e5a92351b0f8",
+      "kind": "markdown"
+    },
+    {
+      "path": "features/agent-event-handlers.md",
+      "sha256": "7ddee9fa3ba60e35535a23ee976e75afebc59132331e65c76fea0a8aaa0a72d4",
+      "kind": "markdown"
+    },
+    {
+      "path": "features/agent-memory.md",
+      "sha256": "0defbe298c4d1c2b89ed842fdfb7dddabf29434b056d779f258f42f3267a25d2",
+      "kind": "markdown"
+    },
+    {
+      "path": "features/agent-persistence.md",
+      "sha256": "1d146b6fbabf799998d993c0691ebd00fea6efc664d2684a98f9e195a8810028",
+      "kind": "markdown"
+    },
+    {
+      "path": "features/chat-memory/chat-agent-with-memory.md",
+      "sha256": "c8ba945bb113e19bd19bd4e7b64e3b88cbc8c08cb6ed83ebbe0abfa1f832b2c1",
+      "kind": "markdown"
+    },
+    {
+      "path": "features/chat-memory/chat-backend-with-memory.md",
+      "sha256": "ee0285043891b0b36d576eb6ae8084f4906ffc643a8d63d448893d5a3501d90c",
+      "kind": "markdown"
+    },
+    {
+      "path": "features/chat-memory/index.md",
+      "sha256": "9966cba95e31a1c4cdb894040421f7badf468924133352418898382cab2240a5",
+      "kind": "markdown"
+    },
+    {
+      "path": "features/custom-features.md",
+      "sha256": "1f9902cb1de19b5e692798a5dc041d22c7153eb638330f10e87e47826cf45698",
+      "kind": "markdown"
+    },
+    {
+      "path": "features/index.md",
+      "sha256": "c80f27a41f13c2d36ca8439483a77e8f8d2f1d4cfda852eda775ff4a50834d2c",
+      "kind": "markdown"
+    },
+    {
+      "path": "features/long-term-memory.md",
+      "sha256": "86687e3c47224a0807e51676e36d693f5ea514f4d1d54f75f5036d790feb5754",
+      "kind": "markdown"
+    },
+    {
+      "path": "features/open-telemetry/index.md",
+      "sha256": "c30379e50abb68d1244f4c65ab8241be9d2790a282d0fe3261a907720382e6e1",
+      "kind": "markdown"
+    },
+    {
+      "path": "features/open-telemetry/opentelemetry-langfuse-exporter.md",
+      "sha256": "5445375fc209b70527759d6534dfacaea07e3ec56c147ba130ed790c5d0b518f",
+      "kind": "markdown"
+    },
+    {
+      "path": "features/open-telemetry/opentelemetry-weave-exporter.md",
+      "sha256": "847fe6af6c9d4e32164083952056850d93a8bd2a2c18c5a9068dc92e8ec7abe8",
+      "kind": "markdown"
+    },
+    {
+      "path": "features/tracing.md",
+      "sha256": "b5da11ede3ba98affe05dee8bf7f5cf1bc29e54c1bf37fc48b11a4540a2f6563",
+      "kind": "markdown"
+    },
+    {
+      "path": "glossary.md",
+      "sha256": "e56622eed7a4a8c597cbae93f2ee37490af592f8fad1d695c5a60da4a54b0b88",
+      "kind": "markdown"
+    },
+    {
+      "path": "history-compression.md",
+      "sha256": "33f97fa74d2db0579b9a3c16f4613de83620dbabff7b4edc3844fe1bc41cd153",
+      "kind": "markdown"
+    },
+    {
+      "path": "img/basic-strategy-graph.png",
+      "sha256": "710870d6641e442dcbfcf7f31f7993ed3d16cd499af28680c479302eeb1372e1",
+      "kind": "asset"
+    },
+    {
+      "path": "img/favicon.ico",
+      "sha256": "8c153338a54232fcccc4ad1251b449275835c4a76b136da69512fd7fab16a53d",
+      "kind": "asset"
+    },
+    {
+      "path": "img/koog-react-diagram-dark.png",
+      "sha256": "6abfac2c085a77e84cbbb99d922bc15637f960fb01ab2a381b919898bac37de1",
+      "kind": "asset"
+    },
+    {
+      "path": "img/koog-react-diagram-light.png",
+      "sha256": "daf0ae5c545991801a088bf96ab7cae72e6115f5874d39e507b678add587ddff",
+      "kind": "asset"
+    },
+    {
+      "path": "img/opentelemetry-langfuse-exporter-dark.png",
+      "sha256": "bdf4e933a132d632cc59f7aa1d3d49f8242af05847de0649eaecb7b6b1a3a768",
+      "kind": "asset"
+    },
+    {
+      "path": "img/opentelemetry-langfuse-exporter-light.png",
+      "sha256": "a1e2ab45602550404c574f38f3f45076a69200a5b041d3be24305b97222ad056",
+      "kind": "asset"
+    },
+    {
+      "path": "img/opentelemetry-weave-exporter-dark.png",
+      "sha256": "df0157c0eba635404c98897d24786da6375c3c069ef6bfdbbc9c0999b293fcdd",
+      "kind": "asset"
+    },
+    {
+      "path": "img/opentelemetry-weave-exporter-light.png",
+      "sha256": "72b4709813031bba623dbca27e08751cfc324d0f40ab6c17a83850cc8dc3a1ae",
+      "kind": "asset"
+    },
+    {
+      "path": "img/scheme.png",
+      "sha256": "c5501cd25b02e6acc920768557f90190b9b736c789cb5d702ba97c4e146e08b8",
+      "kind": "asset"
+    },
+    {
+      "path": "index.md",
+      "sha256": "8dace95b90bf01b32f3e01b4595e77cac6c040255a76ee26a7f5a011a61d3617",
+      "kind": "markdown"
+    },
+    {
+      "path": "javascripts/mermaid.mjs",
+      "sha256": "c0df2a74148a164340e30150b2967d8e292012b9b562cd9411d666ad76d54549",
+      "kind": "asset"
+    },
+    {
+      "path": "key-features.md",
+      "sha256": "be7942b98bd8d62f41ddc94306fb677ca9fff7737abf819e6bb4f7b238cc331d",
+      "kind": "markdown"
+    },
+    {
+      "path": "ktor-plugin.md",
+      "sha256": "d19fcd56839b70cdecb4fa2874144b3c4e575faa3f970489709df2a938fb26b2",
+      "kind": "markdown"
+    },
+    {
+      "path": "llm-parameters.md",
+      "sha256": "466f3ccc4f3e1d8bc2f0f44bfa020c41bb1f99f9beea533363d154933a3a3596",
+      "kind": "markdown"
+    },
+    {
+      "path": "llm-providers.md",
+      "sha256": "0012d333c588c31cbffe34d048dbfcac1f19854925b027951160e7c4a4f7710d",
+      "kind": "markdown"
+    },
+    {
+      "path": "model-capabilities.md",
+      "sha256": "595a37fe9ed01a50350c454d059d86b81224419deba86218da43cb6322f3a0e5",
+      "kind": "markdown"
+    },
+    {
+      "path": "model-context-protocol.md",
+      "sha256": "c93d00387ee5fd6d4c8110b72c33dcc134de5aaeb74c77f5cc27cc88ab5aaeaa",
+      "kind": "markdown"
+    },
+    {
+      "path": "nodes-and-components.md",
+      "sha256": "e4cd496c59a9d5393bee0cc0f291c78c5eaa898c11d92f3504935dcc37028bbe",
+      "kind": "markdown"
+    },
+    {
+      "path": "parallel-node-execution.md",
+      "sha256": "869a432c4e93c7a19ec520e566c09e0a63deb0c5a8368a937db7701034b1c317",
+      "kind": "markdown"
+    },
+    {
+      "path": "predefined-agent-strategies.md",
+      "sha256": "476af596b9e690db986afec8ce25038e3604b6a5730ea0d24573932044ccc365",
+      "kind": "markdown"
+    },
+    {
+      "path": "prompts/handling-failures.md",
+      "sha256": "5f6f1c637ffca1bb4e830c200a97215a966ebf5dca6a9fe52a2a99927ed2ab1d",
+      "kind": "markdown"
+    },
+    {
+      "path": "prompts/index.md",
+      "sha256": "0a9eb7870b9b31fa43b0997aaf37a5022900804e3f9a38ddae877759719e0c1c",
+      "kind": "markdown"
+    },
+    {
+      "path": "prompts/llm-clients.md",
+      "sha256": "74105a7a2c63b65dc31c120ba5bedf9177bfa0824b06afb914bcc4d2d6f05b51",
+      "kind": "markdown"
+    },
+    {
+      "path": "prompts/llm-response-caching.md",
+      "sha256": "2db2c65d2d23ad47befa9fca662a62d358b47eb67d8f7930395a9ed54b9445da",
+      "kind": "markdown"
+    },
+    {
+      "path": "prompts/prompt-creation/index.md",
+      "sha256": "6b3a1f1e8fd9770a64464e625ab9acbdd6f1d8a3180362b08fc1c89f2cc3fc1b",
+      "kind": "markdown"
+    },
+    {
+      "path": "prompts/prompt-creation/multimodal-content.md",
+      "sha256": "ec369abfe41598c080247c595166258264f09fee07c7c9657f6130e4ca668c34",
+      "kind": "markdown"
+    },
+    {
+      "path": "prompts/prompt-executors.md",
+      "sha256": "b7e65e777811281be076afb910954f0aa731b009d0737b213b05f0b52f1529fe",
+      "kind": "markdown"
+    },
+    {
+      "path": "quickstart.md",
+      "sha256": "7e24c86b44e53e64377280c669ead17b897eb9b63e256a2d67bd36a8b02f2564",
+      "kind": "markdown"
+    },
+    {
+      "path": "ranked-document-storage.md",
+      "sha256": "0398ca5df5643b28133d7396e494dfde751bdb9ae9972baa2b9ec0e658a65e0a",
+      "kind": "markdown"
+    },
+    {
+      "path": "serialization.md",
+      "sha256": "e06a373ee639b5cc062f9f24b3d967f5244add6c74ef8813406d4dc66d1bd7e6",
+      "kind": "markdown"
+    },
+    {
+      "path": "sessions.md",
+      "sha256": "90d6115794b294bb91b575f5bc6ebcae4d9aee0f8b5039c33bf13fe8a1eb8235",
+      "kind": "markdown"
+    },
+    {
+      "path": "snippets/abbreviations.md",
+      "sha256": "398dc24f9b339038e48150492605e478d0c82cf4b7214642f904f2a3b68879f6",
+      "kind": "markdown"
+    },
+    {
+      "path": "snippets/llm-parameters-snippets.md",
+      "sha256": "82a09c3b302e5dba9397413fc43292af88c536e762c7511bedc790f077f7189c",
+      "kind": "markdown"
+    },
+    {
+      "path": "snippets/quickstart-snippets.md",
+      "sha256": "31fa9a263aa32487dd43507dad2174777d0f01ec7292683886bbc17be1e7cb99",
+      "kind": "markdown"
+    },
+    {
+      "path": "spring-ai-integration.md",
+      "sha256": "466e66ad1e1d23402ea6f94bde7f97ee4aa123a9973312ef2ffec1e624e1779b",
+      "kind": "markdown"
+    },
+    {
+      "path": "spring-boot.md",
+      "sha256": "cbc8f9b94f02945bb7a4f1d286d729ace40c146aee3971a806edc3b14a3ded1a",
+      "kind": "markdown"
+    },
+    {
+      "path": "streaming-api.md",
+      "sha256": "1da1c4a87902893e159bc59ecefa433b8a4928e6a86d0d7b5c01340c40422802",
+      "kind": "markdown"
+    },
+    {
+      "path": "structured-output.md",
+      "sha256": "2b71415c81b8a071d8e9245e99ff1bde076c3824a90a1e1fd2ff3160c236f5c2",
+      "kind": "markdown"
+    },
+    {
+      "path": "stylesheets/extra.css",
+      "sha256": "b0ba5829253f513f9cad782e61c4c53edcc9804f42da4b6708da892798f5ffc1",
+      "kind": "asset"
+    },
+    {
+      "path": "subgraphs-overview.md",
+      "sha256": "76b9aadeec473f7fed00f51cfb0732e98f641007fd94f1942eea947e7cacf060",
+      "kind": "markdown"
+    },
+    {
+      "path": "testing.md",
+      "sha256": "47bd4d8f87c7b023126a50377aaac7a61a65fe2722a132d2b8888b8afb9a2ebe",
+      "kind": "markdown"
+    },
+    {
+      "path": "tools/tool-descriptor-schemer.md",
+      "sha256": "99c32801f678f49899bc08c56cdb4f33449d92a237e520c377c896ae1440ec08",
+      "kind": "markdown"
+    },
+    {
+      "path": "tools-overview.md",
+      "sha256": "98d76c9ca65b44f4b7babc58ae65179fb4f2226555bc2b01b673374363ad5533",
+      "kind": "markdown"
+    },
+    {
+      "path": "why-koog.md",
+      "sha256": "acd1d400f2fa946989a590127e5a44dd89fd32dfffb368a2629e4dd30e61e87e",
+      "kind": "markdown"
+    }
+  ]
+}

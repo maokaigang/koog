@@ -1,0 +1,7 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "buildCommand": "cd site && python3 -m pip install --disable-pip-version-check uv && uv sync --frozen --all-extras && uv run mkdocs build",
+  "outputDirectory": "dist"
+}
+

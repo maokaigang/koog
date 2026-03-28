@@ -1,0 +1,12 @@
+.md-banner {
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(33, 150, 243, 0.08), rgba(0, 0, 0, 0.02));
+    padding: 0.9rem 1rem;
+    margin: 1rem 0 1.5rem;
+}
+
+.md-banner p {
+    margin: 0;
+}
+
