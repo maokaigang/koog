@@ -38,28 +38,28 @@ LLM 客户端专为直接与 LLM 提供方交互而设计。
 
     ```kotlin
     fun main() = runBlocking {
-        // 创建一个 OpenAI 客户端
+        // Create an OpenAI client
         val apiKey = System.getenv("OPENAI_API_KEY")
         val client = OpenAILLMClient(apiKey)
 
-        // 创建一个提示词
+        // Create a prompt
         val prompt = prompt("prompt_name", LLMParams()) {
-            // 添加系统消息以设置上下文
+            // Add a system message to set the context
             system("You are a helpful assistant.")
 
-            // 添加用户消息
+            // Add a user message
             user("Tell me about Kotlin")
 
-            // 您也可以添加助手消息作为少样本示例
+            // You can also add assistant messages for few-shot examples
             assistant("Kotlin is a modern programming language...")
 
-            // 添加另一条用户消息
+            // Add another user message
             user("What are its key features?")
         }
 
-        // 运行提示词
+        // Run the prompt
         val response = client.execute(prompt, OpenAIModels.Chat.GPT4o)
-        // 打印响应
+        // Print the response
         println(response)
     }
     ```
@@ -74,51 +74,55 @@ LLM 客户端专为直接与 LLM 提供方交互而设计。
     **/
     -->
     ```java
-    // 创建一个 OpenAI 客户端
+    // Create an OpenAI client
     String apiKey = System.getenv("OPENAI_API_KEY");
     OpenAILLMClient client = new OpenAILLMClient(apiKey);
 
-    // 创建一个提示词
+    // Create a prompt
     Prompt prompt = Prompt.builder("prompt_name")
-        // 添加系统消息以设置上下文
+        // Add a system message to set the context
         .system("You are a helpful assistant.")
         
-        // 添加用户消息
+        // Add a user message
         .user("Tell me about Kotlin")
 
-        // 您也可以添加助手消息作为少样本示例
+        // You can also add assistant messages for few-shot examples
         .assistant("Kotlin is a modern programming language...")
 
-        // 添加另一条用户消息
+        // Add another user message
         .user("What are its key features?")
         .build();
 
-    // 运行提示词
+    // Run the prompt
     List<Message.Response> response = client.execute(prompt, OpenAIModels.Chat.GPT4o, Collections.emptyList());
-    // 打印响应
+    // Print the response
     System.out.println(response);
 
     client.close();
     ```
     <!--- KNIT example-llm-clients-java-01.java -->
 
-## 流式响应 { #running-a-prompt }
+## Streaming responses
 
 !!! note
-    适用于所有 LLM 客户端。
+    Available for all LLM clients.
 
-当您需要在生成时处理响应时，可以在 Kotlin 中使用 `executeStreaming()` 方法，或在 Java 中使用 `executeStreamingWithPublisher()` 来流式传输模型输出。
+When you need to process responses as they are generated, you can use the `executeStreaming()` method in Kotlin or 
+`executeStreamingWithPublisher()` in Java to stream the model output.
 
-流式 API 提供不同类型的帧：
+The streaming API provides different frame types:
 
--   **增量帧** (`TextDelta`, `ReasoningDelta`, `ToolCallDelta`) — 以块形式到达的增量内容
--   **完整帧** (`TextComplete`, `ReasoningComplete`, `ToolCallComplete`) — 接收完所有增量后的完整内容
--   **结束帧** (`End`) — 表示流完成，并包含完成原因
+- **Delta frames** (`TextDelta`, `ReasoningDelta`, `ToolCallDelta`) — incremental content that arrives in chunks
+- **Complete frames** (`TextComplete`, `ReasoningComplete`, `ToolCallComplete`) — full content after all deltas are received
+- **End frame** (`End`) — signals stream completion with finish reason
 
-对于支持推理的模型（例如 Claude Sonnet 4.5 或 GPT-o1），在流式传输期间会发出推理帧。
-有关处理帧的更多详细信息，请参阅 [流式 API 文档](../streaming-api.md)。
+For models that support reasoning (such as Claude Sonnet 4.5 or GPT-o1), reasoning frames will be emitted during 
+streaming.
+See the [Streaming API documentation](../streaming-api.md) for more details on working with frames.
 
-=== "Kotlin"<!--- INCLUDE
+=== "Kotlin"
+
+    <!--- INCLUDE
     import ai.koog.prompt.dsl.prompt
     import ai.koog.prompt.executor.clients.openai.OpenAILLMClient
     import ai.koog.prompt.executor.clients.openai.OpenAIModels
@@ -126,30 +130,30 @@ LLM 客户端专为直接与 LLM 提供方交互而设计。
     import kotlinx.coroutines.runBlocking
     fun main() = runBlocking {
     -->
-<!--- SUFFIX
+    <!--- SUFFIX
     }
     -->
-```kotlin
-// 使用您的 API 密钥设置 OpenAI 客户端
-val token = System.getenv("OPENAI_API_KEY")
-val client = OpenAILLMClient(token)
+    ```kotlin
+    // Set up the OpenAI client with your API key
+    val token = System.getenv("OPENAI_API_KEY")
+    val client = OpenAILLMClient(token)
 
-val response = client.executeStreaming(
-    prompt = prompt("stream_demo") { user("Stream this response in short chunks.") },
-    model = OpenAIModels.Chat.GPT4_1
-)
+    val response = client.executeStreaming(
+        prompt = prompt("stream_demo") { user("Stream this response in short chunks.") },
+        model = OpenAIModels.Chat.GPT4_1
+    )
 
-response.collect { frame ->
-    when (frame) {
-        is StreamFrame.TextDelta -> print(frame.text)
-        is StreamFrame.ReasoningDelta -> print("[Reasoning] ${frame.text}")
-        is StreamFrame.ToolCallComplete -> println("\nTool call: ${frame.name}")
-        is StreamFrame.End -> println("\n[done] Reason: ${frame.finishReason}")
-        else -> {} // 根据需要处理其他帧类型
+    response.collect { frame ->
+        when (frame) {
+            is StreamFrame.TextDelta -> print(frame.text)
+            is StreamFrame.ReasoningDelta -> print("[Reasoning] ${frame.text}")
+            is StreamFrame.ToolCallComplete -> println("\nTool call: ${frame.name}")
+            is StreamFrame.End -> println("\n[done] Reason: ${frame.finishReason}")
+            else -> {} // Handle other frame types if needed
+        }
     }
-}
-```
-<!--- KNIT example-llm-clients-02.kt -->
+    ```
+    <!--- KNIT example-llm-clients-02.kt -->
 
 === "Java"
 
@@ -160,7 +164,7 @@ response.collect { frame ->
     **/
     -->
     ```java
-    // 使用您的 API 密钥设置 OpenAI 客户端
+    // Set up the OpenAI client with your API key
     String token = System.getenv("OPENAI_API_KEY");
     OpenAILLMClient client = new OpenAILLMClient(token);
 
@@ -170,7 +174,7 @@ response.collect { frame ->
     
     Publisher<StreamFrame> response = client.executeStreamingWithPublisher(prompt, OpenAIModels.Chat.GPT4_1);
 
-    // 订阅 Publisher 以消费帧
+    // Subscribe to the Publisher to consume frames
     response.subscribe(new Subscriber<StreamFrame>() {
         private Subscription subscription;
 
@@ -191,7 +195,7 @@ response.collect { frame ->
                         System.out.println("\nTool call: " + toolCall.getName());
                 case StreamFrame.End end ->
                         System.out.println("\n[done] Reason: " + end.getFinishReason());
-                default -> {} // 处理其他帧类型
+                default -> {} // Handle other frame types
             }
         }
 
@@ -206,13 +210,14 @@ response.collect { frame ->
     ```
     <!--- KNIT example-llm-clients-java-02.java -->
 
-## 多选响应 { #streaming-responses }
+## Multiple choices
 
 !!! note
-    适用于除 `GoogleLLMClient`、`BedrockLLMClient` 和 `OllamaClient` 之外的所有 LLM 客户端
+    Available for all LLM clients except `GoogleLLMClient`, `BedrockLLMClient`, and `OllamaClient`
 
-您可以通过使用 `executeMultipleChoices()` 方法，在单次调用中请求模型的多个备选响应。
-这需要额外在执行的提示中指定 [`numberOfChoices`](prompt-creation/index.md#prompt-parameters) LLM 参数。
+You can request multiple alternative responses from the model in a single call by using the `executeMultipleChoices()` method.
+It requires additionally specifying the [`numberOfChoices`](prompt-creation/index.md#prompt-parameters) LLM parameter in the prompt
+being executed.
 
 === "Kotlin"
 
@@ -227,21 +232,22 @@ response.collect { frame ->
     fun main() = runBlocking {
         val apiKey = System.getenv("OPENAI_API_KEY")
         val client = OpenAILLMClient(apiKey)
-``````kotlin
-val choices = client.executeMultipleChoices(
-    prompt = prompt("n_best", params = LLMParams(numberOfChoices = 3)) {
-        system("你是一位创意助手。")
-        user("给我三个不同的故事开篇句子。")
-    },
-    model = OpenAIModels.Chat.GPT4o
-)
 
-choices.forEachIndexed { i, choice ->
-    val text = choice.joinToString(" ") { it.content }
-    println("第 ${i + 1} 句: $text")
-}
-```
-<!--- KNIT example-llm-clients-03.kt -->
+        val choices = client.executeMultipleChoices(
+            prompt = prompt("n_best", params = LLMParams(numberOfChoices = 3)) {
+                system("You are a creative assistant.")
+                user("Give me three different opening lines for a story.")
+            },
+            model = OpenAIModels.Chat.GPT4o
+        )
+
+        choices.forEachIndexed { i, choice ->
+            val text = choice.joinToString(" ") { it.content }
+            println("Line #${i + 1}: $text")
+        }
+    }
+    ```
+    <!--- KNIT example-llm-clients-03.kt -->
 
 === "Java"
 
@@ -255,7 +261,7 @@ choices.forEachIndexed { i, choice ->
     String apiKey = System.getenv("OPENAI_API_KEY");
     OpenAILLMClient client = new OpenAILLMClient(apiKey);
 
-    // 配置参数（LLMParams 构造函数在 Java 中需要全部 8 个参数）
+    // Configure parameters (LLMParams constructor requires all 8 arguments in Java)
     LLMParams params = new LLMParams(
         null, // temperature
         null, // maxTokens
@@ -268,12 +274,12 @@ choices.forEachIndexed { i, choice ->
     );
 
     Prompt prompt = Prompt.builder("n_best")
-        .system("你是一位创意助手。")
-        .user("给我三个不同的故事开篇句子。")
+        .system("You are a creative assistant.")
+        .user("Give me three different opening lines for a story.")
         .build()
         .withParams(params);
 
-    // LLMChoice 是 List<Message.Response> 的类型别名
+    // LLMChoice is a type alias for List<Message.Response>
     List<List<Message.Response>> choices = client.executeMultipleChoices(
         prompt, 
         OpenAIModels.Chat.GPT4o
@@ -285,17 +291,17 @@ choices.forEachIndexed { i, choice ->
         for (Message.Response msg : choice) {
             text.append(msg.getContent()).append(" ");
         }
-        System.out.println("第 " + (i + 1) + " 句: " + text.toString().trim());
+        System.out.println("Line #" + (i + 1) + ": " + text.toString().trim());
     }
     ```
     <!--- KNIT example-llm-clients-java-03.java -->
 
-## 列出可用模型 { #multiple-choices }
+## Listing available models
 
 !!! note
-    适用于所有 LLM 客户端，除了 `AnthropicLLMClient`、`BedrockLLMClient` 和 `OllamaClient`。
+    Available for all LLM clients except `AnthropicLLMClient`, `BedrockLLMClient`, and `OllamaClient`.
 
-要获取 LLM 客户端支持的可用模型 ID 列表，请使用 `models()` 方法：
+To get a list of available model IDs supported by the LLM client, use the `models()` method:    
 
 === "Kotlin"
 
@@ -336,13 +342,15 @@ choices.forEachIndexed { i, choice ->
     ```
     <!--- KNIT example-llm-clients-java-04.java -->
 
-## 嵌入 { #listing-available-models }
+## Embeddings
 
 !!! note
-    适用于 `OpenAILLMClient`、`GoogleLLMClient`、`BedrockLLMClient`、`MistralAILLMClient` 和 `OllamaClient`。
+    Available for `OpenAILLMClient`, `GoogleLLMClient`, `BedrockLLMClient`, `MistralAILLMClient`, and `OllamaClient`.
 
-你可以使用 `embed()` 方法将文本转换为嵌入向量。
-选择一个嵌入模型并将你的文本传递给此方法：<!--- INCLUDE
+You convert text into embedding vectors using the `embed()` method.
+Choose an embedding model and pass your text to this method:
+
+<!--- INCLUDE
 import ai.koog.prompt.dsl.prompt
 import ai.koog.prompt.executor.clients.openai.OpenAILLMClient
 import ai.koog.prompt.executor.clients.openai.OpenAIModels
@@ -363,12 +371,12 @@ fun main() = runBlocking {
 ```
 <!--- KNIT example-llm-clients-05.kt -->
 
-## 内容审核 { #embeddings }
+## Moderation
 
 !!! note
-    适用于以下 LLM 客户端：`OpenAILLMClient`、`BedrockLLMClient`、`MistralAILLMClient`、`OllamaClient`。
+    Available for the following LLM clients: `OpenAILLMClient`, `BedrockLLMClient`, `MistralAILLMClient`, `OllamaClient`.
 
-您可以使用 `moderate()` 方法配合审核模型来检查提示是否包含不当内容：
+You can use the `moderate()` method with a moderation model to check whether a prompt contains inappropriate content:
 
 === "Kotlin"
 
@@ -416,11 +424,11 @@ fun main() = runBlocking {
     ```
     <!--- KNIT example-llm-clients-java-05.java -->
 
-## 与提示执行器集成 { #moderation }
+## Integration with prompt executors
 
-[提示执行器](prompt-executors.md) 封装了 LLM 客户端，并提供额外功能，例如路由、回退机制以及跨提供商的统一使用方式。
-建议在生产环境中使用它们，因为它们在处理多个提供商时提供了灵活性。
+[Prompt executors](prompt-executors.md) wrap LLM clients and provide additional functionality, such as routing, fallbacks, and unified usage across providers.
+They are recommended for production use, as they offer flexibility when working with multiple providers.
 
-[^1]: 通过 OpenAI Moderation API 支持内容审核。
-[^2]: 内容审核需要配置 Guardrails。
-[^3]: 通过 Mistral `v1/moderations` 端点支持内容审核。
+[^1]: Supports moderation via the OpenAI Moderation API.
+[^2]: Moderation requires Guardrails configuration.
+[^3]: Supports moderation via the Mistral `v1/moderations` endpoint.

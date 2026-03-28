@@ -37,26 +37,26 @@
     }
     -->
     ```kotlin
-    // 创建提示执行器
+    // Create a prompt executor
     val client = OpenAILLMClient(System.getenv("OPENAI_API_KEY"))
     val promptExecutor = MultiLLMPromptExecutor(client)
 
-    // 创建缓存的提示执行器
+    // Create a cached prompt executor
     val cachedExecutor = CachedPromptExecutor(
         cache = FilePromptCache(Path("path/to/your/cache/directory")),
         nested = promptExecutor
     )
 
-    // 首次运行缓存的提示执行器
-    // 这将执行实际的 LLM 请求
+    // Run cached prompt executor for the first time
+    // This will perform an actual LLM request
     val firstTime = measureTimeMillis {
         val firstResponse = cachedExecutor.execute(prompt, OpenAIModels.Chat.GPT4o)
         println("First response: ${firstResponse.first().content}")
     }
     println("First execution took: ${firstTime}ms")
 
-    // 第二次运行缓存的提示执行器
-    // 这将立即从缓存返回结果
+    // Run cached prompt executor for the second time
+    // This will return the result immediately from the cache
     val secondTime = measureTimeMillis {
         val secondResponse = cachedExecutor.execute(prompt, OpenAIModels.Chat.GPT4o)
         println("Second response: ${secondResponse.first().content}")
@@ -74,37 +74,38 @@
     **/
     -->
     ```java
-    // 创建提示
+    // Create a prompt
     Prompt prompt = Prompt.builder("test")
             .user("Hello")
             .build();
 
-    // 创建提示执行器
+    // Create a prompt executor
     OpenAILLMClient client = new OpenAILLMClient(System.getenv("OPENAI_API_KEY"));
     MultiLLMPromptExecutor promptExecutor = new MultiLLMPromptExecutor(client);
 
-    // 创建缓存的提示执行器
+    // Create a cached prompt executor
     FilePromptCache cache = new FilePromptCache(Path.of("path/to/your/cache/directory"), null);
     CachedPromptExecutor cachedExecutor = new CachedPromptExecutor(cache, promptExecutor, Clock.System.INSTANCE);
 
-    // 首次运行缓存的提示执行器
-    // 这将执行实际的 LLM 请求
+    // Run cached prompt executor for the first time
+    // This will perform an actual LLM request
     long start1 = System.nanoTime();
     List<Message.Response> firstResponse = cachedExecutor.execute(prompt, OllamaModels.Meta.LLAMA_3_2);
     long firstTimeMs = (System.nanoTime() - start1) / 1_000_000L;
     System.out.println("First response: " + firstResponse.getFirst().getContent());
     System.out.println("First execution took: " + firstTimeMs + "ms");
-    ```    // 第二次运行缓存的提示词执行器
-    // 这将立即从缓存中返回结果
+
+    // Run cached prompt executor for the second time
+    // This will return the result immediately from the cache
     long start2 = System.nanoTime();
     List<Message.Response> secondResponse = cachedExecutor.execute(prompt, OllamaModels.Meta.LLAMA_3_2);
     long secondTimeMs = (System.nanoTime() - start2) / 1_000_000L;
-    System.out.println("第二次响应: " + secondResponse.getFirst().getContent());
-    System.out.println("第二次执行耗时: " + secondTimeMs + "ms");
+    System.out.println("Second response: " + secondResponse.getFirst().getContent());
+    System.out.println("Second execution took: " + secondTimeMs + "ms");
     ```
     <!--- KNIT example-llm-response-caching-java-01.java -->
 
-该示例产生以下输出：
+The example produces the following output:
 
 ```
 First response: Hello! It seems like we're starting a new conversation. What can I help you with today?
@@ -112,9 +113,9 @@ First execution took: 48ms
 Second response: Hello! It seems like we're starting a new conversation. What can I help you with today?
 Second execution took: 1ms
 ```
-第二次响应从缓存中获取，仅耗时1毫秒。
+The second response is retrieved from the cache, which took only 1ms.
 
-!!!注意
-    * 如果在 Kotlin 中调用 `executeStreaming()`，或在 Java 中调用 `executeStreamingWithPublisher()` 并使用缓存的提示词执行器，会以单个数据块的形式生成响应。
-    * 如果在 Kotlin 或 Java 中使用缓存的提示词执行器调用 `moderate()`，会将请求转发给嵌套的提示词执行器，而不会使用缓存。
-    * 在 Kotlin 或 Java 中不支持对多项选择响应（`executeMultipleChoices()`）进行缓存。
+!!!note
+    * If you call `executeStreaming()` in Kotlin or `executeStreamingWithPublisher()` in Java with the cached prompt executor, it produces a response as a single chunk.
+    * If you call `moderate()` with the cached prompt executor in either Kotlin or Java, it forwards the request to the nested prompt executor and does not use the cache.
+    * Caching of multiple choice responses (`executeMultipleChoices()`) is not supported in either Kotlin or Java.

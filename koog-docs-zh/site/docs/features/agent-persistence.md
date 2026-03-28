@@ -43,7 +43,7 @@
         llmModel = OllamaModels.Meta.LLAMA_3_2,
     ) {
         install(Persistence) {
-            // 使用内存存储快照
+            // Use in-memory storage for snapshots
             storage = InMemoryPersistenceStorageProvider()
         }
     }
@@ -63,24 +63,24 @@
         .promptExecutor(SimplePromptExecutorsKt.simpleOllamaAIExecutor("http://localhost:11434"))
         .llmModel(OllamaModels.Meta.LLAMA_3_2)
         .install(Persistence.Feature, cfg -> {
-            // 使用内存存储快照
+            // Use in-memory storage for snapshots
             cfg.setStorage(new InMemoryPersistenceStorageProvider());
         })
     .build();
     ```
     <!--- KNIT example-agent-persistence-java-01.java -->
 
-## 配置选项 { #configuration-options }
+## Configuration options
 
-智能体持久化功能有三个主要配置选项：
+The Agent Persistence feature has three main configuration options:
 
-- **存储提供程序**：用于保存和检索检查点的提供程序。
-- **持续持久化**：在每个节点运行后自动创建检查点。
-- **回滚策略**：确定回滚到检查点时要恢复的状态。
+- **Storage provider**: the provider used to save and retrieve checkpoints.
+- **Continuous persistence**: automatic creation of checkpoints after each node is run.
+- **Rollback strategy**: determines which state will be restored when rolling back to a checkpoint.
 
-### 存储提供程序 { #storage-provider }
+### Storage provider
 
-设置用于保存和检索检查点的存储提供程序：
+Set the storage provider that will be used to save and retrieve checkpoints:
 
 === "Kotlin"
 
@@ -124,17 +124,19 @@
     ```
     <!--- KNIT example-agent-persistence-java-02.java -->
 
-框架包含以下内置提供程序：
+The framework includes the following built-in providers:
 
-- `InMemoryPersistenceStorageProvider`：将检查点存储在内存中（应用程序重启后丢失）。
-- `FilePersistenceStorageProvider`：将检查点持久化到文件系统。
-- `NoPersistenceStorageProvider`：一个不存储检查点的空操作实现。这是默认提供程序。您也可以通过实现 `PersistenceStorageProvider` 接口来实现自定义存储提供程序。
-更多信息，请参阅[自定义存储提供程序](#custom-storage-providers)。
+- `InMemoryPersistenceStorageProvider`: stores checkpoints in memory (lost when the application restarts).
+- `FilePersistenceStorageProvider`: persists checkpoints to the file system.
+- `NoPersistenceStorageProvider`: a no-op implementation that does not store checkpoints. This is the default provider.
 
-### 持续持久化 { #continuous-persistence }
+You can also implement custom storage providers by implementing the `PersistenceStorageProvider` interface.
+For more information, see [Custom storage providers](#custom-storage-providers).
 
-持续持久化意味着每个节点运行后都会自动创建一个检查点。
-要禁用持续持久化，请使用以下代码：
+### Continuous persistence
+
+Continuous persistence means that a checkpoint is automatically created after each node is run.
+To disable continuous persistence, use the code below:
 
 === "Kotlin"
 
@@ -179,13 +181,13 @@
     ```
     <!--- KNIT example-agent-persistence-java-03.java -->
 
-如果禁用了持续持久化，您仍然可以手动创建检查点。
+If continuous persistence is disabled, you can still create checkpoints manually.
 
-## 基本用法 { #basic-usage }
+## Basic usage
 
-### 创建检查点 { #creating-a-checkpoint }
+### Creating a checkpoint
 
-要了解如何在智能体执行的特定点创建检查点，请参阅以下代码示例：
+To learn how to create a checkpoint at a specific point in your agent's execution, see the code sample below:
 
 === "Kotlin"
 
@@ -199,7 +201,7 @@
     -->
     ```kotlin
     suspend fun example(context: AIAgentContext) {
-        // 使用当前状态创建检查点
+        // Create a checkpoint with the current state
         val checkpoint = context.persistence().createCheckpointAfterNode(
             agentContext = context,
             nodePath = context.executionInfo.path(),
@@ -209,7 +211,7 @@
             version = 0L
         )
 
-        // 检查点 ID 可以存储以备后用
+        // The checkpoint ID can be stored for later use
         val checkpointId = checkpoint?.checkpointId
     }
     ```
@@ -227,9 +229,9 @@
     ```
     <!--- KNIT example-agent-persistence-java-04.java -->
 
-### 从检查点恢复 { #restoring-from-a-checkpoint }
+### Restoring from a checkpoint
 
-要从特定检查点恢复智能体的状态，请按照以下代码示例操作：
+To restore the state of an agent from a specific checkpoint, follow the code sample below:
 
 === "Kotlin"
 
@@ -239,10 +241,10 @@
     -->
     ```kotlin
     suspend fun example(context: AIAgentContext, checkpointId: String) {
-        // 回滚到特定检查点
+        // Roll back to a specific checkpoint
         context.persistence().rollbackToCheckpoint(checkpointId, context)
 
-        // 或回滚到最新检查点
+        // Or roll back to the latest checkpoint
         context.persistence().rollbackToLatestCheckpoint(context)
     }
     ```
@@ -260,11 +262,12 @@
     ```
     <!--- KNIT example-agent-persistence-java-05.java -->
 
-#### 回滚工具产生的所有副作用 { #rolling-back-all-side-effects-produced-by-tools }
+#### Rolling back all side-effects produced by tools
 
-某些工具产生副作用是很常见的。具体来说，当您在后台运行智能体时，一些工具很可能会执行某些数据库事务。这使得您的智能体更难回到过去。
+It's quite common for some tools to produce side-effects. Specifically, when you are running your agents on the backend, 
+some of the tools would likely perform some database transactions. This makes it much harder for your agent to travel back in time.
 
-假设您有一个工具 `createUser`，可以在数据库中创建新用户。并且您的智能体随着时间的推移已经调用了多个工具：
+Imagine you have a tool `createUser` that creates a new user in your database. And your agent has populated multiple tool calls overtime:
 
 ```
 tool call: createUser "Alex"
@@ -274,9 +277,13 @@ tool call: createUser "Alex"
 tool call: createUser "Daniel"
 tool call: createUser "Maria"
 ```
- <!--- KNIT example-agent-persistence-01.txt -->现在您希望回滚到某个检查点。仅恢复代理的状态（包括消息历史和策略图节点）不足以完全还原检查点之前的世界状态。您还需要恢复工具调用产生的副作用。在我们的示例中，这意味着从数据库中移除 `Maria` 和 `Daniel`。
+ <!--- KNIT example-agent-persistence-01.txt -->
 
-通过 Koog 持久化功能，您可以通过为 `Persistence` 功能配置提供 `RollbackToolRegistry` 来实现这一点：
+And now you would like to roll back to a checkpoint. Restoring the agent's state (including message history, and strategy graph node) alone would not
+be sufficient to achieve the exact state of the world before the checkpoint. You should also restore the side-effects produced by your tool calls. In our example,
+this would mean removing `Maria` and `Daniel` from the database.
+
+With Koog Persistence you can achieve that by providing a `RollbackToolRegistry` to `Persistence` feature config:
 
 === "Kotlin"
 
@@ -301,10 +308,10 @@ tool call: createUser "Maria"
     install(Persistence) {
         enableAutomaticPersistence = true
         rollbackToolRegistry = RollbackToolRegistry {
-            // 对于每个 `createUser` 工具调用，在回滚到目标执行点时，
-            // 都会按相反顺序调用一次 `removeUser`。
-            // 注意：`removeUser` 工具应接受与 `createUser` 完全相同的参数。
-            // 开发者需确保 `removeUser` 调用能回滚 `createUser` 的所有副作用：
+            // For every `createUser` tool call there will be a `removeUser` invocation in the reverse order 
+            // when rolling back to the desired execution point.
+            // Note: `removeUser` tool should take the same exact arguments as `createUser`. 
+            // It's the developer's responsibility to make sure that `removeUser` invocation rolls back all side-effects of `createUser`:
             registerRollback(::createUser, ::removeUser)
         }
     }
@@ -323,9 +330,9 @@ tool call: createUser "Maria"
     ```
     <!--- KNIT example-agent-persistence-java-06.java -->
 
-### 使用扩展函数 { #using-extension-functions }
+### Using extension functions
 
-代理持久化功能提供了便捷的扩展函数来处理检查点：
+The Agent Persistence feature provides convenient extension functions for working with checkpoints:
 
 === "Kotlin"
 
@@ -338,12 +345,12 @@ tool call: createUser "Maria"
     -->
     ```kotlin
     suspend fun example(context: AIAgentContext) {
-        // 访问检查点功能
+        // Access the checkpoint feature
         val checkpointFeature = context.persistence()
 
-        // 或使用检查点功能执行操作
+        // Or perform an action with the checkpoint feature
         context.withPersistence { ctx ->
-            // 'this' 指向检查点功能
+            // 'this' is the checkpoint feature
             createCheckpointAfterNode(
                 agentContext = ctx,
                 nodePath = ctx.executionInfo.path(),
@@ -369,11 +376,11 @@ tool call: createUser "Maria"
     ```
     <!--- KNIT example-agent-persistence-java-07.java -->
 
-## 高级用法 { #advanced-usage }
+## Advanced usage
 
-### 自定义存储提供程序 { #custom-storage-providers }
+### Custom storage providers
 
-您可以通过实现 `PersistenceStorageProvider` 接口来自定义存储提供程序：
+You can implement custom storage providers by implementing the `PersistenceStorageProvider` interface:
 
 === "Kotlin"
 
@@ -413,7 +420,10 @@ tool call: createUser "Maria"
     -->
     ```java
     ```
-    <!--- KNIT example-agent-persistence-java-08.java -->要在功能配置中使用您的自定义提供程序，请在代理中配置代理持久化功能时将其设置为存储。
+    <!--- KNIT example-agent-persistence-java-08.java -->
+
+To use your custom provider in the feature configuration, set it as the storage when configuring the Agent Persistence
+feature in your agent.
 
 === "Kotlin"
 
@@ -462,9 +472,9 @@ tool call: createUser "Maria"
     ```
     <!--- KNIT example-agent-persistence-java-09.java -->
 
-### 设置执行点 { #setting-execution-points }
+### Setting execution points
 
-如需进行高级控制，您可以直接设置代理的执行点：
+For advanced control, you can directly set the execution point of an agent:
 
 === "Kotlin"
 
@@ -480,7 +490,7 @@ tool call: createUser "Maria"
     -->
     ```kotlin
     fun example(context: AIAgentContext) {
-        // 您可以在某个节点之前设置执行点，并为其提供输入：
+        // You can set the execution point before some node and provide an input for it:
         context.persistence().setExecutionPoint(
             agentContext = context,
             nodePath = context.executionInfo.path(),
@@ -488,7 +498,7 @@ tool call: createUser "Maria"
             input = customInput
         )
 
-        // 或在某个节点之后设置执行点，并提供该节点的输出：
+        // Or after some node and provide an output from the node:
         context.persistence().setExecutionPointAfterNode(
             agentContext = context,
             nodePath = context.executionInfo.path(),
@@ -512,4 +522,4 @@ tool call: createUser "Maria"
     ```
     <!--- KNIT example-agent-persistence-java-10.java -->
 
-这允许对代理状态进行更精细的控制，而不仅限于从检查点恢复。
+This allows for more fine-grained control over the agent's state beyond just restoring from checkpoints.

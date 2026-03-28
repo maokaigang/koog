@@ -40,9 +40,9 @@ exclude: true
         <version>0.7.1</version>
     </dependency>
     ```
-# --8<-- [end:dependencies] { #8-end-dependencies }
+# --8<-- [end:dependencies]
 
-# --8<-- [start:api-key] { #8-start-api-key }
-从 LLM 提供商获取 API 密钥，或通过 Ollama 运行本地 LLM。
-更多信息请参阅 [快速入门](/quickstart.md)。
-# --8<-- [end:api-key] { #8-end-api-key }
+# --8<-- [start:api-key]
+Get an API key from an LLM provider or run a local LLM via Ollama.
+For more information, see [Quickstart](/quickstart.md).
+# --8<-- [end:api-key]

@@ -143,41 +143,43 @@ ai:
 - 对于 Kotlin，需要添加 kotlinx-coroutines-core 和 kotlinx-coroutines-reactor 依赖（Java 版本调用阻塞的 `execute` 方法）
 - 通过属性启用 Anthropic（ai.koog.anthropic.enabled=true）
 
-=== "Kotlin"```kotlin
-import ai.koog.prompt.dsl.prompt
-import ai.koog.prompt.executor.clients.anthropic.AnthropicModels
-import ai.koog.prompt.executor.model.PromptExecutor
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+=== "Kotlin"
 
-@RestController
-@RequestMapping("/api/chat")
-class ChatController(private val anthropicExecutor: PromptExecutor) {
+    ```kotlin
+    import ai.koog.prompt.dsl.prompt
+    import ai.koog.prompt.executor.clients.anthropic.AnthropicModels
+    import ai.koog.prompt.executor.model.PromptExecutor
+    import org.springframework.http.ResponseEntity
+    import org.springframework.web.bind.annotation.PostMapping
+    import org.springframework.web.bind.annotation.RequestBody
+    import org.springframework.web.bind.annotation.RequestMapping
+    import org.springframework.web.bind.annotation.RestController
 
-    @PostMapping
-    suspend fun chat(@RequestBody request: ChatRequest): ResponseEntity<ChatResponse> {
-        return try {
-            val prompt = prompt("chat") {
-                system("You are a helpful assistant")
-                user(request.message)
+    @RestController
+    @RequestMapping("/api/chat")
+    class ChatController(private val anthropicExecutor: PromptExecutor) {
+
+        @PostMapping
+        suspend fun chat(@RequestBody request: ChatRequest): ResponseEntity<ChatResponse> {
+            return try {
+                val prompt = prompt("chat") {
+                    system("You are a helpful assistant")
+                    user(request.message)
+                }
+
+                val result = anthropicExecutor.execute(prompt, AnthropicModels.Haiku_4_5)
+                ResponseEntity.ok(ChatResponse(result.first().content))
+            } catch (e: Exception) {
+                ResponseEntity.internalServerError()
+                    .body(ChatResponse("Error processing request"))
             }
-
-            val result = anthropicExecutor.execute(prompt, AnthropicModels.Haiku_4_5)
-            ResponseEntity.ok(ChatResponse(result.first().content))
-        } catch (e: Exception) {
-            ResponseEntity.internalServerError()
-                .body(ChatResponse("Error processing request"))
         }
     }
-}
 
-data class ChatRequest(val message: String)
-data class ChatResponse(val response: String)
-```
-<!--- KNIT example-spring-boot-kotlin-01.txt -->
+    data class ChatRequest(val message: String)
+    data class ChatResponse(val response: String)
+    ```
+    <!--- KNIT example-spring-boot-kotlin-01.txt -->
 
 === "Java"
 
@@ -228,11 +230,13 @@ data class ChatResponse(val response: String)
     ```
     <!--- KNIT example-spring-boot-java-01.txt -->
 
-Spring Framework 通过 bean 名称（`anthropicExecutor`）注入了 Anthropic 的执行器，
-但你也可以使用 `@Qualifier` 注解注入多个 `PromptExecutor` bean（参见下方的“多 bean 错误”部分）。
+Spring Framework injected the executor for Anthropic by bean name (`anthropicExecutor`),
+but you can also inject multiple `PromptExecutor` beans using `@Qualifier` annotation (see "Multiple beans error" below).
 
-## 高级用法 { #advanced-usage }
-### LLM 提供者回退配置多个 LLM 提供方后，您可以通过 `MultiLLMPromptExecutor` 向多个 LLM 发送请求： { #llm-provider-fallback }
+## Advanced usage
+### LLM Provider Fallback
+
+After configuring multiple LLM providers you can send request to multiple LLMs via `MultiLLMPromptExecutor`:
 
 === "Kotlin"
 
@@ -310,7 +314,7 @@ Spring Framework 通过 bean 名称（`anthropicExecutor`）注入了 Anthropic 
                 .user(input)
                 .build();
 
-```            for (LLModel llm : llms) {
+            for (LLModel llm : llms) {
                 try {
                     List<Message.Response> result = multiLLMPromptExecutor.execute(prompt, llm);
                     return result.get(0).getContent();
@@ -325,51 +329,53 @@ Spring Framework 通过 bean 名称（`anthropicExecutor`）注入了 Anthropic 
     ```
     <!--- KNIT example-spring-boot-java-02.txt -->
 
-你也可以注册自己的 `MultiLLMPromptExecutor` bean 并向其传递一个 `FallbackPromptExecutorSettings`。
-要覆盖你 bean 的自动配置，可以使用 `@Primary` 注解。
+You can also register your own `MultiLLMPromptExecutor` bean and pass a `FallbackPromptExecutorSettings` to it.
+To override the auto-configuration for your beans you can use `@Primary` annotation.
 
-## 配置参考 { #configuration-reference }
+## Configuration Reference
 
-### 可用属性 { #available-properties }
+### Available Properties
 
-| 属性                      | 描述         | Bean 条件                         | 默认值                                     |
+| Property                      | Description         | Bean Condition                         | Default                                     |
 |-------------------------------|---------------------|----------------------------------------|---------------------------------------------|
-| `ai.koog.openai.api-key`      | OpenAI API 密钥      | 创建 `openAIExecutor` bean 所必需     | -                                           |
-| `ai.koog.openai.base-url`     | OpenAI 基础 URL     | 可选                               | `https://api.openai.com`                    |
-| `ai.koog.anthropic.api-key`   | Anthropic API 密钥   | 创建 `anthropicExecutor` bean 所必需  | -                                           |
-| `ai.koog.anthropic.base-url`  | Anthropic 基础 URL  | 可选                               | `https://api.anthropic.com`                 |
-| `ai.koog.google.api-key`      | Google API 密钥      | 创建 `googleExecutor` bean 所必需     | -                                           |
-| `ai.koog.google.base-url`     | Google 基础 URL     | 可选                               | `https://generativelanguage.googleapis.com` |
-| `ai.koog.openrouter.api-key`  | OpenRouter API 密钥  | 创建 `openRouterExecutor` bean 所必需 | -                                           |
-| `ai.koog.openrouter.base-url` | OpenRouter 基础 URL | 可选                               | `https://openrouter.ai`                     |
-| `ai.koog.deepseek.api-key`    | DeepSeek API 密钥    | 创建 `deepSeekExecutor` bean 所必需   | -                                           |
-| `ai.koog.deepseek.base-url`   | DeepSeek 基础 URL   | 可选                               | `https://api.deepseek.com`                  |
-| `ai.koog.mistral.api-key`     | Mistral API 密钥     | 创建 `mistralAIExecutor` bean 所必需  | -                                           |
-| `ai.koog.mistral.base-url`    | Mistral 基础 URL    | 可选                               | `https://api.mistral.ai`                    |
-| `ai.koog.ollama.base-url`     | Ollama 基础 URL     | 可选                               | `http://127.0.0.1:11434`                    |
+| `ai.koog.openai.api-key`      | OpenAI API key      | Required for `openAIExecutor` bean     | -                                           |
+| `ai.koog.openai.base-url`     | OpenAI base URL     | Optional                               | `https://api.openai.com`                    |
+| `ai.koog.anthropic.api-key`   | Anthropic API key   | Required for `anthropicExecutor` bean  | -                                           |
+| `ai.koog.anthropic.base-url`  | Anthropic base URL  | Optional                               | `https://api.anthropic.com`                 |
+| `ai.koog.google.api-key`      | Google API key      | Required for `googleExecutor` bean     | -                                           |
+| `ai.koog.google.base-url`     | Google base URL     | Optional                               | `https://generativelanguage.googleapis.com` |
+| `ai.koog.openrouter.api-key`  | OpenRouter API key  | Required for `openRouterExecutor` bean | -                                           |
+| `ai.koog.openrouter.base-url` | OpenRouter base URL | Optional                               | `https://openrouter.ai`                     |
+| `ai.koog.deepseek.api-key`    | DeepSeek API key    | Required for `deepSeekExecutor` bean   | -                                           |
+| `ai.koog.deepseek.base-url`   | DeepSeek base URL   | Optional                               | `https://api.deepseek.com`                  |
+| `ai.koog.mistral.api-key`     | Mistral API key     | Required for `mistralAIExecutor` bean  | -                                           |
+| `ai.koog.mistral.base-url`    | Mistral base URL    | Optional                               | `https://api.mistral.ai`                    |
+| `ai.koog.ollama.base-url`     | Ollama base URL     | Optional                               | `http://127.0.0.1:11434`                    |
 
-### Bean 名称 { #bean-names }
+### Bean Names
 
-自动配置会创建以下 bean（当配置时）：- `openAIExecutor` - OpenAI 执行器（需要 `ai.koog.openai.api-key`）
-- `anthropicExecutor` - Anthropic 执行器（需要 `ai.koog.anthropic.api-key`）
-- `googleExecutor` - Google 执行器（需要 `ai.koog.google.api-key`）
-- `openRouterExecutor` - OpenRouter 执行器（需要 `ai.koog.openrouter.api-key`）
-- `deepSeekExecutor` - DeepSeek 执行器（需要 `ai.koog.deepseek.api-key`）
-- `mistralAIExecutor` - Mistral AI 执行器（需要 `ai.koog.mistral.api-key`）
-- `ollamaExecutor` - Ollama 执行器（需要 `ai.koog.ollama.enabled=true`）
+The auto-configuration creates the following beans (when configured):
+
+- `openAIExecutor` - OpenAI executor (requires `ai.koog.openai.api-key`)
+- `anthropicExecutor` - Anthropic executor (requires `ai.koog.anthropic.api-key`)
+- `googleExecutor` - Google executor (requires `ai.koog.google.api-key`)
+- `openRouterExecutor` - OpenRouter executor (requires `ai.koog.openrouter.api-key`)
+- `deepSeekExecutor` - DeepSeek executor (requires `ai.koog.deepseek.api-key`)
+- `mistralAIExecutor` - Mistral AI executor (requires `ai.koog.mistral.api-key`)
+- `ollamaExecutor` - Ollama executor (requires `ai.koog.ollama.enabled=true`)
 - `multiLLMPromptExecutor` - MultiLLMPromptExecutor
 
-## 故障排除 { #troubleshooting }
+## Troubleshooting
 
-### 常见问题 { #common-issues }
+### Common Issues
 
-**错误：没有符合条件的 'PromptExecutor' 类型 bean 可用**
+**Error: No qualifying bean of type 'PromptExecutor' available**
 
-**解决方案：** 确保在配置文件中至少配置了一个提供程序。
+**Solution:** Ensure you have configured at least one provider in your properties file.
 
-**错误：存在多个符合条件的 'PromptExecutor' 类型 bean**
+**Error: Multiple qualifying beans of type 'PromptExecutor' available**
 
-**解决方案：** 使用 `@Qualifier` 来指定所需的 bean：
+**Solution:** Use `@Qualifier` to specify which bean you want:
 
 === "Kotlin"
 
@@ -402,23 +408,23 @@ Spring Framework 通过 bean 名称（`anthropicExecutor`）注入了 Anthropic 
     ```
     <!--- KNIT example-spring-boot-java-03.txt -->
 
-**错误：API 密钥为必需但未提供**
+**Error: API key is required but not provided**
 
-**解决方案：** 检查环境变量是否正确设置，并且 Spring Boot 应用程序可以访问。
+**Solution:** Check that your environment variables are properly set and accessible to your Spring Boot application.
 
-## 最佳实践 { #best-practices }
+## Best Practices
 
-1. **环境变量：** 始终使用环境变量来存储 API 密钥
-2. **可空注入：** 使用可空类型来处理提供程序未配置的情况
-3. **回退逻辑：** 在使用多个提供程序时实现回退机制
-4. **错误处理：** 在生产代码中始终将执行器调用包装在 try-catch 块中
-5. **测试：** 在测试中使用模拟对象，避免进行实际的 API 调用
-6. **配置验证：** 在使用执行器之前检查其是否可用
+1. **Environment Variables**: Always use environment variables for API keys
+2. **Nullable Injection**: Use nullable types to handle cases where providers aren't configured
+3. **Fallback Logic**: Implement fallback mechanisms when using multiple providers
+4. **Error Handling**: Always wrap executor calls in try-catch blocks for production code
+5. **Testing**: Use mocks in tests to avoid making actual API calls
+6. **Configuration Validation**: Check if executors are available before using them
 
-## 后续步骤 { #next-steps }
+## Next Steps
 
-- 了解[基础代理](agents/basic-agents.md)以构建最小化的 AI 工作流
-- 探索[基于图的代理](agents/graph-based-agents.md)以应对高级用例
-- 查看[工具概览](tools-overview.md)以扩展代理的能力
-- 查看[示例](examples.md)了解实际实现
-- 阅读[术语表](glossary.md)以更好地理解框架
+- Learn about the [basic agents](agents/basic-agents.md) to build minimal AI workflows
+- Explore [graph-based agents](agents/graph-based-agents.md) for advanced use cases
+- See the [tools overview](tools-overview.md) to extend your agents' capabilities
+- Check out [examples](examples.md) for real-world implementations
+- Read the [glossary](glossary.md) to understand the framework better

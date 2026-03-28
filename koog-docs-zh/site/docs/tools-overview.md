@@ -76,7 +76,7 @@ Koog 框架中有三种类型的工具：
     ```
     <!--- KNIT example-tools-overview-java-01.java -->
 
-要合并多个工具注册表，请执行以下操作：
+To merge multiple tool registries, do the following:
 
 === "Kotlin"
 
@@ -140,27 +140,29 @@ Koog 框架中有三种类型的工具：
     ```
     <!--- KNIT example-tools-overview-java-02.java -->
 
-### 将工具传递给代理 { #passing-tools-to-an-agent }
+### Passing tools to an agent
 
-要使代理能够使用工具，您需要在创建代理时提供一个包含该工具的工具注册表作为参数：
+To enable an agent to use a tool, you need to provide a tool registry that contains this tool as an argument when creating the agent:
 
-=== "Kotlin"<!--- INCLUDE
+=== "Kotlin"
+
+    <!--- INCLUDE
     import ai.koog.agents.core.agent.AIAgent
     import ai.koog.agents.example.exampleToolsOverview01.toolRegistry
     import ai.koog.prompt.executor.clients.openai.OpenAIModels
     import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
     -->
-```kotlin
-// 智能体初始化
-val agent = AIAgent(
-    promptExecutor = simpleOpenAIExecutor(System.getenv("OPENAI_API_KEY")),
-    systemPrompt = "你是一位具备强大数学能力的助手。",
-    llmModel = OpenAIModels.Chat.GPT4o,
-    // 将你的工具注册表传递给智能体
-    toolRegistry = toolRegistry
-)
-```
-<!--- KNIT example-tools-overview-03.kt -->
+    ```kotlin
+    // Agent initialization
+    val agent = AIAgent(
+        promptExecutor = simpleOpenAIExecutor(System.getenv("OPENAI_API_KEY")),
+        systemPrompt = "You are a helpful assistant with strong mathematical skills.",
+        llmModel = OpenAIModels.Chat.GPT4o,
+        // Pass your tool registry to the agent
+        toolRegistry = toolRegistry
+    )
+    ```
+    <!--- KNIT example-tools-overview-03.kt -->
 
 === "Java"
 
@@ -173,7 +175,7 @@ val agent = AIAgent(
     ```java
     AIAgent<String, String> agent = AIAgent.builder()
         .promptExecutor(simpleOpenAIExecutor(System.getenv("OPENAI_API_KEY")))
-        .systemPrompt("你是一位具备强大数学能力的助手。")
+        .systemPrompt("You are a helpful assistant with strong mathematical skills.")
         .llmModel(OpenAIModels.Chat.GPT4o)
         .toolRegistry(ToolRegistry.builder()
             .tools(secondSampleTool)
@@ -183,27 +185,29 @@ val agent = AIAgent(
     ```
     <!--- KNIT example-tools-overview-java-03.java -->
 
-### 调用工具 { #calling-tools }
+### Calling tools
 
-在你的智能体代码中，有几种调用工具的方式。推荐的方法是使用智能体上下文中提供的方法，而不是直接调用工具，这能确保在智能体环境中正确处理工具操作。
+There are several ways to call tools within your agent code. The recommended approach is to use the provided methods
+in the agent context rather than calling tools directly, as this ensures proper handling of tool operation within the
+agent environment.
 
 !!! tip
-    请确保你已在工具中实现了适当的[错误处理](features/agent-event-handlers.md)，以防止智能体运行失败。
+    Ensure you have implemented proper [error handling](features/agent-event-handlers.md) in your tools to prevent agent failure.
 
-工具在由 `AIAgentLLMWriteSession` 表示的特定会话上下文中被调用。
-它提供了几种调用工具的方法，以便你可以：
+The tools are called within a specific session context represented by `AIAgentLLMWriteSession`.
+It provides several methods for calling tools so that you can:
 
-- 使用给定的参数调用一个工具。
-- 通过工具名称和给定的参数调用一个工具。
-- 通过提供的工具类和参数调用一个工具。
-- 使用给定的参数调用指定类型的工具。
-- 调用一个返回原始字符串结果的工具。
+- Call a tool with the given arguments.
+- Call a tool by its name and the given arguments.
+- Call a tool by the provided tool class and arguments.
+- Call a tool of the specified type with the given arguments.
+- Call a tool that returns a raw string result.
 
-更多详细信息，请参阅 [AIAgentLLMWriteSession](api:agents-core::ai.koog.agents.core.agent.session.AIAgentLLMWriteSession) 的 API 参考。
+For more details, the API reference for [AIAgentLLMWriteSession](api:agents-core::ai.koog.agents.core.agent.session.AIAgentLLMWriteSession).
 
-#### 并行工具调用 { #parallel-tool-calls }
+#### Parallel tool calls
 
-你也可以使用 `toParallelToolCallsRaw` 扩展来并行调用工具。例如：
+You can also call tools in parallel using the `toParallelToolCallsRaw` extension. For example:
 
 === "Kotlin"
 
@@ -227,15 +231,15 @@ val agent = AIAgent(
     class BookTool() : SimpleTool<Book>(
         argsType = typeToken<Book>(),
         name = NAME,
-        description = "一个从 Markdown 解析书籍信息的工具"
+        description = "A tool to parse book information from Markdown"
     ) {
         companion object {
             const val NAME = "book"
         }
     
         override suspend fun execute(args: Book): String {
-            println("${args.title} 作者 ${args.author}:\n ${args.description}")
-            return "完成"
+            println("${args.title} by ${args.author}:\n ${args.description}")
+            return "Done"
         }
     }
     
@@ -246,7 +250,7 @@ val agent = AIAgent(
         val myNode by node<Unit, Unit> { _ ->
             llm.writeSession {
                 flow {
-                    emit(Book("书籍 1", "作者 1", "描述 1"))
+                    emit(Book("Book 1", "Author 1", "Description 1"))
                 }.toParallelToolCallsRaw(BookTool::class).collect()
             }
         }
@@ -267,25 +271,28 @@ val agent = AIAgent(
     ```
     <!--- KNIT example-tools-overview-java-04.java -->
 
-#### 从节点调用工具 { #calling-tools-from-nodes }
+#### Calling tools from nodes
 
-在使用节点构建智能体工作流时，你可以使用特殊节点来调用工具：
+When building agent workflows with nodes, you can use special nodes to call tools:
 
-* **nodeExecuteTool**：调用单个工具调用并返回其结果。详情请参阅 [API 参考](api:agents-core::ai.koog.agents.core.dsl.extension.nodeExecuteTool)。* **nodeExecuteSingleTool**：调用指定工具并传入参数。详情请参阅 [API 参考文档](api:agents-core::ai.koog.agents.core.dsl.extension.nodeExecuteSingleTool)。
+* **nodeExecuteTool**: calls a single tool call and returns its result. For details, see [API reference](api:agents-core::ai.koog.agents.core.dsl.extension.nodeExecuteTool).
 
-* **nodeExecuteMultipleTools**：执行多个工具调用并返回结果。详情请参阅 [API 参考文档](api:agents-core::ai.koog.agents.core.dsl.extension.nodeExecuteMultipleTools)。
+* **nodeExecuteSingleTool** that calls a specific tool with the provided arguments. For details, see [API reference](api:agents-core::ai.koog.agents.core.dsl.extension.nodeExecuteSingleTool).
 
-* **nodeLLMSendToolResult**：向 LLM 发送工具执行结果并获取响应。详情请参阅 [API 参考文档](api:agents-core::ai.koog.agents.core.dsl.extension.nodeLLMSendToolResult)。
+* **nodeExecuteMultipleTools** that performs multiple tool calls and returns their results. For details, see [API reference](api:agents-core::ai.koog.agents.core.dsl.extension.nodeExecuteMultipleTools).
 
-* **nodeLLMSendMultipleToolResults**：向 LLM 发送多个工具执行结果。详情请参阅 [API 参考文档](api:agents-core::ai.koog.agents.core.dsl.extension.nodeLLMSendMultipleToolResults)。
+* **nodeLLMSendToolResult** that sends a tool result to the LLM and gets a response. For details, see [API reference](api:agents-core::ai.koog.agents.core.dsl.extension.nodeLLMSendToolResult).
 
-## 将智能体作为工具使用 { #using-agents-as-tools }
+* **nodeLLMSendMultipleToolResults** that sends multiple tool results to the LLM. For details, see [API reference](api:agents-core::ai.koog.agents.core.dsl.extension.nodeLLMSendMultipleToolResults).
 
-该框架支持将任意 AI 智能体转换为可供其他智能体调用的工具。这一强大功能使您能够构建分层智能体架构，让高层协调智能体可以像调用工具一样调用专用智能体。
+## Using agents as tools
 
-### 将智能体转换为工具 { #converting-agents-to-tools }
+The framework provides the capability to convert any AI agent into a tool that can be used by other agents. 
+This powerful feature enables you to create hierarchical agent architectures where specialized agents can be called as tools by higher-level orchestrating agents.
 
-要转换智能体为工具，请使用 `AIAgentService` 及 `createAgentTool()` 扩展函数：
+### Converting agents to tools
+
+To convert an agent into a tool, use the `AIAgentService` and the `createAgentTool()` extension function:
 
 === "Kotlin"
 
@@ -303,19 +310,19 @@ val agent = AIAgent(
     val analysisToolRegistry = ToolRegistry {}
     -->
     ```kotlin
-    // 创建专用智能体服务，负责生成财务分析智能体
+    // Create a specialized agent service, responsible for creating financial analysis agents.
     val analysisAgentService = AIAgentService(
         promptExecutor = simpleOpenAIExecutor(apiKey),
         llmModel = OpenAIModels.Chat.GPT4o,
-        systemPrompt = "您是一名财务分析专家。",
+        systemPrompt = "You are a financial analysis specialist.",
         toolRegistry = analysisToolRegistry
     )
     
-    // 创建调用时会运行财务分析智能体的工具
+    // Create a tool that would run financial analysis agent once called.
     val analysisAgentTool = analysisAgentService.createAgentTool(
         agentName = "analyzeTransactions",
-        agentDescription = "执行财务交易分析",
-        inputDescription = "交易分析请求",
+        agentDescription = "Performs financial transaction analysis",
+        inputDescription = "Transaction analysis request",
         inputType = typeToken<String>(),
     )
     ```
@@ -333,9 +340,10 @@ val agent = AIAgent(
     ```
     <!--- KNIT example-tools-overview-java-05.java -->
 
-### 在其他智能体中使用智能体工具 { #using-agent-tools-in-other-agents }
 
-转换为工具后，您可以将智能体工具添加到其他智能体的工具注册表中：
+### Using agent tools in other agents
+
+Once converted to a tool, you can add the agent tool to another agent's tool registry:
 
 === "Kotlin"
 
@@ -348,14 +356,14 @@ val agent = AIAgent(
     const val apiKey = ""
     -->
     ```kotlin
-    // 创建能够使用专用智能体作为工具的协调智能体
+    // Create a coordinator agent that can use specialized agents as tools
     val coordinatorAgent = AIAgent(
         promptExecutor = simpleOpenAIExecutor(apiKey),
         llmModel = OpenAIModels.Chat.GPT4o,
-        systemPrompt = "您负责协调不同的专业服务。",
+        systemPrompt = "You coordinate different specialized services.",
         toolRegistry = ToolRegistry {
             tool(analysisAgentTool)
-            // 按需添加其他工具
+            // Add other tools as needed
         }
     )
     ```
@@ -373,16 +381,17 @@ val agent = AIAgent(
     ```
     <!--- KNIT example-tools-overview-java-06.java -->
 
-### 智能体工具执行流程 { #agent-tool-execution }
 
-当智能体工具被调用时：
+### Agent tool execution
 
-1. 参数根据输入描述符进行反序列化
-2. 封装的智能体使用反序列化后的输入执行
-3. 智能体的输出被序列化并作为工具结果返回
+When an agent tool is called:
 
-### 智能体作为工具的优势 { #benefits-of-agents-as-tools }
+1. The arguments are deserialized according to the input descriptor.
+2. The wrapped agent is executed with the deserialized input.
+3. The agent's output is serialized and returned as the tool result.
 
-- **模块化**：将复杂工作流拆分为专用智能体
-- **可复用性**：同一专用智能体可被多个协调智能体使用
-- **关注点分离**：每个智能体可专注于特定领域
+### Benefits of agents as tools
+
+- **Modularity**: Break complex workflows into specialized agents.
+- **Reusability**: Use the same specialized agent across multiple coordinator agents.
+- **Separation of concerns**: Each agent can focus on its specific domain.

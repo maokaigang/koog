@@ -34,7 +34,7 @@
     -->
     ```kotlin
     val myNode by node<Input, Output>("node_name") { input ->
-        // 处理逻辑
+        // Processing
         returnValue
     }
     ```
@@ -59,14 +59,16 @@
         .withInput(Input.class)
         .withOutput(Output.class)
         .withAction((input, ctx) -> {
-            // 处理逻辑
+            // Processing
             return returnValue;
         })
         .build();
     ```
     <!--- KNIT exampleCustomNodesJava01.java -->
 
-上面的代码表示一个自定义节点 `myNode`，具有预定义的 `Input` 和 `Output` 类型，以及可选的名称字符串参数（`node_name`）。在实际示例中，这里是一个简单的节点，它接收字符串输入并返回输入的长度：
+The code above represents a custom node `myNode` with predefined `Input` and `Output` types, with the optional name
+string parameter (`node_name`). In an actual example, here is a simple node that takes a string input and returns
+the input's length:
 
 === "Kotlin"
 
@@ -80,7 +82,7 @@
     -->
     ```kotlin
     val myNode by node<String, Int>("node_name") { input ->
-        // 处理逻辑
+        // Processing
         input.length
     }
     ```
@@ -102,14 +104,15 @@
         .withInput(String.class)
         .withOutput(Integer.class)
         .withAction((input, ctx) -> {
-            // 处理逻辑
+            // Processing
             return input.length();
         })
         .build();
     ```
     <!--- KNIT exampleCustomNodesJava02.java -->
 
-在 Kotlin 中创建自定义节点的另一种方法是，在 `AIAgentSubgraphBuilderBase` 上定义一个扩展函数，该函数调用 `node` 函数。在 Java 中，您可以通过将节点构建器调用提取到辅助方法中来实现相同的可复用性：
+Another way to create a custom node in Kotlin is to define an extension function on `AIAgentSubgraphBuilderBase` that
+calls the `node` function. In Java, you achieve the same reusability by extracting the node builder call into a helper method:
 
 === "Kotlin"
 
@@ -129,10 +132,11 @@
     fun AIAgentSubgraphBuilderBase<*, *>.myCustomNode(
         name: String? = null
     ): AIAgentNodeDelegate<Input, Output> = node(name) { input ->
-        // 自定义逻辑
-        input // 将输入作为输出返回（直通）
+        // Custom logic
+        input // Return the input as output (pass-through)
     }
-    ```    val myCustomNode by myCustomNode("node_name")
+
+    val myCustomNode by myCustomNode("node_name")
     ```
     <!--- KNIT example-custom-nodes-03.kt -->
 
@@ -152,18 +156,18 @@
         .withInput(String.class)
         .withOutput(String.class)
         .withAction((input, ctx) -> {
-            // 自定义逻辑
-            return input; // 将输入作为输出返回（直通）
+            // Custom logic
+            return input; // Return the input as output (pass-through)
         })
         .build();
     ```
     <!--- KNIT exampleCustomNodesJava03.java -->
 
-这会创建一个直通节点，它执行一些自定义逻辑，但将输入作为输出返回而不做修改。
+This creates a pass-through node that performs some custom logic but returns the input as the output without modification.
 
-### 带额外参数的节点 { #nodes-with-additional-arguments }
+### Nodes with additional arguments
 
-您可以创建接受参数以自定义其行为的节点：
+You can create nodes that accept arguments to customize their behavior:
 
 === "Kotlin"
 
@@ -185,8 +189,8 @@
         arg1: String,
         arg2: Int
     ): AIAgentNodeDelegate<Input, Output> = node(name) { input ->
-        // 在自定义逻辑中使用 arg1 和 arg2
-        input // 将输入作为输出返回
+        // Use arg1 and arg2 in your custom logic
+        input // Return the input as the output
     }
 
     val myCustomNode by myNodeWithArguments("node_name", arg1 = "value1", arg2 = 42)
@@ -212,17 +216,17 @@
         .withInput(String.class)
         .withOutput(String.class)
         .withAction((input, ctx) -> {
-            // 在自定义逻辑中使用 arg1 和 arg2
-            return input; // 将输入作为输出返回
+            // Use arg1 and arg2 in your custom logic
+            return input; // Return the input as the output
         })
         .build();
     ```
     <!--- KNIT exampleCustomNodesJava04.java -->
 
 
-### 参数化节点 { #parameterized-nodes }
+### Parameterized nodes
 
-您可以定义具有输入和输出参数的节点：
+You can define nodes with input and output parameters:
 
 === "Kotlin"
 
@@ -236,8 +240,8 @@
     inline fun <reified T> AIAgentSubgraphBuilderBase<*, *>.myParameterizedNode(
         name: String? = null,
     ): AIAgentNodeDelegate<T, T> = node(name) { input ->
-        // 执行一些额外操作
-        // 将输入作为输出返回
+        // Do some additional actions
+        // Return the input as the output
         input
     }
 
@@ -259,22 +263,22 @@
     }
     -->
     ```java
-    // 在 Java 中，构建节点时显式指定类型
+    // In Java, specify the types explicitly when building the node
     var myCustomNode = AIAgentNode.builder("node_name")
         .withInput(String.class)
         .withOutput(String.class)
         .withAction((input, ctx) -> {
-            // 执行一些额外操作
-            // 将输入作为输出返回
+            // Do some additional actions
+            // Return the input as the output
             return input;
         })
         .build();
     ```
     <!--- KNIT exampleCustomNodesJava05.java -->
 
-### 有状态节点 { #stateful-nodes }
+### Stateful nodes
 
-如果您的节点需要在多次运行之间保持状态，可以使用闭包变量：
+If your node needs to maintain state between runs, you can use closure variables:
 
 === "Kotlin"
 
@@ -293,42 +297,44 @@
 
         return node(name) { input ->
             counter++
-            println("节点已执行 $counter 次")
+            println("Node executed $counter times")
             input
         }
     }
     ```
     <!--- KNIT example-custom-nodes-06.kt -->
 
-=== "Java"<!--- INCLUDE
+=== "Java"
+
+    <!--- INCLUDE
     import ai.koog.agents.core.agent.entity.AIAgentNode;
     import java.util.concurrent.atomic.AtomicInteger;
     class exampleCustomNodesJava06 {
         public static void main(String[] args) {
     -->
-<!--- SUFFIX
+    <!--- SUFFIX
         }
     }
     -->
-```java
-// 在 Java 中，使用 AtomicInteger（或类似工具），因为 lambda 捕获的变量必须是有效的 final 变量
-AtomicInteger counter = new AtomicInteger(0);
+    ```java
+    // In Java, use AtomicInteger (or similar) since the lambda captures must be effectively final
+    AtomicInteger counter = new AtomicInteger(0);
 
-var myStatefulNode = AIAgentNode.builder("node_name")
-    .withInput(String.class)
-    .withOutput(String.class)
-    .withAction((input, ctx) -> {
-        int count = counter.incrementAndGet();
-        System.out.println("Node executed " + count + " times");
-        return input;
-    })
-    .build();
-```
-<!--- KNIT exampleCustomNodesJava06.java -->
+    var myStatefulNode = AIAgentNode.builder("node_name")
+        .withInput(String.class)
+        .withOutput(String.class)
+        .withAction((input, ctx) -> {
+            int count = counter.incrementAndGet();
+            System.out.println("Node executed " + count + " times");
+            return input;
+        })
+        .build();
+    ```
+    <!--- KNIT exampleCustomNodesJava06.java -->
 
-## 节点输入与输出类型 { #node-input-and-output-types }
+## Node input and output types
 
-节点可以具有不同的输入和输出类型，这些类型被指定为泛型参数：
+Nodes can have different input and output types, which are specified as generic parameters:
 
 === "Kotlin"
 
@@ -342,8 +348,8 @@ var myStatefulNode = AIAgentNode.builder("node_name")
     -->
     ```kotlin
     val stringToIntNode by node<String, Int>("node_name") { input: String ->
-        // 处理过程
-        input.toInt() // 将字符串转换为整数
+        // Processing
+        input.toInt() // Convert string to integer
     }
     ```
     <!--- KNIT example-custom-nodes-07.kt -->
@@ -364,35 +370,35 @@ var myStatefulNode = AIAgentNode.builder("node_name")
         .withInput(String.class)
         .withOutput(Integer.class)
         .withAction((input, ctx) -> {
-            // 处理过程
-            return Integer.parseInt(input); // 将字符串转换为整数
+            // Processing
+            return Integer.parseInt(input); // Convert string to integer
         })
         .build();
     ```
     <!--- KNIT exampleCustomNodesJava07.java -->
 
 !!! note
-    输入和输出类型决定了节点在工作流中如何与其他节点连接。只有当源节点的输出类型与目标节点的输入类型兼容时，节点才能被连接。
+    The input and output types determine how the node can be connected to other nodes in the workflow. Nodes can only be connected if the output type of the source node is compatible with the input type of the target node.
 
-## 最佳实践 { #best-practices }
+## Best practices
 
-在实现自定义节点时，请遵循以下最佳实践：
+When implementing custom nodes, follow these best practices:
 
-1. **保持节点功能专注**：每个节点应执行单一、定义明确的操作。
-2. **使用描述性名称**：节点名称应清晰表明其用途。
-3. **记录参数**：为所有参数提供清晰的文档说明。
-4. **优雅地处理错误**：实现适当的错误处理，以防止工作流失败。
-5. **使节点可重用**：设计节点时考虑在不同工作流中的可重用性。
-6. **使用类型参数**：在适当的情况下使用泛型类型参数，使节点更加灵活。
-7. **提供默认值**：尽可能为参数提供合理的默认值。
+1. **Keep nodes focused**: each node should perform a single, well-defined operation.
+2. **Use descriptive names**: node names should clearly indicate their purpose.
+3. **Document parameters**: provide clear documentation for all parameters.
+4. **Handle errors gracefully**: implement proper error handling to prevent workflow failures.
+5. **Make nodes reusable**: design nodes to be reusable across different workflows.
+6. **Use type parameters**: use generic type parameters when appropriate to make nodes more flexible.
+7. **Provide default values**: when possible, provide sensible default values for parameters.
 
-## 常见模式 { #common-patterns }
+## Common patterns
 
-以下部分提供了一些实现自定义节点的常见模式。
+The following sections provide some common patterns for implementing custom nodes.
 
-### 直通节点 { #pass-through-nodes }
+### Pass-through nodes
 
-执行操作但将输入作为输出返回的节点。
+Nodes that perform an operation but return the input as the output.
 
 === "Kotlin"
 
@@ -407,7 +413,7 @@ var myStatefulNode = AIAgentNode.builder("node_name")
     ```kotlin
     val loggingNode by node<String, String>("node_name") { input ->
         println("Processing input: $input")
-        input // 将输入作为输出返回
+        input // Return the input as the output
     }
     ```
     <!--- KNIT example-custom-nodes-08.kt -->
@@ -429,31 +435,33 @@ var myStatefulNode = AIAgentNode.builder("node_name")
         .withOutput(String.class)
         .withAction((input, ctx) -> {
             System.out.println("Processing input: " + input);
-            return input; // 将输入作为输出返回
+            return input; // Return the input as the output
         })
         .build();
     ```
     <!--- KNIT exampleCustomNodesJava08.java -->
 
-### 转换节点 { #transformation-nodes }
+### Transformation nodes
 
-将输入转换为不同输出的节点。
+Nodes that transform the input into a different output.
 
-=== "Kotlin"<!--- INCLUDE
+=== "Kotlin"
+
+    <!--- INCLUDE
     import ai.koog.agents.core.dsl.builder.strategy
     import ai.koog.agents.core.dsl.builder.node
     val strategy = strategy<String, String>("strategy_name") {
     -->
-<!--- SUFFIX
+    <!--- SUFFIX
     }
     -->
-```kotlin
-val upperCaseNode by node<String, String>("node_name") { input ->
-    println("Processing input: $input")
-    input.uppercase() // 将输入转换为大写
-}
-```
-<!--- KNIT example-custom-nodes-09.kt -->
+    ```kotlin
+    val upperCaseNode by node<String, String>("node_name") { input ->
+        println("Processing input: $input")
+        input.uppercase() // Transform the input to uppercase
+    }
+    ```
+    <!--- KNIT example-custom-nodes-09.kt -->
 
 === "Java"
 
@@ -472,15 +480,15 @@ val upperCaseNode by node<String, String>("node_name") { input ->
         .withOutput(String.class)
         .withAction((input, ctx) -> {
             System.out.println("Processing input: " + input);
-            return input.toUpperCase(); // 将输入转换为大写
+            return input.toUpperCase(); // Transform the input to uppercase
         })
         .build();
     ```
     <!--- KNIT exampleCustomNodesJava09.java -->
 
-### LLM 交互节点 { #llm-interaction-nodes }
+### LLM interaction nodes
 
-与 LLM 交互的节点。
+Nodes that interact with the LLM.
 
 === "Kotlin"
 
@@ -496,7 +504,7 @@ val upperCaseNode by node<String, String>("node_name") { input ->
     val summarizeTextNode by node<String, String>("node_name") { input ->
         llm.writeSession {
             appendPrompt {
-                user("请总结以下文本: $input")
+                user("Please summarize the following text: $input")
             }
 
             val response = requestLLMWithoutTools()
@@ -519,11 +527,13 @@ val upperCaseNode by node<String, String>("node_name") { input ->
     }
     -->
     ```java
-    // 在 Java 中，LLM 交互使用预构建的工厂节点处理。
-    // AIAgentNode.llmRequest() 创建一个节点，将输入字符串作为用户消息发送到 LLM 并返回响应。提示文本在图中执行节点时作为节点的输入提供。
+    // In Java, LLM interaction is handled using pre-built factory nodes.
+    // AIAgentNode.llmRequest() creates a node that sends the input string as a user
+    // message to the LLM and returns the response. The prompt text is provided as
+    // the node's input when it is executed in the graph.
     var summarizeTextNode = AIAgentNode.llmRequest(true, "node_name");
 
-    // 要从 LLM 响应中提取文本内容，可以链接一个单独的节点：
+    // To extract the text content from the LLM response, chain a separate node:
     var extractContent = AIAgentNode.builder("extract-content")
         .withInput(Message.Response.class)
         .withOutput(String.class)
@@ -533,9 +543,9 @@ val upperCaseNode by node<String, String>("node_name") { input ->
     <!--- KNIT exampleCustomNodesJava10.java -->
 
 !!! note
-    上面的 Kotlin 示例展示了对 LLM 会话的细粒度控制（自定义提示构建、显式 `requestLLMWithoutTools` 调用）。Java API 提供了更高级的工厂方法，如 `AIAgentNode.llmRequest()`，可自动处理提示构建——输入字符串即成为用户消息。对于大多数用例来说这已足够；对于高级提示定制，可以组合多个节点或使用自定义子图。
+    The Kotlin example above shows fine-grained control over the LLM session (custom prompt construction, explicit `requestLLMWithoutTools` call). The Java API provides higher-level factory methods like `AIAgentNode.llmRequest()` that handle prompt construction automatically — the input string becomes the user message. For most use cases this is sufficient; for advanced prompt customization, compose multiple nodes or use a custom subgraph.
 
-### 工具运行节点 { #tool-run-node }
+### Tool run node
 
 === "Kotlin"
 
@@ -562,7 +572,7 @@ val upperCaseNode by node<String, String>("node_name") { input ->
             id = UUID.randomUUID().toString(),
             tool = toolName,
             metaInfo = ResponseMetaInfo.create(Clock.System),
-            content = Json.encodeToString(ToolArgs(arg1 = input, arg2 = 42)) // 使用输入作为工具参数
+            content = Json.encodeToString(ToolArgs(arg1 = input, arg2 = 42)) // Use the input as tool arguments
         )
 
         val result = environment.executeTool(toolCall)
@@ -571,27 +581,28 @@ val upperCaseNode by node<String, String>("node_name") { input ->
     ```
     <!--- KNIT example-custom-nodes-11.kt -->
 
-=== "Java"<!--- INCLUDE
+=== "Java"
+
+    <!--- INCLUDE
     import ai.koog.agents.core.agent.entity.AIAgentSubgraph;
     class exampleCustomNodesJava11 {
         public static void main(String[] args) {
     -->
-<!--- SUFFIX
+    <!--- SUFFIX
         }
     }
     -->
-```java
-// 在 Java 中，无法通过 Java 构建器 API 直接执行工具（如 Kotlin 示例所示）。
-// 取而代之的是使用一个子图，将工具调用委托给 LLM，由其决定何时以及如何调用工具：
-var toolSubgraph = AIAgentSubgraph.builder("tool-subgraph")
-    .withInput(String.class)
-    .withOutput(String.class)
-    .withTask(input -> "Use my_tool with input: " + input)
-    .build();
-```
-<!--- KNIT exampleCustomNodesJava11.java -->
+    ```java
+    // In Java, direct tool execution (as shown in the Kotlin example) is not available
+    // through the Java builder API. Instead, use a subgraph that delegates tool calls
+    // to the LLM, which decides when and how to invoke the tools:
+    var toolSubgraph = AIAgentSubgraph.builder("tool-subgraph")
+        .withInput(String.class)
+        .withOutput(String.class)
+        .withTask(input -> "Use my_tool with input: " + input)
+        .build();
+    ```
+    <!--- KNIT exampleCustomNodesJava11.java -->
 
 !!! note
-    Kotlin 示例通过手动构建 `Message.Tool.Call` 并调用 `environment.executeTool()` 来演示底层的工具执行方式。
-    而 Java API 则提倡使用更高层级的子图方法，结合 `withTask()`，由 LLM 自动编排工具调用。
-    若要限制可用工具的范围，可在 `.withInput()` 前链式调用 `.limitedTools(List.of(myTool))`。
+    The Kotlin example demonstrates low-level tool execution by manually constructing a `Message.Tool.Call` and calling `environment.executeTool()`. The Java API encourages a higher-level approach using subgraphs with `withTask()`, where the LLM orchestrates tool calls automatically. To restrict which tools are available, chain `.limitedTools(List.of(myTool))` before `.withInput()`.

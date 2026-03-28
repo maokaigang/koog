@@ -394,7 +394,7 @@ Koog 提供了可在自定义消息处理器中使用的预定义事件类型。
         )
         addMessageProcessor(fileWriter)
         
-        // 仅追踪 LLM 调用
+        // Only trace LLM calls
         fileWriter.setMessageFilter { message ->
             message is LLMCallStartingEvent || message is LLMCallCompletedEvent
         }
@@ -414,9 +414,9 @@ Koog 提供了可在自定义消息处理器中使用的预定义事件类型。
     ```
     <!--- KNIT example-events-java-01.java -->
 
-### 能否使用多个消息处理器？ { #how-do-i-trace-only-specific-parts-of-my-agent-s-execution }
+### Can I use multiple message processors?
 
-可以，您可以添加多个消息处理器以同时将追踪数据写入不同目标：
+Yes, you can add multiple message processors to trace to different destinations simultaneously:
 
 === "Kotlin"
 
@@ -473,9 +473,9 @@ Koog 提供了可在自定义消息处理器中使用的预定义事件类型。
     ```
     <!--- KNIT example-events-java-02.java -->
 
-### 如何创建自定义消息处理器？ { #can-i-use-multiple-message-processors }
+### How can I create a custom message processor?
 
-实现 `FeatureMessageProcessor` 接口：
+Implement the `FeatureMessageProcessor` interface:
 
 === "Kotlin"
 
@@ -508,36 +508,37 @@ Koog 提供了可在自定义消息处理器中使用的预定义事件类型。
     ```kotlin
     class CustomTraceProcessor : FeatureMessageProcessor() {
 
-        // 处理器的当前开启状态
-        private var _isOpen = MutableStateFlow(false)```kotlin
-override val isOpen: StateFlow<Boolean>
-    get() = _isOpen.asStateFlow()
+        // Current open state of the processor
+        private var _isOpen = MutableStateFlow(false)
 
-override suspend fun processMessage(message: FeatureMessage) {
-    // 自定义处理逻辑
-    when (message) {
-        is NodeExecutionStartingEvent -> {
-            // 处理节点开始事件
+        override val isOpen: StateFlow<Boolean>
+            get() = _isOpen.asStateFlow()
+        
+        override suspend fun processMessage(message: FeatureMessage) {
+            // Custom processing logic
+            when (message) {
+                is NodeExecutionStartingEvent -> {
+                    // Process node start event
+                }
+
+                is LLMCallCompletedEvent -> {
+                    // Process LLM call end event 
+                }
+                // Handle other event types 
+            }
         }
 
-        is LLMCallCompletedEvent -> {
-            // 处理 LLM 调用结束事件
+        override suspend fun close() {
+            // Close connections of established
         }
-        // 处理其他事件类型
     }
-}
 
-override suspend fun close() {
-    // 关闭已建立的连接
-}
-```
-
-// 使用自定义处理器
-install(Tracing) {
-    addMessageProcessor(CustomTraceProcessor())
-}
-```
-<!--- KNIT example-events-03.kt -->
+    // Use your custom processor
+    install(Tracing) {
+        addMessageProcessor(CustomTraceProcessor())
+    }
+    ```
+    <!--- KNIT example-events-03.kt -->
 
 === "Java"
 
@@ -551,4 +552,4 @@ install(Tracing) {
     ```
     <!--- KNIT example-events-java-03.java -->
 
-有关可由消息处理器处理的现有事件类型的更多信息，请参阅[预定义事件类型](#predefined-event-types)。
+For more information about existing event types that can be handled by message processors, see [Predefined event types](#predefined-event-types).

@@ -50,16 +50,16 @@
     <!--- KNIT example-prompts-java-01.java -->
 
 !!! note
-    AI 代理可以接受简单的文本提示词作为输入。
-    它们会自动将文本提示词转换为 Prompt 对象，并将其发送给LLM执行。
-    这对于[基础代理](../agents/basic-agents.md)非常有用，
-    该代理仅需运行单个请求，不需要复杂的对话逻辑。
+    AI agents can take a simple text prompt as input.
+    They automatically convert the text prompt to the Prompt object and send it to the LLM for execution.
+    This is useful for a [basic agent](../agents/basic-agents.md)
+    that only needs to run a single request and does not require complex conversation logic.
 
-## 运行提示词 { #running-prompts }
+## Running prompts
 
-Koog提供了两个抽象层级来针对LLM运行提示词：LLM客户端和提示词执行器。
-两者都接受 Prompt 对象，并可用于直接执行提示词，无需 AI 代理。
-客户端和执行器的执行流程相同：
+Koog provides two levels of abstraction for running prompts against LLMs: LLM clients and prompt executors.
+Both accept Prompt objects and can be used for direct prompt execution, without an AI agent.
+The execution flow is the same for both clients and executors:
 
 ```mermaid
 flowchart TB
@@ -77,58 +77,63 @@ flowchart TB
 
 <div class="grid cards" markdown>
 
--   :material-arrow-right-bold:{ .lg .middle } [**LLM 客户端**](llm-clients.md)
+-   :material-arrow-right-bold:{ .lg .middle } [**LLM clients**](llm-clients.md)
 
     ---
 
-    用于与特定LLM提供商直接交互的低级接口。
-    当您与单一提供商合作且不需要高级生命周期管理时使用。
+    Low‑level interfaces for direct interaction with specific LLM providers.
+    Use them when you work with a single provider and do not need advanced lifecycle management.
 
--   :material-swap-horizontal:{ .lg .middle } [**提示词执行器**](prompt-executors.md)
+-   :material-swap-horizontal:{ .lg .middle } [**Prompt executors**](prompt-executors.md)
 
     ---
 
-    管理一个或多个LLM客户端生命周期的高级抽象。
-    当您需要统一的API来跨多个提供商运行提示词，
-    并支持动态切换和故障转移时使用。
+    High-level abstractions that manage the lifecycles of one or multiple LLM clients.
+    Use them when you need a unified API for running prompts across multiple providers,
+    with dynamic switching between them and fallbacks.
 
 </div>
 
-## 优化性能和处理故障 { #optimizing-performance-and-handling-failures }
+## Optimizing performance and handling failures
 
-Koog允许您在运行提示词时优化性能和处理故障。
+Koog allows you to optimize performance and handle failures when running prompts.
 
-<div class="grid cards" markdown>-   :material-cached:{ .lg .middle } [**LLM 响应缓存**](llm-response-caching.md)
+<div class="grid cards" markdown>
 
-    ---
-
-    缓存 LLM 响应，以优化性能并降低重复请求的成本。
-
--   :material-shield-check:{ .lg .middle } [**处理失败情况**](handling-failures.md)
+-   :material-cached:{ .lg .middle } [**LLM response caching**](llm-response-caching.md)
 
     ---
 
-    在应用程序中使用内置的重试、超时和其他错误处理机制。
+    Cache LLM responses to optimize performance and reduce costs for repeated requests.
+
+-   :material-shield-check:{ .lg .middle } [**Handling failures**](handling-failures.md)
+
+    ---
+
+    Use built-in retries, timeouts, and other error handling mechanisms in your application.
 
 </div>
 
-## AI 代理中的提示词 { #prompts-in-ai-agents }
+## Prompts in AI agents
 
-在 Koog 中，AI 代理在其生命周期内维护和管理提示词。
-虽然使用 LLM 客户端或执行器来运行提示词，但代理负责处理提示词的更新流程，确保对话历史保持相关性和一致性。
+In Koog, AI agents maintain and manage prompts during their lifecycle.
+While LLM clients or executors are used to run prompts, agents handle the flow of prompt updates, ensuring the
+conversation history remains relevant and consistent.
 
-代理中的提示词生命周期通常包括以下几个阶段：
+The prompt lifecycle in an agent usually includes several stages:
 
-1.  初始提示词设置。
-2.  自动提示词更新。
-3.  上下文窗口管理。
-4.  手动提示词管理。
+1. Initial prompt setup.
+2. Automatic prompt updates.
+3. Context window management.
+4. Manual prompt management.
 
-### 初始提示词设置 { #initial-prompt-setup }
+### Initial prompt setup
 
-当你[初始化一个代理](../quickstart.md#create-your-first-koog-agent)时，可以定义一个[系统消息](prompt-creation/index.md#system-message)来设定代理的行为。
-然后，当你调用代理的 `run()` 方法时，通常会提供一个初始的[用户消息](prompt-creation/index.md#user-messages)作为输入。
-这些消息共同构成了代理的初始提示词。例如：
+When you [initialize an agent](../quickstart.md#create-your-first-koog-agent),
+you can define a [system message](prompt-creation/index.md#system-message) that sets the agent's behavior.
+Then, when you call the agent's `run()` method,
+you typically provide an initial [user message](prompt-creation/index.md#user-messages) as input.
+Together, these messages form the agent's initial prompt. For example: 
 
 === "Kotlin"
 
@@ -144,14 +149,14 @@ Koog允许您在运行提示词时优化性能和处理故障。
     }
     -->
     ```kotlin
-    // 创建代理
+    // Create an agent
     val agent = AIAgent(
         promptExecutor = simpleOpenAIExecutor(apiKey),
         systemPrompt = "You are a helpful assistant.",
         llmModel = OpenAIModels.Chat.GPT4o
     )
     
-    // 运行代理
+    // Run the agent
     val result = agent.run("What is Koog?")
     ```
     <!--- KNIT example-prompts-02.kt -->
@@ -175,7 +180,7 @@ Koog允许您在运行提示词时优化性能和处理故障。
     ```
     <!--- KNIT example-prompts-java-02.java -->
 
-在此示例中，代理自动将文本提示词转换为 Prompt 对象并发送给提示词执行器：
+In the example, the agent automatically converts the text prompt to the Prompt object and sends it to the prompt executor:
 
 ```mermaid
 flowchart TB
@@ -197,22 +202,25 @@ flowchart TB
 ```
 <!--- KNIT example-prompts-02.txt -->
 
-对于更高级的配置，你也可以使用 [AIAgentConfig](api:agents-core::ai.koog.agents.core.agent.config.AIAgentConfig) 来定义代理的初始提示词。
+For more advanced configurations, you can also use [AIAgentConfig](api:agents-core::ai.koog.agents.core.agent.config.AIAgentConfig)
+to define the agent's initial prompt.
 
-### 自动提示词更新 { #automatic-prompt-updates }
+### Automatic prompt updates
 
-当代理运行其策略时，[预定义节点](../nodes-and-components.md)会自动更新提示词。例如：
+As the agent runs its strategy, [predefined nodes](../nodes-and-components.md) automatically update the prompt.
+For example:
 
--   [`nodeLLMRequest`](../nodes-and-components.md#nodellmrequest)：将用户消息附加到提示词中，并捕获 LLM 响应。
--   [`nodeLLMSendToolResult`](../nodes-and-components.md#nodellmsendtoolresult)：将工具执行结果附加到对话中。
--   [`nodeAppendPrompt`](../nodes-and-components.md#nodeappendprompt)：在工作流的任意时间点将特定消息插入到提示词中。
+- [`nodeLLMRequest`](../nodes-and-components.md#nodellmrequest): Appends a user message to the prompt and captures the LLM response.
+- [`nodeLLMSendToolResult`](../nodes-and-components.md#nodellmsendtoolresult): Appends tool execution results to the conversation.
+- [`nodeAppendPrompt`](../nodes-and-components.md#nodeappendprompt): Inserts specific messages into the prompt at any point in the workflow.
 
-### 上下文窗口管理 { #context-window-management }
+### Context window management
 
-为了避免在长时间运行的交互中超出 LLM 上下文窗口，代理可以使用[历史压缩](../history-compression.md)功能。
+To avoid exceeding the LLM context window in long-running interactions, agents can use the
+[history compression](../history-compression.md) feature.
 
-### 手动提示词管理 { #manual-prompt-management }
+### Manual prompt management
 
-对于复杂的工作流，你可以使用 [LLM 会话](../sessions.md)手动管理提示词。
-在代理策略或自定义节点中，可以使用 `llm.writeSession` 来访问和更改 `Prompt` 对象。
-这允许你根据需要添加、删除或重新排序消息。
+For complex workflows, you can manage the prompt manually using [LLM sessions](../sessions.md).
+In an agent strategy or custom node, you can use `llm.writeSession` to access and change the `Prompt` object.
+This lets you add, remove, or reorder messages as needed.

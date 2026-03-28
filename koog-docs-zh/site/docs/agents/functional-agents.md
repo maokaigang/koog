@@ -78,31 +78,33 @@
     ```
    <!--- KNIT example-functional-agent-java-01.java -->
 
-智能体可能产生以下输出：
+The agent can produce the following output:
 
 ```text
 The answer to 12 × 9 is 108.
 ```
 <!--- KNIT example-functional-agent-01.txt -->
 
-## 进行顺序LLM调用 { #make-sequential-llm-calls }
+## Make sequential LLM calls
 
-您可以扩展先前的策略以进行多次顺序LLM调用：
+You can extend the previous strategy to make multiple sequential LLM calls:
 
-=== "Kotlin"<!--- INCLUDE
+=== "Kotlin"
+
+    <!--- INCLUDE
     import ai.koog.agents.core.agent.functionalStrategy
     -->
-```kotlin
-val strategy = functionalStrategy<String, String> { input ->
-    // 第一个 LLM 调用基于用户输入生成初始草稿
-    val draft = requestLLM("草稿: $input").asAssistantMessage().content
-    // 第二个 LLM 调用改进初始草稿
-    val improved = requestLLM("改进并澄清。").asAssistantMessage().content
-    // 最后的 LLM 调用格式化改进后的文本并返回结果
-    requestLLM("将结果格式化为粗体。").asAssistantMessage().content
-}
-```
-<!--- KNIT example-functional-agent-02.kt -->
+    ```kotlin
+    val strategy = functionalStrategy<String, String> { input ->
+        // The first LLM call produces an initial draft based on the user input
+        val draft = requestLLM("Draft: $input").asAssistantMessage().content
+        // The second LLM call improves the initial draft
+        val improved = requestLLM("Improve and clarify.").asAssistantMessage().content
+        // The final LLM call formats the improved text and returns the result
+        requestLLM("Format the result as bold.").asAssistantMessage().content
+    }
+    ```
+    <!--- KNIT example-functional-agent-02.kt -->
 
 === "Java"
 
@@ -115,25 +117,25 @@ val strategy = functionalStrategy<String, String> { input ->
     ```java
     AIAgent<String, String> mathAgent = AIAgent.builder()
         .promptExecutor(simpleOllamaAIExecutor("http://localhost:11434"))
-        .systemPrompt("你是一个精确的数学助手。")
+        .systemPrompt("You are a precise math assistant.")
         .llmModel(OllamaModels.Meta.LLAMA_3_2)
         .functionalStrategy((AIAgentFunctionalContext context, String input) -> {
-            // 第一个 LLM 调用基于用户输入生成初始草稿
-            Message.Response draftResponse = context.requestLLM("草稿: " + input);
+            // The first LLM call produces an initial draft based on the user input
+            Message.Response draftResponse = context.requestLLM("Draft: " + input);
             String draft = "";
             if (draftResponse instanceof Message.Assistant) {
                 draft = ((Message.Assistant) draftResponse).getContent();
             }
 
-            // 第二个 LLM 调用改进初始草稿
-            Message.Response improvedResponse = context.requestLLM("改进并澄清。");
+            // The second LLM call improves the initial draft
+            Message.Response improvedResponse = context.requestLLM("Improve and clarify.");
             String improved = "";
             if (improvedResponse instanceof Message.Assistant) {
                 improved = ((Message.Assistant) improvedResponse).getContent();
             }
 
-            // 最后的 LLM 调用格式化改进后的文本并返回结果
-            Message.Response finalResponse = context.requestLLM("将结果格式化为粗体。");
+            // The final LLM call formats the improved text and returns the result
+            Message.Response finalResponse = context.requestLLM("Format the result as bold.");
             if (finalResponse instanceof Message.Assistant) {
                 return ((Message.Assistant) finalResponse).getContent();
             }
@@ -143,7 +145,7 @@ val strategy = functionalStrategy<String, String> { input ->
     ```
     <!--- KNIT example-functional-agent-java-02.java -->
 
-该代理可以生成以下输出：
+The agent can produce the following output:
 
 ```text
 To calculate the product of 12 and 9, we multiply these two numbers together.
@@ -152,20 +154,22 @@ To calculate the product of 12 and 9, we multiply these two numbers together.
 ```
 <!--- KNIT example-functional-agent-02.txt -->
 
-## 添加工具 { #add-tools }
+## Add tools
 
-在许多情况下，功能型代理需要完成特定任务，
-例如读写数据、调用 API 或执行其他确定性操作。
-在 Koog 中，你可以将此类能力作为[工具](../tools-overview.md)公开，并让 LLM 决定何时调用它们。
+In many cases, a functional agent needs to complete specific tasks,
+such as reading and writing data, calling APIs, or performing other deterministic operations.
+In Koog, you expose such capabilities as [tools](../tools-overview.md) and let the LLM decide when to call them.
 
-你需要执行以下操作：
+Here is what you need to do:
 
-1. 创建一个[基于注解的工具](../annotation-based-tools.md)。
-2. 将其添加到工具注册表中，并将注册表传递给代理。
-3. 确保代理策略能够识别 LLM 响应中的工具调用，执行请求的工具，
-   将其结果发送回 LLM，并重复此过程直到没有剩余的工具调用。
+1. Create an [annotation-based tool](../annotation-based-tools.md).
+2. Add it to a tool registry and pass the registry to the agent.
+3. Make sure the agent strategy can identify tool calls in LLM responses, execute the requested tools,
+   send their results back to the LLM, and repeat the process until there are no tool calls remaining.
 
-=== "Kotlin"<!--- INCLUDE
+=== "Kotlin"
+
+    <!--- INCLUDE
     import ai.koog.agents.core.agent.AIAgent
     import ai.koog.agents.core.agent.functionalStrategy
     import ai.koog.agents.core.tools.ToolRegistry
@@ -176,53 +180,53 @@ To calculate the product of 12 and 9, we multiply these two numbers together.
     import ai.koog.prompt.executor.ollama.client.OllamaModels
     import kotlinx.coroutines.runBlocking
     -->
-```kotlin
-@LLMDescription("用于执行数学运算的工具")
-class MathTools : ToolSet {
-    @Tool
-    @LLMDescription("将两个数字相乘并返回结果")
-    fun multiply(a: Int, b: Int): Int {
-        // 这并非必需，但有助于在控制台输出中查看工具调用
-        println("正在计算 $a 乘以 $b...")
-        return a * b
-    }
-}
-
-val toolRegistry = ToolRegistry {
-    tool(MathTools()::multiply)
-}
-
-val strategy = functionalStrategy<String, String> { input ->
-    // 将用户输入发送给 LLM
-    var responses = requestLLMMultiple(input)
-
-    // 仅当 LLM 请求工具时循环
-    while (responses.containsToolCalls()) {
-        // 从响应中提取工具调用
-        val pendingCalls = extractToolCalls(responses)
-        // 执行工具并返回结果
-        val results = executeMultipleTools(pendingCalls)
-        // 将工具结果发送回 LLM。LLM 可能调用更多工具或返回最终输出
-        responses = sendMultipleToolResults(results)
+    ```kotlin
+    @LLMDescription("Tools for performing math operations")
+    class MathTools : ToolSet {
+        @Tool
+        @LLMDescription("Multiplies two numbers and returns the result")
+        fun multiply(a: Int, b: Int): Int {
+            // This is not necessary, but it helps to see the tool call in the console output
+            println("Multiplying $a and $b...")
+            return a * b
+        }
     }
 
-    // 当没有剩余工具调用时，从响应中提取并返回助手消息内容
-    responses.single().asAssistantMessage().content
-}
+    val toolRegistry = ToolRegistry {
+        tool(MathTools()::multiply)
+    }
 
-val mathAgentWithTools = AIAgent(
-    promptExecutor = simpleOllamaAIExecutor(),
-    llmModel = OllamaModels.Meta.LLAMA_3_2,
-    toolRegistry = toolRegistry,
-    strategy = strategy
-)
+    val strategy = functionalStrategy<String, String> { input ->
+        // Send the user input to the LLM
+        var responses = requestLLMMultiple(input)
 
-fun main() = runBlocking {
-    val result = mathAgentWithTools.run("将 3 乘以 4，再将结果乘以 5。")
-    println(result)
-}
-```
-<!--- KNIT example-functional-agent-03.kt -->
+        // Only loop while the LLM requests tools
+        while (responses.containsToolCalls()) {
+            // Extract tool calls from the response
+            val pendingCalls = extractToolCalls(responses)
+            // Execute the tools and return the results
+            val results = executeMultipleTools(pendingCalls)
+            // Send the tool results back to the LLM. The LLM may call more tools or return a final output
+            responses = sendMultipleToolResults(results)
+        }
+
+        // When no tool calls remain, extract and return the assistant message content from the response
+        responses.single().asAssistantMessage().content
+    }
+
+    val mathAgentWithTools = AIAgent(
+        promptExecutor = simpleOllamaAIExecutor(),
+        llmModel = OllamaModels.Meta.LLAMA_3_2,
+        toolRegistry = toolRegistry,
+        strategy = strategy
+    )
+
+    fun main() = runBlocking {
+        val result = mathAgentWithTools.run("Multiply 3 by 4, then multiply the result by 5.")
+        println(result)
+    }
+    ```
+    <!--- KNIT example-functional-agent-03.kt -->
 
 === "Java"
 
@@ -233,13 +237,13 @@ fun main() = runBlocking {
     **/
     -->
     ```java
-    @LLMDescription(description = "用于执行数学运算的工具")
+    @LLMDescription(description = "Tools for performing math operations")
     public static class MathTools implements ToolSet {
         @Tool
-        @LLMDescription(description = "将两个数字相乘并返回结果")
+        @LLMDescription(description = "Multiplies two numbers and returns the result")
         public int multiply(int a, int b) {
-            // 这并非必需，但有助于在控制台输出中查看工具调用
-            System.out.println("正在计算 " + a + " 乘以 " + b + "...");
+            // This is not necessary, but it helps to see the tool call in the console output
+            System.out.println("Multiplying " + a + " and " + b + "...");
             return a * b;
         }
     }
@@ -255,34 +259,35 @@ fun main() = runBlocking {
             .llmModel(OllamaModels.Meta.LLAMA_3_2)
             .toolRegistry(toolRegistry)
             .functionalStrategy("mathWithTools", (AIAgentFunctionalContext context, String input) -> {
-                // 将用户输入发送给 LLM
-                List<Message.Response> responses = context.requestLLMMultiple(input);```java
-// 仅当 LLM 请求工具时循环执行
-while (context.containsToolCalls(responses)) {
-    // 从响应中提取工具调用
-    List<Message.Tool.Call> pendingCalls = context.extractToolCalls(responses);
-    // 执行工具并返回结果
-    List<ReceivedToolResult> results = context.executeMultipleTools(pendingCalls, false);
-    // 将工具结果发送回 LLM
-    responses = context.sendMultipleToolResults(results);
-}
+                // Send the user input to the LLM
+                List<Message.Response> responses = context.requestLLMMultiple(input);
 
-// 从响应中提取并返回助手消息内容
-Message.Response finalResponse = responses.get(0);
-if (finalResponse instanceof Message.Assistant) {
-    return ((Message.Assistant) finalResponse).getContent();
-}
-return "";
-})
-.build();
+                // Only loop while the LLM requests tools
+                while (context.containsToolCalls(responses)) {
+                    // Extract tool calls from the response
+                    List<Message.Tool.Call> pendingCalls = context.extractToolCalls(responses);
+                    // Execute the tools and return the results
+                    List<ReceivedToolResult> results = context.executeMultipleTools(pendingCalls, false);
+                    // Send the tool results back to the LLM
+                    responses = context.sendMultipleToolResults(results);
+                }
 
-String result = mathAgentWithTools.run("将3乘以4，再将结果乘以5。");
-System.out.println(result);
-}
-```
-<!--- KNIT example-functional-agent-java-03.java -->
+                // Extract and return the assistant message content from the response
+                Message.Response finalResponse = responses.get(0);
+                if (finalResponse instanceof Message.Assistant) {
+                    return ((Message.Assistant) finalResponse).getContent();
+                }
+                return "";
+            })
+            .build();
 
-智能体可生成以下输出：
+        String result = mathAgentWithTools.run("Multiply 3 by 4, then multiply the result by 5.");
+        System.out.println(result);
+    }
+    ```
+   <!--- KNIT example-functional-agent-java-03.java -->
+
+The agent can produce the following output:
 
 ```text
 Multiplying 3 and 4...
@@ -291,6 +296,6 @@ The result of multiplying 3 by 4 is 12. Multiplying 12 by 5 gives us a final ans
 ```
 <!--- KNIT example-functional-agent-03.txt -->
 
-## 后续步骤 { #next-steps }
+## Next steps
 
-- 学习如何创建[基于图的智能体](graph-based-agents.md)
+- Learn how to create [graph-based agents](graph-based-agents.md)

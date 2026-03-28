@@ -125,50 +125,52 @@ graph TB
     var nodeExecuteTool = AIAgentNode.executeTool("nodeExecuteTool");
     var nodeSendToolResult = AIAgentNode.llmSendToolResult("nodeSendToolResult");
 
-```calculatorAgentStrategy.edge(calculatorAgentStrategy.nodeStart, nodeSendInput);
-calculatorAgentStrategy.edge(AIAgentEdge.builder()
-    .from(nodeSendInput)   
-    .to(calculatorAgentStrategy.nodeFinish)
-    .onIsInstance(Message.Assistant.class)
-    .transformed(Message.Assistant::getContent)
-    .build());
-calculatorAgentStrategy.edge(AIAgentEdge.builder()
-    .from(nodeSendInput)
-    .to(nodeExecuteTool)
-    .onIsInstance(Message.Tool.Call.class)
-    .build());
-calculatorAgentStrategy.edge(nodeExecuteTool, nodeSendToolResult);
-calculatorAgentStrategy.edge(AIAgentEdge.builder()
-    .from(nodeSendToolResult)
-    .to(calculatorAgentStrategy.nodeFinish)
-    .onIsInstance(Message.Assistant.class)
-    .transformed(Message.Assistant::getContent)
-    .build());
-calculatorAgentStrategy.edge(AIAgentEdge.builder()
-    .from(nodeSendToolResult)
-    .to(nodeExecuteTool)
-    .onIsInstance(Message.Tool.Call.class)
-    .build());
-```
-<!--- KNIT exampleGraphAgentsJava01.java -->
+    calculatorAgentStrategy.edge(calculatorAgentStrategy.nodeStart, nodeSendInput);
+    calculatorAgentStrategy.edge(AIAgentEdge.builder()
+        .from(nodeSendInput)   
+        .to(calculatorAgentStrategy.nodeFinish)
+        .onIsInstance(Message.Assistant.class)
+        .transformed(Message.Assistant::getContent)
+        .build());
+    calculatorAgentStrategy.edge(AIAgentEdge.builder()
+        .from(nodeSendInput)
+        .to(nodeExecuteTool)
+        .onIsInstance(Message.Tool.Call.class)
+        .build());
+    calculatorAgentStrategy.edge(nodeExecuteTool, nodeSendToolResult);
+    calculatorAgentStrategy.edge(AIAgentEdge.builder()
+        .from(nodeSendToolResult)
+        .to(calculatorAgentStrategy.nodeFinish)
+        .onIsInstance(Message.Assistant.class)
+        .transformed(Message.Assistant::getContent)
+        .build());
+    calculatorAgentStrategy.edge(AIAgentEdge.builder()
+        .from(nodeSendToolResult)
+        .to(nodeExecuteTool)
+        .onIsInstance(Message.Tool.Call.class)
+        .build());
+    ```
+    <!--- KNIT exampleGraphAgentsJava01.java -->
 
-此示例仅使用了[预定义节点](../nodes-and-components.md)，
-但你也可以创建[自定义节点](../custom-nodes.md)。
+This example uses only [predefined nodes](../nodes-and-components.md),
+but you can also create [custom nodes](../custom-nodes.md).
 
-每个策略图都必须有一条从 `nodeStart` 到 `nodeFinish` 的路径，由[边](../custom-strategy-graphs.md#edges)连接。
-边可以设置条件来决定何时遵循特定边。
-边还可以在将数据传递给下一个节点之前，对上一个节点的输出进行转换。
-这对于连接输出和输入类型不匹配的节点是必要的。
+Every strategy graph must have a path from `nodeStart` to `nodeFinish` connected by [edges](../custom-strategy-graphs.md#edges).
+Edges can have conditions to determine when to follow a particular edge.
+Edges can also transform the output of the previous node before passing it to the next one.
+This is necessary to connect nodes that have non-matching output and input types.
 
-在前面的示例中，`onToolCall { true }` 表示仅当上一个节点返回工具调用 `Message.Tool.Call` 时，该边才会被遵循。
+In the previous example, `onToolCall { true }` means that the edge will follow
+only if the previous node returned a tool call `Message.Tool.Call`.
 
-当使用 `onAssistantMessage { true }` 时，仅当上一个节点返回助手消息 `Message.Assistant` 时，该边才会被遵循。
-此函数还会提取助手消息的内容，
-从而将 `Message.Assistant` 转换为 `String`，因为 `nodeFinish` 期望接收字符串。
+When using `onAssistantMessage { true }`, the edge will follow
+only if the previous node returned an assistant message `Message.Assistant`.
+This function also extracts the content of the assistant message,
+effectively transforming `Message.Assistant` to `String`, because `nodeFinish` expects a string.
 
 !!! tip
 
-    除了使用 `onAssistantMessage {true}`，你还可以这样做：
+    Instead of `onAssistantMessage {true}`, you can do the following:
 
     <!--- INCLUDE
     /**
@@ -181,7 +183,7 @@ calculatorAgentStrategy.edge(AIAgentEdge.builder()
     ```
     <!--- KNIT example-graph-agents-02.kt -->
 
-    或者：
+    Or:
 
     <!--- INCLUDE
     /**
@@ -194,9 +196,9 @@ calculatorAgentStrategy.edge(AIAgentEdge.builder()
     ```
     <!--- KNIT example-graph-agents-03.kt -->
 
-## 创建并运行智能体 { #create-and-run-the-agent }
+## Create and run the agent
 
-让我们使用此策略创建一个智能体实例并运行它：
+Let's create an agent instance with this strategy and run it:
 
 === "Kotlin"
 
@@ -226,14 +228,14 @@ calculatorAgentStrategy.edge(AIAgentEdge.builder()
         edge(nodeSendToolResult forwardTo nodeExecuteTool onToolCall { true })
     }
     
-```val mathAgent = AIAgent(
+    val mathAgent = AIAgent(
         promptExecutor = simpleOllamaAIExecutor(),
         llmModel = OllamaModels.Meta.LLAMA_3_2,
         strategy = calculatorAgentStrategy
     )
     
     fun main() = runBlocking {
-        val result = mathAgent.run("将3乘以4，然后将结果乘以5，再加10，再加123。")
+        val result = mathAgent.run("Multiply 3 by 4, then multiply the result by 5, then add 10, then add 123.")
         println(result)
     }
     ```
@@ -300,12 +302,12 @@ calculatorAgentStrategy.edge(AIAgentEdge.builder()
         .graphStrategy(calculatorAgentStrategy.build())
         .build();
 
-        String result = mathAgent.run("将3乘以4，然后将结果乘以5，再加10，再加123。", null);
+        String result = mathAgent.run("Multiply 3 by 4, then multiply the result by 5, then add 10, then add 123.", null);
         System.out.println(result);
     ```
     <!--- KNIT exampleGraphAgentsJava02.java -->
 
-当你运行这个智能体时，它会返回类似这样的结果：
+When you run this agent, it will respond with something like this:
 
 ```text
 To calculate this, I'll follow the order of operations:
@@ -319,9 +321,9 @@ The final answer is 193.
 ```
 <!--- KNIT example-graph-agents-02.txt -->
 
-然而，由于这个智能体没有任何工具，LLM 永远不会返回工具调用，
-而是直接生成整个答案。
-实际发生的情况如下：
+However, since this agent doesn't have any tools, the LLM never returns a tool call 
+and simply generates the whole answer.
+This is what effectively happens:
 
 ```mermaid
 ---
@@ -346,44 +348,46 @@ graph LR
 ```
 <!--- KNIT example-graph-agents-03.txt -->
 
-尽管在这种情况下答案是正确的，但结果将依赖于底层 LLM 的算术能力。
-为了确保计算准确，我们应该为智能体提供数学工具。
-这样 LLM 就能够决定调用工具来执行确定性的计算。
+Even though it is correct in this case, the answer will depend on the arithmetic abilities of the underlying LLM.
+To make sure the calculations are correct, we should provide the agent with math tools.
+Then the LLM will be able to decide to call tools that perform the calculations deterministically.
 
-## 添加工具 { #add-tools }
+## Add tools
 
-定义用于执行数学运算的[工具](../tools-overview.md)，并将其添加到[ToolRegistry](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-tool-registry/index.html)中：
+Define [tools](../tools-overview.md) for performing math operations and add them to a [ToolRegistry](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-tool-registry/index.html):
 
-=== "Kotlin"<!--- INCLUDE
+=== "Kotlin"
+
+    <!--- INCLUDE
     import ai.koog.agents.core.tools.ToolRegistry
     import ai.koog.agents.core.tools.annotations.LLMDescription
     import ai.koog.agents.core.tools.annotations.Tool
     import ai.koog.agents.core.tools.reflect.ToolSet
     -->
-```kotlin
-@LLMDescription("用于执行数学运算的工具")
-class MathTools : ToolSet {
-    @Tool
-    @LLMDescription("将两个数字相加并返回结果")
-    fun add(a: Int, b: Int): Int {
-        // 这并非必需，但有助于在控制台输出中查看工具调用
-        println("正在计算 $a 与 $b 的和...")
-        return a + b
+    ```kotlin
+    @LLMDescription("Tools for performing math operations")
+    class MathTools : ToolSet {
+        @Tool
+        @LLMDescription("Adds two numbers and returns the result")
+        fun add(a: Int, b: Int): Int {
+            // This is not necessary, but it helps to see the tool call in the console output
+            println("Adding $a and $b...")
+            return a + b
+        }
+        @Tool
+        @LLMDescription("Multiplies two numbers and returns the result")
+        fun multiply(a: Int, b: Int): Int {
+            // This is not necessary, but it helps to see the tool call in the console output
+            println("Multiplying $a and $b...")
+            return a * b
+        }
     }
-    @Tool
-    @LLMDescription("将两个数字相乘并返回结果")
-    fun multiply(a: Int, b: Int): Int {
-        // 这并非必需，但有助于在控制台输出中查看工具调用
-        println("正在计算 $a 与 $b 的乘积...")
-        return a * b
+    
+    val toolRegistry = ToolRegistry {
+        tools(MathTools())
     }
-}
-
-val toolRegistry = ToolRegistry {
-    tools(MathTools())
-}
-```
-<!--- KNIT example-graph-agents-05.kt -->
+    ```
+    <!--- KNIT example-graph-agents-05.kt -->
 
 === "Java"
 
@@ -399,21 +403,21 @@ val toolRegistry = ToolRegistry {
     }
     -->
     ```java
-    @LLMDescription("用于执行数学运算的工具")
+    @LLMDescription("Tools for performing math operations")
     public static class MathTools implements ToolSet {
         @Tool
-        @LLMDescription("将两个数字相加并返回结果")
+        @LLMDescription("Adds two numbers and returns the result")
         public int add(int a, int b) {
-            // 这并非必需，但有助于在控制台输出中查看工具调用
-            System.out.println("正在计算 " + a + " 与 " + b + " 的和...");
+            // This is not necessary, but it helps to see the tool call in the console output
+            System.out.println("Adding " + a + " and " + b + "...");
             return a + b;
         }
 
         @Tool
-        @LLMDescription("将两个数字相乘并返回结果")
+        @LLMDescription("Multiplies two numbers and returns the result")
         public int multiply(int a, int b) {
-            // 这并非必需，但有助于在控制台输出中查看工具调用
-            System.out.println("正在计算 " + a + " 与 " + b + " 的乘积...");
+            // This is not necessary, but it helps to see the tool call in the console output
+            System.out.println("Multiplying " + a + " and " + b + "...");
             return a * b;
         }
     }
@@ -425,7 +429,7 @@ val toolRegistry = ToolRegistry {
     ```
     <!--- KNIT exampleGraphAgentsJava03.java -->
 
-将工具注册表添加到智能体配置中：
+Add the tool registry to the agent configuration:
 
 === "Kotlin"
 
@@ -489,7 +493,7 @@ val toolRegistry = ToolRegistry {
     )
     
     fun main() = runBlocking {
-        val result = mathAgent.run("将3乘以4，然后将结果乘以5，接着加上10，最后加上123。")
+        val result = mathAgent.run("Multiply 3 by 4, then multiply the result by 5, then add 10, then add 123.")
         println(result)
     }
     ```
@@ -577,12 +581,12 @@ val toolRegistry = ToolRegistry {
         .toolRegistry(toolRegistry)
         .build();
 
-    String result = mathAgent.run("将3乘以4，然后将结果乘以5，接着加上10，最后加上123。", null);
+    String result = mathAgent.run("Multiply 3 by 4, then multiply the result by 5, then add 10, then add 123.", null);
     System.out.println(result);
     ```
     <!--- KNIT exampleGraphAgentsJava04.java -->
 
-现在运行智能体时，它将返回类似以下的结果：
+When you run the agent now, it will respond with something like this:
 
 ```text
 Multiplying 3 and 4...
@@ -595,14 +599,16 @@ Then, 10 was added to the result:
 Finally, 123 was added to the result:
 70 + 123 = 193
 ```
-<!--- KNIT example-graph-agents-04.txt -->根据此输出，智能体正确执行了计算，但它仅调用了一次 `multiply` 工具，
-而未对每个操作调用相应的工具。
-我们可以通过描述其角色并在系统提示中提供使用适当工具的说明来帮助智能体。
+<!--- KNIT example-graph-agents-04.txt -->
 
-## 提供系统提示 { #provide-a-system-prompt }
+According to this output, the agent correctly performed the calculations, but it only called the `multiply` tool once
+instead of calling the corresponding tool for every operation.
+We can help the agent by describing its role and providing instructions for using appropriate tools in the system prompt.
 
-[系统提示](../prompts/prompt-creation/index.md#system-message)定义了智能体的角色和执行任务的说明。
-在我们的示例中，描述智能体应如何处理复杂的多步骤计算非常重要：
+## Provide a system prompt
+
+A [system prompt](../prompts/prompt-creation/index.md#system-message) defines the agent's role and instructions for performing tasks.
+In our example, it is important to describe how the agent should process complex multistep calculations:
 
 === "Kotlin"
 
@@ -662,18 +668,18 @@ Finally, 123 was added to the result:
         promptExecutor = simpleOllamaAIExecutor(),
         llmModel = OllamaModels.Meta.LLAMA_3_2,
         systemPrompt = """
-                    你是一个简单的计算器助手。
-                    你可以使用“add”和“multiply”工具对两个数字进行加法和乘法运算。
-                    当用户提供输入时，提取他们请求的数字和操作。
-                    对第一个操作使用适当的工具，然后处理下一个操作，依此类推，直到计算出结果。
-                    始终以清晰、友好的消息回应，显示计算过程和结果。
+                    You are a simple calculator assistant.
+                    You can add and multiply two numbers using the 'add' and 'multiply' tools.
+                    When the user provides input, extract the numbers and operations they requested.
+                    Use the appropriate tool for the first operation, then the next one, and so on, until you calculate the result.
+                    Always respond with a clear, friendly message showing the calculation and result.
                     """.trimIndent(),
         toolRegistry = toolRegistry,
         strategy = calculatorAgentStrategy
     )
     
     fun main() = runBlocking {
-        val result = mathAgent.run("将3乘以4，然后将结果乘以5，再加10，再加123。")
+        val result = mathAgent.run("Multiply 3 by 4, then multiply the result by 5, then add 10, then add 123.")
         println(result)
     }
     ```
@@ -757,17 +763,17 @@ Finally, 123 was added to the result:
     AIAgent<String, String> mathAgent = AIAgent.builder()
         .promptExecutor(promptExecutor)
         .llmModel(OllamaModels.Meta.LLAMA_3_2)
-        .systemPrompt("你是一个简单的计算器助手。你可以使用“add”和“multiply”工具对两个数字进行加法和乘法运算。当用户提供输入时，提取他们请求的数字和操作。对第一个操作使用适当的工具，然后处理下一个操作，依此类推，直到计算出结果。始终以清晰、友好的消息回应，显示计算过程和结果。")
+        .systemPrompt("You are a simple calculator assistant. You can add and multiply two numbers using the 'add' and 'multiply' tools. When the user provides input, extract the numbers and operations they requested. Use the appropriate tool for the first operation, then the next one, and so on, until you calculate the result. Always respond with a clear, friendly message showing the calculation and result.")
         .graphStrategy(calculatorAgentStrategy.build())
         .toolRegistry(toolRegistry)
         .build();
 
-    String result = mathAgent.run("将3乘以4，然后将结果乘以5，再加10，再加123。", null);
+    String result = mathAgent.run("Multiply 3 by 4, then multiply the result by 5, then add 10, then add 123.", null);
     System.out.println(result);
     ```
     <!--- KNIT exampleGraphAgentsJava05.java -->
 
-现在运行智能体时，它将返回类似以下内容：
+When you run the agent now, it will respond with something like this:
 
 ```text
 Multiplying 3 and 4...
@@ -778,11 +784,11 @@ The final result is: 193
 ```
 <!--- KNIT example-graph-agents-05.txt -->
 
-如你所见，智能体现在为每个操作正确调用了相应的工具，
-确保以确定性的方式执行计算，而不是冒险产生幻觉结果。
+As you can see, the agent now correctly calls the appropriate tool for each operation,
+ensuring that it performs the calculations deterministically instead of risking a hallucinated result.
 
-## 后续步骤 { #next-steps }
+## Next steps
 
-- 与[功能型智能体](functional-agents.md)和[规划型智能体](planner-agents/index.md)进行比较
-- 通过[安装功能](../features/index.md)增强你的智能体
-- 使用[结构化输出](../structured-output.md)提高可预测性和可靠性
+- Compare to [functional agents](functional-agents.md) and [planner agents](planner-agents/index.md)
+- Enhance your agent by [installing features](../features/index.md)
+- Improve the predictability and reliability with [structured output](../structured-output.md)

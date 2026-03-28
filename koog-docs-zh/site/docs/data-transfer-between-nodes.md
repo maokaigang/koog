@@ -49,11 +49,12 @@ Koog 提供了一种使用 `AIAgentStorage` 存储和传递数据的方式，这
     ```
     <!--- KNIT exampleDataTransferBetweenNodesJava01.java -->
 
-定义后，使用该类创建存储键，如下所述。
 
-### 创建存储键 { #creating-a-storage-key }
+Once defined, use the class to create a storage key as described below.
 
-为定义的数据结构创建类型化存储键：
+### Creating a storage key
+
+Create a typed storage key for the defined data structure:
 
 === "Kotlin"
 
@@ -90,11 +91,11 @@ Koog 提供了一种使用 `AIAgentStorage` 存储和传递数据的方式，这
     ```
     <!--- KNIT exampleDataTransferBetweenNodesJava02.java -->
 
-`createStorageKey` 函数接受一个字符串参数，用于唯一标识该键。
+The `createStorageKey` function takes a single string parameter that uniquely identifies the key.
 
-### 存储数据 { #storing-data }
+### Storing data
 
-要使用创建的存储键保存数据，请在节点中使用 `storage.set(key: AIAgentStorageKey<T>, value: T)` 方法：
+To save data using a created storage key, use the `storage.set(key: AIAgentStorageKey<T>, value: T)` method in a node:
 
 === "Kotlin"
 
@@ -145,11 +146,13 @@ Koog 提供了一种使用 `AIAgentStorage` 存储和传递数据的方式，这
     ```
     <!--- KNIT exampleDataTransferBetweenNodesJava03.java -->
 
-### 检索数据 { #retrieving-data }
+### Retrieving data
 
-要检索数据，请在节点中使用 `storage.get` 方法：
+To retrieve the data, use the `storage.get` method in a node:
 
-=== "Kotlin"<!--- INCLUDE
+=== "Kotlin"
+
+    <!--- INCLUDE
     import ai.koog.agents.core.agent.entity.createStorageKey
     import ai.koog.agents.core.dsl.builder.strategy
     import ai.koog.agents.core.dsl.builder.node
@@ -161,18 +164,18 @@ Koog 提供了一种使用 `AIAgentStorage` 存储和传递数据的方式，这
         val userDataKey = createStorageKey<UserData>("user-data")
         val str = strategy<String, Unit>("my-strategy") {
     -->
-<!--- SUFFIX
+    <!--- SUFFIX
         }
     }
     -->
-```kotlin
-val nodeRetrieveData by node<String, Unit> { message ->
-    storage.get(userDataKey)?.let { userFromStorage ->
-        println("Hello dear $userFromStorage, here's a message for you: $message")
+    ```kotlin
+    val nodeRetrieveData by node<String, Unit> { message ->
+        storage.get(userDataKey)?.let { userFromStorage ->
+            println("Hello dear $userFromStorage, here's a message for you: $message")
+        }
     }
-}
-```
-<!--- KNIT example-data-transfer-between-nodes-04.kt -->
+    ```
+    <!--- KNIT example-data-transfer-between-nodes-04.kt -->
 
 === "Java"
 
@@ -205,11 +208,11 @@ val nodeRetrieveData by node<String, Unit> { message ->
     ```
     <!--- KNIT exampleDataTransferBetweenNodesJava04.java -->
 
-## API 文档 { #api-documentation }
+## API documentation
 
-有关 `AIAgentStorage` 类的完整参考，请参阅 [AIAgentStorage](api:agents-core::ai.koog.agents.core.agent.entity.AIAgentStorage)。
+For a complete reference related to the `AIAgentStorage` class, see [AIAgentStorage](api:agents-core::ai.koog.agents.core.agent.entity.AIAgentStorage).
 
-有关 `AIAgentStorage` 类中可用的各个函数，请参阅以下 API 参考：
+For individual functions available in the `AIAgentStorage` class, see the following API references:
 
 - [clear](api:agents-core::ai.koog.agents.core.agent.entity.AIAgentStorage.clear)
 - [get](api:agents-core::ai.koog.agents.core.agent.entity.AIAgentStorage.get)
@@ -219,9 +222,9 @@ val nodeRetrieveData by node<String, Unit> { message ->
 - [set](api:agents-core::ai.koog.agents.core.agent.entity.AIAgentStorage.set)
 - [toMap](api:agents-core::ai.koog.agents.core.agent.entity.AIAgentStorage.toMap)
 
-## 附加信息 { #additional-information }
+## Additional information
 
-- `AIAgentStorage` 是线程安全的，使用 Mutex 确保正确处理并发访问。
-- 检索值时，类型转换会自动处理，确保整个应用程序的类型安全。
-- 对于不可为空的值访问，请使用 `getValue` 方法，如果键不存在，该方法会抛出异常。
-- 您可以使用 `clear` 方法完全清除存储，该方法会移除所有存储的键值对。
+- `AIAgentStorage` is thread-safe, using a Mutex to ensure concurrent access is handled properly.
+- When retrieving values, type casting is handled automatically, ensuring type safety throughout your application.
+- For non-nullable access to values, use the `getValue` method which throws an exception if the key does not exist.
+- You can clear the storage entirely using the `clear` method, which removes all stored key-value pairs.

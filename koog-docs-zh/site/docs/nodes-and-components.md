@@ -1166,7 +1166,9 @@ API 允许您通过可选参数微调执行：- runMode：控制任务期间工�
     ```
     <!--- KNIT example-nodes-and-component-15.kt -->
 
-=== "Java"<!--- INCLUDE
+=== "Java"
+
+    <!--- INCLUDE
     import ai.koog.agents.core.agent.entity.AIAgentGraphStrategy;
     import ai.koog.agents.core.agent.entity.AIAgentSubgraph;
     import ai.koog.agents.ext.tool.SayToUser;
@@ -1180,12 +1182,12 @@ API 允许您通过可选参数微调执行：- runMode：控制任务期间工�
             SayToUser analyzeTool = SayToUser.INSTANCE;
             SayToUser readFileTool = SayToUser.INSTANCE;
     -->
-<!--- SUFFIX
+    <!--- SUFFIX
         }
     }
     -->
-```java
-var verifyCode = AIAgentSubgraph.builder("verifyCode")
+    ```java
+    var verifyCode = AIAgentSubgraph.builder("verifyCode")
     .limitedTools(List.of(runTestsTool, analyzeTool, readFileTool))
     .withInput(String.class)
     .withVerification(codeToVerify ->
@@ -1196,8 +1198,8 @@ var verifyCode = AIAgentSubgraph.builder("verifyCode")
         "Code to verify:\n" +
         codeToVerify)
     .build();
-```
-<!--- KNIT exampleNodesAndComponentsJava14.java -->
+    ```
+    <!--- KNIT exampleNodesAndComponentsJava14.java -->
 
 ## 预定义策略与常见策略模式 { #predefined-strategies-and-common-strategy-patterns }
 

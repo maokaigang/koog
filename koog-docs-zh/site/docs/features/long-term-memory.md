@@ -15,7 +15,7 @@
 
     ```kotlin
     @OptIn(ExperimentalAgentsApi::class)
-    val myStorage = InMemoryRecordStorage() // 或你的向量数据库适配器
+    val myStorage = InMemoryRecordStorage() // or your vector DB adapter
 
     @OptIn(ExperimentalAgentsApi::class)
     val agent = AIAgent(
@@ -32,7 +32,7 @@
         }
     }
 
-    agent.run("我们昨天讨论了什么？")
+    agent.run("What did we discuss yesterday?")
     ```
 
 === "Java"
@@ -43,7 +43,7 @@
     AIAgent agent = AIAgent.builder()
         .promptExecutor(executor)
         .llmModel(OpenAIModels.Chat.GPT4o)
-        .systemPrompt("你是一个乐于助人的助手。")
+        .systemPrompt("You are a helpful assistant.")
         .install(LongTermMemory.Feature, config -> {
             config.retrieval(
                 new LongTermMemory.RetrievalSettingsBuilder()
@@ -56,12 +56,12 @@
         })
         .build();
 
-    Object result = agent.run("我们昨天讨论了什么？");
+    Object result = agent.run("What did we discuss yesterday?");
     ```
 
-## 仅检索（RAG） { #retrieval-only-rag }
+## Retrieval Only (RAG)
 
-当你有一个预填充的知识库时，可以仅使用检索功能而不进行摄取：
+Use retrieval without ingestion when you have a pre-populated knowledge base:
 
 === "Kotlin"
 
@@ -70,7 +70,7 @@
     install(LongTermMemory) {
         retrieval {
             storage = myVectorDbStorage
-            namespace = "my-collection"  // 可选：限定到特定的命名空间/集合
+            namespace = "my-collection"  // optional: scope to a specific namespace/collection
             searchStrategy = SimilaritySearchStrategy(topK = 3, similarityThreshold = 0.7)
             promptAugmenter = SystemPromptAugmenter()
         }
@@ -89,23 +89,25 @@
         .build();
     ```
 
-### 提示增强器 { #prompt-augmenters }
+### Prompt Augmenters
 
-| 增强器 | 行为 |
+| Augmenter | Behavior |
 |---|---|
-| `SystemPromptAugmenter()` | 将上下文作为系统消息插入到提示的开头（如果没有系统消息，则不执行任何操作） |
-| `UserPromptAugmenter()` | 将上下文作为单独的用户消息插入到最后一个用户消息之前 |
-| `PromptAugmenter { prompt, context -> ... }` | 通过 lambda 表达式进行自定义增强 |
+| `SystemPromptAugmenter()` | Inserts context as a system message at the start of the prompt (no-op if there is no system message) |
+| `UserPromptAugmenter()` | Inserts context as a separate user message before the last user message |
+| `PromptAugmenter { prompt, context -> ... }` | Custom augmentation via lambda |
 
-### 搜索策略| 策略                                                      | 行为                     | { #search-strategies }
+### Search Strategies
+
+| Strategy                                                  | Behavior                 |
 |-----------------------------------------------------------|--------------------------|
-| `KeywordSearchStrategy()`                                 | 全文/词法关键词匹配       |
-| `SimilaritySearchStrategy()`                              | 向量相似度语义搜索        |
-| `query -> new KeywordSearchRequest(query, 20, 0.0, null)` | 通过 lambda 自定义搜索    |
+| `KeywordSearchStrategy()`                                 | Full-text/lexical keyword matching |
+| `SimilaritySearchStrategy()`                              | Vector similarity semantic search |
+| `query -> new KeywordSearchRequest(query, 20, 0.0, null)` | Custom search via lambda |
 
-## 仅数据摄取 { #ingestion-only }
+## Ingestion Only
 
-使用仅摄取（不检索）功能，随时间逐步构建记忆存储：
+Use ingestion without retrieval to build up a memory storage over time:
 
 === "Kotlin"
 
@@ -114,7 +116,7 @@
     install(LongTermMemory) {
         ingestion {
             storage = myVectorDbStorage
-            namespace = "my-collection"  // 可选：限定到特定命名空间/集合
+            namespace = "my-collection"  // optional: scope to a specific namespace/collection
             extractor = FilteringMemoryRecordExtractor(
                 messageRolesToExtract = setOf(Message.Role.User, Message.Role.Assistant)
             )
@@ -139,16 +141,16 @@
         .build();
     ```
 
-### 摄取时机 { #ingestion-timing }
+### Ingestion Timing
 
-| 时机 | 行为 |
+| Timing | Behavior |
 |---|---|
-| `ON_LLM_CALL` | 在每次 LLM 调用/流式处理时摄取消息（支持会话内 RAG） |
-| `ON_AGENT_COMPLETION` | 在智能体运行完成时一次性摄取所有消息 |
+| `ON_LLM_CALL` | Ingests messages on each LLM call/stream (enables intra-session RAG) |
+| `ON_AGENT_COMPLETION` | Ingests all messages at once when the agent run completes |
 
-## 从策略节点访问长期记忆 { #accessing-long-term-memory-from-strategy-nodes }
+## Accessing Long-Term Memory from Strategy Nodes
 
-在策略节点内使用 `withLongTermMemory { }` 直接搜索或添加记录：
+Use `withLongTermMemory { }` inside a strategy node to directly search or add records:
 
 ```kotlin
 @OptIn(ExperimentalAgentsApi::class)
@@ -165,7 +167,7 @@ val myNode by node<String, Unit> {
 }
 ```
 
-使用 `longTermMemory()` 直接获取功能实例：
+Use `longTermMemory()` to get the feature instance directly:
 
 ```kotlin
 @OptIn(ExperimentalAgentsApi::class)
@@ -175,9 +177,9 @@ val myNode by node<String, Unit> {
 }
 ```
 
-## 自定义记忆记录提取器 { #custom-memory-record-extractor }
+## Custom Memory Record Extractor
 
-实现 `MemoryRecordExtractor` 以控制消息在存储前的转换方式：
+Implement `MemoryRecordExtractor` to control how messages are transformed before storage:
 
 ```kotlin
 @OptIn(ExperimentalAgentsApi::class)
@@ -195,9 +197,9 @@ install(LongTermMemory) {
 }
 ```
 
-## 实现自定义存储 { #implementing-custom-storage }
+## Implementing Custom Storage
 
-实现 `RetrievalStorage` 和/或 `IngestionStorage` 以连接到您的向量数据库：
+Implement `RetrievalStorage` and/or `IngestionStorage` to connect to your vector database:
 
 ```kotlin
 class MyVectorDbStorage : RetrievalStorage, IngestionStorage {
@@ -215,4 +217,4 @@ class MyVectorDbStorage : RetrievalStorage, IngestionStorage {
 }
 ```
 
-用于测试时，可使用内置的 `InMemoryRecordStorage`，该存储将记录保留在内存中并支持基于关键词的搜索。
+For testing, use the built-in `InMemoryRecordStorage` which keeps records in memory with keyword-based search.

@@ -127,20 +127,22 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
         setx BEDROCK_API_KEY "your-api-key"
         ```  
 
-=== "Mistral"获取你的 [Mistral API 密钥](https://console.mistral.ai/api-keys) 并将其赋值给 `MISTRAL_API_KEY` 环境变量。
+=== "Mistral"
 
-=== "Linux/macOS"
+    获取你的 [Mistral API 密钥](https://console.mistral.ai/api-keys) 并将其赋值给 `MISTRAL_API_KEY` 环境变量。
 
-    ```shell
-    export MISTRAL_API_KEY=your-api-key
-    ```
+    === "Linux/macOS"
 
-=== "Windows"
+        ```shell
+        export MISTRAL_API_KEY=your-api-key
+        ``` 
 
-    ```cmd
-    setx MISTRAL_API_KEY "your-api-key"
-    ```
-    <!--- KNIT example-getting-started-01.txt -->
+    === "Windows"
+
+        ```cmd
+        setx MISTRAL_API_KEY "your-api-key"
+        ``` 
+        <!--- KNIT example-getting-started-01.txt -->
 
 === "Ollama"
 
@@ -162,18 +164,18 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
         -->
         ```kotlin
         fun main() = runBlocking {
-            // 从 OPENAI_API_KEY 环境变量中获取 OpenAI API 密钥
+            // Get the OpenAI API key from the OPENAI_API_KEY environment variable
             val apiKey = System.getenv("OPENAI_API_KEY")
-                ?: error("未设置 API 密钥。")
+                ?: error("The API key is not set.")
             
-            // 创建智能体
+            // Create an agent
             val agent = AIAgent(
                 promptExecutor = simpleOpenAIExecutor(apiKey),
                 llmModel = OpenAIModels.Chat.GPT4o
             )
         
-            // 运行智能体
-            val result = agent.run("你好！你能如何帮助我？")
+            // Run the agent
+            val result = agent.run("Hello! How can you help me?")
             println(result)
         }
         ```
@@ -188,39 +190,39 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
         **/
         -->
         ```java
-        // 从 OPENAI_API_KEY 环境变量中获取 OpenAI API 密钥
+        // Get the OpenAI API key from the OPENAI_API_KEY environment variable
         String apiKey = System.getenv("OPENAI_API_KEY");
         if (apiKey == null) {
-            throw new RuntimeException("未设置 API 密钥。");
+            throw new RuntimeException("The API key is not set.");
         }
 
-        // 创建智能体
+        // Create an agent
         AIAgent<String, String> agent = AIAgent.builder()
             .promptExecutor(simpleOpenAIExecutor(apiKey))
             .llmModel(OpenAIModels.Chat.GPT4o)
             .build();
 
-        // 运行智能体
-        String result = agent.run("你好！你能如何帮助我？");
+        // Run the agent
+        String result = agent.run("Hello! How can you help me?");
         System.out.println(result);
         ```
         <!--- KNIT example-getting-started-java-01.java -->
 
-    示例可能产生以下输出：
+    The example can produce the following output:
     
     ```
-    你好！我在这里为你提供所需的任何帮助。以下是我能做的一些事情：
+    Hello! I'm here to help you with whatever you need. Here are just a few things I can do:
 
-    - 回答问题。
-    - 解释你好奇的概念或主题。
-    - 为任务提供分步指导。
-    - 提供建议、笔记或想法。
-    - 协助研究或总结复杂材料。
-    - 撰写或编辑文本、电子邮件或其他文档。
-    - 为创意项目或解决方案进行头脑风暴。
-    - 解决问题或进行计算。
+    - Answer questions.
+    - Explain concepts or topics you're curious about.
+    - Provide step-by-step instructions for tasks.
+    - Offer advice, notes, or ideas.
+    - Help with research or summarize complex material.
+    - Write or edit text, emails, or other documents.
+    - Brainstorm creative projects or solutions.
+    - Solve problems or calculations.
 
-    告诉我你需要什么帮助——我随时为你服务！
+    Let me know what you need help with—I’m here for you!
     ```
     <!--- KNIT example-getting-started-02.txt -->
 
@@ -228,71 +230,73 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
 
     以下示例使用 [`Claude Opus 4.1`](https://www.anthropic.com/news/claude-opus-4-1) 模型，通过 Anthropic API 创建并运行一个简单的 Koog 智能体。
 
-    === "Kotlin"<!--- INCLUDE
+    === "Kotlin"
+
+        <!--- INCLUDE
         import ai.koog.agents.core.agent.AIAgent
         import ai.koog.prompt.executor.llms.all.simpleAnthropicExecutor
         import ai.koog.prompt.executor.clients.anthropic.AnthropicModels
         import kotlinx.coroutines.runBlocking
         -->
-```kotlin
-fun main() = runBlocking {
-    // 从 ANTHROPIC_API_KEY 环境变量获取 Anthropic API 密钥
-    val apiKey = System.getenv("ANTHROPIC_API_KEY")
-        ?: error("未设置 API 密钥。")
-    
-    // 创建智能体
-    val agent = AIAgent(
-        promptExecutor = simpleAnthropicExecutor(apiKey),
-        llmModel = AnthropicModels.Opus_4_1
-    )
-
-    // 运行智能体
-    val result = agent.run("你好！你能如何帮助我？")
-    println(result)
-}
-```
-<!--- KNIT example-getting-started-02.kt -->
+        ```kotlin
+        fun main() = runBlocking {
+            // Get the Anthropic API key from the ANTHROPIC_API_KEY environment variable
+            val apiKey = System.getenv("ANTHROPIC_API_KEY")
+                ?: error("The API key is not set.")
+            
+            // Create an agent
+            val agent = AIAgent(
+                promptExecutor = simpleAnthropicExecutor(apiKey),
+                llmModel = AnthropicModels.Opus_4_1
+            )
+        
+            // Run the agent
+            val result = agent.run("Hello! How can you help me?")
+            println(result)
+        }
+        ```
+        <!--- KNIT example-getting-started-02.kt -->
 
 === "Java"
 
-    <!--- INCLUDE
+        <!--- INCLUDE
         /**
         -->
-    <!--- SUFFIX
+        <!--- SUFFIX
         **/
         -->
-    ```java
-    // 从 ANTHROPIC_API_KEY 环境变量获取 Anthropic API 密钥
-    String apiKey = System.getenv("ANTHROPIC_API_KEY");
-    if (apiKey == null) {
-        throw new RuntimeException("未设置 API 密钥。");
-    }
+        ```java
+        // Get the Anthropic API key from the ANTHROPIC_API_KEY environment variable
+        String apiKey = System.getenv("ANTHROPIC_API_KEY");
+        if (apiKey == null) {
+            throw new RuntimeException("The API key is not set.");
+        }
 
-    // 创建智能体
-    AIAgent<String, String> agent = AIAgent.builder()
-        .promptExecutor(simpleAnthropicExecutor(apiKey))
-        .llmModel(AnthropicModels.Opus_4_1)
-        .build();
+        // Create an agent
+        AIAgent<String, String> agent = AIAgent.builder()
+            .promptExecutor(simpleAnthropicExecutor(apiKey))
+            .llmModel(AnthropicModels.Opus_4_1)
+            .build();
 
-    // 运行智能体
-    String result = agent.run("你好！你能如何帮助我？");
-    System.out.println(result);
+        // Run the agent
+        String result = agent.run("Hello! How can you help me?");
+        System.out.println(result);
+        ```
+        <!--- KNIT example-getting-started-java-02.java -->
+
+    The example can produce the following output:
+
     ```
-    <!--- KNIT example-getting-started-java-02.java -->
+    Hello! I can help you with:
 
-    示例可能产生以下输出：
-
-    ```
-    你好！我可以帮助你：
-
-    - **回答问题** 并解释主题
-    - **写作** - 起草、编辑、校对
-    - **学习** - 作业、数学、学习辅导
-    - **解决问题** 和头脑风暴
-    - **研究** 和信息查找
-    - **一般任务** - 指导、规划、建议
+    - **Answering questions** and explaining topics
+    - **Writing** - drafting, editing, proofreading
+    - **Learning** - homework, math, study help
+    - **Problem-solving** and brainstorming
+    - **Research** and information finding
+    - **General tasks** - instructions, planning, recommendations
     
-    你今天需要什么帮助？
+    What do you need help with today?
     ```
     <!--- KNIT example-getting-started-03.txt -->
 
@@ -310,18 +314,18 @@ fun main() = runBlocking {
         -->
         ```kotlin
         fun main() = runBlocking {
-            // 从 GOOGLE_API_KEY 环境变量获取 Gemini API 密钥
+            // Get the Gemini API key from the GOOGLE_API_KEY environment variable
             val apiKey = System.getenv("GOOGLE_API_KEY")
-                ?: error("未设置 API 密钥。")
+                ?: error("The API key is not set.")
             
-            // 创建智能体
+            // Create an agent
             val agent = AIAgent(
                 promptExecutor = simpleGoogleAIExecutor(apiKey),
                 llmModel = GoogleModels.Gemini2_5Pro
             )
         
-            // 运行智能体
-            val result = agent.run("你好！你能如何帮助我？")
+            // Run the agent
+            val result = agent.run("Hello! How can you help me?")
             println(result)
         }
         ```
@@ -336,35 +340,37 @@ fun main() = runBlocking {
         **/
         -->
         ```java
-        // 从 GOOGLE_API_KEY 环境变量获取 Gemini API 密钥
+        // Get the Gemini API key from the GOOGLE_API_KEY environment variable
         String apiKey = System.getenv("GOOGLE_API_KEY");
         if (apiKey == null) {
-            throw new RuntimeException("未设置 API 密钥。");
-        }// 创建智能体
+            throw new RuntimeException("The API key is not set.");
+        }
+
+        // Create an agent
         AIAgent<String, String> agent = AIAgent.builder()
             .promptExecutor(simpleGoogleAIExecutor(apiKey))
             .llmModel(GoogleModels.Gemini2_5Pro)
             .build();
 
-        // 运行智能体
-        String result = agent.run("你好！你能如何帮助我？");
+        // Run the agent
+        String result = agent.run("Hello! How can you help me?");
         System.out.println(result);
         ```
         <!--- KNIT example-getting-started-java-03.java -->
 
-    该示例可能产生以下输出：
+    The example can produce the following output:
 
     ```
-    我是一个能够协助处理语言和信息任务的AI。你可以让我：
+    I'm an AI that can help you with tasks involving language and information. You can ask me to:
 
-    *   **回答问题**
-    *   **撰写或编辑文本**（邮件、故事、代码等）
-    *   **头脑风暴想法**
-    *   **总结长文档**
-    *   **规划事务**（如旅行或项目）
-    *   **作为创意伙伴**
+    *   **Answer questions**
+    *   **Write or edit text** (emails, stories, code, etc.)
+    *   **Brainstorm ideas**
+    *   **Summarize long documents**
+    *   **Plan things** (like trips or projects)
+    *   **Be a creative partner**
 
-    只需告诉我你的需求
+    Just tell me what you need
     ```
     <!--- KNIT example-getting-started-04.txt -->
 
@@ -383,23 +389,23 @@ fun main() = runBlocking {
         -->
         ```kotlin
         fun main() = runBlocking {
-            // 从 DEEPSEEK_API_KEY 环境变量获取 DeepSeek API 密钥
+            // Get the DeepSeek API key from the DEEPSEEK_API_KEY environment variable
             val apiKey = System.getenv("DEEPSEEK_API_KEY")
-                ?: error("未设置 API 密钥。")
+                ?: error("The API key is not set.")
             
-            // 创建 LLM 客户端
+            // Create an LLM client
             val deepSeekClient = DeepSeekLLMClient(apiKey)
         
-            // 创建智能体
+            // Create an agent
             val agent = AIAgent(
-                // 使用 LLM 客户端创建提示词执行器
+                // Create a prompt executor using the LLM client
                 promptExecutor = MultiLLMPromptExecutor(deepSeekClient),
-                // 提供模型
+                // Provide a model
                 llmModel = DeepSeekModels.DeepSeekChat
             )
         
-            // 运行智能体
-            val result = agent.run("你好！你能如何帮助我？")
+            // Run the agent
+            val result = agent.run("Hello! How can you help me?")
             println(result)
         }
         ```
@@ -414,33 +420,35 @@ fun main() = runBlocking {
         **/
         -->
         ```java
-        // 从 DEEPSEEK_API_KEY 环境变量获取 DeepSeek API 密钥
+        // Get the DeepSeek API key from the DEEPSEEK_API_KEY environment variable
         String apiKey = System.getenv("DEEPSEEK_API_KEY");
         if (apiKey == null) {
-            throw new RuntimeException("未设置 API 密钥。");
+            throw new RuntimeException("The API key is not set.");
         }
 
-        // 创建 LLM 客户端
+        // Create an LLM client
         DeepSeekLLMClient deepSeekClient = new DeepSeekLLMClient(apiKey);
 
-        // 创建智能体
+        // Create an agent
         AIAgent<String, String> agent = AIAgent.builder()
-            // 使用 LLM 客户端创建提示词执行器
+            // Create a prompt executor using the LLM client
             .promptExecutor(new MultiLLMPromptExecutor(deepSeekClient))
-            // 提供模型
+            // Provide a model
             .llmModel(DeepSeekModels.DeepSeekChat)
             .build();
 
-        // 运行智能体
-        String result = agent.run("你好！你能如何帮助我？");
+        // Run the agent
+        String result = agent.run("Hello! How can you help me?");
         System.out.println(result);
         ```
         <!--- KNIT example-getting-started-java-04.java -->
 
-    该示例可能产生以下输出：```
-你好！我在这里协助你处理各种任务，包括回答问题、提供信息、帮助解决问题、提供创意想法，甚至只是聊天。无论你需要研究、写作、学习新知识方面的帮助，还是只想讨论某个话题，随时都可以问我——我很乐意帮忙！😊
-```
-<!--- KNIT example-getting-started-05.txt -->
+    The example can produce the following output:
+
+    ```
+    Hello! I'm here to assist you with a wide range of tasks, including answering questions, providing information, helping with problem-solving, offering creative ideas, and even just chatting. Whether you need help with research, writing, learning something new, or simply want to discuss a topic, feel free to ask—I’m happy to help! 😊
+    ```
+    <!--- KNIT example-getting-started-05.txt -->
 
 === "OpenRouter"
 
@@ -456,17 +464,17 @@ fun main() = runBlocking {
         -->
         ```kotlin
         fun main() = runBlocking {
-            // 从 OPENROUTER_API_KEY 环境变量获取 OpenRouter API 密钥
+            // Get the OpenRouter API key from the OPENROUTER_API_KEY environment variable
             val apiKey = System.getenv("OPENROUTER_API_KEY")
                 ?: error("The API key is not set.")
             
-            // 创建代理
+            // Create an agent
             val agent = AIAgent(
                 promptExecutor = simpleOpenRouterExecutor(apiKey),
                 llmModel = OpenRouterModels.GPT4o
             )
         
-            // 运行代理
+            // Run the agent
             val result = agent.run("Hello! How can you help me?")
             println(result)
         }
@@ -482,28 +490,28 @@ fun main() = runBlocking {
         **/
         -->
         ```java
-        // 从 OPENROUTER_API_KEY 环境变量获取 OpenRouter API 密钥
+        // Get the OpenRouter API key from the OPENROUTER_API_KEY environment variable
         String apiKey = System.getenv("OPENROUTER_API_KEY");
         if (apiKey == null) {
             throw new RuntimeException("The API key is not set.");
         }
 
-        // 创建代理
+        // Create an agent
         AIAgent<String, String> agent = AIAgent.builder()
             .promptExecutor(simpleOpenRouterExecutor(apiKey))
             .llmModel(OpenRouterModels.GPT4o)
             .build();
 
-        // 运行代理
+        // Run the agent
         String result = agent.run("Hello! How can you help me?");
         System.out.println(result);
         ```
         <!--- KNIT example-getting-started-java-05.java -->
 
-    该示例可能产生以下输出：
+    The example can produce the following output:
 
     ```
-    我可以回答问题、协助写作、解决问题、组织任务等等——只需告诉我你需要什么！
+    I can answer questions, help with writing, solve problems, organize tasks, and more—just let me know what you need!
     ```
     <!--- KNIT example-getting-started-06.txt -->
 
@@ -521,24 +529,26 @@ fun main() = runBlocking {
         -->
         ```kotlin
         fun main() = runBlocking {
-            // 从 BEDROCK_API_KEY 环境变量获取 Bedrock API 密钥
+            // Get the Bedrock API key from the BEDROCK_API_KEY environment variable
             val apiKey = System.getenv("BEDROCK_API_KEY")
                 ?: error("The API key is not set.")
             
-            // 创建代理
+            // Create an agent
             val agent = AIAgent(
                 promptExecutor = simpleBedrockExecutorWithBearerToken(apiKey),
                 llmModel = BedrockModels.AnthropicClaude4_5Sonnet
             )
         
-            // 运行代理
+            // Run the agent
             val result = agent.run("Hello! How can you help me?")
             println(result)
         }
         ```
         <!--- KNIT example-getting-started-06.kt -->
 
-    === "Java"<!--- INCLUDE
+    === "Java"
+
+        <!--- INCLUDE
         /**
         -->
         <!--- SUFFIX
@@ -563,7 +573,7 @@ fun main() = runBlocking {
         ```
         <!--- KNIT example-getting-started-java-06.java -->
 
-    该示例可能产生以下输出：
+    The example can produce the following output:
 
     ```
     Hello! I'm a helpful assistant and I can assist you in many ways, including:
@@ -625,33 +635,35 @@ fun main() = runBlocking {
         String apiKey = System.getenv("MISTRAL_API_KEY");
         if (apiKey == null) {
             throw new RuntimeException("The API key is not set.");
-        }        // 创建智能体
+        }
+
+        // Create an agent
         AIAgent<String, String> agent = AIAgent.builder()
             .promptExecutor(simpleMistralAIExecutor(apiKey))
             .llmModel(MistralAIModels.Chat.MistralMedium31)
             .build();
 
-        // 运行智能体
-        String result = agent.run("你好！你能如何帮助我？");
+        // Run the agent
+        String result = agent.run("Hello! How can you help me?");
         System.out.println(result);
         ```
         <!--- KNIT example-getting-started-java-07.java -->
 
-    示例可能产生以下输出：
+    The example can produce the following output:
 
     ```
-    我可以协助您处理广泛的主题和任务。以下是一些示例：
+    I can assist you with a wide range of topics and tasks. Here are some examples:
 
-    1. **回答问题**：我可以提供关于历史、科学、技术、文学等各种主题的信息。
-    2. **提供定义**：如果您不确定某个单词或短语的含义，我可以帮助您定义它。
-    3. **生成文本**：无论是撰写电子邮件、创建社交媒体内容还是编写故事，我都可以协助文本生成。
-    4. **翻译**：我可以将文本从一种语言翻译成另一种语言。
-    5. **对话**：我们可以就任何您感兴趣的话题进行聊天，我会相应回应。
-    6. **语言练习**：如果您正在学习一门新语言，我可以帮助发音、语法和词汇练习。
-    7. **头脑风暴**：如果您在某个问题上遇到困难或需要项目创意，我可以帮助构思解决方案。
-    8. **摘要**：如果您有一篇长文本并希望获得摘要，我可以为您浓缩内容。
+    1. **Answering questions**: I can provide information on various subjects, including history, science, technology, literature, and more.
+    2. **Providing definitions**: If you're unsure about the meaning of a word or phrase, I can help define it for you.
+    3. **Generating text**: Whether it's writing an email, creating content for social media, or composing a story, I can help with text generation.
+    4. **Translation**: I can translate text from one language to another.
+    5. **Conversation**: We can have a chat about any topic that interests you, and I'll respond accordingly.
+    6. **Language practice**: If you're learning a new language, I can help with pronunciation, grammar, and vocabulary practice.
+    7. **Brainstorming**: If you're stuck on a problem or need ideas for a project, I can help brainstorm solutions.
+    8. **Summarization**: If you have a long piece of text and want a summary, I can condense it for you.
     
-    您在想什么？有什么具体需要帮助的吗？
+    What's on your mind? Is there something specific you'd like help with?
     ```
     <!--- KNIT example-getting-started-08.txt -->
 
@@ -669,14 +681,14 @@ fun main() = runBlocking {
         -->
         ```kotlin
         fun main() = runBlocking {
-            // 创建智能体
+            // Create an agent
             val agent = AIAgent(
                 promptExecutor = simpleOllamaAIExecutor(),
                 llmModel = OllamaModels.Meta.LLAMA_3_2
             )
 
-            // 运行智能体
-            val result = agent.run("你好！你能如何帮助我？")
+            // Run the agent
+            val result = agent.run("Hello! How can you help me?")
             println(result)
         }
         ```
@@ -691,25 +703,25 @@ fun main() = runBlocking {
         **/
         -->  
         ```java
-        // 创建智能体
+        // Create an agent
         AIAgent<String, String> agent = AIAgent.builder()
             .promptExecutor(simpleOllamaAIExecutor("http://localhost:11434"))
             .llmModel(OllamaModels.Meta.LLAMA_3_2)
             .build();
 
-        // 运行智能体
-        String result = agent.run("你好！你能如何帮助我？");
+        // Run the agent
+        String result = agent.run("Hello! How can you help me?");
         System.out.println(result);
         ```
         <!--- KNIT example-getting-started-java-08.java -->
 
-    示例可能产生以下输出：
+    The example can produce the following output:
 
     ```
-    我可以协助处理各种任务，例如回答问题、提供信息，甚至帮助语言相关任务，如校对或写作建议。您今天有什么想法？
+    I can assist with various tasks such as answering questions, providing information, and even helping with language-related tasks like proofreading or writing suggestions. What's on your mind today?
     ```
     <!--- KNIT example-getting-started-09.txt -->
 
-## 后续步骤 { #next-steps }
+## Next steps
 
-- 了解更多关于[智能体类型](agents/index.md)的信息
+- Learn more about [agent types](agents/index.md)

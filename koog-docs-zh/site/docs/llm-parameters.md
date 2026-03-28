@@ -25,10 +25,10 @@ LLM 参数是配置选项，可让您微调语言模型生成响应的方式。�
             maxTokens = 500
         )
     ) {
-        // 添加系统消息以设置上下文
+        // Add a system message to set the context
         system("You are a helpful assistant.")
 
-        // 添加用户消息
+        // Add a user message
         user("Tell me about Kotlin")
     }
     ```
@@ -61,9 +61,9 @@ LLM 参数是配置选项，可让您微调语言模型生成响应的方式。�
     <!--- KNIT example-llm-parameters-java-01.java -->
 
 
-有关提示创建的更多信息，请参阅[提示](prompts/prompt-creation/index.md)。
+For more information about prompt creation, see [Prompts](prompts/prompt-creation/index.md).
 
-- 创建子图时：
+- When creating a subgraph:
 
 === "Kotlin"
 
@@ -116,32 +116,34 @@ LLM 参数是配置选项，可让您微调语言模型生成响应的方式。�
     <!--- KNIT example-llm-parameters-java-02.java -->
 
 
-有关 Koog 中现有子图类型的更多信息，请参阅[预定义子图](nodes-and-components.md#predefined-subgraphs)。要了解如何创建和实现自己的子图，请参阅[自定义子图](custom-subgraphs.md)。
+For more information about existing subgraph types in Koog, see [Predefined subgraphs](nodes-and-components.md#predefined-subgraphs). To learn how to create and implement your own subgraphs, see [Custom subgraphs](custom-subgraphs.md).
 
-- 在 LLM 写入会话中更新提示时：
+- When updating a prompt in an LLM write session:
 
-=== "Kotlin"<!--- INCLUDE
+=== "Kotlin"
+
+    <!--- INCLUDE
     import ai.koog.agents.core.dsl.builder.strategy
     import ai.koog.agents.core.dsl.builder.node
     import ai.koog.prompt.params.LLMParams
     val strategy = strategy<Unit, Unit>("strategy-name") {
     val node by node<Unit, Unit> {
     -->
-<!--- SUFFIX
+    <!--- SUFFIX
        }
     }
     -->
-```kotlin
-llm.writeSession {
-    changeLLMParams(
-        LLMParams(
-            temperature = 0.7,
-            maxTokens = 500
+    ```kotlin
+    llm.writeSession {
+        changeLLMParams(
+            LLMParams(
+                temperature = 0.7,
+                maxTokens = 500
+            )
         )
-    )
-}
-```
-<!--- KNIT example-llm-parameters-03.kt -->
+    }
+    ```
+    <!--- KNIT example-llm-parameters-03.kt -->
 
 === "Java"
 
@@ -155,23 +157,25 @@ llm.writeSession {
     ```
     <!--- KNIT example-llm-parameters-java-03.java -->
 
-有关会话的更多信息，请参阅[LLM 会话与手动历史记录管理](sessions.md)。
+For more information about sessions, see [LLM sessions and manual history management](sessions.md).
 
-## LLM 参数参考 { #llm-parameter-reference }
+## LLM parameter reference
 
-下表提供了 `LLMParams` 类中包含且由 Koog 开箱即用的所有 LLM 提供商支持的 LLM 参数参考。
-有关特定于某些提供商的参数列表，请参阅[提供商特定参数](#provider-specific-parameters)。| 参数                  | 类型                           | 描述                                                                                                                                                                                             |
-|-----------------------|--------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `temperature`          | Double                         | 控制输出结果的随机性。较高的值（如 0.7–1.0）会产生更多样化和创造性的响应，而较低的值会产生更确定性和聚焦的响应。                                                                                 |
-| `maxTokens`            | Integer                        | 响应中生成的最大令牌数。用于控制响应长度。                                                                                                                                                       |
-| `numberOfChoices`      | Integer                        | 生成的备选响应数量。必须大于 0。                                                                                                                                                                 |
-| `speculation`          | String                         | 影响模型行为的推测性配置字符串，旨在提升结果速度和准确性。仅特定模型支持，但可能显著提升速度和准确性。                                                                                           |
-| `schema`               | Schema                         | 定义模型响应格式的结构，支持结构化输出，如 JSON。更多信息请参阅 [Schema](#schema)。                                                                                      |
-| `toolChoice`           | ToolChoice                     | 控制语言模型的工具调用行为。更多信息请参阅 [Tool choice](#tool-choice)。                                                                                                                         |
-| `user`                 | String                         | 发起请求的用户标识符，可用于追踪目的。                                                                                                                                                           |
-| `additionalProperties` | Map&lt;String, JsonElement&gt; | 可用于存储特定模型提供商自定义参数的附加属性。                                                                                                                                                   |
+The following table provides a reference of LLM parameters included in the `LLMParams` class and supported by all LLM providers that are available in Koog out of the box.
+For a list of parameters that are specific to some providers, see [Provider-specific parameters](#provider-specific-parameters).
 
-各参数的默认值列表，请参阅相应的 LLM 提供商文档：
+| Parameter              | Type                           | Description                                                                                                                                                                                     |
+|------------------------|--------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `temperature`          | Double                         | Controls randomness in the output. Higher values, such as 0.7–1.0, produce more diverse and creative responses, while lower values produce more deterministic and focused responses.            |
+| `maxTokens`            | Integer                        | Maximum number of tokens to generate in the response. Useful for controlling response length.                                                                                                   |
+| `numberOfChoices`      | Integer                        | Number of alternative responses to generate. Must be greater than 0.                                                                                                                            |
+| `speculation`          | String                         | A speculative configuration string that influences model behavior, designed to enhance result speed and accuracy. Supported only by certain models, but may greatly improve speed and accuracy. |
+| `schema`               | Schema                         | Defines the structure for the model's response format, enabling structured outputs like JSON. For more information, see [Schema](#schema).                                                      |
+| `toolChoice`           | ToolChoice                     | Controls tool calling behavior of the language model. For more information, see [Tool choice](#tool-choice).                                                                                    |
+| `user`                 | String                         | Identifier for the user making the request, which can be used for tracking purposes.                                                                                                            |
+| `additionalProperties` | Map&lt;String, JsonElement&gt; | Additional properties that can be used to store custom parameters specific to certain model providers.                                                                                          |
+
+For a list of default values for each parameter, see the corresponding LLM provider documentation:
 
 - [OpenAI Chat](https://platform.openai.com/docs/api-reference/chat/create)
 - [OpenAI Responses](https://platform.openai.com/docs/api-reference/responses/create)
@@ -180,16 +184,18 @@ llm.writeSession {
 - [Mistral](https://docs.mistral.ai/api/#operation/chatCompletions)
 - [DeepSeek](https://api-docs.deepseek.com/api/create-chat-completion#request)
 - [OpenRouter](https://openrouter.ai/docs/api/reference/parameters)
-- 阿里巴巴 ([DashScope](https://www.alibabacloud.com/help/en/model-studio/qwen-api-reference))
+- Alibaba ([DashScope](https://www.alibabacloud.com/help/en/model-studio/qwen-api-reference))
 
-## Schema { #schema }
+## Schema
 
-`Schema` 接口定义了模型响应格式的结构。
-Koog 支持 JSON 模式，如下文各节所述。
+The `Schema` interface defines the structure for the model's response format.
+Koog supports JSON schemas, as described in the sections below.
 
-### JSON 模式JSON 模式允许您向语言模型请求结构化的 JSON 数据。Koog 支持以下两种类型的 JSON 模式： { #json-schemas }
+### JSON schemas
 
-1) **基础 JSON 模式** (`LLMParams.Schema.JSON.Basic`)：用于基础的 JSON 处理能力。此格式主要关注嵌套数据定义，不包含高级的 JSON 模式功能。
+JSON schemas let you request structured JSON data from language models. Koog supports the following two types of JSON schemas:
+
+1) **Basic JSON Schema** (`LLMParams.Schema.JSON.Basic`): Used for basic JSON processing capabilities. This format primarily focuses on nested data definitions without advanced JSON Schema functionalities.
 
 === "Kotlin"
 
@@ -200,7 +206,7 @@ Koog 支持 JSON 模式，如下文各节所述。
     import kotlinx.serialization.json.JsonPrimitive
     -->
     ```kotlin
-    // 使用基础 JSON 模式创建参数
+    // Create parameters with a basic JSON schema
     val jsonParams = LLMParams(
         temperature = 0.2,
         schema = LLMParams.Schema.JSON.Basic(
@@ -236,7 +242,7 @@ Koog 支持 JSON 模式，如下文各节所述。
     **/
     -->
     ```java
-    // 使用基础 JSON 模式创建参数
+    // Create parameters with a basic JSON schema
     LLMParams jsonParams = new LLMParams(
         0.2,         // temperature
         null,        // maxTokens
@@ -267,7 +273,9 @@ Koog 支持 JSON 模式，如下文各节所述。
         null         // additionalProperties
     );
     ```
-    <!--- KNIT example-llm-parameters-java-04.java -->2) **标准 JSON 架构** (`LLMParams.Schema.JSON.Standard`)：表示符合 [json-schema.org](https://json-schema.org/) 的标准 JSON 架构。此格式是官方 JSON 架构规范的一个真子集。请注意，不同 LLM 提供商的实现风格可能有所不同，因为它们并非全部支持完整的 JSON 架构。
+    <!--- KNIT example-llm-parameters-java-04.java -->
+
+2) **Standard JSON Schema** (`LLMParams.Schema.JSON.Standard`): Represents a standard JSON schema according to [json-schema.org](https://json-schema.org/). This format is a proper subset of the official JSON Schema specification. Note that the flavor across different LLM providers might vary, since not all of them support full JSON schemas.
 
 === "Kotlin"
 
@@ -278,7 +286,7 @@ Koog 支持 JSON 模式，如下文各节所述。
     import kotlinx.serialization.json.JsonArray
     -->
     ```kotlin
-    // 使用标准 JSON 架构创建参数
+    // Create parameters with a standard JSON schema
     val standardJsonParams = LLMParams(
         temperature = 0.2,
         schema = LLMParams.Schema.JSON.Standard(
@@ -309,66 +317,69 @@ Koog 支持 JSON 模式，如下文各节所述。
     ```
     <!--- KNIT example-llm-parameters-05.kt -->
 
-=== "Java"<!--- INCLUDE
+=== "Java"
+
+    <!--- INCLUDE
     /**
     -->
-<!--- SUFFIX
+    <!--- SUFFIX
     **/
     -->
-```java
-// 使用标准的 JSON 模式创建参数
-LLMParams standardJsonParams = new LLMParams(
-    0.2,         // temperature
-    null,        // maxTokens
-    1,           // numberOfChoices
-    null,        // speculation
-    new LLMParams.Schema.JSON.Standard(
-        "ProductCatalog",
-        new JsonObject(Map.of(
-            "type", new JsonPrimitive("object"),
-            "properties", new JsonObject(Map.of(
-                "products", new JsonObject(Map.of(
-                    "type", new JsonPrimitive("array"),
-                    "items", new JsonObject(Map.of(
-                        "type", new JsonPrimitive("object"),
-                        "properties", new JsonObject(Map.of(
-                            "id", new JsonObject(Map.of("type", new JsonPrimitive("string"))),
-                            "name", new JsonObject(Map.of("type", new JsonPrimitive("string"))),
-                            "price", new JsonObject(Map.of("type", new JsonPrimitive("number"))),
-                            "description", new JsonObject(Map.of("type", new JsonPrimitive("string")))
-                        )),
-                        "additionalProperties", new JsonPrimitive(false),
-                        "required", new JsonArray(List.of(
-                            new JsonPrimitive("id"),
-                            new JsonPrimitive("name"),
-                            new JsonPrimitive("price"),
-                            new JsonPrimitive("description")
+    ```java
+    // Create parameters with a standard JSON schema
+    LLMParams standardJsonParams = new LLMParams(
+        0.2,         // temperature
+        null,        // maxTokens
+        1,           // numberOfChoices
+        null,        // speculation
+        new LLMParams.Schema.JSON.Standard(
+            "ProductCatalog",
+            new JsonObject(Map.of(
+                "type", new JsonPrimitive("object"),
+                "properties", new JsonObject(Map.of(
+                    "products", new JsonObject(Map.of(
+                        "type", new JsonPrimitive("array"),
+                        "items", new JsonObject(Map.of(
+                            "type", new JsonPrimitive("object"),
+                            "properties", new JsonObject(Map.of(
+                                "id", new JsonObject(Map.of("type", new JsonPrimitive("string"))),
+                                "name", new JsonObject(Map.of("type", new JsonPrimitive("string"))),
+                                "price", new JsonObject(Map.of("type", new JsonPrimitive("number"))),
+                                "description", new JsonObject(Map.of("type", new JsonPrimitive("string")))
+                            )),
+                            "additionalProperties", new JsonPrimitive(false),
+                            "required", new JsonArray(List.of(
+                                new JsonPrimitive("id"),
+                                new JsonPrimitive("name"),
+                                new JsonPrimitive("price"),
+                                new JsonPrimitive("description")
+                            ))
                         ))
                     ))
-                ))
-            )),
-            "additionalProperties", new JsonPrimitive(false),
-            "required", new JsonArray(List.of(new JsonPrimitive("products")))
-        ))
-    ),
-    LLMParams.ToolChoice.Auto.INSTANCE, // toolChoice
-    null,        // user
-    null         // additionalProperties
-);
-```
-<!--- KNIT example-llm-parameters-java-05.java -->
+                )),
+                "additionalProperties", new JsonPrimitive(false),
+                "required", new JsonArray(List.of(new JsonPrimitive("products")))
+            ))
+        ),
+        LLMParams.ToolChoice.Auto.INSTANCE, // toolChoice
+        null,        // user
+        null         // additionalProperties
+    );
+    ```
+    <!--- KNIT example-llm-parameters-java-05.java -->
 
-## 工具选择 { #tool-choice }
+## Tool choice
 
-`ToolChoice` 类控制语言模型如何使用工具。它提供以下选项：
+The `ToolChoice` class controls how the language model uses tools. It provides the following options:
 
-* `LLMParams.ToolChoice.Named`：语言模型调用指定的工具。接受一个 `name` 字符串参数，该参数表示要调用的工具名称。
-* `LLMParams.ToolChoice.All`：语言模型调用所有工具。
-* `LLMParams.ToolChoice.None`：语言模型不调用工具，仅生成文本。
-* `LLMParams.ToolChoice.Auto`：语言模型自动决定是否调用工具以及调用哪个工具。
-* `LLMParams.ToolChoice.Required`：语言模型至少调用一个工具。
+* `LLMParams.ToolChoice.Named`: the language model calls the specified tool. Takes the `name` string argument that
+  represents the name of the tool to call.
+* `LLMParams.ToolChoice.All`: the language model calls all tools.
+* `LLMParams.ToolChoice.None`: the language model does not call tools and only generates text.
+* `LLMParams.ToolChoice.Auto`: the language model automatically decides whether to call tools and which tool to call.
+* `LLMParams.ToolChoice.Required`: the language model calls at least one tool.
 
-以下是使用 `LLMParams.ToolChoice.Named` 类调用特定工具的示例：
+Here is an example of using the `LLMParams.ToolChoice.Named` class to call a specific tool:
 
 === "Kotlin"
 
@@ -382,40 +393,43 @@ LLMParams standardJsonParams = new LLMParams(
     ```
     <!--- KNIT example-llm-parameters-06.kt -->
 
-=== "Java"<!--- INCLUDE
+=== "Java"
+
+    <!--- INCLUDE
     /**
     -->
-<!--- SUFFIX
+    <!--- SUFFIX
     **/
     -->
-```java
-LLMParams specificToolParams = new LLMParams(
-    null,        // temperature
-    null,        // maxTokens
-    1,           // numberOfChoices
-    null,        // speculation
-    null,        // schema
-    new LLMParams.ToolChoice.Named("calculator"), // toolChoice
-    null,        // user
-    null         // additionalProperties
-);
-```
-<!--- KNIT example-llm-parameters-java-06.java -->
+    ```java
+    LLMParams specificToolParams = new LLMParams(
+        null,        // temperature
+        null,        // maxTokens
+        1,           // numberOfChoices
+        null,        // speculation
+        null,        // schema
+        new LLMParams.ToolChoice.Named("calculator"), // toolChoice
+        null,        // user
+        null         // additionalProperties
+    );
+    ```
+    <!--- KNIT example-llm-parameters-java-06.java -->
 
-## 供应商特定参数 { #provider-specific-parameters }
+## Provider-specific parameters
 
-Koog 支持部分 LLM 供应商的特定参数。这些参数扩展了基础 `LLMParams` 类，并增加了供应商特定的功能。以下类包含按供应商特定的参数：
+Koog supports provider-specific parameters for some LLM providers. These parameters extend the base `LLMParams` class
+and add provider-specific functionality. The following classes include parameters that are specific per provider:
 
-- `OpenAIChatParams`：特定于 OpenAI 聊天补全 API 的参数。
-- `OpenAIResponsesParams`：特定于 OpenAI 响应 API 的参数。
-- `GoogleParams`：特定于 Google 模型的参数。
-- `AnthropicParams`：特定于 Anthropic 模型的参数。
-- `MistralAIParams`：特定于 Mistral 模型的参数。
-- `DeepSeekParams`：特定于 DeepSeek 模型的参数。
-- `OpenRouterParams`：特定于 OpenRouter 模型的参数。
-- `DashscopeParams`：特定于阿里巴巴模型的参数。
+- `OpenAIChatParams`: Parameters specific to the OpenAI Chat Completions API.
+- `OpenAIResponsesParams`: Parameters specific to the OpenAI Responses API.
+- `GoogleParams`: Parameters specific to Google models.
+- `AnthropicParams`: Parameters specific to Anthropic models.
+- `MistralAIParams`: Parameters specific to Mistral models.
+- `DeepSeekParams`: Parameters specific to DeepSeek models.
+- `OpenRouterParams`: Parameters specific to OpenRouter models.
+- `DashscopeParams`: Parameters specific to Alibaba models.
 
-以下是 Koog 中供应商特定参数的完整参考：
+Here is the complete reference of provider-specific parameters in Koog:
 
 === "OpenAI 聊天"
 
@@ -465,16 +479,18 @@ Koog 支持部分 LLM 供应商的特定参数。这些参数扩展了基础 `LL
     llm-parameters-snippets.md:topP
     --8<--
 
-=== "Anthropic"--8<--
-llm-parameters-snippets.md:heading
-llm-parameters-snippets.md:container
-llm-parameters-snippets.md:mcpServers
-llm-parameters-snippets.md:serviceTier
-llm-parameters-snippets.md:stopSequences
-llm-parameters-snippets.md:thinking
-llm-parameters-snippets.md:topK
-llm-parameters-snippets.md:topP
---8<--
+=== "Anthropic"
+
+    --8<--
+    llm-parameters-snippets.md:heading
+    llm-parameters-snippets.md:container
+    llm-parameters-snippets.md:mcpServers
+    llm-parameters-snippets.md:serviceTier
+    llm-parameters-snippets.md:stopSequences
+    llm-parameters-snippets.md:thinking
+    llm-parameters-snippets.md:topK
+    llm-parameters-snippets.md:topP
+    --8<--
 
 === "Mistral"
 
@@ -537,7 +553,7 @@ llm-parameters-snippets.md:topP
     llm-parameters-snippets.md:topP
     --8<--
 
-以下示例展示了使用特定提供商的 `OpenRouterParams` 类定义的 OpenRouter LLM 参数：
+The following example shows defined OpenRouter LLM parameters using the provider-specific `OpenRouterParams` class:
 
 === "Kotlin"
 
@@ -559,43 +575,45 @@ llm-parameters-snippets.md:topP
     ```
     <!--- KNIT example-llm-parameters-07.kt -->
 
-=== "Java"<!--- INCLUDE
+=== "Java"
+
+    <!--- INCLUDE
     /**
     -->
-<!--- SUFFIX
+    <!--- SUFFIX
     **/
     -->
-```java
-OpenRouterParams openRouterParams = new OpenRouterParams(
-    0.7,         // temperature
-    500,         // maxTokens
-    1,           // numberOfChoices
-    null,        // speculation
-    null,        // schema
-    null,        // toolChoice
-    null,        // user
-    null,        // additionalProperties
-    0.5,         // frequencyPenalty
-    null,        // logprobs
-    null,        // minP
-    Arrays.asList("anthropic/claude-3-opus", "anthropic/claude-3-sonnet"), // models
-    0.5,         // presencePenalty
-    null,        // provider
-    1.1,         // repetitionPenalty
-    null,        // route
-    null,        // stop
-    null,        // topA
-    40,          // topK
-    null,        // topLogprobs
-    0.9,         // topP
-    Arrays.asList("middle-out") // transforms
-);
-```
-<!--- KNIT example-llm-parameters-java-07.java -->
+    ```java
+    OpenRouterParams openRouterParams = new OpenRouterParams(
+        0.7,         // temperature
+        500,         // maxTokens
+        1,           // numberOfChoices
+        null,        // speculation
+        null,        // schema
+        null,        // toolChoice
+        null,        // user
+        null,        // additionalProperties
+        0.5,         // frequencyPenalty
+        null,        // logprobs
+        null,        // minP
+        Arrays.asList("anthropic/claude-3-opus", "anthropic/claude-3-sonnet"), // models
+        0.5,         // presencePenalty
+        null,        // provider
+        1.1,         // repetitionPenalty
+        null,        // route
+        null,        // stop
+        null,        // topA
+        40,          // topK
+        null,        // topLogprobs
+        0.9,         // topP
+        Arrays.asList("middle-out") // transforms
+    );
+    ```
+    <!--- KNIT example-llm-parameters-java-07.java -->
 
-## 使用示例 { #usage-examples }
+## Usage examples
 
-### 基础用法 { #basic-usage }
+### Basic usage
 
 === "Kotlin"
 
@@ -603,7 +621,7 @@ OpenRouterParams openRouterParams = new OpenRouterParams(
     import ai.koog.prompt.params.LLMParams
     -->
     ```kotlin
-    // 一组基础参数，长度有限
+    // A basic set of parameters with limited length
     val basicParams = LLMParams(
         temperature = 0.7,
         maxTokens = 150,
@@ -621,7 +639,7 @@ OpenRouterParams openRouterParams = new OpenRouterParams(
     **/
     -->
     ```java
-    // 一组基础参数，长度有限
+    // A basic set of parameters with limited length
     LLMParams basicParams = new LLMParams(
         0.7,         // temperature
         150,         // maxTokens
@@ -635,11 +653,11 @@ OpenRouterParams openRouterParams = new OpenRouterParams(
     ```
     <!--- KNIT example-llm-parameters-java-08.java -->
 
-### 推理控制 { #reasoning-control }
+### Reasoning control
 
-您可以通过特定于提供商的参数来实现推理控制，这些参数控制模型的推理过程。
-当使用 OpenAI Chat API 以及支持推理的模型时，使用 `reasoningEffort` 参数
-来控制模型在提供响应之前生成多少推理令牌：
+You implement reasoning control through provider-specific parameters that control model reasoning.
+When using the OpenAI Chat API and models that support reasoning, use the `reasoningEffort` parameter
+to control how many reasoning tokens the model generates before providing a response:
 
 === "Kotlin"
 
@@ -654,42 +672,44 @@ OpenRouterParams openRouterParams = new OpenRouterParams(
     ```
     <!--- KNIT example-llm-parameters-09.kt -->
 
-=== "Java"<!--- INCLUDE
+=== "Java"
+
+    <!--- INCLUDE
     /**
     -->
-<!--- SUFFIX
+    <!--- SUFFIX
     **/
     -->
-```java
-OpenAIChatParams openAIReasoningEffortParams = new OpenAIChatParams(
-    null,        // temperature
-    null,        // maxTokens
-    1,           // numberOfChoices
-    null,        // speculation
-    null,        // schema
-    null,        // toolChoice
-    null,        // user
-    null,        // additionalProperties
-    null,        // audio
-    null,        // frequencyPenalty
-    null,        // logprobs
-    null,        // parallelToolCalls
-    null,        // presencePenalty
-    null,        // promptCacheKey
-    ReasoningEffort.MEDIUM, // reasoningEffort
-    null,        // safetyIdentifier
-    null,        // serviceTier
-    null,        // stop
-    null,        // store
-    null,        // topLogprobs
-    null,        // topP
-    null         // webSearchOptions
-);
-```
-<!--- KNIT example-llm-parameters-java-09.java -->
+    ```java
+    OpenAIChatParams openAIReasoningEffortParams = new OpenAIChatParams(
+        null,        // temperature
+        null,        // maxTokens
+        1,           // numberOfChoices
+        null,        // speculation
+        null,        // schema
+        null,        // toolChoice
+        null,        // user
+        null,        // additionalProperties
+        null,        // audio
+        null,        // frequencyPenalty
+        null,        // logprobs
+        null,        // parallelToolCalls
+        null,        // presencePenalty
+        null,        // promptCacheKey
+        ReasoningEffort.MEDIUM, // reasoningEffort
+        null,        // safetyIdentifier
+        null,        // serviceTier
+        null,        // stop
+        null,        // store
+        null,        // topLogprobs
+        null,        // topP
+        null         // webSearchOptions
+    );
+    ```
+    <!--- KNIT example-llm-parameters-java-09.java -->
 
-此外，当在无状态模式下使用 OpenAI Responses API 时，您需要维护推理项的加密历史记录，并在每次对话轮次中将其发送给模型。加密在 OpenAI 端完成，您需要通过将请求中的 `include` 参数设置为 `reasoning.encrypted_content` 来请求加密的推理令牌。
-然后，您可以在后续对话轮次中将加密的推理令牌传回给模型。
+In addition, when using the OpenAI Responses API in a stateless mode, you keep an encrypted history of reasoning items and send it to the model in every conversation turn. The encryption is done on the OpenAI side, and you need to request encrypted reasoning tokens by setting the `include` parameter in your requests to `reasoning.encrypted_content`.
+You can then pass the encrypted reasoning tokens back to the model in the next conversation turns.
 
 === "Kotlin"
 
@@ -739,9 +759,9 @@ OpenAIChatParams openAIReasoningEffortParams = new OpenAIChatParams(
     ```
     <!--- KNIT example-llm-parameters-java-10.java -->
 
-### 自定义参数 { #custom-parameters }
+### Custom parameters
 
-要添加可能特定于模型提供商且 Koog 未原生支持的自定义参数，请使用 `additionalProperties` 属性，如下例所示。
+To add custom parameters that may be provider specific and not supported in Koog out of the box, use the `additionalProperties` property as shown in the example below.
 
 === "Kotlin"
 
@@ -750,7 +770,7 @@ OpenAIChatParams openAIReasoningEffortParams = new OpenAIChatParams(
     import ai.koog.prompt.params.additionalPropertiesOf
     -->
     ```kotlin
-    // 为特定模型提供商添加自定义参数
+    // Add custom parameters for specific model providers
     val customParams = LLMParams(
         additionalProperties = additionalPropertiesOf(
             "top_p" to 0.95,
@@ -761,34 +781,38 @@ OpenAIChatParams openAIReasoningEffortParams = new OpenAIChatParams(
     ```
     <!--- KNIT example-llm-parameters-11.kt -->
 
-=== "Java"<!--- INCLUDE
+=== "Java"
+
+    <!--- INCLUDE
     /**
     -->
-<!--- SUFFIX
+    <!--- SUFFIX
     **/
     -->
-```java
-// 为特定模型提供商添加自定义参数
-LLMParams customParams = new LLMParams(
-    null,        // temperature
-    null,        // maxTokens
-    1,           // numberOfChoices
-    null,        // speculation
-    null,        // schema
-    null,        // toolChoice
-    null,        // user
-    AdditionalPropertiesKt.additionalPropertiesOf(
-        "top_p", 0.95,
-        "frequency_penalty", 0.5,
-        "presence_penalty", 0.5
-    )
-);
-```
-<!--- KNIT example-llm-parameters-java-11.java -->
+    ```java
+    // Add custom parameters for specific model providers
+    LLMParams customParams = new LLMParams(
+        null,        // temperature
+        null,        // maxTokens
+        1,           // numberOfChoices
+        null,        // speculation
+        null,        // schema
+        null,        // toolChoice
+        null,        // user
+        AdditionalPropertiesKt.additionalPropertiesOf(
+            "top_p", 0.95,
+            "frequency_penalty", 0.5,
+            "presence_penalty", 0.5
+        )
+    );
+    ```
+    <!--- KNIT example-llm-parameters-java-11.java -->
 
-### 设置和覆盖参数 { #setting-and-overriding-parameters }
+### Setting and overriding parameters
 
-以下代码示例展示了如何定义一组您可能主要想使用的 LLM 参数，然后通过部分覆盖原始集中的值并添加新值来创建另一组参数。这使您能够定义大多数请求通用的参数，同时添加更具体的参数组合，而无需重复通用参数。
+The code sample below shows how you can define a set of LLM parameters that you may want to use primarily,
+then create another set by partially overriding values from the original set and adding new values to it.
+This lets you define parameters that are common to most requests but also add more specific parameter combinations without having to repeat the common parameters.
 
 === "Kotlin"
 
@@ -796,14 +820,14 @@ LLMParams customParams = new LLMParams(
     import ai.koog.prompt.params.LLMParams
     -->
     ```kotlin
-    // 定义默认参数
+    // Define default parameters
     val defaultParams = LLMParams(
         temperature = 0.7,
         maxTokens = 150,
         toolChoice = LLMParams.ToolChoice.Auto
     )
 
-    // 创建包含部分覆盖的参数，其余使用默认值
+    // Create parameters with some overrides, using defaults for the rest
     val overrideParams = LLMParams(
         temperature = 0.2,
         numberOfChoices = 3
@@ -820,7 +844,7 @@ LLMParams customParams = new LLMParams(
     **/
     -->
     ```java
-    // 定义默认参数
+    // Define default parameters
     LLMParams defaultParams = new LLMParams(
         0.7,         // temperature
         150,         // maxTokens
@@ -832,7 +856,7 @@ LLMParams customParams = new LLMParams(
         null         // additionalProperties
     );
 
-    // 创建包含部分覆盖的参数，其余使用默认值
+    // Create parameters with some overrides, using defaults for the rest
     LLMParams overrideParams = new LLMParams(
         0.2,         // temperature
         null,        // maxTokens
@@ -846,7 +870,7 @@ LLMParams customParams = new LLMParams(
     ```
     <!--- KNIT example-llm-parameters-java-12.java -->
 
-最终 `overrideParams` 集中的值等效于以下内容：
+The values in the resulting `overrideParams` set are equivalent to the following:
 
 === "Kotlin"
 
@@ -863,7 +887,9 @@ LLMParams customParams = new LLMParams(
     ```
     <!--- KNIT example-llm-parameters-13.kt -->
 
-=== "Java"<!--- INCLUDE
+=== "Java"
+
+    <!--- INCLUDE
     /**
     -->
     <!--- SUFFIX
@@ -871,14 +897,14 @@ LLMParams customParams = new LLMParams(
     -->
     ```java
     LLMParams overrideParams = new LLMParams(
-        0.2,         // 温度参数
-        150,         // 最大令牌数
-        3,           // 选择数量
-        null,        // 推测
-        null,        // 模式
-        LLMParams.ToolChoice.Auto.INSTANCE, // 工具选择
-        null,        // 用户
-        null         // 附加属性
+        0.2,         // temperature
+        150,         // maxTokens
+        3,           // numberOfChoices
+        null,        // speculation
+        null,        // schema
+        LLMParams.ToolChoice.Auto.INSTANCE, // toolChoice
+        null,        // user
+        null         // additionalProperties
     );
     ```
     <!--- KNIT example-llm-parameters-java-13.java -->

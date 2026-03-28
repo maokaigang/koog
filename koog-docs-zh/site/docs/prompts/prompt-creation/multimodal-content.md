@@ -38,12 +38,12 @@ Koog允许您在`user`消息中向LLM发送图像、音频、视频和文件以�
 
     ```kotlin
     user {
-        +"描述这些图像："
+        +"Describe these images:"
 
         image("https://example.com/test.png")
         image(Path("/path/to/image.png"))
 
-        +"重点关注主要主体。"
+        +"Focus on the main subjects."
     }
     ```
     <!--- KNIT example-multimodal-content-01.kt -->
@@ -58,9 +58,9 @@ Koog允许您在`user`消息中向LLM发送图像、音频、视频和文件以�
     -->
     ```java
     ContentPartsBuilder partsBuilder = new ContentPartsBuilder();
-    partsBuilder.text("描述这些图像：");
+    partsBuilder.text("Describe these images:");
     partsBuilder.image("https://example.com/test.png");
-    partsBuilder.text("重点关注主要主体。");
+    partsBuilder.text("Focus on the main subjects.");
 
     Prompt prompt = Prompt.builder("image_analysis")
         .user(partsBuilder.build())
@@ -68,14 +68,18 @@ Koog允许您在`user`消息中向LLM发送图像、音频、视频和文件以�
     ```
     <!--- KNIT example-multimodal-content-java-01.java -->
 
-在Kotlin中，`+`运算符将文本内容与附件一起添加到用户消息中。在Java中，使用`ContentPartsBuilder`的`text()`方法。
+In Kotlin, the `+` operator adds text content to the user message along with the attachments. In Java, use the `text()` method of `ContentPartsBuilder`.
 
-### 自定义配置的附件 { #custom-configured-attachments }
+### Custom-configured attachments
 
-[`ContentPart`](api:prompt-model::ai.koog.prompt.message.ContentPart)接口允许您为每个附件单独配置参数。
+The [`ContentPart`](api:prompt-model::ai.koog.prompt.message.ContentPart) interface
+lets you configure parameters for each attachment individually.
 
-所有附件都实现了`ContentPart.Attachment`接口。
-您可以为每个附件创建特定实现的实例，配置其参数，并将其传递给Kotlin中的相应`image()`、`audio()`、`video()`或`file()`函数，或Java中的方法。包含文本消息和自定义配置附件列表的 `user` 消息通用格式如下：
+All attachments implement the `ContentPart.Attachment` interface.
+You can create an instance of a specific implementation for each attachment, configure its parameters, and pass it to 
+the corresponding `image()`, `audio()`, `video()`, or `file()` functions in Kotlin or methods in Java.
+
+The general format of the `user` message that includes a text message and a list of custom-configured attachments is as follows:
 
 === "Kotlin"
 
@@ -91,7 +95,7 @@ Koog允许您在`user`消息中向LLM发送图像、音频、视频和文件以�
 
     ```kotlin
     user {
-        +"描述这张图片"
+        +"Describe this image"
         image(
             ContentPart.Image(
                 content = AttachmentContent.URL("https://example.com/capture.png"),
@@ -115,7 +119,7 @@ Koog允许您在`user`消息中向LLM发送图像、音频、视频和文件以�
     ```java
     Prompt prompt = Prompt.builder("custom_image")
         .user(List.of(
-            new ContentPart.Text("描述这张图片"),
+            new ContentPart.Text("Describe this image"),
             new ContentPart.Image(
                 new AttachmentContent.URL("https://example.com/capture.png"),
                 "png",
@@ -127,49 +131,53 @@ Koog允许您在`user`消息中向LLM发送图像、音频、视频和文件以�
     ```
     <!--- KNIT example-multimodal-content-java-02.java -->
 
-Koog 为每种媒体类型提供了以下实现 `ContentPart.Attachment` 接口的专用类：
+Koog provides the following specialized classes for each media type that implement the `ContentPart.Attachment` interface:
 
-- [`ContentPart.Image`](api:prompt-model::ai.koog.prompt.message.ContentPart.Image)：图像附件，例如 JPG 或 PNG 文件。
-- [`ContentPart.Audio`](api:prompt-model::ai.koog.prompt.message.ContentPart.Audio)：音频附件，例如 MP3 或 WAV 文件。
-- [`ContentPart.Video`](api:prompt-model::ai.koog.prompt.message.ContentPart.Video)：视频附件，例如 MP4 或 AVI 文件。
-- [`ContentPart.File`](api:prompt-model::ai.koog.prompt.message.ContentPart.File)：文件附件，例如 PDF 或 TXT 文件。
+- [`ContentPart.Image`](api:prompt-model::ai.koog.prompt.message.ContentPart.Image): image attachments, such as JPG or PNG files.
+- [`ContentPart.Audio`](api:prompt-model::ai.koog.prompt.message.ContentPart.Audio): audio attachments, such as MP3 or WAV files.
+- [`ContentPart.Video`](api:prompt-model::ai.koog.prompt.message.ContentPart.Video): video attachments, such as MP4 or AVI files.
+- [`ContentPart.File`](api:prompt-model::ai.koog.prompt.message.ContentPart.File): file attachments, such as PDF or TXT files.
 
-所有 `ContentPart.Attachment` 类型均接受以下参数：| 名称       | 数据类型                                                                                                          | 必填 | 描述                                                                                                                                                                                                                             |
+All `ContentPart.Attachment` types accept the following parameters:
+
+| Name       | Data type                                                                                                          | Required | Description                                                                                                                                                                                                                             |
 |------------|--------------------------------------------------------------------------------------------------------------------|----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `content`  | [AttachmentContent](api:prompt-model::ai.koog.prompt.message.AttachmentContent) | 是      | 所提供文件内容的来源。                                                                                                                                                                                                |
-| `format`   | 字符串                                                                                                             | 是      | 所提供文件的格式。例如 `png`。                                                                                                                                                                                    |
-| `mimeType` | 字符串                                                                                                             | 仅适用于 `ContentPart.File`      | 所提供文件的 MIME 类型。<br/>对于 `ContentPart.Image`、`ContentPart.Audio` 和 `ContentPart.Video`，默认为 `<type>/<format>`（例如 `image/png`）。<br/>对于 `ContentPart.File`，必须显式提供。 |
-| `fileName` | 字符串?                                                                                                            | 否       | 所提供文件的名称（包含扩展名）。例如 `screenshot.png`。                                                                                                                                                   |
+| `content`  | [AttachmentContent](api:prompt-model::ai.koog.prompt.message.AttachmentContent) | Yes      | The source of the provided file content.                                                                                                                                                                                                |
+| `format`   | String                                                                                                             | Yes      | The format of the provided file. For example, `png`.                                                                                                                                                                                    |
+| `mimeType` | String                                                                                                             | Only for `ContentPart.File`      | The MIME Type of the provided file.<br/>For `ContentPart.Image`, `ContentPart.Audio`, and `ContentPart.Video`, it defaults to `<type>/<format>` (for example, `image/png`).<br/>For `ContentPart.File`, it must be explicitly provided. |
+| `fileName` | String?                                                                                                            | No       | The name of the provided file including the extension. For example, `screenshot.png`.                                                                                                                                                   |
 
-#### 附件内容 { #attachment-content }
+#### Attachment content
 
-AttachmentContent 接口的实现定义了作为输入提供给 LLM 的内容类型和来源：
+Implementations of the AttachmentContent interface define the type and source of content that is provided as input to the LLM:
 
-- [`AttachmentContent.URL`](api:prompt-model::ai.koog.prompt.message.AttachmentContent.URL) 定义所提供内容的 URL：
+- [`AttachmentContent.URL`](api:prompt-model::ai.koog.prompt.message.AttachmentContent.URL) defines the URL of the provided content:
     ```kotlin
     AttachmentContent.URL("https://example.com/image.png")
     ```
     <!--- KNIT example-multimodal-content-01.txt -->
 
-- [`AttachmentContent.Binary.Bytes`](api:prompt-model::ai.koog.prompt.message.AttachmentContent.Binary) 将文件内容定义为字节数组：
+- [`AttachmentContent.Binary.Bytes`](api:prompt-model::ai.koog.prompt.message.AttachmentContent.Binary) defines the file content as a byte array:
     ```kotlin
     AttachmentContent.Binary.Bytes(byteArrayOf(/* ... */))
     ```
     <!--- KNIT example-multimodal-content-02.txt -->
 
-- [`AttachmentContent.Binary.Base64`](api:prompt-model::ai.koog.prompt.message.AttachmentContent.Binary) 将文件内容定义为包含文件数据的 Base64 编码字符串：
+- [`AttachmentContent.Binary.Base64`](api:prompt-model::ai.koog.prompt.message.AttachmentContent.Binary) defines the file content as a Base64-encoded string containing file data:
     ```kotlin
     AttachmentContent.Binary.Base64("iVBORw0KGgoAAAANS...")
     ```
     <!--- KNIT example-multimodal-content-03.txt -->
 
-- [`AttachmentContent.PlainText`](api:prompt-model::ai.koog.prompt.message.AttachmentContent.PlainText) 将文件内容定义为纯文本（仅适用于 [`ContentPart.File`](api:prompt-model::ai.koog.prompt.message.ContentPart.File)）：
+- [`AttachmentContent.PlainText`](api:prompt-model::ai.koog.prompt.message.AttachmentContent.PlainText) defines the file content as plain text (for [`ContentPart.File`](api:prompt-model::ai.koog.prompt.message.ContentPart.File) only):
     ```kotlin
     AttachmentContent.PlainText("This is the file content.")
     ```
     <!--- KNIT example-multimodal-content-04.txt -->
 
-### 混合附件除了在单独的提示或消息中提供不同类型的附件外，您还可以在单个 `user()` 消息中提供多种混合类型的附件： { #mixed-attachments }
+### Mixed attachments
+
+In addition to providing different types of attachments in separate prompts or messages, you can also provide multiple and mixed types of attachments in a single `user()` message:
 
 === "Kotlin"
 
@@ -223,7 +231,7 @@ AttachmentContent 接口的实现定义了作为输入提供给 LLM 的内容类
     ```
     <!--- KNIT example-multimodal-content-java-03.java -->
 
-## 后续步骤 { #next-steps }
+## Next steps
 
-- 如果您与单个 LLM 提供商合作，请使用 [LLM 客户端](../llm-clients.md)运行提示。
-- 如果您与多个 LLM 提供商合作，请使用 [提示执行器](../prompt-executors.md)运行提示。
+- Run prompts with [LLM clients](../llm-clients.md) if you work with a single LLM provider.
+- Run prompts with [prompt executors](../prompt-executors.md) if you work with multiple LLM providers.

@@ -41,8 +41,8 @@ LLM 可决定是否调用提供的工具。
     )
     ```
 
-    该智能体将接收字符串输入并返回字符串输出。
-    运行智能体时，使用 `run()` 函数并传入用户输入：
+    This agent will expect a string as input and return a string as output.
+    To run the agent, use the `run()` function with some user input:
 
     ```kotlin
     fun main() = runBlocking {
@@ -74,8 +74,8 @@ LLM 可决定是否调用提供的工具。
         .build();
     ```
 
-    该智能体接收字符串输入并返回字符串输出。
-    运行智能体时，使用 `run()` 方法并传入用户输入：
+    This agent expects a string as input and returns a string as output.
+    To run the agent, use the `run()` method with some user input:
 
     ```java
     String result = agent.run("Hello! How can you help me?");
@@ -83,7 +83,7 @@ LLM 可决定是否调用提供的工具。
     ```
     <!--- KNIT exampleBasicJava01.java -->
 
-智能体将返回通用答复，例如：
+The agent will return a generic answer, such as:
 
 ```text
 I can assist with a wide range of topics and tasks. Here are some examples:
@@ -100,10 +100,10 @@ What's on your mind? Do you have a specific question, topic, or task you'd like 
 ```
 <!--- KNIT example-basic-01.txt -->
 
-## 添加系统提示 { #add-a-system-prompt }
+## Add a system prompt
 
-通过提供[系统消息](../prompts/prompt-creation/index.md#system-message)来定义智能体的角色，
-以及任务相关的目的、上下文和指令。
+Provide a [system message](../prompts/prompt-creation/index.md#system-message) to define the agent's role
+as well as the purpose, context, and instructions related to the task.
 
 === "Kotlin"
 
@@ -143,7 +143,9 @@ What's on your mind? Do you have a specific question, topic, or task you'd like 
         .llmModel(OpenAIModels.Chat.GPT4o)
         .build();
     ```
-    <!--- KNIT exampleBasicJava02.java -->系统提示中的指令将指导代理的响应：
+    <!--- KNIT exampleBasicJava02.java -->
+
+The instructions in the system prompt will guide the agent's response:
 
 ```text
 I'm here to help you navigate the wild world of internet memes!
@@ -152,10 +154,11 @@ What's on your mind? Are you trying to understand a specific meme, need help fin
 ```
 <!--- KNIT example-basic-02.txt -->
 
-## 配置 LLM 输出 { #configure-llm-output }
+## Configure LLM output
 
-您可以直接向代理构造函数（Kotlin）或通过构建器方法（Java）提供一些 [LLM 参数](../llm-parameters.md#llm-parameter-reference)来自定义 LLM 的行为。
-例如，使用 `temperature` 参数来调整生成响应的随机性：
+You can provide some [LLM parameters](../llm-parameters.md#llm-parameter-reference) directly to the agent constructor 
+(Kotlin) or via the builder methods (Java) to customize the behavior of the LLM.
+For example, use the `temperature` parameter to adjust the randomness of the generated responses:
 
 === "Kotlin"
 
@@ -199,7 +202,7 @@ What's on your mind? Are you trying to understand a specific meme, need help fin
     ```
     <!--- KNIT exampleBasicJava03.java -->
 
-以下是不同温度值下的响应示例：
+Here are some response examples with different temperature values:
 
 === "0.4"
     
@@ -228,11 +231,11 @@ What's on your mind? Are you trying to understand a specific meme, need help fin
     ```
     <!--- KNIT example-basic-05.txt -->
 
-## 添加工具 { #add-tools }
+## Add tools
 
-代理可以使用 [工具](../tools-overview.md) 来执行特定任务。
+Agents can use [tools](../tools-overview.md) to perform specific tasks.
 
-首先，通过使用 [`@Tool`](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools.annotations/-tool/index.html) 注解标注函数（Kotlin）或方法（Java）来创建工具：
+First, create a tool by annotating a function (Kotlin) or method (Java) with the [`@Tool`](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools.annotations/-tool/index.html) annotation:
 
 === "Kotlin"
 
@@ -254,24 +257,26 @@ What's on your mind? Are you trying to understand a specific meme, need help fin
         println(question)
         return readln()
     }
-    ```然后，使用 [`ToolRegistry`](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-tool-registry/index.html) 使该工具对代理可用：
+    ```
 
-```kotlin
-val agent = AIAgent(
-    promptExecutor = simpleOpenAIExecutor(System.getenv("YOUR_API_KEY")),
-    systemPrompt = "你是一位网络迷因专家。请乐于助人、态度友好，并简洁地回答用户问题，展示你对迷因的了解。",
-    llmModel = OpenAIModels.Chat.GPT4o,
-    temperature = 0.7,
-    toolRegistry = ToolRegistry {
-        tool(::askUser)
-    }
-)
-```
-<!--- KNIT example-basic-03.kt -->
+    Then, use the [`ToolRegistry`](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-tool-registry/index.html) to make this tool available to the agent:
 
-在此示例中，`askUser` 是一个工具，通过控制台的打印和读取帮助代理与用户保持对话。
-如果代理决定向用户提问，
-它可以调用此工具，该工具通过 `println()` 写入 `stdout`，并通过 `readln()` 从 `stdin` 读取。
+    ```kotlin
+    val agent = AIAgent(
+        promptExecutor = simpleOpenAIExecutor(System.getenv("YOUR_API_KEY")),
+        systemPrompt = "You are an expert in internet memes. Be helpful, friendly, and answer user questions concisely, showing your knowledge of memes.",
+        llmModel = OpenAIModels.Chat.GPT4o,
+        temperature = 0.7,
+        toolRegistry = ToolRegistry {
+            tool(::askUser)
+        }
+    )
+    ```
+    <!--- KNIT example-basic-03.kt -->
+
+    In the example, `askUser` is a tool that helps the agent maintain a conversation with the user via printing and reading from the console.
+    If the agent decides to ask the user a question,
+    it can call this tool that writes to `stdout` via `println()` and reads from `stdin` via `readln()`.
 
 === "Java"
 
@@ -295,12 +300,12 @@ val agent = AIAgent(
     }
     -->
     ```java
-    // 创建 ToolSet 类
+    // Create a ToolSet class
     class UserConversationTools implements ToolSet {
         @Tool
-        @LLMDescription("通过将问题发送到 stdout 并向代理返回来自 stdin 的答案来询问用户")
+        @LLMDescription("Ask the user a question by sending it to stdout and return the answer from stdin")
         public String askUser(
-            @LLMDescription("来自代理的问题")
+            @LLMDescription("Question from the agent")
             String question
         ) {
             System.out.println(question);
@@ -310,7 +315,7 @@ val agent = AIAgent(
     }
     ```
     
-    然后，使用 [`ToolRegistry`](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-tool-registry/index.html) 使该工具对代理可用：
+    Then, use the [`ToolRegistry`](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-tool-registry/index.html) to make this tool available to the agent:
 
     ```java
     UserConversationTools askUser = new UserConversationTools();
@@ -321,7 +326,7 @@ val agent = AIAgent(
 
     AIAgent<String, String> agent = AIAgent.builder()
         .promptExecutor(simpleOpenAIExecutor(System.getenv("OPENAI_API_KEY")))
-        .systemPrompt("你是一位网络迷因专家。请乐于助人、态度友好，并简洁地回答用户问题，展示你对迷因的了解。")
+        .systemPrompt("You are an expert in internet memes. Be helpful, friendly, and answer user questions concisely, showing your knowledge of memes.")
         .llmModel(OpenAIModels.Chat.GPT4o)
         .temperature(0.7)
         .toolRegistry(toolRegistry)
@@ -329,9 +334,9 @@ val agent = AIAgent(
     ```
     <!--- KNIT exampleBasicJava04.java -->
 
-    在此示例中，`askUser` 是一个工具，通过控制台的打印和读取帮助代理与用户保持对话。
+    In the example, `askUser` is a tool that helps the agent maintain a conversation with the user via printing and reading from the console.
 
-以下是代理的一个交互示例：
+Here is an example interaction with the agent:
 
 ```text
 Agent: Which meme would you like me to explain? Please choose from: Grumpy Cat, Success Kid, or Doge.
@@ -360,14 +365,16 @@ The meme is known for its lighthearted and playful tone, and is often used to ex
 ```
 <!--- KNIT example-basic-06.txt -->
 
-## 调整代理迭代次数 { #adjust-agent-iterations }
+## Adjust agent iterations
 
-为避免无限循环，Koog 允许任何代理执行有限次数的步骤（默认为 50 步）。
-使用 `maxIterations` 参数来增加此限制（如果你预期代理需要更多步骤，
-例如工具调用和 LLM 请求），或减少此限制以适用于仅需少量步骤的代理。
-例如，此处描述的简单代理不太可能需要超过 10 步：
+To avoid infinite loops, Koog allows any agent to take a limited number of steps (50 by default).
+Use the `maxIterations` parameter to either increase this limit if you expect the agent to require more steps
+(such as tool calls and LLM requests) or decrease it for agents that require only a few steps.
+For example, a simple agent described here is not likely to require more than 10 steps:
 
-=== "Kotlin"<!--- INCLUDE
+=== "Kotlin"
+
+    <!--- INCLUDE
     import ai.koog.agents.core.agent.AIAgent
     import ai.koog.agents.core.tools.ToolRegistry
     import ai.koog.prompt.executor.clients.openai.OpenAIModels
@@ -384,19 +391,19 @@ The meme is known for its lighthearted and playful tone, and is often used to ex
         return readln()
     }
     -->
-```kotlin
-val agent = AIAgent(
-    promptExecutor = simpleOpenAIExecutor(System.getenv("YOUR_API_KEY")),
-    systemPrompt = "你是一位网络迷因专家。请保持乐于助人、友好亲切的态度，简洁地回答用户问题，并展现你对迷因的了解。",
-    llmModel = OpenAIModels.Chat.GPT4o,
-    temperature = 0.7,
-    toolRegistry = ToolRegistry {
-        tool(::askUser)
-    },
-    maxIterations = 10
-)
-```
-<!--- KNIT example-basic-04.kt -->
+    ```kotlin
+    val agent = AIAgent(
+        promptExecutor = simpleOpenAIExecutor(System.getenv("YOUR_API_KEY")),
+        systemPrompt = "You are an expert in internet memes. Be helpful, friendly, and answer user questions concisely, showing your knowledge of memes.",
+        llmModel = OpenAIModels.Chat.GPT4o,
+        temperature = 0.7,
+        toolRegistry = ToolRegistry {
+            tool(::askUser)
+        },
+        maxIterations = 10
+    )
+    ```
+    <!--- KNIT example-basic-04.kt -->
 
 === "Java"
 
@@ -420,12 +427,12 @@ val agent = AIAgent(
     }
     -->
     ```java
-    // 创建 ToolSet 类
+    // Create a ToolSet class
     class UserConversationTools implements ToolSet {
         @Tool
-        @LLMDescription("通过将问题发送到 stdout 并从 stdin 读取答案来向用户提问")
+        @LLMDescription("Ask the user a question by sending it to stdout and return the answer from stdin")
         public String askUser(
-            @LLMDescription("来自智能体的问题")
+            @LLMDescription("Question from the agent")
             String question
         ) {
             System.out.println(question);
@@ -434,7 +441,7 @@ val agent = AIAgent(
         }
     }
 
-    // 在 main 方法中：
+    // In main method:
     UserConversationTools askUser = new UserConversationTools();
 
     ToolRegistry toolRegistry = ToolRegistry.builder()
@@ -443,7 +450,7 @@ val agent = AIAgent(
 
     AIAgent<String, String> agent = AIAgent.builder()
         .promptExecutor(simpleOpenAIExecutor(System.getenv("OPENAI_API_KEY")))
-        .systemPrompt("你是一位网络迷因专家。请保持乐于助人、友好亲切的态度，简洁地回答用户问题，并展现你对迷因的了解。")
+        .systemPrompt("You are an expert in internet memes. Be helpful, friendly, and answer user questions concisely, showing your knowledge of memes.")
         .llmModel(OpenAIModels.Chat.GPT4o)
         .temperature(0.7)
         .toolRegistry(toolRegistry)
@@ -454,14 +461,14 @@ val agent = AIAgent(
 
 !!! tip
 
-    除了直接将模型、温度、最大迭代次数等参数传递给 Kotlin 构造函数
-    或 Java 构建器，你也可以定义并传递一个独立的配置对象。
-    更多信息，请参阅[智能体配置](index.md#agent-configuration)。
+    Instead of passing the model, temperature, max iterations, and other parameters directly to the Kotlin constructor 
+    or Java builder, you can also define and pass them as a separate configuration object.
+    For more information, see [Agent configuration](index.md#agent-configuration).
 
-## 处理智能体运行期间的事件 { #handle-events-during-agent-runtime }
+## Handle events during agent runtime
 
-为了辅助测试和调试，以及为链式智能体交互提供钩子，
-Koog 提供了 [EventHandler](https://api.koog.ai/agents/agents-features/agents-features-event-handler/ai.koog.agents.features.eventHandler.feature/-event-handler/index.html) 功能。
+To assist with testing and debugging, as well as making hooks for chained agent interactions,
+Koog provides the [EventHandler](https://api.koog.ai/agents/agents-features/agents-features-event-handler/ai.koog.agents.features.eventHandler.feature/-event-handler/index.html) feature.
 
 === "Kotlin"
 

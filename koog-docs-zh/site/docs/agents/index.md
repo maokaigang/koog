@@ -70,9 +70,14 @@ Koog 智能体围绕以下核心概念构建：
     ```
     <!--- KNIT example-agent-config-java-01.java -->
 
-或者，您可以创建一个 [`AIAgentConfig`](https://api.koog.ai/agents/agents-core/ai.koog.agents.core.agent.config/-a-i-agent-config/index.html) 实例来更精细地定义智能体的行为和参数，然后将其传递给智能体构造函数。这使您能够定义包含多条消息、对话历史、LLM 参数和附加执行参数的复杂提示。
+Alternatively, you can create an instance of [`AIAgentConfig`](https://api.koog.ai/agents/agents-core/ai.koog.agents.core.agent.config/-a-i-agent-config/index.html)
+to define the agent's behavior and parameters more granularly, then pass it to the agent constructor.
+This enables you to define complex prompts with multiple messages,
+conversation history, LLM parameters, and additional execution parameters.
 
-=== "Kotlin"<!--- INCLUDE
+=== "Kotlin"
+
+    <!--- INCLUDE
     import ai.koog.agents.core.agent.AIAgent
     import ai.koog.agents.core.agent.config.AIAgentConfig
     import ai.koog.prompt.dsl.prompt
@@ -80,26 +85,26 @@ Koog 智能体围绕以下核心概念构建：
     import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
     import ai.koog.prompt.params.LLMParams
     -->
-```kotlin
-val agentConfig = AIAgentConfig(
-    prompt = prompt(
-        id = "assistant",
-        params = LLMParams(
-            temperature = 0.7
-        )
-    ) {
-        system("You are a helpful assistant.")
-    },
-    model = OpenAIModels.Chat.GPT4o,
-    maxAgentIterations = 10
-)
+    ```kotlin
+    val agentConfig = AIAgentConfig(
+        prompt = prompt(
+            id = "assistant",
+            params = LLMParams(
+                temperature = 0.7
+            )
+        ) {
+            system("You are a helpful assistant.")
+        },
+        model = OpenAIModels.Chat.GPT4o,
+        maxAgentIterations = 10
+    )
 
-val agent = AIAgent(
-    promptExecutor = simpleOpenAIExecutor(System.getenv("OPENAI_API_KEY")),
-    agentConfig = agentConfig
-)
-```
-<!--- KNIT example-agent-config-02.kt -->
+    val agent = AIAgent(
+        promptExecutor = simpleOpenAIExecutor(System.getenv("OPENAI_API_KEY")),
+        agentConfig = agentConfig
+    )
+    ```
+    <!--- KNIT example-agent-config-02.kt -->
 
 === "Java"
 
@@ -136,21 +141,21 @@ val agent = AIAgent(
     ```
     <!--- KNIT example-agent-config-java-02.java -->
 
-以下是 `AIAgentConfig` 的参数说明：
+Here are the parameters of `AIAgentConfig`:
 
-- `prompt` 定义了初始的 [提示词](../prompts/prompt-creation/index.md) 和 [LLM 参数](../llm-parameters.md)。
+- `prompt` defines the initial [prompt](../prompts/prompt-creation/index.md) and [LLM parameters](../llm-parameters.md).
 
-- `model` 指定了智能体交互所使用的语言模型。
-  您可以使用预定义的模型之一，或 [创建自定义模型配置](../model-capabilities.md#creating-a-model-llmodel-configuration)。
+- `model` specifies the language model with which the agent interacts.
+  You can use one of the predefined models or [create a custom model configuration](../model-capabilities.md#creating-a-model-llmodel-configuration).
 
-- `maxAgentIterations` 限制了智能体在终止前可以执行的最大步骤数。
-  每个步骤都是智能体工作流中的一个 [节点](../nodes-and-components.md)。
+- `maxAgentIterations` limits the maximum number of steps the agent can take before it terminates.
+  Each step is a [node](../nodes-and-components.md) in the agent's workflow.
 
-- `missingToolsConversionStrategy` 定义了在智能体执行过程中处理缺失工具的策略。
+- `missingToolsConversionStrategy` defines a strategy for handling missing tools during agent execution.
 
-[//]: # (TODO 在工具部分撰写关于缺失工具的内容，并在此处添加链接)
+[//]: # (TODO write about missing tools in the TOols section and link from here)
 
-- `responseProcessor` 可用于定义自定义响应处理器。
-  例如，它可以对响应内容进行审核和验证、更改响应格式或记录响应。
+- `responseProcessor` can be used to define a custom response processor.
+  For example, it can moderate and validate the response content, change the response format, or log the response.
 
-[//]: # (TODO 在某个地方撰写关于响应处理的内容？)
+[//]: # (TODO write about response processing somewhere?)

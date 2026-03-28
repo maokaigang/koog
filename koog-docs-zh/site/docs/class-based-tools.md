@@ -61,58 +61,60 @@ Koog 框架提供以下实现工具的方法：
     import ai.koog.agents.core.tools.annotations.LLMDescription
     -->
     ```kotlin
-    // 实现一个简单的计算器工具，用于将两个数字相加
+    // Implement a simple calculator tool that adds two digits
     object CalculatorTool : Tool<CalculatorTool.Args, Int>(
         argsType = typeToken<Args>(),
         resultType = typeToken<Int>(),
         name = "calculator",
-        description = "一个简单的计算器，可以将两个数字（0-9）相加。"
+        description = "A simple calculator that can add two digits (0-9)."
     ) {
 
-        // 计算器工具的参数
+        // Arguments for the calculator tool
         @Serializable
         data class Args(
-            @property:LLMDescription("要相加的第一个数字（0-9）")
+            @property:LLMDescription("The first digit to add (0-9)")
             val digit1: Int,
-            @property:LLMDescription("要相加的第二个数字（0-9）")
+            @property:LLMDescription("The second digit to add (0-9)")
             val digit2: Int
         ) {
             init {
-                require(digit1 in 0..9) { "digit1 必须是单个数字（0-9）" }
-                require(digit2 in 0..9) { "digit2 必须是单个数字（0-9）" }
+                require(digit1 in 0..9) { "digit1 must be a single digit (0-9)" }
+                require(digit2 in 0..9) { "digit2 must be a single digit (0-9)" }
             }
         }
 
-        // 将两个数字相加的函数
+        // Function to add two digits
         override suspend fun execute(args: Args): Int = args.digit1 + args.digit2
     }
     ```
     <!--- KNIT example-class-based-tools-01.kt -->
 
-实现工具后，您需要将其添加到工具注册表中，然后与智能体一起使用。详细信息请参阅[工具注册表](tools-overview.md#tool-registry)。
+After implementing your tool, you need to add it to a tool registry and then use it with an agent. For details, see [Tool registry](tools-overview.md#tool-registry).
 
-更多详细信息，请参阅 [API 参考](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-tool/index.html)。
+For more details, see [API reference](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-tool/index.html).
 
-### SimpleTool 类 (Kotlin) { #simpletool-class-kotlin }
+### SimpleTool class (Kotlin)
 
-[`SimpleTool<Args>`](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-simple-tool/index.html) 抽象类继承自 `Tool<Args, ToolResult.Text>`，简化了返回文本结果的工具创建过程。
+The [`SimpleTool<Args>`](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-simple-tool/index.html) abstract class extends `Tool<Args, ToolResult.Text>` and simplifies the creation of tools that return text results.
 
-每个简单工具包含以下组件：| <div style="width:110px">组件</div> | 描述                                                                                                                                                                                                                                                                                              |
+Each simple tool consists of the following components:
+
+| <div style="width:110px">Component</div> | Description                                                                                                                                                                                                                                                                                              |
 |------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `Args`                                   | 定义自定义工具所需参数的可序列化数据类。                                                                                                                                                                                                                                                         |
-| `argsSerializer`                         | 重写变量，用于定义工具参数的序列化方式。另请参阅 [argsSerializer](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-tool/args-serializer.html)。                                                                                                                             |
-| `descriptor`                             | 重写变量，用于指定工具元数据：<br/>- `name`<br/>- `description`<br/>- `requiredParameters`（默认为空）<br/> - `optionalParameters`（默认为空）<br/> 另请参阅 [descriptor](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-tool/descriptor.html)。 |
-| `doExecute()`                            | 重写函数，用于描述工具执行的主要操作。它接收类型为 `Args` 的参数，并返回一个 `String`。另请参阅 [doExecute()](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-simple-tool/do-execute.html)。                                          |
+| `Args`                                   | The serializable data class that defines arguments required for the custom tool.                                                                                                                                                                                                                         |
+| `argsSerializer`                         | The overridden variable that defines how the arguments for the tool are serialized. See also [argsSerializer](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-tool/args-serializer.html).                                                                                             |
+| `descriptor`                             | The overridden variable that specifies tool metadata:<br/>- `name`<br/>- `description`<br/>- `requiredParameters` (empty by default)<br/> - `optionalParameters` (empty by default)<br/> See also [descriptor](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-tool/descriptor.html). |
+| `doExecute()`                            | The overridden function that describes the main action performed by the tool. It takes arguments of type `Args` and returns a `String`. See also [doExecute()](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-simple-tool/do-execute.html).                                          |
 
-!!! note "Java 实现"
-    在 Java 中，等效方法是使用返回 `String` 的基于注解的方法。框架会自动处理文本结果的包装。更多详情，请参阅下方的[基于注解的方法](#annotation-based-methods-java)。
+!!! note "Java Implementation"
+    In Java, the equivalent approach is to use annotation-based methods that return `String`. The framework automatically handles the text result wrapping. For more details, see [Annotation-based methods](#annotation-based-methods-java) below.
 
 !!! tip
-    确保您的工具具有清晰的描述和明确定义的参数名称，以便 LLM 更容易理解并正确使用它们。在 Kotlin 中，使用 `descriptor` 和构造函数参数；在 Java 中，使用 `@Tool` 和 `@LLMDescription` 注解。
+    Ensure your tools have clear descriptions and well-defined parameter names to make it easier for the LLM to understand and use them properly. In Kotlin, use the `descriptor` and constructor parameters; in Java, use `@Tool` and `@LLMDescription` annotations.
 
-#### 使用示例 { #usage-example }
+#### Usage example 
 
-以下是在 Kotlin 中使用 `SimpleTool` 实现自定义工具的示例：
+Here is an example of a custom tool implementation using `SimpleTool` in Kotlin:
 
 === "Kotlin"
 
@@ -123,26 +125,27 @@ Koog 框架提供以下实现工具的方法：
     import kotlinx.serialization.Serializable
     -->
     ```kotlin
-    // 创建一个将字符串表达式转换为双精度值的工具
+    // Create a tool that casts a string expression to a double value
     object CastToDoubleTool : SimpleTool<CastToDoubleTool.Args>(
         argsType = typeToken<Args>(),
         name = "cast_to_double",
-        description = "将传入的表达式转换为双精度值，若表达式无法转换则返回 0.0"
+        description = "casts the passed expression to double or returns 0.0 if the expression is not castable"
     ) {
-        // 定义工具参数
+        // Define tool arguments
         @Serializable
         data class Args(
-            @property:LLMDescription("要转换为双精度值的表达式")
+            @property:LLMDescription("An expression to case to double")
             val expression: String,
-            @property:LLMDescription("关于如何处理表达式的注释")
+            @property:LLMDescription("A comment on how to process the expression")
             val comment: String
         )
-    ```        // 使用提供的参数执行工具的函数
+
+        // Function that executes the tool with the provided arguments
         override suspend fun execute(args: Args): String {
-            return "结果: ${castToDouble(args.expression)}, " + "注释为: ${args.comment}"
+            return "Result: ${castToDouble(args.expression)}, " + "the comment was: ${args.comment}"
         }
 
-        // 将字符串表达式转换为双精度值的函数
+        // Function to cast a string expression to a double value
         private fun castToDouble(expression: String): Double {
             return expression.toDoubleOrNull() ?: 0.0
         }
@@ -150,14 +153,15 @@ Koog 框架提供以下实现工具的方法：
     ```
     <!--- KNIT example-class-based-tools-02.kt -->
 
-### 基于注解的方法 (Java) { #annotation-based-methods-java }
+### Annotation-based methods (Java)
 
-要在 Java 中实现工具，无需子类化 `Tool` 或 `SimpleTool`，可使用基于注解的方法配合 `@Tool` 和
-`@LLMDescription`。Koog 通过反射自动处理序列化和注册。要了解更多实现细节，请参阅以下 Java 示例。
+To implement tools in Java, instead of subclassing `Tool` or `SimpleTool`, use annotation-based methods with `@Tool` and
+`@LLMDescription`. Koog handles serialization and registration automatically through reflection. To learn more about the
+implementation, see Java examples below.
 
-#### 使用示例 { #usage-examples }
+#### Usage examples
 
-这是在 Java 中实现工具的示例，相当于在 Kotlin 中使用 `Tool` 类。
+This is an example of a tool implementation in Java, equivalent to using the `Tool` class in Kotlin.
 
 === "Java"
 
@@ -168,19 +172,19 @@ Koog 框架提供以下实现工具的方法：
     **/
     -->
     ```java
-    // Java 等效实现：将工具实现为 Java 方法并通过 ToolRegistry.builder() 注册。
-    // 这是推荐的 Java 互操作路径，而非子类化 Kotlin Tool 基类。
+    // Java equivalent: implement the tool as a Java method and register it via ToolRegistry.builder().
+    // This is the recommended Java interop path instead of subclassing the Kotlin Tool base class.
     public final class CalculatorTool {
         private CalculatorTool() {}
     
         @Tool(customName = "calculator")
-        @LLMDescription(description = "可计算两个数字（0-9）相加的简易计算器。")
+        @LLMDescription(description = "A simple calculator that can add two digits (0-9).")
         public static int calculator(
-                @LLMDescription(description = "要相加的第一个数字（0-9）") int digit1,
-                @LLMDescription(description = "要相加的第二个数字（0-9）") int digit2
+                @LLMDescription(description = "The first digit to add (0-9)") int digit1,
+                @LLMDescription(description = "The second digit to add (0-9)") int digit2
         ) {
-            if (digit1 < 0 || digit1 > 9) throw new IllegalArgumentException("digit1 必须是单个数字（0-9）");
-            if (digit2 < 0 || digit2 > 9) throw new IllegalArgumentException("digit2 必须是单个数字（0-9）");
+            if (digit1 < 0 || digit1 > 9) throw new IllegalArgumentException("digit1 must be a single digit (0-9)");
+            if (digit2 < 0 || digit2 > 9) throw new IllegalArgumentException("digit2 must be a single digit (0-9)");
             return digit1 + digit2;
         }
     
@@ -190,13 +194,13 @@ Koog 框架提供以下实现工具的方法：
                 .build();
         }
     }
-    // 注意：不支持子类化 Kotlin Tool<TArgs, TResult> 并重写来自 Java 的 suspend execute(...) 方法。
-    // Java 互操作使用基于反射的 Java 方法注册为工具。
+    // Note: Subclassing the Kotlin Tool<TArgs, TResult> and overriding a suspend execute(...) from Java is not supported.
+    // The Java interop uses reflection-based registration of Java methods as tools.
     ```
     <!--- KNIT example-class-based-tools-java-01.java -->
 
-以下是在 Java 中实现工具的示例，相当于在 Kotlin 中使用 `SimpleTool` 类。此示例
-实现了一个返回文本结果的简单工具。
+Here is an example of a tool implementation in Java, equivalent to using the `SimpleTool` class in Kotlin. This example
+implements a simple tool that returns a text result.
 
 === "Java"
 
@@ -207,15 +211,15 @@ Koog 框架提供以下实现工具的方法：
     **/
     -->
     ```java
-    // SimpleTool 的 Java 等效实现：提供 Java 方法并将其注册为工具。
+    // Java equivalent of SimpleTool: provide a Java method and register it as a tool.
     public final class CastToDoubleTool {
         private CastToDoubleTool() {}
     
-```        @Tool(customName = "cast_to_double")
-        @LLMDescription(description = "将传入的表达式转换为 double 类型，若表达式无法转换则返回 0.0")
+        @Tool(customName = "cast_to_double")
+        @LLMDescription(description = "casts the passed expression to double or returns 0.0 if the expression is not castable")
         public static String castToDouble(
-                @LLMDescription(description = "要转换为 double 的表达式") String expression,
-                @LLMDescription(description = "关于如何处理该表达式的注释") String comment
+                @LLMDescription(description = "An expression to case to double") String expression,
+                @LLMDescription(description = "A comment on how to process the expression") String comment
         ) {
             double value;
             try {
@@ -223,7 +227,7 @@ Koog 框架提供以下实现工具的方法：
             } catch (Exception e) {
                 value = 0.0;
             }
-            return "结果: " + value + ", 注释为: " + comment;
+            return "Result: " + value + ", the comment was: " + comment;
         }
     
         public static ToolRegistry registry() throws NoSuchMethodException {
@@ -232,26 +236,26 @@ Koog 框架提供以下实现工具的方法：
                 .build();
         }
     }
-    // 注意：无需继承 Kotlin SimpleTool<TArgs> 来自 Java；注册 Java 方法是惯用做法。
+    // Note: Extending Kotlin SimpleTool<TArgs> from Java is not required; registering a Java method is the idiomatic approach.
     ```
     <!--- KNIT example-class-based-tools-java-02.java -->
 
-### 以自定义格式将工具结果发送至 LLM { #sending-tool-result-to-llm-in-custom-format }
+### Sending tool result to LLM in custom format
 
-对于 Kotlin：
+For Kotlin:
 
-如果您对发送至 LLM 的 JSON 结果不满意（在某些情况下，若工具输出以 Markdown 等结构化格式呈现，LLM 可能工作得更好），您需要遵循以下步骤：
+If you are not happy with JSON results sent to LLM (in some cases, LLMs can work better if tool output is structured as Markdown, for instance), you have to follow the following steps:
 
-1. 实现 `ToolResult.TextSerializable` 接口，并重写 `textForLLM()` 方法
-2. 使用 `ToolResultUtils.toTextSerializer<T>()` 重写 `resultSerializer`
+1. Implement `ToolResult.TextSerializable` interface, and override `textForLLM()` method
+2. Override `resultSerializer` using `ToolResultUtils.toTextSerializer<T>()`
 
-对于 Java：
+For Java:
 
-直接从您的注解方法返回格式化文本（如 Markdown）作为 `String`。框架会自动处理此过程。
+Return formatted text (such as Markdown) directly as a `String` from your annotated method. The framework handles this automatically.
 
-#### 示例 { #example }
+#### Example
 
-以下示例展示了在 Kotlin 和 Java 中自定义格式化输出的方式：
+Here is an example showing custom formatted output in both Kotlin and Java:
 
 === "Kotlin"
 
@@ -266,14 +270,14 @@ Koog 框架提供以下实现工具的方法：
     import ai.koog.prompt.markdown.markdown
     -->
     ```kotlin
-    // 编辑文件的工具
+    // A tool that edits file
     object EditFile : Tool<EditFile.Args, EditFile.Result>(
         argsType = typeToken<Args>(),
         resultType = typeToken<Result>(),
         name = "edit_file",
-        description = "编辑指定文件"
+        description = "Edits the given file"
     ) {
-        // 定义工具参数
+        // Define tool arguments
         @Serializable
         public data class Args(
             val path: String,
@@ -293,17 +297,19 @@ Koog 框架提供以下实现工具的方法：
 
                 @Serializable
                 public sealed class Failure(public val reason: String) : PatchApplyResult
-            }// 工具完成后将显示给 LLM 的文本输出（Markdown格式）。
+            }
+
+            // Textual output (in Markdown format) that will be visible to the LLM after the tool finishes.
             fun textForLLM(): String = markdown {
                 if (patchApplyResult is PatchApplyResult.Success) {
                     line {
-                        bold("成功").text("编辑文件（补丁已应用）")
+                        bold("Successfully").text(" edited file (patch applied)")
                     }
                 } else {
                     line {
-                        text("文件")
-                            .bold("未")
-                            .text("被修改（补丁应用失败：${(patchApplyResult as PatchApplyResult.Failure).reason}）")
+                        text("File was ")
+                            .bold("not")
+                            .text(" modified (patch application failed: ${(patchApplyResult as PatchApplyResult.Failure).reason})")
                     }
                 }
             }
@@ -311,9 +317,9 @@ Koog 框架提供以下实现工具的方法：
             override fun toString(): String = textForLLM()
         }
 
-        // 使用提供的参数执行工具的函数
+        // Function that executes the tool with the provided arguments
         override suspend fun execute(args: Args): Result {
-            return TODO("实现文件编辑")
+            return TODO("Implement file edit")
         }
     }
     ```
@@ -332,24 +338,24 @@ Koog 框架提供以下实现工具的方法：
     import ai.koog.agents.core.tools.annotations.LLMDescription;
     import ai.koog.agents.core.tools.annotations.Tool;
 
-    // Java 等效方式：直接从 Java 方法返回 Markdown 文本给 LLM，并将其注册为工具。
-    // 这避免了需要自定义可序列化的 Result 类型（该类型需要 Kotlin 序列化支持）。
+    // Java equivalent: return Markdown text directly to the LLM from a Java method and register it as a tool.
+    // This avoids needing a custom serializable Result type (which would require Kotlin serialization support).
     public final class EditFile {
         private EditFile() {}
 
         @Tool(customName = "edit_file")
-        @LLMDescription(description = "编辑指定文件")
+        @LLMDescription(description = "Edits the given file")
         public static String editFile(
                 String path,
                 String original,
                 String replacement
         ) {
-            // TODO：实现文件编辑逻辑；以下为展示 Markdown 输出的占位代码
+            // TODO: Implement file edit logic; below is a placeholder illustrating Markdown output
             boolean success = false;
             if (success) {
-                return "**成功**编辑文件（补丁已应用）";
+                return "**Successfully** edited file (patch applied)";
             } else {
-                return "文件**未**被修改（补丁应用失败：原因）";
+                return "File was **not** modified (patch application failed: reason)";
             }
         }
 
@@ -359,10 +365,10 @@ Koog 框架提供以下实现工具的方法：
                 .build();
         }
     }
-    // 注意：如果需要从 Java 返回结构化的自定义 Result 对象，必须暴露一个 Kotlin @Serializable 类型
-    // 或其他支持序列化的类型。返回 String 类型可与 Koog 的 Java 互操作直接使用。
+    // Note: If you need a structured custom Result object from Java, you must expose a Kotlin @Serializable type
+    // or another serializer-aware type. Returning String works out-of-the-box with Koog's Java interop.
     ```
     <!--- KNIT example-class-based-tools-java-03.java -->
 
-在 Kotlin 或 Java 中实现工具后，您需要将其添加到工具注册表，然后与智能体一起使用。
-详情请参阅[工具注册表](tools-overview.md#tool-registry)。
+After implementing your tool in Kotlin or Java, you need to add it to a tool registry and then use it with an agent.
+For details, see [Tool registry](tools-overview.md#tool-registry).

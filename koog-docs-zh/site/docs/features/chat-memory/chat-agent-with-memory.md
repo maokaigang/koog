@@ -81,7 +81,7 @@ graph TB
 
     --8<-- "quickstart-snippets.md:api-key"
 
-    本页示例假设您已设置 `OPENAI_API_KEY` 环境变量。
+    Examples on this page assume that you have set the `OPENAI_API_KEY` environment variable.
 
 === "Kotlin"
 
@@ -103,7 +103,7 @@ graph TB
                 systemPrompt = "You are a helpful assistant."
             ) {
                 install(ChatMemory) {
-                    windowSize(20) // 仅保留最近20条消息
+                    windowSize(20) // keep only the last 20 messages
                 }
             }
 
@@ -127,25 +127,25 @@ graph TB
         public static void main(String[] args) {
             String sessionId = "my-conversation";
     
-```            try (var executor = simpleOpenAIExecutor(System.getenv("OPENAI_API_KEY"))) {
+            try (var executor = simpleOpenAIExecutor(System.getenv("OPENAI_API_KEY"))) {
                 AIAgent<String, String> agent = AIAgent.builder()
                         .promptExecutor(executor)
                         .llmModel(OpenAIModels.Chat.GPT5_2)
-                        .systemPrompt("你是一个乐于助人的助手。")
+                        .systemPrompt("You are a helpful assistant.")
                         .install(ChatMemory.Feature, config -> {
-                            config.windowSize(20); // 仅保留最近的20条消息
+                            config.windowSize(20); // keep only the last 20 messages
                         })
                         .build();
     
                 Scanner scanner = new Scanner(System.in);
                 while (true) {
-                    System.out.print("你: ");
+                    System.out.print("You: ");
                     String input = scanner.nextLine().trim();
                     if (input.equals("/bye")) break;
                     if (input.isEmpty()) continue;
     
                     String reply = agent.run(input, sessionId);
-                    System.out.println("助手: " + reply + "\n");
+                    System.out.println("Assistant: " + reply + "\n");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -154,23 +154,24 @@ graph TB
     }
     ```
 
-## 实现细节 { #implementation-details }
+## Implementation details
 
-`agent.run()` 的第二个参数是用于识别和区分不同对话的[会话ID](index.md#session-ids)。
-在我们的示例中，由于每次只有一个对话，因此该ID保持恒定。
-在实际应用中，可以为同一用户的相关对话分配独立的唯一ID。
+The second argument to `agent.run()` is the [session ID](index.md#session-ids)
+used to identify and differentiate between ongoing conversations.
+In our example, it is constant because there is only one conversation at a time.
+In a real application, you can have a separate unique ID for conversations related to the same user, for example.
 
-该代理使用默认的[历史记录提供器](index.md#history-providers)，
-该提供器将对话历史存储在内存中。
-这意味着当应用程序退出时，历史记录会丢失。
-在实际应用中，应实现自定义的历史记录提供器，
-以便将历史记录持久化存储到数据库或文件中。
+The agent uses the default [history provider](index.md#history-providers)
+that stores the conversation history in memory.
+This means that the history is lost when the application exits.
+In a real application, you should implement a custom history provider
+to persistently store the history in a database or a file.
 
-`windowSize(20)` [预处理器](index.md#preprocessors)确保上下文大小受限：
-代理仅存储最多20条最新消息。
-若无此限制，提示词大小可能超出上下文限制。
+The `windowSize(20)` [preprocessor](index.md#preprocessors) ensures a limited context size:
+the agent stores only up to 20 most recent messages.
+Without this, the prompt size can grow beyond the context limit.
 
-## 示例会话 { #example-session }
+## Example session
 
 ```
 You: My name is Alice.
@@ -183,5 +184,5 @@ You: What's my name?
 Assistant: Your name is Alice!
 ```
 
-尽管每次交互都是独立的代理运行，但代理仍能正确回答“你的名字是Alice！”，
-这是因为`ChatMemory`功能在处理第三条消息前加载了先前的对话记录。
+Even though each interaction is a separate agent run, the agent correctly answers "Your name is Alice!"
+because the `ChatMemory` feature loaded earlier exchanges before processing the third message.

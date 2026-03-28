@@ -93,17 +93,20 @@ Koog 内置支持将智能体追踪数据导出到 [Langfuse](https://langfuse.c
     ```
     <!--- KNIT exampleLangfuseExporterJava01.java -->
 
-## 追踪属性 { #trace-attributes }
+## Trace attributes
 
-Langfuse 使用追踪级别的属性来增强可观测性，支持会话、环境、标签和其他元数据等功能。
-`addLangfuseExporter` 函数支持一个 `traceAttributes` 参数，该参数接受一个 `CustomAttribute` 对象列表。
+Langfuse uses trace-level attributes to enhance observability with features like sessions, environments, tags and other metadata.
+The `addLangfuseExporter` function supports a `traceAttributes` parameter that accepts a list of `CustomAttribute` objects.
 
-这些属性会被添加到每个追踪的根 `InvokeAgentSpan` 跨度中，并启用 Langfuse 的高级功能。您可以传递 Langfuse 支持的任何属性 - 请参阅 [Langfuse 的 OpenTelemetry 文档中的完整列表](https://langfuse.com/integrations/native/opentelemetry#trace-level-attributes)。通用属性：
-- **会话** (`langfuse.session.id`)：将相关追踪分组，用于聚合指标、成本分析和评分
-- **环境**：将生产环境追踪与开发和预发布环境隔离，以便进行更清晰的分析
-- **标签** (`langfuse.trace.tags`)：使用功能名称、实验ID或客户细分（字符串数组）标记追踪
+These attributes are added to the root `InvokeAgentSpan` span of each trace and enable Langfuse's advanced features. You can pass
+any attributes supported by Langfuse - see the [complete list in Langfuse's OpenTelemetry documentation](https://langfuse.com/integrations/native/opentelemetry#trace-level-attributes).
 
-### 会话和标签示例 { #example-with-session-and-tags }
+Common attributes:
+- **Sessions** (`langfuse.session.id`): Group related traces for aggregated metrics, cost analysis, and scoring
+- **Environments**: Isolate production traces from development and staging for cleaner analysis
+- **Tags** (`langfuse.trace.tags`): Label traces with feature names, experiment IDs, or customer segments (array of strings)
+
+### Example with session and tags
 
 === "Kotlin"
 
@@ -138,7 +141,7 @@ Langfuse 使用追踪级别的属性来增强可观测性，支持会话、环�
     
         println("Running agent with Langfuse tracing")
 
-        // 使用相同会话ID的多次运行将在Langfuse中被分组
+        // Multiple runs with the same session ID will be grouped in Langfuse
         agent.run("What is Kotlin?")
         agent.run("Show me a coroutine example")
     }
@@ -183,28 +186,30 @@ Langfuse 使用追踪级别的属性来增强可观测性，支持会话、环�
 
         System.out.println("Running agent with Langfuse tracing");
 
-        // 使用相同会话ID的多次运行将在Langfuse中被分组
+        // Multiple runs with the same session ID will be grouped in Langfuse
         agent.run("How to setup Langfuse integration in Koog agent?");
         agent.run("Show me a Java API  example");
     }
     ```
     <!--- KNIT exampleLangfuseExporterJava02.java -->
 
-## 追踪内容 { #what-gets-traced }
+## What gets traced
 
-启用后，Langfuse导出器会捕获与Koog通用OpenTelemetry集成相同的跨度，包括：
+When enabled, the Langfuse exporter captures the same spans as Koog’s general OpenTelemetry integration, including:
 
-- **代理生命周期事件**：代理启动、停止、错误
-- **LLM交互**：提示、响应、令牌使用量、延迟
-- **工具调用**：工具调用的执行追踪
-- **系统上下文**：元数据，如模型名称、环境、Koog版本
+- **Agent lifecycle events**: agent start, stop, errors
+- **LLM interactions**: prompts, responses, token usage, latency
+- **Tool calls**: execution traces for tool invocations
+- **System context**: metadata such as model name, environment, Koog version
 
-Koog还会捕获Langfuse显示[代理图谱](https://langfuse.com/docs/observability/features/agent-graphs)所需的跨度属性。
+Koog also captures span attributes required by Langfuse to show [Agent Graphs](https://langfuse.com/docs/observability/features/agent-graphs).
 
-出于安全考虑，OpenTelemetry跨度的部分内容默认会被屏蔽。
-若要在Langfuse中查看这些内容，请在OpenTelemetry配置中使用[setVerbose](opentelemetry-support.md#setverbose)方法，并将其`verbose`参数设置为`true`，如下所示：
+For security reasons, some content of OpenTelemetry spans is masked by default.
+To make the content available in Langfuse, use the [setVerbose](opentelemetry-support.md#setverbose) method in the OpenTelemetry configuration and set its `verbose` argument to `true` as follows:
 
-=== "Kotlin"<!--- INCLUDE
+=== "Kotlin"
+
+    <!--- INCLUDE
     import ai.koog.agents.core.agent.AIAgent
     import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry
     import ai.koog.prompt.executor.clients.openai.OpenAIModels
@@ -216,16 +221,16 @@ Koog还会捕获Langfuse显示[代理图谱](https://langfuse.com/docs/observabi
         systemPrompt = "You are a helpful assistant."
     ) {
     -->
-<!--- SUFFIX
+    <!--- SUFFIX
     }
     -->
-```kotlin
-install(OpenTelemetry) {
-    addLangfuseExporter()
-    setVerbose(true)
-}
-```
-<!--- KNIT example-langfuse-exporter-03.kt -->
+    ```kotlin
+    install(OpenTelemetry) {
+        addLangfuseExporter()
+        setVerbose(true)
+    }
+    ```
+    <!--- KNIT example-langfuse-exporter-03.kt -->
 
 === "Java"
 
@@ -261,18 +266,18 @@ install(OpenTelemetry) {
     ```
     <!--- KNIT exampleLangfuseExporterJava03.java -->
 
-在 Langfuse 中可视化时，追踪信息显示如下：
+When visualized in Langfuse, the trace appears as follows:
 ![Langfuse traces](img/opentelemetry-langfuse-exporter-light.png#only-light)
 ![Langfuse traces](img/opentelemetry-langfuse-exporter-dark.png#only-dark)
 
-有关 Langfuse OpenTelemetry 追踪的更多详情，请参阅：  
-[Langfuse OpenTelemetry 文档](https://langfuse.com/integrations/native/opentelemetry#opentelemetry-endpoint)。
+For more details on Langfuse OpenTelemetry tracing, see:  
+[Langfuse OpenTelemetry Docs](https://langfuse.com/integrations/native/opentelemetry#opentelemetry-endpoint).
 
 ---
 
-## 故障排除 { #troubleshooting }
+## Troubleshooting
 
-### Langfuse 中未显示追踪信息 { #no-traces-appear-in-langfuse }
-- 请仔细检查您的环境中是否已设置 `LANGFUSE_HOST`、`LANGFUSE_PUBLIC_KEY` 和 `LANGFUSE_SECRET_KEY`。
-- 如果在自托管的 Langfuse 上运行，请确认您的应用环境能够访问 `LANGFUSE_HOST`。
-- 验证公钥/私钥对是否属于正确的项目。
+### No traces appear in Langfuse
+- Double-check that `LANGFUSE_HOST`, `LANGFUSE_PUBLIC_KEY`, and `LANGFUSE_SECRET_KEY` are set in your environment.
+- If running on self-hosted Langfuse, confirm that the `LANGFUSE_HOST` is reachable from your application environment.
+- Verify that the public/secret key pair belongs to the correct project.

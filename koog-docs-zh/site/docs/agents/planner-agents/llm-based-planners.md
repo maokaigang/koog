@@ -41,16 +41,16 @@ Koog 提供了两种简单的规划器：
     import kotlinx.coroutines.runBlocking
     -->
     ```kotlin
-    // 创建规划器
+    // Create the planner
     val planner = SimpleLLMPlanner()
 
-    // 将其包装在规划器策略中
+    // Wrap it in a planner strategy
     val strategy = AIAgentPlannerStrategy(
         name = "simple-planner",
         planner = planner
     )
 
-    // 配置代理
+    // Configure the agent
     val agentConfig = AIAgentConfig(
         prompt = prompt("planner") {
             system("You are a helpful planning assistant.")
@@ -59,7 +59,7 @@ Koog 提供了两种简单的规划器：
         maxAgentIterations = 50
     )
 
-    // 创建规划器代理
+    // Create the planner agent
     val agent = PlannerAIAgent(
         promptExecutor = simpleOpenAIExecutor(System.getenv("OPENAI_API_KEY")),
         strategy = strategy,
@@ -67,7 +67,7 @@ Koog 提供了两种简单的规划器：
     )
 
     suspend fun main() {
-        // 运行代理执行任务
+        // Run the agent with a task
         val result = agent.run("Create a plan to organize a team meeting")
         println(result)
     }
@@ -89,18 +89,18 @@ Koog 提供了两种简单的规划器：
     }
     -->
     ```java
-    // 使用基于 LLM 的规划器创建规划器策略
+    // Create the planner strategy with LLM-based planner
     AIAgentPlannerStrategy<String, String, ?> strategy =
         AIAgentPlannerStrategy.builder("simple-planner")
             .llmBasedPlanner()
             .build();
 
-    // 创建 OpenAI 执行器
+    // Create the OpenAI executor
     var promptExecutor = PromptExecutor.builder()
         .openAI("OPENAI_API_KEY")
         .build();
 
-    // 使用 AIAgent 构建器创建规划器代理
+    // Create the planner agent using AIAgent builder
     AIAgent<String, String> agent = AIAgent.builder()
         .plannerStrategy(strategy)
         .promptExecutor(promptExecutor)
@@ -109,12 +109,12 @@ Koog 提供了两种简单的规划器：
         .maxIterations(50)
         .build();
 
-    // 运行代理执行任务
+    // Run the agent with a task
     String result = agent.run("Create a plan to organize a team meeting");
     System.out.println(result);
     ```
      <!--- KNIT exampleLLMBasedPlannerJava01.java -->
 
-## 后续步骤 { #next-steps }
+## Next steps
 
-- 了解 [GOAP 代理](goap-agents.md)
+- Learn about [GOAP agents](goap-agents.md)

@@ -37,24 +37,27 @@ Koog 提供了三种主要类型的提示执行器，它们都实现了 [`Prompt
     ```
     <!--- KNIT example-prompt-executors-01.kt -->
 
-=== "Java"<!--- INCLUDE
+=== "Java"
+
+    <!--- INCLUDE
     /**
     -->
-<!--- SUFFIX
+    <!--- SUFFIX
     **/
     -->
-```java
-OpenAILLMClient openAIClient = new OpenAILLMClient(System.getenv("OPENAI_API_KEY"));
-MultiLLMPromptExecutor promptExecutor = new MultiLLMPromptExecutor(openAIClient);
-```
-<!--- KNIT example-prompt-executors-java-01.java -->
+    ```java
+    OpenAILLMClient openAIClient = new OpenAILLMClient(System.getenv("OPENAI_API_KEY"));
+    MultiLLMPromptExecutor promptExecutor = new MultiLLMPromptExecutor(openAIClient);
+    ```
+    <!--- KNIT example-prompt-executors-java-01.java -->
 
-## 创建多提供商执行器 { #creating-a-multi-provider-executor }
+## Creating a multi-provider executor
 
-要创建一个支持多个 LLM 提供商的提示执行器，请按以下步骤操作：
+To create a prompt executor that works with multiple LLM providers, do the following:
 
-1. 为所需的 LLM 提供商配置客户端，并提供相应的 API 密钥。
-2. 将配置好的客户端传递给 [`MultiLLMPromptExecutor`](api:prompt-executor-model::ai.koog.prompt.executor.llms.MultiLLMPromptExecutor) 类的构造函数，以创建一个支持多个 LLM 提供商的提示执行器。
+1. Configure clients for the required LLM providers with the corresponding API keys.
+2. Pass the configured clients to the [`MultiLLMPromptExecutor`](api:prompt-executor-model::ai.koog.prompt.executor.llms.MultiLLMPromptExecutor) class constructor to create a prompt executor
+   with multiple LLM providers.
 
 === "Kotlin"
 
@@ -92,19 +95,19 @@ MultiLLMPromptExecutor promptExecutor = new MultiLLMPromptExecutor(openAIClient)
     ```
     <!--- KNIT example-prompt-executors-java-02.java -->
 
-## 创建路由执行器 { #creating-a-routing-executor }
+## Creating a routing executor
 
-!!! warning "实验性 API"
-    路由功能目前处于实验阶段，未来版本中可能会发生变化。
-    如需使用，请通过 `@OptIn(ExperimentalRoutingApi::class)` 选择启用。
+!!! warning "Experimental API"
+    Routing capabilities are experimental and may change in future releases.
+    To use them, opt in with `@OptIn(ExperimentalRoutingApi::class)`.
 
-要创建一个使用路由策略在多个 LLM 客户端实例之间分发请求的提示执行器，请按以下步骤操作：
+To create a prompt executor that distributes requests across multiple LLM client instances using routing strategies, do the following:
 
-1. 配置多个客户端实例（可以是相同或不同的 LLM 提供商），并提供相应的 API 密钥。
-2. 使用路由策略（例如 [`RoundRobinRouter`](api:prompt-executor-model::ai.koog.prompt.executor.llms.RoundRobinRouter)）创建一个路由器。
-3. 将路由器传递给 [`RoutingLLMPromptExecutor`](api:prompt-executor-model::ai.koog.prompt.executor.llms.RoutingLLMPromptExecutor) 类的构造函数。
+1. Configure multiple client instances (they can be for the same or different LLM providers) with the corresponding API keys.
+2. Create a router using a routing strategy, such as [`RoundRobinRouter`](api:prompt-executor-model::ai.koog.prompt.executor.llms.RoundRobinRouter).
+3. Pass the router to the [`RoutingLLMPromptExecutor`](api:prompt-executor-model::ai.koog.prompt.executor.llms.RoutingLLMPromptExecutor) class constructor.
 
-这对于避免速率限制、提高吞吐量以及实现故障转移策略非常有用。
+This is useful for avoiding rate limits, improving throughput, and implementing failover strategies.
 
 === "Kotlin"
 
@@ -115,65 +118,69 @@ MultiLLMPromptExecutor promptExecutor = new MultiLLMPromptExecutor(openAIClient)
     import ai.koog.prompt.executor.llms.RoutingLLMPromptExecutor
     -->
     ```kotlin
-    // 创建多个客户端实例
+    // Create multiple client instances
     val openAI1 = OpenAILLMClient(apiKey = "openai-key-1")
     val openAI2 = OpenAILLMClient(apiKey = "openai-key-2")
     val anthropic = AnthropicLLMClient(apiKey = "anthropic-key")
 
-    // 使用轮询策略创建路由器
+    // Create router with round-robin strategy
     val router = RoundRobinRouter(openAI1, openAI2, anthropic)
 
-    // 创建路由执行器
+    // Create routing executor
     val routingExecutor = RoutingLLMPromptExecutor(router)
     ```
     <!--- KNIT example-prompt-executors-03.kt -->
 
-=== "Java"<!--- INCLUDE
+=== "Java"
+
+    <!--- INCLUDE
     /**
     -->
-<!--- SUFFIX
+    <!--- SUFFIX
     **/
     -->
-```java
-// 创建多个客户端实例
-OpenAILLMClient openAI1 = new OpenAILLMClient("openai-key-1");
-OpenAILLMClient openAI2 = new OpenAILLMClient("openai-key-2");
-AnthropicLLMClient anthropic = new AnthropicLLMClient("anthropic-key");
+    ```java
+    // Create multiple client instances
+    OpenAILLMClient openAI1 = new OpenAILLMClient("openai-key-1");
+    OpenAILLMClient openAI2 = new OpenAILLMClient("openai-key-2");
+    AnthropicLLMClient anthropic = new AnthropicLLMClient("anthropic-key");
 
-// 使用轮询策略创建路由器
-RoundRobinRouter router = new RoundRobinRouter(openAI1, openAI2, anthropic);
+    // Create router with round-robin strategy
+    RoundRobinRouter router = new RoundRobinRouter(openAI1, openAI2, anthropic);
 
-// 创建路由执行器
-RoutingLLMPromptExecutor routingExecutor = new RoutingLLMPromptExecutor(router);
-```
-<!--- KNIT example-prompt-executors-java-03.java -->
+    // Create routing executor
+    RoutingLLMPromptExecutor routingExecutor = new RoutingLLMPromptExecutor(router);
+    ```
+    <!--- KNIT example-prompt-executors-java-03.java -->
 
-当你使用此执行器执行提示时，对 OpenAI 模型的请求将按照轮询策略在 `openAI1` 和 `openAI2` 之间交替进行。
-对 Anthropic 模型的请求始终会发送到单一的 `anthropic` 客户端，因为轮询策略会为每个提供商维护独立的计数器。
+When you execute prompts with this executor, requests to OpenAI models will alternate between `openAI1` and `openAI2` using the round-robin strategy.
+Requests to Anthropic models always go to the single `anthropic` client, as round-robin maintains an independent counter per provider.
 
-你也可以通过创建实现 [`LLMClientRouter`](api:prompt-executor-model::ai.koog.prompt.executor.llms.LLMClientRouter) 接口的类来实现自定义路由策略。
+You can also implement custom routing strategies by creating a class that implements the [`LLMClientRouter`](api:prompt-executor-model::ai.koog.prompt.executor.llms.LLMClientRouter) interface.
 
-## 预定义的提示执行器 { #pre-defined-prompt-executors }
+## Pre-defined prompt executors
 
-为了更快地设置，Koog 在 Kotlin 和 Java 中为常见提供商提供了即用型执行器实现。
+For faster setup, Koog provides ready-to-use executor implementations for common providers in both Kotlin and Java.
 
-下表列出了**预定义的单提供商执行器**，
-它们返回配置了特定 LLM 客户端的 `SingleLLMPromptExecutor`。
+The following table includes the **pre-defined single-provider executors**
+that return `SingleLLMPromptExecutor` configured with a specific LLM client.
 
 <!--TODO: SingleLLMPromptExecutor is deprecated and is being replaced by PromptExecutor. Once it is implemented,
-the predefined executors will return a PromptExecutor instance configured with a specific client.-->| LLM 提供商 | 提示词执行器                                                                                                                                                                             | 描述                                                                      |
-|----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
-| OpenAI         | [simpleOpenAIExecutor](api:prompt-executor-llms-all::ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor)                                  | 封装了使用 OpenAI 模型运行提示词的 `OpenAILLMClient`。                    |
-| OpenAI         | [simpleAzureOpenAIExecutor](api:prompt-executor-llms-all::ai.koog.prompt.executor.llms.all.simpleAzureOpenAIExecutor)                       | 封装了配置为使用 Azure OpenAI Service 的 `OpenAILLMClient`。               |
-| Anthropic      | [simpleAnthropicExecutor](api:prompt-executor-llms-all::ai.koog.prompt.executor.llms.all.simpleAnthropicExecutor)                              | 封装了使用 Anthropic 模型运行提示词的 `AnthropicLLMClient`。              |
-| Google         | [simpleGoogleAIExecutor](api:prompt-executor-llms-all::ai.koog.prompt.executor.llms.all.simpleGoogleAIExecutor)                              | 封装了使用 Google 模型运行提示词的 `GoogleLLMClient`。                    |
-| OpenRouter     | [simpleOpenRouterExecutor](api:prompt-executor-llms-all::ai.koog.prompt.executor.llms.all.simpleOpenRouterExecutor)                           | 封装了使用 OpenRouter 运行提示词的 `OpenRouterLLMClient`。                   |
-| Amazon Bedrock | [simpleBedrockExecutor](api:prompt-executor-llms-all::ai.koog.prompt.executor.llms.all.simpleBedrockExecutor)                                  | 封装了使用 AWS Bedrock 运行提示词的 `BedrockLLMClient`。                     |
-| Amazon Bedrock | [simpleBedrockExecutorWithBearerToken](api:prompt-executor-llms-all::ai.koog.prompt.executor.llms.all.simpleBedrockExecutorWithBearerToken) | 封装了 `BedrockLLMClient` 并使用提供的 Bedrock API 密钥发送请求。 |
-| Mistral        | [simpleMistralAIExecutor](api:prompt-executor-llms-all::ai.koog.prompt.executor.llms.all.simpleMistralAIExecutor)                            | 封装了使用 Mistral 模型运行提示词的 `MistralAILLMClient`。                |
-| Ollama         | [simpleOllamaAIExecutor](api:prompt-executor-llms-all::ai.koog.prompt.executor.llms.all.simpleOllamaAIExecutor)                              | 封装了使用 Ollama 运行提示词的 `OllamaClient`。                              |
+the predefined executors will return a PromptExecutor instance configured with a specific client.-->
 
-以下是创建预定义执行器的示例：
+| LLM provider   | Prompt executor                                                                                                                                                                             | Description                                                                      |
+|----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
+| OpenAI         | [simpleOpenAIExecutor](api:prompt-executor-llms-all::ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor)                                  | Wraps `OpenAILLMClient` that runs prompts with OpenAI models.                    |
+| OpenAI         | [simpleAzureOpenAIExecutor](api:prompt-executor-llms-all::ai.koog.prompt.executor.llms.all.simpleAzureOpenAIExecutor)                       | Wraps `OpenAILLMClient` configured for using Azure OpenAI Service.               |
+| Anthropic      | [simpleAnthropicExecutor](api:prompt-executor-llms-all::ai.koog.prompt.executor.llms.all.simpleAnthropicExecutor)                              | Wraps `AnthropicLLMClient` that runs prompts with Anthropic models.              |
+| Google         | [simpleGoogleAIExecutor](api:prompt-executor-llms-all::ai.koog.prompt.executor.llms.all.simpleGoogleAIExecutor)                              | Wraps `GoogleLLMClient` that runs prompts with Google models.                    |
+| OpenRouter     | [simpleOpenRouterExecutor](api:prompt-executor-llms-all::ai.koog.prompt.executor.llms.all.simpleOpenRouterExecutor)                           | Wraps `OpenRouterLLMClient` that runs prompts with OpenRouter.                   |
+| Amazon Bedrock | [simpleBedrockExecutor](api:prompt-executor-llms-all::ai.koog.prompt.executor.llms.all.simpleBedrockExecutor)                                  | Wraps `BedrockLLMClient` that runs prompts with AWS Bedrock.                     |
+| Amazon Bedrock | [simpleBedrockExecutorWithBearerToken](api:prompt-executor-llms-all::ai.koog.prompt.executor.llms.all.simpleBedrockExecutorWithBearerToken) | Wraps `BedrockLLMClient` and uses the provided Bedrock API key to send requests. |
+| Mistral        | [simpleMistralAIExecutor](api:prompt-executor-llms-all::ai.koog.prompt.executor.llms.all.simpleMistralAIExecutor)                            | Wraps `MistralAILLMClient` that runs prompts with Mistral models.                |
+| Ollama         | [simpleOllamaAIExecutor](api:prompt-executor-llms-all::ai.koog.prompt.executor.llms.all.simpleOllamaAIExecutor)                              | Wraps `OllamaClient` that runs prompts with Ollama.                              |
+
+Here is an example of creating a pre-defined executor:
 
 === "Kotlin"
 
@@ -187,7 +194,7 @@ the predefined executors will return a PromptExecutor instance configured with a
     -->
 
     ```kotlin
-    // 创建 OpenAI 执行器
+    // Create an OpenAI executor
     val promptExecutor = simpleOpenAIExecutor("OPENAI_API_KEY")
     ```
     <!--- KNIT example-prompt-executors-04.kt -->
@@ -201,19 +208,19 @@ the predefined executors will return a PromptExecutor instance configured with a
     **/
     -->
     ```java
-    // 创建 OpenAI 执行器
+    // Create an OpenAI executor
     PromptExecutor openAIExecutor = simpleOpenAIExecutor("OPENAI_API_KEY");
     ```
     <!--- KNIT example-prompt-executors-java-04.java -->
 
-## 运行提示词 { #running-a-prompt }
+## Running a prompt
 
-要使用提示词执行器运行提示词，请执行以下操作：
+To run a prompt using a prompt executor, do the following:
 
-1. 创建提示词执行器。
-2. 使用 `execute()` 方法运行具有特定 LLM 的提示词。
+1. Create a prompt executor.
+2. Run the prompt with the specific LLM using the `execute()` method.
 
-示例如下：
+Here is an example:
 
 === "Kotlin"
 
@@ -228,17 +235,19 @@ the predefined executors will return a PromptExecutor instance configured with a
     <!--- SUFFIX
         }
     }
-    -->```kotlin
-// 创建 OpenAI 执行器
-val promptExecutor = simpleOpenAIExecutor("OPENAI_API_KEY")
+    -->
 
-// 执行提示词
-val response = promptExecutor.execute(
-    prompt = prompt("demo") { user("Summarize this.") },
-    model = OpenAIModels.Chat.GPT4o
-)
-```
-<!--- KNIT example-prompt-executors-05.kt -->
+    ```kotlin
+    // Create an OpenAI executor
+    val promptExecutor = simpleOpenAIExecutor("OPENAI_API_KEY")
+
+    // Execute a prompt
+    val response = promptExecutor.execute(
+        prompt = prompt("demo") { user("Summarize this.") },
+        model = OpenAIModels.Chat.GPT4o
+    )
+    ```
+    <!--- KNIT example-prompt-executors-05.kt -->
 
 === "Java"
 
@@ -249,38 +258,38 @@ val response = promptExecutor.execute(
     **/
     -->
     ```java
-    // 创建 OpenAI 执行器
+    // Create an OpenAI executor
     PromptExecutor promptExecutor = simpleOpenAIExecutor("OPENAI_API_KEY");
 
-    // 创建提示词
+    // Create a prompt
     Prompt prompt = Prompt.builder("demo")
         .user("Summarize this.")
         .build();
 
-    // 运行提示词
+    // Run the prompt
     List<Message.Response> response = promptExecutor.execute(prompt, OpenAIModels.Chat.GPT4o);
     ```
     <!--- KNIT example-prompt-executors-java-05.java -->
 
-这将使用 `GPT4o` 模型运行提示词并返回响应。
+This will run the prompt with the `GPT4o` model and return the response.
 
 !!! note
-    提示词执行器提供了多种功能来运行提示词，
-    例如流式传输、多选生成和内容审核。
-    由于提示词执行器封装了 LLM 客户端，每个执行器都支持相应客户端的功能。
-    详情请参阅 [LLM 客户端](llm-clients.md)。
+    The prompt executors provide methods to run prompts using various capabilities, 
+    such as streaming, multiple choice generation, and content moderation.
+    Since prompt executors wrap LLM clients, each executor supports the capabilities of the corresponding client.
+    For details, refer to [LLM clients](llm-clients.md).
 
-## 在提供商之间切换 { #switching-between-providers }
+## Switching between providers
 
-当您使用 `MultiLLMPromptExecutor` 与多个 LLM 提供商合作时，可以在它们之间切换。
-流程如下：
+When you work with multiple LLM providers using `MultiLLMPromptExecutor`, you can switch between them.
+The process is as follows:
 
-1. 为每个要使用的提供商创建一个 LLM 客户端实例。
-2. 创建一个 `MultiLLMPromptExecutor`，将 LLM 提供商映射到 LLM 客户端。
-3. 运行提示词时，将相应客户端的模型作为参数传递给 `execute()` 方法。
-   提示词执行器将根据模型提供商使用对应的客户端来运行提示词。
+1. Create an LLM client instance for each provider you want to use.
+2. Create a `MultiLLMPromptExecutor` that maps LLM providers to LLM clients.
+3. Run a prompt with a model from the corresponding client passed as an argument to the `execute()` method.
+   The prompt executor will use the corresponding client based on the model provider to run the prompt.
 
-以下是在提供商之间切换的示例：
+Here is an example of switching between providers:
 
 === "Kotlin"
 
@@ -301,71 +310,73 @@ val response = promptExecutor.execute(
     -->
 
     ```kotlin
-    // 为 OpenAI、Anthropic 和 Google 提供商创建 LLM 客户端
+    // Create LLM clients for OpenAI, Anthropic, and Google providers
     val openAIClient = OpenAILLMClient("OPENAI_API_KEY")
     val anthropicClient = AnthropicLLMClient("ANTHROPIC_API_KEY")
     val googleClient = GoogleLLMClient("GOOGLE_API_KEY")
 
-    // 创建 MultiLLMPromptExecutor，将 LLM 提供商映射到 LLM 客户端
+    // Create a MultiLLMPromptExecutor that maps LLM providers to LLM clients
     val executor = MultiLLMPromptExecutor(
         LLMProvider.OpenAI to openAIClient,
         LLMProvider.Anthropic to anthropicClient,
         LLMProvider.Google to googleClient
     )
 
-    // 创建提示词
+    // Create a prompt
     val p = prompt("demo") { user("Summarize this.") }
 
-    // 使用 OpenAI 模型运行提示词；提示词执行器自动切换到 OpenAI 客户端
+    // Run the prompt with an OpenAI model; the prompt executor automatically switches to the OpenAI client
     val openAIResult = executor.execute(p, OpenAIModels.Chat.GPT4o)
 
-    // 使用 Anthropic 模型运行提示词；提示词执行器自动切换到 Anthropic 客户端
+    // Run the prompt with an Anthropic model; the prompt executor automatically switches to the Anthropic client
     val anthropicResult = executor.execute(p, AnthropicModels.Sonnet_4_5)
     ```
     <!--- KNIT example-prompt-executors-06.kt -->
 
-=== "Java"<!--- INCLUDE
+=== "Java"
+
+    <!--- INCLUDE
     /**
     -->
-<!--- SUFFIX
+    <!--- SUFFIX
     **/
     -->
-```java
-// 为 OpenAI、Anthropic 和 Google 提供商创建 LLM 客户端
-OpenAILLMClient openAIClient = new OpenAILLMClient("OPENAI_API_KEY");
-AnthropicLLMClient anthropicClient = new AnthropicLLMClient("ANTHROPIC_API_KEY");
-GoogleLLMClient googleClient = new GoogleLLMClient("GOOGLE_API_KEY");
+    ```java
+    // Create LLM clients for OpenAI, Anthropic, and Google providers
+    OpenAILLMClient openAIClient = new OpenAILLMClient("OPENAI_API_KEY");
+    AnthropicLLMClient anthropicClient = new AnthropicLLMClient("ANTHROPIC_API_KEY");
+    GoogleLLMClient googleClient = new GoogleLLMClient("GOOGLE_API_KEY");
 
-// 创建一个 MultiLLMPromptExecutor，将 LLM 提供商映射到 LLM 客户端
-MultiLLMPromptExecutor promptExecutor = new MultiLLMPromptExecutor(
-    Map.of(
-        LLMProvider.OpenAI, openAIClient,
-        LLMProvider.Anthropic, anthropicClient,
-        LLMProvider.Google, googleClient
-    )
-);
+    // Create a MultiLLMPromptExecutor that maps LLM providers to LLM clients
+    MultiLLMPromptExecutor promptExecutor = new MultiLLMPromptExecutor(
+        Map.of(
+            LLMProvider.OpenAI, openAIClient,
+            LLMProvider.Anthropic, anthropicClient,
+            LLMProvider.Google, googleClient
+        )
+    );
 
-// 创建一个提示
-Prompt prompt = Prompt.builder("demo")
-    .user("Summarize this.")
-    .build();
+    // Create a prompt
+    Prompt prompt = Prompt.builder("demo")
+        .user("Summarize this.")
+        .build();
 
-// 使用 OpenAI 模型运行提示；提示执行器会自动切换到 OpenAI 客户端
-List<Message.Response> openAIResult = promptExecutor.execute(prompt, OpenAIModels.Chat.GPT4o);
+    // Run the prompt with an OpenAI model; the prompt executor automatically switches to the OpenAI client
+    List<Message.Response> openAIResult = promptExecutor.execute(prompt, OpenAIModels.Chat.GPT4o);
 
-// 使用 Anthropic 模型运行提示；提示执行器会自动切换到 Anthropic 客户端
-List<Message.Response> anthropicResult = promptExecutor.execute(prompt, AnthropicModels.Sonnet_4_5);
-```
-<!--- KNIT example-prompt-executors-java-06.java -->
+    // Run the prompt with an Anthropic model; the prompt executor automatically switches to the Anthropic client
+    List<Message.Response> anthropicResult = promptExecutor.execute(prompt, AnthropicModels.Sonnet_4_5);
+    ```
+    <!--- KNIT example-prompt-executors-java-06.java -->
 
-您可以选择配置一个备用的 LLM 提供商和模型，以便在请求的客户端不可用时使用。
-有关详细信息，请参阅[配置回退机制](#configuring-fallbacks)。
+You can optionally configure a fallback LLM provider and model to use when the requested client is unavailable.
+For details, refer to [Configuring fallbacks](#configuring-fallbacks).
 
-## 配置回退机制 { #configuring-fallbacks }
+## Configuring fallbacks
 
-多提供商和路由提示执行器可以配置为在请求的 LLM 客户端不可用时，使用备用的 LLM 提供商和模型。
+Multi-provider and routing prompt executors can be configured to use a fallback LLM provider and model when the requested LLM client is unavailable.
 
-要配置回退机制，请在创建 `MultiLLMPromptExecutor` 或 `RoutingLLMPromptExecutor` 时传递回退设置：
+To configure the fallback mechanism, pass fallback settings when creating a `MultiLLMPromptExecutor` or `RoutingLLMPromptExecutor`:
 
 === "Kotlin"
 
@@ -403,7 +414,8 @@ List<Message.Response> anthropicResult = promptExecutor.execute(prompt, Anthropi
     ```java
     OpenAILLMClient openAIClient = new OpenAILLMClient(System.getenv("OPENAI_API_KEY"));
     OllamaClient ollamaClient = new OllamaClient();
-```    MultiLLMPromptExecutor multiExecutor = new MultiLLMPromptExecutor(
+
+    MultiLLMPromptExecutor multiExecutor = new MultiLLMPromptExecutor(
         Map.of(
             LLMProvider.OpenAI, openAIClient,
             LLMProvider.Ollama, ollamaClient
@@ -416,8 +428,8 @@ List<Message.Response> anthropicResult = promptExecutor.execute(prompt, Anthropi
     ```
     <!--- KNIT example-prompt-executors-java-07.java -->
 
-如果你传入一个未包含在`MultiLLMPromptExecutor`中的LLM提供商的模型，
-提示执行器将使用回退模型：
+If you pass a model from an LLM provider that is not included in the `MultiLLMPromptExecutor`,
+the prompt executor will use the fallback model:
 
 === "Kotlin"
 
@@ -447,9 +459,9 @@ List<Message.Response> anthropicResult = promptExecutor.execute(prompt, Anthropi
     -->
 
     ```kotlin
-    // 创建提示
+    // Create a prompt
     val p = prompt("demo") { user("Summarize this") }
-    // 如果传入Google模型，提示执行器将使用回退模型，因为Google客户端未包含在内
+    // If you pass a Google model, the prompt executor will use the fallback model, as the Google client is not included
     val response = multiExecutor.execute(p, GoogleModels.Gemini2_5Pro)
     ```
     <!--- KNIT example-prompt-executors-08.kt -->
@@ -463,15 +475,20 @@ List<Message.Response> anthropicResult = promptExecutor.execute(prompt, Anthropi
     **/
     -->
     ```java
-    // 创建提示
+    // Create a prompt
     Prompt p = Prompt.builder("demo")
         .user("Summarize this")
         .build();
 
-    // 如果传入Google模型，提示执行器将使用回退模型，因为Google客户端未包含在内
+    // If you pass a Google model, the prompt executor will use the fallback model, as the Google client is not included
     List<Message.Response> response = multiExecutor.execute(p, GoogleModels.Gemini2_5Pro);
     ```
     <!--- KNIT example-prompt-executors-java-08.java -->
 
 !!! note
-    回退功能仅适用于`execute()`和`executeMultipleChoices()`方法。
+    Fallbacks are available for the `execute()` and `executeMultipleChoices()` methods only.
+
+
+
+
+

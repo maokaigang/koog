@@ -64,7 +64,7 @@ fun generate(toolDescriptor: ToolDescriptor): JsonObject
                                 put("type", "string")
                                 putJsonArray("enum") { t.entries.forEach { add(JsonPrimitive(it)) } }
                             }
-                            else -> put("type", "string") // 为简洁起见，使用回退方案
+                            else -> put("type", "string") // fallback for brevity
                         }
                     })
                 }
@@ -96,7 +96,7 @@ fun generate(toolDescriptor: ToolDescriptor): JsonObject
                 Map<String, JsonElement> prop = new LinkedHashMap<>();
                 prop.put("description", JsonPrimitive(p.getDescription()));
 
-```                ToolParameterType t = p.getType();
+                ToolParameterType t = p.getType();
                 if (t == ToolParameterType.String.INSTANCE) {
                     prop.put("type", JsonPrimitive("string"));
                 } else if (t == ToolParameterType.Integer.INSTANCE) {
@@ -108,14 +108,14 @@ fun generate(toolDescriptor: ToolDescriptor): JsonObject
                     for (String e : entries) enumVals.add(JsonPrimitive(e));
                     prop.put("enum", new JsonArray(enumVals));
                 } else {
-                    prop.put("type", JsonPrimitive("string")); // 为简洁起见，作为后备方案
+                    prop.put("type", JsonPrimitive("string")); // fallback for brevity
                 }
 
                 props.put(p.getName(), new JsonObject(prop));
             }
             root.put("properties", new JsonObject(props));
 
-            // 必需参数数组
+            // required array
             List<JsonElement> required = new ArrayList<>();
             for (ToolParameterDescriptor p : toolDescriptor.getRequiredParameters()) {
                 required.add(JsonPrimitive(p.getName()));
@@ -135,11 +135,11 @@ fun generate(toolDescriptor: ToolDescriptor): JsonObject
     ```
     <!--- KNIT example-tool-descriptor-schemer-java-01.java -->
 
-## 与客户端配合使用 { #using-with-a-client }
+## Using with a client
 
-通常，您无需直接调用模式生成器。Koog 客户端接受一个 `ToolDescriptor` 对象列表，并在为提供程序序列化请求时内部应用正确的模式生成器。
+Typically, you do not need to call a schemer directly. Koog clients accept a list of `ToolDescriptor` objects and apply the correct schemer internally when serializing requests for the provider.
 
-以下示例定义了一个简单工具并将其传递给 OpenAI 客户端。客户端将在底层使用 `OpenAICompatibleToolDescriptorSchemer` 来构建 JSON 模式。
+The example below defines a simple tool and passes it to the OpenAI client. The client will use `OpenAICompatibleToolDescriptorSchemer` under the hood to build the JSON schema.
 
 === "Kotlin"
 
@@ -186,11 +186,11 @@ fun generate(toolDescriptor: ToolDescriptor): JsonObject
     
     val getUserTool = ToolDescriptor(
         name = "get_user",
-        description = "根据ID返回用户资料",
+        description = "Returns user profile by id",
         requiredParameters = listOf(
             ToolParameterDescriptor(
                 name = "id",
-                description = "用户ID",
+                description = "User id",
                 type = ToolParameterType.String
             )
         )
@@ -216,27 +216,29 @@ fun generate(toolDescriptor: ToolDescriptor): JsonObject
     **/
     -->
     ```java
-    // 自定义模式生成器扩展 OpenAI 兼容的生成器在文档中仅为 Kotlin 示例；对于 Java 示例，我们复用上面的 MinimalSchemer。
-    OpenAILLMClient client = new OpenAILLMClient(System.getenv("OPENAI_API_KEY"), new OpenAIClientSettings(), null, null, new OpenAICompatibleToolDescriptorSchemaGenerator());ToolDescriptor getUserTool = new ToolDescriptor(
-    "get_user",
-    "根据用户ID返回用户资料",
-    Collections.singletonList(new ToolParameterDescriptor(
-        "id",
-        "用户ID",
-        ToolParameterType.String.INSTANCE
-    )),
-    Collections.emptyList()
-);
+    // Custom schemer extending the OpenAI-compatible one is Kotlin-only in the docs; for Java example we reuse MinimalSchemer from above.
+    OpenAILLMClient client = new OpenAILLMClient(System.getenv("OPENAI_API_KEY"), new OpenAIClientSettings(), null, null, new OpenAICompatibleToolDescriptorSchemaGenerator());
+    
+    ToolDescriptor getUserTool = new ToolDescriptor(
+        "get_user",
+        "Returns user profile by id",
+        Collections.singletonList(new ToolParameterDescriptor(
+            "id",
+            "User id",
+            ToolParameterType.String.INSTANCE
+        )),
+        Collections.emptyList()
+    );
 
-Prompt prompt = Prompt.builder("p1")
-    .user("你好")
-    .build();
+    Prompt prompt = Prompt.builder("p1")
+        .user("Hello")
+        .build();
 
-List<Message.Response> responses = client.execute(prompt, OpenAIModels.Chat.GPT4o, java.util.List.of(getUserTool));
-```
-<!--- KNIT example-tool-descriptor-schemer-java-02.java -->
+    List<Message.Response> responses = client.execute(prompt, OpenAIModels.Chat.GPT4o, java.util.List.of(getUserTool));
+    ```
+    <!--- KNIT example-tool-descriptor-schemer-java-02.java -->
 
-如果你需要直接访问生成的模式（用于调试或自定义传输），可以实例化特定于提供程序的模式生成器并自行序列化 JSON：
+If you need direct access to the produced schema (for debugging or for a custom transport), you can instantiate the provider‑specific schemer and serialize the JSON yourself:
 
 === "Kotlin"
 

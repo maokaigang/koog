@@ -40,6 +40,7 @@ LOCAL_EXTRA_FILES = {
 PLACEHOLDER_PATTERN = re.compile(r"@@koogzh_[a-z]+_(?P<index>\d+)@@")
 HEADING_PATTERN = re.compile(r"^#\s+(?P<title>.+?)\s*$", re.MULTILINE)
 HEADING_ATTRS_SUFFIX = re.compile(r"\s+\{\s*#[^}]+\}\s*$")
+MERGED_TAB_PATTERN = re.compile(r'^(?P<indent>\s*)(?P<header>===\s+"[^"]+")(?P<rest>\S.*)$')
 NAV_GROUP_TRANSLATIONS = {
     "Documentation": "文档",
     "Overview": "概览",
@@ -109,6 +110,13 @@ class SiteDocument:
     path: Path
     meta: dict[str, str] | None
     body: str
+
+
+@dataclass
+class TabBlock:
+    start: int
+    end: int
+    indent: int
 
 
 def now_iso() -> str:
@@ -832,6 +840,135 @@ def preserve_heading_anchors(source_text: str, translated_text: str) -> str:
     return result
 
 
+def leading_spaces(line: str) -> int:
+    return len(line) - len(line.lstrip(" "))
+
+
+def ensure_nested_tab_indent(line: str, base_indent: str) -> str:
+    if not line.strip():
+        return line
+    if leading_spaces(line) > len(base_indent):
+        return line
+    return f"{base_indent}    {line}"
+
+
+def normalize_merged_tab_blocks(text: str) -> str:
+    lines = text.splitlines()
+    output: list[str] = []
+    index = 0
+
+    while index < len(lines):
+        match = MERGED_TAB_PATTERN.match(lines[index])
+        if not match:
+            output.append(lines[index])
+            index += 1
+            continue
+
+        base_indent = match.group("indent")
+        header_line = f"{base_indent}{match.group('header')}"
+        rest = match.group("rest")
+
+        output.append(header_line)
+        output.append("")
+        output.append(ensure_nested_tab_indent(rest, base_indent))
+        index += 1
+
+        if not (rest.startswith("<!--") or rest.startswith("```") or rest.startswith("--8<--")):
+            continue
+
+        in_comment = rest.startswith("<!--") and "-->" not in rest
+        in_fence = rest.startswith("```")
+        in_include = rest.startswith("--8<--")
+
+        while index < len(lines):
+            line = lines[index]
+            stripped = line.strip()
+            structural = stripped.startswith("<!--") or stripped.startswith("```") or stripped.startswith("--8<--")
+
+            if not stripped:
+                output.append(line)
+                index += 1
+                continue
+
+            if not in_comment and not in_fence and not in_include:
+                if leading_spaces(line) <= len(base_indent) and not structural:
+                    break
+
+            output.append(ensure_nested_tab_indent(line, base_indent))
+
+            if stripped.startswith("<!--"):
+                if "-->" not in stripped:
+                    in_comment = True
+            elif in_comment and "-->" in stripped:
+                in_comment = False
+
+            if stripped.startswith("```"):
+                in_fence = not in_fence
+
+            if stripped.startswith("--8<--"):
+                in_include = not in_include
+
+            index += 1
+
+    result = "\n".join(output)
+    if text.endswith("\n"):
+        result += "\n"
+    return result
+
+
+def parse_tab_blocks(lines: list[str]) -> list[TabBlock]:
+    header_pattern = re.compile(r'^(\s*)===\s+"[^"]+"\s*$')
+    stack: list[TabBlock] = []
+    blocks: list[TabBlock] = []
+
+    for index, line in enumerate(lines):
+        match = header_pattern.match(line)
+        if not match:
+            continue
+        indent = len(match.group(1))
+        while stack and indent <= stack[-1].indent:
+            block = stack.pop()
+            block.end = index
+            blocks.append(block)
+        stack.append(TabBlock(start=index, end=len(lines), indent=indent))
+
+    while stack:
+        blocks.append(stack.pop())
+
+    return sorted(blocks, key=lambda block: block.start)
+
+
+def is_structural_tab_body(lines: list[str]) -> bool:
+    for line in lines:
+        stripped = line.strip()
+        if not stripped:
+            continue
+        return stripped.startswith("<!--") or stripped.startswith("```") or stripped.startswith("--8<--")
+    return False
+
+
+def restore_structural_tab_blocks(source_text: str, translated_text: str) -> str:
+    source_lines = source_text.splitlines()
+    translated_lines = translated_text.splitlines()
+    source_blocks = parse_tab_blocks(source_lines)
+    translated_blocks = parse_tab_blocks(translated_lines)
+
+    if len(source_blocks) != len(translated_blocks):
+        return translated_text
+
+    updated = translated_lines[:]
+    for source_block, translated_block in reversed(list(zip(source_blocks, translated_blocks, strict=False))):
+        source_body = source_lines[source_block.start + 1 : source_block.end]
+        if not is_structural_tab_body(source_body):
+            continue
+        updated[translated_block.start + 1 : translated_block.end] = source_body
+
+    result = "\n".join(updated)
+    if translated_text.endswith("\n"):
+        result += "\n"
+    return result
+
+
 def translate_markdown_with_deepseek(text: str) -> str:
     placeholders: list[str] = []
     protected = text
@@ -867,7 +1004,9 @@ def translate_markdown_with_deepseek(text: str) -> str:
         translated_parts.append(deepseek_translate(chunk))
 
     restored = restore_placeholders("".join(translated_parts), placeholders)
-    return preserve_heading_anchors(text, restored)
+    normalized = normalize_merged_tab_blocks(restored)
+    structural = restore_structural_tab_blocks(text, normalized)
+    return preserve_heading_anchors(text, structural)
 
 
 def translate_structured_line(line: str, provider: str) -> str:
@@ -1007,7 +1146,9 @@ def translate_markdown(text: str, provider: str) -> str:
         paragraph.append(line)
 
     flush_paragraph(paragraph, output, provider)
-    return "\n".join(output) + ("\n" if text.endswith("\n") else "")
+    translated = "\n".join(output) + ("\n" if text.endswith("\n") else "")
+    normalized = normalize_merged_tab_blocks(translated)
+    return restore_structural_tab_blocks(text, normalized)
 
 
 def candidate_paths(statuses: set[str], explicit_paths: list[str] | None) -> list[Path]:
