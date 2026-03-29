@@ -14,7 +14,7 @@
 ```kotlin
 // Interface
 interface ToolDescriptorSchemaGenerator {
-fun generate(toolDescriptor: ToolDescriptor): JsonObject
+    fun generate(toolDescriptor: ToolDescriptor): JsonObject
 }
 ```
 
@@ -109,7 +109,7 @@ fun generate(toolDescriptor: ToolDescriptor): JsonObject
 
 ## 与客户一起使用 { #using-with-a-client }
 
-通常，您不需要直接调用策划者。 Koog 客户端接受 `ToolDescriptor` 对象列表，并在序列化对提供者的请求时在内部应用正确的方案。
+通常，您不需要直接调用 schemer。Koog 客户端接受 `ToolDescriptor` 对象列表，并在序列化对提供者的请求时在内部应用正确的 schema 生成逻辑。
 
 下面的示例定义了一个简单的工具并将其传递给 OpenAI 客户端。客户端将在后台使用 `OpenAICompatibleToolDescriptorSchemer` 来构建 JSON 模式。
 
@@ -176,4 +176,5 @@ fun generate(toolDescriptor: ToolDescriptor): JsonObject
 === "Java"
 
     ```java
+    // 本节不提供额外的 Java 示例。
     ```
