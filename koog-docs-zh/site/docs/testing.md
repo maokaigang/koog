@@ -353,7 +353,9 @@ dependencies {
     ```java
     ```
 
-您还可以基于不同的结果属性测试复杂的决策路径：=== "Kotlin"
+您还可以基于不同的结果属性测试复杂的决策路径：
+
+=== "Kotlin"
 
     ```kotlin
     assertEdges {

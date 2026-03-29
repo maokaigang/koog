@@ -42,6 +42,7 @@ PLACEHOLDER_PATTERN = re.compile(r"@@koogzh_[a-z]+_(?P<index>\d+)@@")
 HEADING_PATTERN = re.compile(r"^#\s+(?P<title>.+?)\s*$", re.MULTILINE)
 HEADING_ATTRS_SUFFIX = re.compile(r"\s+\{\s*#[^}]+\}\s*$")
 MERGED_TAB_PATTERN = re.compile(r'^(?P<indent>\s*)(?P<header>===\s+"[^"]+")(?P<rest>\S.*)$')
+INLINE_TAB_PATTERN = re.compile(r'^(?P<prefix>.*\S)\s*(?P<header>===\s+"[^"]+")\s*$')
 MERGED_COMMENT_PATTERN = re.compile(r"^(?P<indent>\s*)(?P<comment><!--.*?-->)(?P<rest>\S.*)$")
 BROKEN_FENCE_PATTERN = re.compile(r"^\s*```[A-Za-z0-9_-]+(?:\s+(?!title=|linenums=|hl_lines=|\{)[^\s].*)$")
 MERGED_SNIPPET_PATTERN = re.compile(r"^(?!\s*#\s*--8<--)(?!\s*--8<--).*(--8<--).+$")
@@ -941,6 +942,51 @@ def normalize_merged_tab_blocks(text: str) -> str:
     return result
 
 
+def normalize_inline_tab_headers(text: str) -> str:
+    lines = text.splitlines()
+    output: list[str] = []
+    in_fence = False
+    in_comment = False
+
+    for line in lines:
+        stripped = line.strip()
+
+        if in_comment:
+            output.append(line)
+            if "-->" in line:
+                in_comment = False
+            continue
+
+        if stripped.startswith("<!--"):
+            output.append(line)
+            if "-->" not in line:
+                in_comment = True
+            continue
+
+        if re.match(r"^\s*```", line):
+            output.append(line)
+            in_fence = not in_fence
+            continue
+
+        if in_fence or not stripped or stripped.startswith(("===", "[//]:", "--8<--", "# --8<--")):
+            output.append(line)
+            continue
+
+        match = INLINE_TAB_PATTERN.match(line)
+        if not match:
+            output.append(line)
+            continue
+
+        output.append(match.group("prefix").rstrip())
+        output.append("")
+        output.append(match.group("header"))
+
+    result = "\n".join(output)
+    if text.endswith("\n"):
+        result += "\n"
+    return result
+
+
 def normalize_comment_tails(text: str) -> str:
     lines = text.splitlines()
     output: list[str] = []
@@ -1155,6 +1201,7 @@ def normalize_merged_table_lines(text: str) -> str:
 
 def normalize_post_translation_structure(text: str) -> str:
     normalized = normalize_merged_tab_blocks(text)
+    normalized = normalize_inline_tab_headers(normalized)
     normalized = normalize_comment_tails(normalized)
     normalized = normalize_stray_fence_lines(normalized)
     normalized = normalize_merged_heading_lines(normalized)
@@ -1727,6 +1774,17 @@ def audit_markdown_file(path: Path) -> list[AuditFinding]:
                     line=index,
                     kind="merged_tab",
                     message="Tab 标题和后续内容粘连在同一行",
+                    excerpt=stripped,
+                )
+            )
+
+        if INLINE_TAB_PATTERN.match(line) and not stripped.startswith("==="):
+            findings.append(
+                AuditFinding(
+                    path=path.relative_to(ROOT).as_posix(),
+                    line=index,
+                    kind="inline_tab",
+                    message="正文和 tab 标题粘连在同一行",
                     excerpt=stripped,
                 )
             )

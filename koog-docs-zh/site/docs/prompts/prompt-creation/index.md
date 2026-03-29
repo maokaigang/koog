@@ -85,7 +85,9 @@ Kotlin DSL 和 Java 构建器 API 支持以下类型的消息，每种消息对�
 
 ### 用户消息 { #user-messages }
 
-用户消息表示来自用户的输入。要创建用户消息，请将字符串作为参数提供给 `user()` Kotlin 函数或 Java 方法：=== "Kotlin"
+用户消息表示来自用户的输入。要创建用户消息，请将字符串作为参数提供给 `user()` Kotlin 函数或 Java 方法：
+
+=== "Kotlin"
 
     ```kotlin
     val prompt = prompt("user_message") {
