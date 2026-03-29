@@ -12,20 +12,10 @@ EventHandler 功能允许您挂钩到各种智能体事件。它作为一种事�
 - 支持错误处理和恢复。
 - 便于工具调用跟踪和结果处理。
 
-<!--## Key components
-
-The EventHandler entity consists of five main handler types:
-
-- Initialization handler that executes at the initialization of an agent run
-- Result handler that processes successful results from agent operations
-- Error handler that handles exceptions and errors that occur during execution
-- Tool call listener that notifies when a tool is about to be invoked
-- Tool result listener that processes the results after a tool has been called-->
-
 ### 安装与配置 { #installation-and-configuration }
 
 EventHandler 功能通过 `EventHandler` 类与智能体工作流集成，
-该类提供了为不同智能体事件注册回调的方法，并可以作为功能安装在智能体配置中。详情请参阅 [API 参考](api:agents-features-event-handler::ai.koog.agents.features.eventHandler.feature.EventHandler)。
+该类提供了为不同智能体事件注册回调的方法，并可以作为功能安装在智能体配置中。详情请参阅 `EventHandler` 的 API 文档。
 
 要为智能体安装该功能并配置事件处理器，请执行以下操作：
 
@@ -65,7 +55,7 @@ EventHandler 功能通过 `EventHandler` 类与智能体工作流集成，
         .build();
     ```
 
-有关事件处理器配置的更多详细信息，请参阅 [API 参考](api:agents-features-event-handler::ai.koog.agents.features.eventHandler.feature.EventHandlerConfig)。
+有关事件处理器配置的更多详细信息，请参阅 `EventHandlerConfig` 的 API 文档。
 
 您也可以在创建智能体时使用 `handleEvents` 扩展函数来设置事件处理器。
 此函数同样会安装事件处理器功能并为智能体配置事件处理器。示例如下：

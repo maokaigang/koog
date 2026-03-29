@@ -402,7 +402,6 @@ val agent = AIAgent(
 
 ### 运行基础智能体 { #running-the-basic-agent }
 
-
 ```kotlin
 import kotlinx.coroutines.runBlocking
 
@@ -467,10 +466,7 @@ runBlocking {
       a b c d e f g h
     -----------------
 
-
-
     执行被中断
-
 
 该基础智能体自主对弈，自动执行走子。对局输出展示了AI自我对弈时的走子序列与棋盘状态。
 
@@ -479,7 +475,6 @@ runBlocking {
 后续章节将展示更复杂的实现方式，用户可通过从AI生成的多个走法中选择来参与AI的决策过程。
 
 ### 自定义选择策略 { #custom-choice-selection-strategy }
-
 
 ```kotlin
 import ai.koog.agents.core.feature.choice.ChoiceSelectionStrategy
@@ -542,7 +537,6 @@ class AskUserChoiceSelectionStrategy(
 
 ### 集成选择机制的增强策略 { #enhanced-strategy-with-choice-selection }
 
-
 ```kotlin
 inline fun <reified T> AIAgentSubgraphBuilderBase<*, *>.nodeTrimHistory(
     name: String? = null
@@ -583,7 +577,6 @@ val askChoiceStrategy = AskUserChoiceSelectionStrategy(promptShowToUser = { prom
 })
 ```
 
-
 ```kotlin
 val promptExecutor = PromptExecutorWithChoiceSelection(baseExecutor, askChoiceStrategy)
 ```
@@ -593,8 +586,9 @@ val promptExecutor = PromptExecutorWithChoiceSelection(baseExecutor, askChoiceSt
 **架构调整：**
 - **封装执行器**：`PromptExecutorWithChoiceSelection` 为任意基础执行器添加选择功能
 - **上下文感知显示**：展示最近工具调用内容而非完整提示
-- **更高温度参数**：提升至1.0以生成更多样化的走法选项### 高级策略：手动选择
+- **更高温度参数**：提升至1.0以生成更多样化的走法选项#
 
+## 高级策略：手动选择
 
 ```kotlin
 val game = ChessGame()
@@ -637,7 +631,6 @@ val agent = AIAgent(
 
 ### 运行交互式智能体 { #advanced-strategy-manual-choice-selection }
 
-
 ```kotlin
 println("Chess Game started!")
 
@@ -649,12 +642,12 @@ runBlocking {
 ```
 
     国际象棋游戏开始！
-    
+
     可用的 LLM 选项
     选项 1: [Call(id=call_K46Upz7XoBIG5RchDh7bZE8F, tool=move, content={"notation": "p-e2-e4"}, metaInfo=ResponseMetaInfo(timestamp=2025-08-18T21:17:40.368252Z, totalTokensCount=773, inputTokensCount=315, outputTokensCount=458, additionalInfo={}))]
     选项 2: [Call(id=call_zJ6OhoCHrVHUNnKaxZkOhwoU, tool=move, content={"notation": "p-e2-e4"}, metaInfo=ResponseMetaInfo(timestamp=2025-08-18T21:17:40.368252Z, totalTokensCount=773, inputTokensCount=315, outputTokensCount=458, additionalInfo={}))]
     选项 3: [Call(id=call_nwX6ZMJ3F5AxiNUypYlI4BH4, tool=move, content={"notation": "p-e2-e4"}, metaInfo=ResponseMetaInfo(timestamp=2025-08-18T21:17:40.368252Z, totalTokensCount=773, inputTokensCount=315, outputTokensCount=458, additionalInfo={}))]
-    请选择一个选项。输入 1 到 3 之间的数字： 
+    请选择一个选项。输入 1 到 3 之间的数字：
     8 r n b q k b n r
     7 p p p p p p p p
     6 * * * * * * * *
@@ -665,12 +658,12 @@ runBlocking {
     1 R N B Q K B N R
       a b c d e f g h
     -----------------
-    
+
     可用的 LLM 选项
     选项 1: [Call(id=call_2V93GXOcIe0fAjUAIFEk9h5S, tool=move, content={"notation": "p-e7-e5"}, metaInfo=ResponseMetaInfo(timestamp=2025-08-18T21:17:47.949303Z, totalTokensCount=1301, inputTokensCount=341, outputTokensCount=960, additionalInfo={}))]
     选项 2: [Call(id=call_INM59xRzKMFC1w8UAV74l9e1, tool=move, content={"notation": "p-e7-e5"}, metaInfo=ResponseMetaInfo(timestamp=2025-08-18T21:17:47.949303Z, totalTokensCount=1301, inputTokensCount=341, outputTokensCount=960, additionalInfo={}))]
     选项 3: [Call(id=call_r4QoiTwn0F3jizepHH5ia8BU, tool=move, content={"notation": "p-e7-e5"}, metaInfo=ResponseMetaInfo(timestamp=2025-08-18T21:17:47.949303Z, totalTokensCount=1301, inputTokensCount=341, outputTokensCount=960, additionalInfo={}))]
-    请选择一个选项。输入 1 到 3 之间的数字： 
+    请选择一个选项。输入 1 到 3 之间的数字：
     8 r n b q k b n r
     7 p p p p * p p p
     6 * * * * * * * *
@@ -680,23 +673,23 @@ runBlocking {
     2 P P P P * P P P
     1 R N B Q K B N R
       a b c d e f g h
-    -----------------可用的 LLM 选项  
-选项 1: [Call(id=call_f9XTizn41svcrtvnmkCfpSUQ, tool=move, content={"notation": "n-g1-f3"}, metaInfo=ResponseMetaInfo(timestamp=2025-08-18T21:17:55.467712Z, totalTokensCount=917, inputTokensCount=341, outputTokensCount=576, additionalInfo={}))]  
-选项 2: [Call(id=call_c0Dfce5RcSbN3cOOm5ESYriK, tool=move, content={"notation": "n-g1-f3"}, metaInfo=ResponseMetaInfo(timestamp=2025-08-18T21:17:55.467712Z, totalTokensCount=917, inputTokensCount=341, outputTokensCount=576, additionalInfo={}))]  
-选项 3: [Call(id=call_Lr4Mdro1iolh0fDyAwZsutrW, tool=move, content={"notation": "n-g1-f3"}, metaInfo=ResponseMetaInfo(timestamp=2025-08-18T21:17:55.467712Z, totalTokensCount=917, inputTokensCount=341, outputTokensCount=576, additionalInfo={}))]  
-请选择一个选项。输入 1 到 3 之间的数字：  
-8 r n b q k b n r  
-7 p p p p * p p p  
-6 * * * * * * * *  
-5 * * * * p * * *  
-4 * * * * P * * *  
-3 * * * * * N * *  
-2 P P P P * P P P  
-1 R N B Q K B * R  
-  a b c d e f g h  
------------------  
+    -----------------可用的 LLM 选项
+选项 1: [Call(id=call_f9XTizn41svcrtvnmkCfpSUQ, tool=move, content={"notation": "n-g1-f3"}, metaInfo=ResponseMetaInfo(timestamp=2025-08-18T21:17:55.467712Z, totalTokensCount=917, inputTokensCount=341, outputTokensCount=576, additionalInfo={}))]
+选项 2: [Call(id=call_c0Dfce5RcSbN3cOOm5ESYriK, tool=move, content={"notation": "n-g1-f3"}, metaInfo=ResponseMetaInfo(timestamp=2025-08-18T21:17:55.467712Z, totalTokensCount=917, inputTokensCount=341, outputTokensCount=576, additionalInfo={}))]
+选项 3: [Call(id=call_Lr4Mdro1iolh0fDyAwZsutrW, tool=move, content={"notation": "n-g1-f3"}, metaInfo=ResponseMetaInfo(timestamp=2025-08-18T21:17:55.467712Z, totalTokensCount=917, inputTokensCount=341, outputTokensCount=576, additionalInfo={}))]
+请选择一个选项。输入 1 到 3 之间的数字：
+8 r n b q k b n r
+7 p p p p * p p p
+6 * * * * * * * *
+5 * * * * p * * *
+4 * * * * P * * *
+3 * * * * * N * *
+2 P P P P * P P P
+1 R N B Q K B * R
+  a b c d e f g h
+-----------------
 
-执行被中断  
+执行被中断
 
 ```kotlin
 import ai.koog.agents.core.feature.choice.nodeLLMSendResultsMultipleChoices
@@ -732,7 +725,7 @@ val strategy = strategy<String, String>("chess_strategy") {
     edge(nodeSelectLLMChoice forwardTo nodeFinish transformed { it.first() } onAssistantMessage { true })
     edge(nodeSelectLLMChoice forwardTo nodeExecuteTool transformed { it.first() } onToolCall { true })
 }
-```  
+```
 
 ```kotlin
 val game = ChessGame()
@@ -755,7 +748,7 @@ val agent = AIAgent(
     maxIterations = 200,
     numberOfChoices = 3,
 )
-```  
+```
 
 ```kotlin
 println("Chess Game started!")
@@ -765,91 +758,91 @@ val initialMessage = "Starting position is ${game.getBoard()}. White to move!"
 runBlocking {
     agent.run(initialMessage)
 }
-```  
+```
 
-国际象棋游戏开始！  
-8 r n b q k b n r  
-7 p p p p p p p p  
-6 * * * * * * * *  
-5 * * * * * * * *  
-4 * * * * P * * *  
-3 * * * * * * * *  
-2 P P P P * P P P  
-1 R N B Q K B N R  
-  a b c d e f g h  
------------------  
+国际象棋游戏开始！
+8 r n b q k b n r
+7 p p p p p p p p
+6 * * * * * * * *
+5 * * * * * * * *
+4 * * * * P * * *
+3 * * * * * * * *
+2 P P P P * P P P
+1 R N B Q K B N R
+  a b c d e f g h
+-----------------
 
-可用的 LLM 选项  
-选项 1: [Call(id=call_gqMIar0z11CyUl5nup3zbutj, tool=move, content={"notation": "p-e7-e5"}, metaInfo=ResponseMetaInfo(timestamp=2025-08-18T21:18:17.313548Z, totalTokensCount=917, inputTokensCount=341, outputTokensCount=576, additionalInfo={}))]  
-选项 2: [Call(id=call_6niUGnZPPJILRFODIlJsCKax, tool=move, content={"notation": "p-e7-e5"}, metaInfo=ResponseMetaInfo(timestamp=2025-08-18T21:18:17.313548Z, totalTokensCount=917, inputTokensCount=341, outputTokensCount=576, additionalInfo={}))]  
-选项 3: [Call(id=call_q1b8ZmIBph0EoVaU3Ic9A09j, tool=move, content={"notation": "p-e7-e5"}, metaInfo=ResponseMetaInfo(timestamp=2025-08-18T21:18:17.313548Z, totalTokensCount=917, inputTokensCount=341, outputTokensCount=576, additionalInfo={}))]  
-请选择一个选项。输入 1 到 3 之间的数字：  
-8 r n b q k b n r  
-7 p p p p * p p p  
-6 * * * * * * * *  
-5 * * * * p * * *  
-4 * * * * P * * *  
-3 * * * * * * * *  
-2 P P P P * P P P  
-1 R N B Q K B N R  
-  a b c d e f g h  
------------------可用的 LLM 选项  
-选项 1: [Call(id=call_pdBIX7MVi82MyWwawTm1Q2ef, tool=move, content={"notation": "n-g1-f3"}, metaInfo=ResponseMetaInfo(timestamp=2025-08-18T21:18:24.505344Z, totalTokensCount=1237, inputTokensCount=341, outputTokensCount=896, additionalInfo={}))]  
-选项 2: [Call(id=call_oygsPHaiAW5OM6pxhXhtazgp, tool=move, content={"notation": "n-g1-f3"}, metaInfo=ResponseMetaInfo(timestamp=2025-08-18T21:18:24.505344Z, totalTokensCount=1237, inputTokensCount=341, outputTokensCount=896, additionalInfo={}))]  
-选项 3: [Call(id=call_GJTEsZ8J8cqOKZW4Tx54RqCh, tool=move, content={"notation": "n-g1-f3"}, metaInfo=ResponseMetaInfo(timestamp=2025-08-18T21:18:24.505344Z, totalTokensCount=1237, inputTokensCount=341, outputTokensCount=896, additionalInfo={}))]  
-请选择一个选项。输入 1 到 3 之间的数字：  
-8 r n b q k b n r  
-7 p p p p * p p p  
-6 * * * * * * * *  
-5 * * * * p * * *  
-4 * * * * P * * *  
-3 * * * * * N * *  
-2 P P P P * P P P  
-1 R N B Q K B * R  
-  a b c d e f g h  
------------------  
+可用的 LLM 选项
+选项 1: [Call(id=call_gqMIar0z11CyUl5nup3zbutj, tool=move, content={"notation": "p-e7-e5"}, metaInfo=ResponseMetaInfo(timestamp=2025-08-18T21:18:17.313548Z, totalTokensCount=917, inputTokensCount=341, outputTokensCount=576, additionalInfo={}))]
+选项 2: [Call(id=call_6niUGnZPPJILRFODIlJsCKax, tool=move, content={"notation": "p-e7-e5"}, metaInfo=ResponseMetaInfo(timestamp=2025-08-18T21:18:17.313548Z, totalTokensCount=917, inputTokensCount=341, outputTokensCount=576, additionalInfo={}))]
+选项 3: [Call(id=call_q1b8ZmIBph0EoVaU3Ic9A09j, tool=move, content={"notation": "p-e7-e5"}, metaInfo=ResponseMetaInfo(timestamp=2025-08-18T21:18:17.313548Z, totalTokensCount=917, inputTokensCount=341, outputTokensCount=576, additionalInfo={}))]
+请选择一个选项。输入 1 到 3 之间的数字：
+8 r n b q k b n r
+7 p p p p * p p p
+6 * * * * * * * *
+5 * * * * p * * *
+4 * * * * P * * *
+3 * * * * * * * *
+2 P P P P * P P P
+1 R N B Q K B N R
+  a b c d e f g h
+-----------------可用的 LLM 选项
+选项 1: [Call(id=call_pdBIX7MVi82MyWwawTm1Q2ef, tool=move, content={"notation": "n-g1-f3"}, metaInfo=ResponseMetaInfo(timestamp=2025-08-18T21:18:24.505344Z, totalTokensCount=1237, inputTokensCount=341, outputTokensCount=896, additionalInfo={}))]
+选项 2: [Call(id=call_oygsPHaiAW5OM6pxhXhtazgp, tool=move, content={"notation": "n-g1-f3"}, metaInfo=ResponseMetaInfo(timestamp=2025-08-18T21:18:24.505344Z, totalTokensCount=1237, inputTokensCount=341, outputTokensCount=896, additionalInfo={}))]
+选项 3: [Call(id=call_GJTEsZ8J8cqOKZW4Tx54RqCh, tool=move, content={"notation": "n-g1-f3"}, metaInfo=ResponseMetaInfo(timestamp=2025-08-18T21:18:24.505344Z, totalTokensCount=1237, inputTokensCount=341, outputTokensCount=896, additionalInfo={}))]
+请选择一个选项。输入 1 到 3 之间的数字：
+8 r n b q k b n r
+7 p p p p * p p p
+6 * * * * * * * *
+5 * * * * p * * *
+4 * * * * P * * *
+3 * * * * * N * *
+2 P P P P * P P P
+1 R N B Q K B * R
+  a b c d e f g h
+-----------------
 
-可用的 LLM 选项  
-选项 1: [Call(id=call_5C7HdlTU4n3KdXcyNogE4rGb, tool=move, content={"notation": "n-g8-f6"}, metaInfo=ResponseMetaInfo(timestamp=2025-08-18T21:18:34.646667Z, totalTokensCount=1621, inputTokensCount=341, outputTokensCount=1280, additionalInfo={}))]  
-选项 2: [Call(id=call_EjCcyeMLQ88wMa5yh3vmeJ2w, tool=move, content={"notation": "n-g8-f6"}, metaInfo=ResponseMetaInfo(timestamp=2025-08-18T21:18:34.646667Z, totalTokensCount=1621, inputTokensCount=341, outputTokensCount=1280, additionalInfo={}))]  
-选项 3: [Call(id=call_NBMMSwmFIa8M6zvfbPw85NKh, tool=move, content={"notation": "n-g8-f6"}, metaInfo=ResponseMetaInfo(timestamp=2025-08-18T21:18:34.646667Z, totalTokensCount=1621, inputTokensCount=341, outputTokensCount=1280, additionalInfo={}))]  
-请选择一个选项。输入 1 到 3 之间的数字：  
-8 r n b q k b * r  
-7 p p p p * p p p  
-6 * * * * * n * *  
-5 * * * * p * * *  
-4 * * * * P * * *  
-3 * * * * * N * *  
-2 P P P P * P P P  
-1 R N B Q K B * R  
-  a b c d e f g h  
------------------  
+可用的 LLM 选项
+选项 1: [Call(id=call_5C7HdlTU4n3KdXcyNogE4rGb, tool=move, content={"notation": "n-g8-f6"}, metaInfo=ResponseMetaInfo(timestamp=2025-08-18T21:18:34.646667Z, totalTokensCount=1621, inputTokensCount=341, outputTokensCount=1280, additionalInfo={}))]
+选项 2: [Call(id=call_EjCcyeMLQ88wMa5yh3vmeJ2w, tool=move, content={"notation": "n-g8-f6"}, metaInfo=ResponseMetaInfo(timestamp=2025-08-18T21:18:34.646667Z, totalTokensCount=1621, inputTokensCount=341, outputTokensCount=1280, additionalInfo={}))]
+选项 3: [Call(id=call_NBMMSwmFIa8M6zvfbPw85NKh, tool=move, content={"notation": "n-g8-f6"}, metaInfo=ResponseMetaInfo(timestamp=2025-08-18T21:18:34.646667Z, totalTokensCount=1621, inputTokensCount=341, outputTokensCount=1280, additionalInfo={}))]
+请选择一个选项。输入 1 到 3 之间的数字：
+8 r n b q k b * r
+7 p p p p * p p p
+6 * * * * * n * *
+5 * * * * p * * *
+4 * * * * P * * *
+3 * * * * * N * *
+2 P P P P * P P P
+1 R N B Q K B * R
+  a b c d e f g h
+-----------------
 
-执行被中断  
+执行被中断
 
-交互式示例展示了用户如何引导 AI 的决策过程。在输出中，你可以看到：  
+交互式示例展示了用户如何引导 AI 的决策过程。在输出中，你可以看到：
 
-1. **多个选项**：AI 生成 3 个不同的走法选项  
-2. **用户选择**：用户输入 1-3 的数字来选择偏好的走法  
-3. **游戏继续**：执行选定的走法，游戏继续进行  
+1. **多个选项**：AI 生成 3 个不同的走法选项
+2. **用户选择**：用户输入 1-3 的数字来选择偏好的走法
+3. **游戏继续**：执行选定的走法，游戏继续进行
 
-## 结论  
+## 结论
 
-本教程展示了使用 Koog 框架构建智能代理的几个关键方面：  
+本教程展示了使用 Koog 框架构建智能代理的几个关键方面：
 
-### 关键要点  
+### 关键要点
 
-1. **领域建模**：结构良好的数据模型对于复杂应用至关重要  
-2. **工具集成**：自定义工具使代理能够有效地与外部系统交互  
-3. **内存管理**：策略性的历史记录修剪优化了长交互的性能  
-4. **策略图**：Koog 的基于图的方法提供了灵活的控制流  
-5. **交互式 AI**：选项选择实现了人机协作和透明度  
+1. **领域建模**：结构良好的数据模型对于复杂应用至关重要
+2. **工具集成**：自定义工具使代理能够有效地与外部系统交互
+3. **内存管理**：策略性的历史记录修剪优化了长交互的性能
+4. **策略图**：Koog 的基于图的方法提供了灵活的控制流
+5. **交互式 AI**：选项选择实现了人机协作和透明度
 
 ### 探索的框架特性 { #key-takeaways }
 
-- ✅ 自定义工具创建与集成  
-- ✅ 代理策略设计与基于图的控制流  
-- ✅ 内存优化技术  
-- ✅ 交互式选项选择  
-- ✅ 多 LLM 响应处理  
+- ✅ 自定义工具创建与集成
+- ✅ 代理策略设计与基于图的控制流
+- ✅ 内存优化技术
+- ✅ 交互式选项选择
+- ✅ 多 LLM 响应处理
 - ✅ 有状态游戏管理Koog框架为构建复杂的人工智能代理提供了基础，这些代理能够处理复杂的多轮交互，同时保持高效性和透明度。

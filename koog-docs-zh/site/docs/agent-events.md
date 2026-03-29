@@ -1,4 +1,4 @@
-<!-- koog-zh-meta: {"last_synced_at": "2026-03-28T12:53:30+00:00", "source_path": "agent-events.md", "source_sha256": "bcb7d32435432fdd5a8fabc5250ca08cd3c4c250bb08fff80d263adc7b179c4c", "source_tag": "0.7.3", "translation_status": "changed"} -->
+<!-- koog-zh-meta: {"last_synced_at": "2026-03-29T03:04:08+00:00", "source_path": "agent-events.md", "source_sha256": "bcb7d32435432fdd5a8fabc5250ca08cd3c4c250bb08fff80d263adc7b179c4c", "source_tag": "0.7.3", "translation_status": "changed"} -->
 # Agent 事件 { #agent-events }
 
 Agent 事件是作为 Agent 工作流一部分发生的动作或交互。包括：
@@ -51,7 +51,9 @@ Koog 提供了可在自定义消息处理器中使用的预定义事件类型。
 
 #### AgentExecutionFailedEvent { #agentexecutionfailedevent }
 
-表示在 Agent 运行期间发生错误。包含以下字段：| 名称            | 数据类型           | 必填 | 默认值 | 描述                                                                                                     |
+表示在 Agent 运行期间发生错误。包含以下字段：
+
+| 名称            | 数据类型           | 必填 | 默认值 | 描述                                                                                                     |
 |-----------------|---------------------|----------|---------|-----------------------------------------------------------------------------------------------------------------|
 | `eventId`       | String              | 是      |         | 事件或事件组的唯一标识符。                                                                                         |
 | `executionInfo` | AgentExecutionInfo  | 是      |         | 提供与此事件关联的执行上下文信息。                                 |
@@ -79,7 +81,9 @@ Koog 提供了可在自定义消息处理器中使用的预定义事件类型。
 | `cause`      | String    | 否       | null    | 错误原因（如果可用）。                            |
 
 <a id="agentexecutioninfo"></a>
-`AgentExecutionInfo` 类提供执行路径的上下文信息，支持追踪代理运行内的嵌套执行上下文。包含以下字段：| 名称       | 数据类型           | 必填 | 默认值 | 描述                                                                                    |
+`AgentExecutionInfo` 类提供执行路径的上下文信息，支持追踪代理运行内的嵌套执行上下文。包含以下字段：
+
+| 名称       | 数据类型           | 必填 | 默认值 | 描述                                                                                    |
 |------------|---------------------|----------|---------|------------------------------------------------------------------------------------------------|
 | `parent`   | AgentExecutionInfo  | 否       | null    | 对父执行上下文的引用。若为 null，则表示根执行层级。  |
 | `partName` | String              | 是      |         | 表示当前执行部分或片段的名称字符串。                |
@@ -111,7 +115,9 @@ Koog 提供了可在自定义消息处理器中使用的预定义事件类型。
 
 #### StrategyCompletedEvent { #strategycompletedevent }
 
-表示策略运行结束。包含以下字段：| 名称            | 数据类型           | 必填 | 默认值 | 描述                                                                 |
+表示策略运行结束。包含以下字段：
+
+| 名称            | 数据类型           | 必填 | 默认值 | 描述                                                                 |
 |-----------------|---------------------|----------|---------|----------------------------------------------------------------------------|
 | `eventId`       | String              | 是       |         | 事件或事件组的唯一标识符。                                                 |
 | `executionInfo` | AgentExecutionInfo  | 是       |         | 提供与此事件关联的执行上下文信息。                                         |
@@ -144,7 +150,9 @@ Koog 提供了可在自定义消息处理器中使用的预定义事件类型。
 | `runId`         | String              | 是       |         | 策略运行的唯一标识符。                                                     |
 | `nodeName`      | String              | 是       |         | 结束运行的节点名称。                                                       |
 | `input`         | JsonElement         | 否       | null    | 节点的输入值。                                                             |
-| `output`        | JsonElement         | 否       | null    | 节点产生的输出值。                                                         |#### NodeExecutionFailedEvent
+| `output`        | JsonElement         | 否       | null    | 节点产生的输出值。                                                         |
+
+#### NodeExecutionFailedEvent
 
 表示节点运行期间发生的错误。包含以下字段：
 
@@ -173,7 +181,9 @@ Koog 提供了可在自定义消息处理器中使用的预定义事件类型。
 
 #### SubgraphExecutionCompletedEvent { #subgraphexecutionstartingevent }
 
-表示子图运行的结束。包含以下字段：| 名称            | 数据类型           | 必填 | 默认值 | 描述                                                                 |
+表示子图运行的结束。包含以下字段：
+
+| 名称            | 数据类型           | 必填 | 默认值 | 描述                                                                 |
 |-----------------|---------------------|----------|---------|----------------------------------------------------------------------------|
 | `eventId`       | String              | 是      |         | 事件或事件组的唯一标识符。                                                    |
 | `executionInfo` | AgentExecutionInfo  | 是      |         | 提供与此事件关联的执行上下文信息。                                             |
@@ -199,7 +209,9 @@ Koog 提供了可在自定义消息处理器中使用的预定义事件类型。
 
 #### LLMCallStartingEvent
 
-表示 LLM 调用的开始。包含以下字段：| 名称            | 数据类型           | 必填 | 默认值 | 描述                                                                        |
+表示 LLM 调用的开始。包含以下字段：
+
+| 名称            | 数据类型           | 必填 | 默认值 | 描述                                                                        |
 |-----------------|---------------------|----------|---------|------------------------------------------------------------------------------------|
 | `eventId`       | String              | 是      |         | 事件或事件组的唯一标识符。                            |
 | `executionInfo` | AgentExecutionInfo  | 是      |         | 提供与此事件关联的执行上下文信息。    |
@@ -222,7 +234,7 @@ Koog 提供了可在自定义消息处理器中使用的预定义事件类型。
 
 | 名称              | 数据类型 | 必填 | 默认值 | 描述                                                              |
 |-------------------|-----------|----------|---------|--------------------------------------------------------------------------|
-| `provider`        | String    | 是      |         | 提供商标识符（例如 "openai"、"google"、"anthropic"）。         |
+| `provider` | String | 是 |  | 提供商标识符（例如 "openai"、"google"、"anthropic"）。 |
 | `model`           | String    | 是      |         | 模型标识符（例如 "gpt-4"、"claude-3"）。                        |
 | `displayName`     | String    | 否       | null    | 模型的可选人类可读显示名称。                      |
 | `contextLength`   | Long      | 否       | null    | 模型可处理的最大令牌数。                          |
@@ -259,7 +271,9 @@ Koog 提供了可在自定义消息处理器中使用的预定义事件类型。
 
 #### LLMStreamingFrameReceivedEvent { #llmstreamingstartingevent }
 
-表示从 LLM 接收到的流式数据帧。包含以下字段：| 名称            | 数据类型           | 必填 | 默认值 | 描述                                                                     |
+表示从 LLM 接收到的流式数据帧。包含以下字段：
+
+| 名称            | 数据类型           | 必填 | 默认值 | 描述                                                                     |
 |-----------------|---------------------|----------|---------|---------------------------------------------------------------------------------|
 | `eventId`       | String              | 是      |         | 事件或事件组的唯一标识符。                         |
 | `executionInfo` | AgentExecutionInfo  | 是      |         | 提供与此事件关联的执行上下文信息。 |
@@ -283,7 +297,9 @@ Koog 提供了可在自定义消息处理器中使用的预定义事件类型。
 
 #### LLMStreamingCompletedEvent { #llmstreamingfailedevent }
 
-表示 LLM 流式调用的结束。包含以下字段：| 名称            | 数据类型           | 必填 | 默认值 | 描述                                                                     |
+表示 LLM 流式调用的结束。包含以下字段：
+
+| 名称            | 数据类型           | 必填 | 默认值 | 描述                                                                     |
 |-----------------|---------------------|----------|---------|---------------------------------------------------------------------------------|
 | `eventId`       | 字符串              | 是      |         | 事件或事件组的唯一标识符。                         |
 | `executionInfo` | AgentExecutionInfo  | 是      |         | 提供与此事件关联的执行上下文信息。 |
@@ -309,7 +325,9 @@ Koog 提供了可在自定义消息处理器中使用的预定义事件类型。
 
 #### ToolValidationFailedEvent { #toolcallstartingevent }
 
-表示工具调用期间发生验证错误的事件。包含以下字段：| 名称              | 数据类型           | 必填     | 默认值  | 描述                                                                       |
+表示工具调用期间发生验证错误的事件。包含以下字段：
+
+| 名称              | 数据类型           | 必填     | 默认值  | 描述                                                                       |
 |-------------------|---------------------|----------|---------|----------------------------------------------------------------------------|
 | `eventId`         | String              | 是       |         | 事件或事件组的唯一标识符。                                                  |
 | `executionInfo`   | AgentExecutionInfo  | 是       |         | 提供与此事件关联的执行上下文信息。                                          |
@@ -323,7 +341,9 @@ Koog 提供了可在自定义消息处理器中使用的预定义事件类型。
 
 #### ToolCallFailedEvent { #toolvalidationfailedevent }
 
-表示工具执行失败。包含以下字段：| 名称              | 数据类型           | 必填     | 默认值  | 描述                                                                                                                     |
+表示工具执行失败。包含以下字段：
+
+| 名称              | 数据类型           | 必填     | 默认值  | 描述                                                                                                                     |
 |-------------------|---------------------|----------|---------|-------------------------------------------------------------------------------------------------------------------------|
 | `eventId`         | String              | 是       |         | 事件或事件组的唯一标识符。                                                                                               |
 | `executionInfo`   | AgentExecutionInfo  | 是       |         | 提供与此事件关联的执行上下文信息。                                                                                       |
@@ -336,7 +356,9 @@ Koog 提供了可在自定义消息处理器中使用的预定义事件类型。
 
 #### ToolCallCompletedEvent { #toolcallfailedevent }
 
-表示一个成功的工具调用并返回结果。包含以下字段：| 名称              | 数据类型           | 必填     | 默认值  | 描述                                                                       |
+表示一个成功的工具调用并返回结果。包含以下字段：
+
+| 名称              | 数据类型           | 必填     | 默认值  | 描述                                                                       |
 |-------------------|---------------------|----------|---------|----------------------------------------------------------------------------|
 | `eventId`         | String              | 是       |         | 事件或事件组的唯一标识符。                                                  |
 | `executionInfo`   | AgentExecutionInfo  | 是       |         | 提供与此事件关联的执行上下文信息。                                          |
@@ -360,11 +382,11 @@ Koog 提供了可在自定义消息处理器中使用的预定义事件类型。
     ```kotlin
     install(Tracing) {
         val fileWriter = TraceFeatureMessageFileWriter(
-            outputPath, 
+            outputPath,
             { path: Path -> SystemFileSystem.sink(path).buffered() }
         )
         addMessageProcessor(fileWriter)
-        
+
         // Only trace LLM calls
         fileWriter.setMessageFilter { message ->
             message is LLMCallStartingEvent || message is LLMCallCompletedEvent
@@ -377,9 +399,9 @@ Koog 提供了可在自定义消息处理器中使用的预定义事件类型。
     ```java
     ```
 
-### Can I use multiple message processors?
+### 我可以使用多个消息处理器吗？ { #can-i-use-multiple-message-processors }
 
-Yes, you can add multiple message processors to trace to different destinations simultaneously:
+是的，您可以添加多个消息处理器以同时跟踪不同的目的地：
 
 === "Kotlin"
 
@@ -396,9 +418,9 @@ Yes, you can add multiple message processors to trace to different destinations 
     ```java
     ```
 
-### How can I create a custom message processor?
+### 如何创建自定义消息处理器？ { #how-can-i-create-a-custom-message-processor }
 
-Implement the `FeatureMessageProcessor` interface:
+实现 `FeatureMessageProcessor` 接口：
 
 === "Kotlin"
 
@@ -410,7 +432,7 @@ Implement the `FeatureMessageProcessor` interface:
 
         override val isOpen: StateFlow<Boolean>
             get() = _isOpen.asStateFlow()
-        
+
         override suspend fun processMessage(message: FeatureMessage) {
             // Custom processing logic
             when (message) {
@@ -419,9 +441,9 @@ Implement the `FeatureMessageProcessor` interface:
                 }
 
                 is LLMCallCompletedEvent -> {
-                    // Process LLM call end event 
+                    // Process LLM call end event
                 }
-                // Handle other event types 
+                // Handle other event types
             }
         }
 
@@ -441,4 +463,4 @@ Implement the `FeatureMessageProcessor` interface:
     ```java
     ```
 
-For more information about existing event types that can be handled by message processors, see [Predefined event types](#predefined-event-types).
+有关消息处理器可以处理的现有事件类型的更多信息，请参阅 [预定义事件类型](#predefined-event-types)。

@@ -160,7 +160,7 @@ GOAP 规划器围绕三个核心概念工作：
         public String draft = "";
         public boolean hasReview = false;
         public boolean isPublished = false;
-    
+
         public ContentState(String topic) {
             super(topic);
             this.topic = topic;
@@ -270,9 +270,92 @@ GOAP 规划器围绕三个核心概念工作：
         System.out.println("Final state: " + result);
     }
     ```
-    
 
-## Custom cost functions
+## 自定义成本函数 { #custom-cost-functions }
 
-As [A* search] uses cost as a factor in finding the optimal sequence of actions,
-you can define custom cost functions for actions and goals to guide the planner:
+由于 [A* 搜索] 会将成本作为寻找最优动作序列时的重要因素，
+你可以为动作和目标定义自定义成本函数，以引导规划器：
+
+=== "Kotlin"
+
+    ```kotlin
+    action(
+        name = "Expensive operation",
+        precondition = { true },
+        belief = { state -> state.copy(operationDone = true) },
+        cost = { state ->
+            // Dynamic cost based on state
+            if (state.hasOptimization) 1.0 else 10.0
+        }
+    ) { ctx, state ->
+        // Execute action
+        state.copy(operationDone = true)
+    }
+    ```
+
+=== "Java"
+
+    ```java
+    .action("Expensive operation", builder -> builder
+        .precondition(state -> true)
+        .belief(state -> state.copy(true))
+        .cost(state -> {
+            // Dynamic cost based on state
+            return state.hasOptimization ? 1.0 : 10.0;
+        })
+        .execute((context, state) -> {
+            // Execute action
+            return state.copy(true);
+        })
+    )
+    ```
+
+## 状态信念与实际执行的比较 { #state-beliefs-compared-to-actual-execution }
+
+GOAP 会区分“信念”（乐观预测）与“实际执行”这两个概念：
+
+- **规划信念**（`Belief`）：规划器认为将会发生什么，用于规划。
+- **实际执行**（`Execution`）：实际发生了什么，用于更新真实状态。
+
+这样一来，规划器可以基于预期结果制定计划，同时在执行阶段正确处理真实结果：
+
+=== "Kotlin"
+
+    ```kotlin
+    action(
+        name = "Attempt complex task",
+        precondition = { state -> !state.taskComplete },
+        belief = { state ->
+            // Optimistic belief: task will succeed
+            state.copy(taskComplete = true)
+        },
+        cost = { 5.0 }
+    ) { ctx, state ->
+        // Actual execution might fail or have different results
+        val success = performComplexTask()
+        state.copy(
+            taskComplete = success,
+            attempts = state.attempts + 1
+        )
+    }
+    ```
+
+=== "Java"
+
+    ```java
+    .action("Attempt complex task", builder -> builder
+        .precondition(state -> !state.taskComplete)
+        .belief(state -> {
+            // Optimistic belief: task will succeed
+            return state.copy(true, state.attempts);
+        })
+        .cost(state -> 5.0)
+        .execute((context, state) -> {
+            // Actual execution might fail or have different results
+            boolean success = performComplexTask();
+            return state.copy(success, state.attempts + 1);
+        })
+    )
+    ```
+
+[A* search]: https://en.wikipedia.org/wiki/A*_search_algorithm

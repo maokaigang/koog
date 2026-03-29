@@ -1,4 +1,4 @@
-<!-- koog-zh-meta: {"last_synced_at": "2026-03-28T13:10:08+00:00", "source_path": "spring-ai-integration.md", "source_sha256": "466e66ad1e1d23402ea6f94bde7f97ee4aa123a9973312ef2ffec1e624e1779b", "source_tag": "0.7.3", "translation_status": "changed"} -->
+<!-- koog-zh-meta: {"last_synced_at": "2026-03-29T03:05:12+00:00", "source_path": "spring-ai-integration.md", "source_sha256": "466e66ad1e1d23402ea6f94bde7f97ee4aa123a9973312ef2ffec1e624e1779b", "source_tag": "0.7.3", "translation_status": "changed"} -->
 # Spring AI 集成 { #spring-ai-integration }
 
 Koog 提供了 Spring AI 集成启动器，将 Spring AI 的模型抽象与 Koog 智能体框架桥接起来。
@@ -8,7 +8,7 @@ Koog 提供了 Spring AI 集成启动器，将 Spring AI 的模型抽象与 Koog
 
 | | `koog-spring-boot-starter` | `koog-spring-ai` 启动器 |
 |---|---|---|
-| **LLM 传输** | Koog 自有的 HTTP 客户端（每个提供商一个：OpenAI、Anthropic、Google 等） | 委托给 Spring AI 的 `ChatModel` / `EmbeddingModel` —— 任何 Spring AI 支持的提供商均可自动工作 |
+| **LLM传输** | Koog自有的HTTP客户端每个（成功一个：OpenAI、Anthropic、Google等） | 委托给Spring AI的`ChatModel` / `EmbeddingModel`——任何Spring AI支持的职工护士自动工作 |
 | **配置** | 每个提供商的 `ai.koog.*` 属性 | 由 Spring AI 启动器管理的标准 `spring.ai.*` 属性 |
 | **适用场景** | 希望 Koog 直接管理 LLM 连接 | 已使用 Spring AI 进行模型访问，并希望在之上接入 Koog 的智能体编排功能 |
 
@@ -80,9 +80,11 @@ Koog 提供了 Spring AI 集成启动器，将 Spring AI 的模型抽象与 Koog
 - 适用于您所选提供商的Spring AI模型入门
 
 ### 可用提供商 { #available-providers }
-Anthropic, Azure OpenAI, Bedrock Converse, Deepseek, Google GenAI, HuggingFace, MiniMax, Mistral AI, OCI GenAI, Ollama, OpenAI, Vertex AI, 智谱AI
 
-### Configure
+当前支持的提供商包括：
+`Anthropic`、`Azure OpenAI`、`Bedrock Converse`、`DeepSeek`、`Google GenAI`、`HuggingFace`、`MiniMax`、`Mistral AI`、`OCI GenAI`、`Ollama`、`OpenAI`、`Vertex AI` 和 `智谱 AI`
+
+### 配置 { #configure }
 
 根据需要修改您的 Spring Boot 配置属性：
 

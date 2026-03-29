@@ -63,15 +63,15 @@
     System.out.println(result);
     ```
 
-The agent can produce the following output:
+代理可以生成以下输出：
 
 ```text
 The answer to 12 × 9 is 108.
 ```
 
-## Make sequential LLM calls
+## 进行顺序 LLM 调用 { #make-sequential-llm-calls }
 
-You can extend the previous strategy to make multiple sequential LLM calls:
+你可以扩展之前的策略，进行多次连续的LLM调用：
 
 === "Kotlin"
 
@@ -118,7 +118,7 @@ You can extend the previous strategy to make multiple sequential LLM calls:
         .build();
     ```
 
-The agent can produce the following output:
+代理可以生成以下输出：
 
 ```text
 To calculate the product of 12 and 9, we multiply these two numbers together.
@@ -126,18 +126,16 @@ To calculate the product of 12 and 9, we multiply these two numbers together.
 12 × 9 = **108**
 ```
 
-## Add tools
+## 添加工具 { #add-tools }
 
-In many cases, a functional agent needs to complete specific tasks,
-such as reading and writing data, calling APIs, or performing other deterministic operations.
-In Koog, you expose such capabilities as [tools](../tools-overview.md) and let the LLM decide when to call them.
+在许多情况下，一个功能型代理需要完成特定任务，例如读写数据、调用API或执行其他确定性操作。在Koog中，您将这些能力作为[工具](../tools-overview.md)公开，并让LLM决定何时调用它们。
 
-Here is what you need to do:
+以下是您需要完成的任务：
 
-1. Create an [annotation-based tool](../annotation-based-tools.md).
-2. Add it to a tool registry and pass the registry to the agent.
-3. Make sure the agent strategy can identify tool calls in LLM responses, execute the requested tools,
-   send their results back to the LLM, and repeat the process until there are no tool calls remaining.
+1. 创建一个[基于注解的工具](../annotation-based-tools.md)。
+2. 将其添加到工具注册表中，并将注册表传递给代理。
+3. 确保代理策略能够识别LLM响应中的工具调用，执行所请求的工具，
+   将结果发送回LLM，并重复此过程，直到没有剩余的工具调用。
 
 === "Kotlin"
 
@@ -240,7 +238,7 @@ Here is what you need to do:
     }
     ```
 
-The agent can produce the following output:
+代理可以生成以下输出：
 
 ```text
 Multiplying 3 and 4...
@@ -248,6 +246,6 @@ Multiplying 12 and 5...
 The result of multiplying 3 by 4 is 12. Multiplying 12 by 5 gives us a final answer of 60.
 ```
 
-## Next steps
+## 下一步 { #next-steps }
 
-- Learn how to create [graph-based agents](graph-based-agents.md)
+- 了解如何创建[基于图的智能体](graph-based-agents.md)

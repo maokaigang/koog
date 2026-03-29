@@ -40,25 +40,25 @@ AI 代理维护着包含用户消息、助手回复、工具调用和工具响�
     ```kotlin
     // Define that the history is too long if there are more than 100 messages
     private suspend fun AIAgentContext.historyIsTooLong(): Boolean = llm.readSession { prompt.messages.size > 100 }
-    
+
     val strategy = strategy<String, String>("execute-with-history-compression") {
         val callLLM by nodeLLMRequest()
         val executeTool by nodeExecuteTool()
         val sendToolResult by nodeLLMSendToolResult()
-    
+
         // Compress the LLM history and keep the current ReceivedToolResult for the next node
         val compressHistory by nodeLLMCompressHistory<ReceivedToolResult>()
-    
+
         edge(nodeStart forwardTo callLLM)
         edge(callLLM forwardTo nodeFinish onAssistantMessage { true })
         edge(callLLM forwardTo executeTool onToolCall { true })
-    
-        // Compress history after executing any tool if the history is too long 
+
+        // Compress history after executing any tool if the history is too long
         edge(executeTool forwardTo compressHistory onCondition { historyIsTooLong() })
         edge(compressHistory forwardTo sendToolResult)
         // Otherwise, proceed to the next LLM request
         edge(executeTool forwardTo sendToolResult onCondition { !historyIsTooLong() })
-    
+
         edge(sendToolResult forwardTo executeTool onToolCall { true })
         edge(sendToolResult forwardTo nodeFinish onAssistantMessage { true })
     }
@@ -154,7 +154,7 @@ AI 代理维护着包含用户消息、助手回复、工具调用和工具响�
         val makeTheDecision by subgraph<String, String> {
             // Some steps to make the decision based on the current compressed history and collected information
         }
-        
+
         nodeStart then collectInformation then compressHistory then makeTheDecision
     }
     ```
@@ -396,7 +396,7 @@ AI 代理维护着包含用户消息、助手回复、工具调用和工具响�
     ```
 
 === "Java"
-    
+
     ```java
     // Using RetrieveFactsFromHistory strategy to extract specific facts
     var compressHistory = AIAgentNode
@@ -434,7 +434,7 @@ AI 代理维护着包含用户消息、助手回复、工具调用和工具响�
         replaceHistoryWithTLDR(
             strategy = RetrieveFactsFromHistory(
                 Concept(
-                    keyword = "user_preferences", 
+                    keyword = "user_preferences",
                     // Description to the LLM -- what specifically to search for
                     description = "User's preferences for the recommendation system, including the preferred conversation style, theme in the application, etc.",
                     // LLM would search for multiple relevant facts related to this concept:
@@ -481,19 +481,19 @@ AI 代理维护着包含用户消息、助手回复、工具调用和工具响�
             // 1. Process the current history in llmSession.prompt.messages
             // 2. Create new compressed messages
             // 3. Update the prompt with the compressed messages
-    
+
             // Save original messages to preserve them
             val originalMessages = llmSession.prompt.messages
-            
+
             // Example implementation:
             val importantMessages = llmSession.prompt.messages.filter {
                 // Your custom filtering logic
                 it.content.contains("important")
             }.filterIsInstance<Message.Response>()
-            
+
             // Note: you can also make LLM requests using the `llmSession` and ask the LLM to do some job for you using, for example, `llmSession.requestLLMWithoutTools()`
             // Or you can change the current model: `llmSession.model = AnthropicModels.Opus_4_6` and ask some other LLM model -- but don't forget to change it back after
-    
+
             // Compose the prompt with the filtered messages
             val compressedMessages = composeMessageHistory(
                 originalMessages,

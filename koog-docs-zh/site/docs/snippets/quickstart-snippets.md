@@ -4,7 +4,6 @@ search:
 exclude: true
 ---
 
-
 # --8<-- [start:prerequisites]
 确保您的环境和项目满足以下要求：
 
@@ -43,7 +42,6 @@ exclude: true
     ```
 
 # --8<-- [end:dependencies]
-
 
 # --8<-- [start:api-key]
 从 LLM 提供商获取 API 密钥，或通过 Ollama 运行本地 LLM。

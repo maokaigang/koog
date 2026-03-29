@@ -19,7 +19,9 @@ Koog 为多个 JetBrains 产品提供支持，包括内部 AI 智能体。
 
 ## 开箱即用的高级解决方案 { #advanced-solutions-available-out-of-the-box }
 
-Koog 包含预构建、可组合的解决方案，以简化和加速智能体系统的开发，这使其区别于仅提供基础组件的框架：* **多种历史压缩策略。** Koog 内置了先进的策略来压缩和管理长对话，无需手动尝试不同方法。经过机器学习工程师测试和优化的提示词、技术和算法，让您可以依赖经过验证的方法来提升性能。有关压缩策略的更多详情，请参阅[历史压缩](https://docs.koog.ai/history-compression/)。要了解 Koog 在实际场景中如何处理压缩和上下文管理，请查看[这篇文章](https://blog.jetbrains.com/ai/2025/07/when-tool-calling-becomes-an-addiction-debugging-llm-patterns-in-koog/)。
+Koog 包含预构建、可组合的解决方案，以简化和加速智能体系统的开发，这使其区别于仅提供基础组件的框架：
+
+* **多种历史压缩策略。** Koog 内置了先进的策略来压缩和管理长对话，无需手动尝试不同方法。经过机器学习工程师测试和优化的提示词、技术和算法，让您可以依赖经过验证的方法来提升性能。有关压缩策略的更多详情，请参阅[历史压缩](https://docs.koog.ai/history-compression/)。要了解 Koog 在实际场景中如何处理压缩和上下文管理，请查看[这篇文章](https://blog.jetbrains.com/ai/2025/07/when-tool-calling-becomes-an-addiction-debugging-llm-patterns-in-koog/)。
 * **无缝的 LLM 切换。** 您可以随时将对话切换到不同的大型语言模型（LLM）及其新工具集，而不会丢失现有对话历史。Koog 会自动重写历史记录并处理不可用的工具，实现平滑过渡和自然的交互流程。
 * **高级持久化功能。** Koog 允许您恢复完整的智能体状态机，而不仅仅是聊天消息。这支持诸如检查点、故障恢复，甚至回滚到状态机执行的任意时间点等功能。
 * **健壮的重试组件。** Koog 包含一个重试机制，允许您将智能体系统中的任何操作集包装起来，并在满足可配置条件前进行重试。您可以提供反馈并调整每次尝试，以确保可靠的结果。如果 LLM 调用超时、工具未按预期工作或出现网络问题，Koog 能确保您的智能体保持韧性并有效运行，即使在临时故障期间也是如此。更多技术细节，请参阅[重试功能](https://docs.koog.ai/history-compression/)。
@@ -27,7 +29,9 @@ Koog 包含预构建、可组合的解决方案，以简化和加速智能体系
 
 ## 广泛集成、多平台支持、增强的可观测性 { #broad-integration-multiplatform-support-enhanced-observability }
 
-Koog 支持在各种平台和环境中开发和部署智能体应用：*  **多平台支持**。您可以将智能体应用部署到 JVM、JS、WasmJS、Android 和 iOS 目标平台。
+Koog 支持在各种平台和环境中开发和部署智能体应用：
+
+*  **多平台支持**。您可以将智能体应用部署到 JVM、JS、WasmJS、Android 和 iOS 目标平台。
 *  **广泛的 AI 集成**。Koog 集成了主流的 LLM 提供商，包括 OpenAI 和 Anthropic，以及企业级 AI 云如 Bedrock。同时支持本地模型，例如 Ollama。有关完整的可用提供商列表，请参阅 [LLM 提供商](https://docs.koog.ai/llm-providers/)。
 *  **OpenTelemetry 支持**。Koog 提供与流行可观测性提供商（如 [W&B Weave](https://wandb.ai/site/weave/) 和 [Langfuse](https://langfuse.com/)）的开箱即用集成，用于监控和调试 AI 应用。借助原生 OpenTelemetry 支持，您可以使用系统中已有的相同工具来追踪、记录和测量您的智能体。了解更多信息，请参阅 [OpenTelemetry](https://docs.koog.ai/opentelemetry-support/)。
 *  **Spring Boot 与 Ktor 集成**。Koog 与广泛使用的企业环境集成。

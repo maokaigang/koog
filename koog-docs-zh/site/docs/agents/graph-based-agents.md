@@ -40,23 +40,23 @@ graph TB
     subgraph nodeStart
         Input
     end
-    
+
     subgraph nodeFinish
         Output
     end
-    
+
     subgraph nodeSendInput
         llmRequest(Request LLM)
     end
-    
+
     subgraph nodeExecuteTool
         executeTool(Execute tool call)
     end
-    
+
     subgraph nodeSendToolResult
         sendToolResult(Request LLM)
     end
-    
+
     Input --String--> llmRequest
     llmRequest --Message.Response--> onToolCall{{onToolCall}}
     llmRequest --Message.Response--> onAssistantMessage{{onAssistantMessage}}
@@ -84,7 +84,7 @@ graph TB
         val nodeSendInput by nodeLLMRequest()
         val nodeExecuteTool by nodeExecuteTool()
         val nodeSendToolResult by nodeLLMSendToolResult()
-        
+
         edge(nodeStart forwardTo nodeSendInput)
         edge(nodeSendInput forwardTo nodeFinish onAssistantMessage { true })
         edge(nodeSendInput forwardTo nodeExecuteTool onToolCall { true })
@@ -107,7 +107,7 @@ graph TB
 
     calculatorAgentStrategy.edge(calculatorAgentStrategy.nodeStart, nodeSendInput);
     calculatorAgentStrategy.edge(AIAgentEdge.builder()
-        .from(nodeSendInput)   
+        .from(nodeSendInput)
         .to(calculatorAgentStrategy.nodeFinish)
         .onIsInstance(Message.Assistant.class)
         .transformed(Message.Assistant::getContent)
@@ -164,7 +164,7 @@ graph TB
         val nodeSendInput by nodeLLMRequest()
         val nodeExecuteTool by nodeExecuteTool()
         val nodeSendToolResult by nodeLLMSendToolResult()
-    
+
         edge(nodeStart forwardTo nodeSendInput)
         edge(nodeSendInput forwardTo nodeFinish onAssistantMessage { true })
         edge(nodeSendInput forwardTo nodeExecuteTool onToolCall { true })
@@ -172,13 +172,13 @@ graph TB
         edge(nodeSendToolResult forwardTo nodeFinish onAssistantMessage { true })
         edge(nodeSendToolResult forwardTo nodeExecuteTool onToolCall { true })
     }
-    
+
     val mathAgent = AIAgent(
         promptExecutor = simpleOllamaAIExecutor(),
         llmModel = OllamaModels.Meta.LLAMA_3_2,
         strategy = calculatorAgentStrategy
     )
-    
+
     fun main() = runBlocking {
         val result = mathAgent.run("Multiply 3 by 4, then multiply the result by 5, then add 10, then add 123.")
         println(result)
@@ -198,7 +198,7 @@ graph TB
 
     calculatorAgentStrategy.edge(calculatorAgentStrategy.nodeStart, nodeSendInput);
     calculatorAgentStrategy.edge(AIAgentEdge.builder()
-        .from(nodeSendInput)   
+        .from(nodeSendInput)
         .to(calculatorAgentStrategy.nodeFinish)
         .onIsInstance(Message.Assistant.class)
         .transformed(Message.Assistant::getContent)
@@ -260,15 +260,15 @@ graph LR
     subgraph nodeStart
         Input
     end
-    
+
     subgraph nodeFinish
         Output
     end
-    
+
     subgraph nodeSendInput
         llmRequest(Request LLM)
     end
-    
+
     Input --String--> llmRequest --Message.Response--> onAssistantMessage{{onAssistantMessage}} --String--> Output
 ```
 
@@ -298,7 +298,7 @@ graph LR
             return a * b
         }
     }
-    
+
     val toolRegistry = ToolRegistry {
         tools(MathTools())
     }
@@ -343,7 +343,7 @@ graph LR
         strategy = calculatorAgentStrategy,
         toolRegistry = toolRegistry
     )
-    
+
     fun main() = runBlocking {
         val result = mathAgent.run("Multiply 3 by 4, then multiply the result by 5, then add 10, then add 123.")
         println(result)
@@ -400,7 +400,7 @@ Finally, 123 was added to the result:
         toolRegistry = toolRegistry,
         strategy = calculatorAgentStrategy
     )
-    
+
     fun main() = runBlocking {
         val result = mathAgent.run("Multiply 3 by 4, then multiply the result by 5, then add 10, then add 123.")
         println(result)

@@ -15,14 +15,11 @@ https://raw.githubusercontent.com/JetBrains/koog/develop/examples/notebooks/Unit
 > - JDK 17+
 > - 在 OPENAI_API_KEY 环境变量中设置 OpenAI API 密钥
 
-
-
 ```kotlin
 %useLatestDescriptors
 %use koog
 
 ```
-
 
 ```kotlin
 lateinit var process: Process
@@ -32,8 +29,6 @@ lateinit var process: Process
 ## 1) 提供你的 OpenAI API 密钥 { #1-provide-your-openai-api-key }
 我们从 `OPENAI_API_KEY` 环境变量中读取 API 密钥，以便将密钥与笔记本内容分离。
 
-
-
 ```kotlin
 val token = System.getenv("OPENAI_API_KEY") ?: error("OPENAI_API_KEY environment variable not set")
 val executor = simpleOpenAIExecutor(token)
@@ -41,8 +36,6 @@ val executor = simpleOpenAIExecutor(token)
 
 ## 2) 配置 Unity 智能体 { #2-configure-the-unity-agent }
 我们为 Unity 定义一个简洁的系统提示词和智能体设置。
-
-
 
 ```kotlin
 val agentConfig = AIAgentConfig(
@@ -56,15 +49,12 @@ val agentConfig = AIAgentConfig(
 )
 ```
 
-
 ```kotlin
 
 ```
 
 ## 3) 启动 Unity MCP 服务器 { #3-start-the-unity-mcp-server }
 我们将从你的 Unity 项目目录启动 Unity MCP 服务器，并通过标准输入/输出进行连接。
-
-
 
 ```kotlin
 // https://github.com/IvanMurzak/Unity-MCP
@@ -77,8 +67,6 @@ val process = ProcessBuilder(
 
 ## 4) 从 Koog 连接并运行智能体 { #4-connect-from-koog-and-run-the-agent }
 我们从 Unity MCP 服务器发现工具，构建一个简单的“先规划后执行”策略，并运行一个仅使用工具来修改你当前打开场景的智能体。
-
-
 
 ```kotlin
 import kotlinx.coroutines.runBlocking
@@ -152,8 +140,6 @@ runBlocking {
 
 ## 5) 关闭 MCP 进程 { #5-shut-down-the-mcp-process }
 在运行结束时，务必清理外部的 Unity MCP 服务器进程。
-
-
 
 ```kotlin
 // Shutdown the Unity MCP process

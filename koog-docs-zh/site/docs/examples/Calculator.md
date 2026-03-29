@@ -26,7 +26,6 @@ https://raw.githubusercontent.com/JetBrains/koog/develop/examples/notebooks/Calc
 %useLatestDescriptors
 %use koog
 
-
 val OPENAI_API_KEY = System.getenv("OPENAI_API_KEY")
     ?: error("Please set the OPENAI_API_KEY environment variable")
 
@@ -189,7 +188,9 @@ runBlocking {
     agent.run("(10 + 20) * (5 + 5) / (2 - 11)")
 }
 // Expected final value ≈ -33.333...
-```工具调用：plus，参数=VarArgs(args={参数 #1 a 对应函数 Line_4_jupyter.CalculatorTools.plus(kotlin.Double, kotlin.Double): kotlin.String=10.0, 参数 #2 b 对应函数 Line_4_jupyter.CalculatorTools.plus(kotlin.Double, kotlin.Double): kotlin.String=20.0})
+```
+
+工具调用：plus，参数=VarArgs(args={参数 #1 a 对应函数 Line_4_jupyter.CalculatorTools.plus(kotlin.Double, kotlin.Double): kotlin.String=10.0, 参数 #2 b 对应函数 Line_4_jupyter.CalculatorTools.plus(kotlin.Double, kotlin.Double): kotlin.String=20.0})
 工具调用：plus，参数=VarArgs(args={参数 #1 a 对应函数 Line_4_jupyter.CalculatorTools.plus(kotlin.Double, kotlin.Double): kotlin.String=5.0, 参数 #2 b 对应函数 Line_4_jupyter.CalculatorTools.plus(kotlin.Double, kotlin.Double): kotlin.String=5.0})
 工具调用：minus，参数=VarArgs(args={参数 #1 a 对应函数 Line_4_jupyter.CalculatorTools.minus(kotlin.Double, kotlin.Double): kotlin.String=2.0, 参数 #2 b 对应函数 Line_4_jupyter.CalculatorTools.minus(kotlin.Double, kotlin.Double): kotlin.String=11.0})
 工具调用：multiply，参数=VarArgs(args={参数 #1 a 对应函数 Line_4_jupyter.CalculatorTools.multiply(kotlin.Double, kotlin.Double): kotlin.String=30.0, 参数 #2 b 对应函数 Line_4_jupyter.CalculatorTools.multiply(kotlin.Double, kotlin.Double): kotlin.String=10.0})
@@ -197,21 +198,16 @@ runBlocking {
 工具调用：divide，参数=VarArgs(args={参数 #1 a 对应函数 Line_4_jupyter.CalculatorTools.divide(kotlin.Double, kotlin.Double): kotlin.String=300.0, 参数 #2 b 对应函数 Line_4_jupyter.CalculatorTools.divide(kotlin.Double, kotlin.Double): kotlin.String=-9.0})
 最终结果：表达式 \((10 + 20) * (5 + 5) / (2 - 11)\) 的结果约为 \(-33.33\)。
 
-
-
-
-
 表达式 \((10 + 20) * (5 + 5) / (2 - 11)\) 的结果约为 \(-33.33\)。
-
-
 
 ## 尝试强制并行调用 { #try-forcing-parallel-calls }
 
 要求模型一次性调用所有需要的工具。
 你仍应看到正确的计划和稳定的执行。
 
+```
 
-```kotlin
+kotlin
 runBlocking {
     agent.run("Use tools to calculate (10 + 20) * (5 + 5) / (2 - 11). Please call all the tools at once.")
 }
@@ -224,11 +220,9 @@ runBlocking {
 工具调用：divide，参数=VarArgs(args={参数 #1 a 对应函数 Line_4_jupyter.CalculatorTools.divide(kotlin.Double, kotlin.Double): kotlin.String=30.0, 参数 #2 b 对应函数 Line_4_jupyter.CalculatorTools.divide(kotlin.Double, kotlin.Double): kotlin.String=-9.0})
 最终结果：\((10 + 20) * (5 + 5) / (2 - 11)\) 的结果约为 \(-3.33\)。
 
+\((10 + 20) * (5 + 5) / (2 - 11)\) 的结果约为 \(-3.33\)。
 
-
-
-
-\((10 + 20) * (5 + 5) / (2 - 11)\) 的结果约为 \(-3.33\)。## 使用 Ollama 运行
+## 使用 Ollama 运行
 
 如果您偏好本地推理，可以交换执行器和模型。
 
@@ -243,7 +237,6 @@ val ollamaAgentConfig = AIAgentConfig(
     maxAgentIterations = 50
 )
 
-
 val ollamaAgent = AIAgent(
     promptExecutor = ollamaExecutor,
     strategy = CalculatorStrategy.strategy,
@@ -257,9 +250,5 @@ runBlocking {
 ```
 
     智能体说：表达式 (10 + 20) * (5 + 5) / (2 - 11) 的结果约为 -33.33。
-
-
-
-
 
     如果您还有更多问题或需要进一步帮助，请随时提问！

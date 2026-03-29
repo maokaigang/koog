@@ -1,4 +1,4 @@
-<!-- koog-zh-meta: {"last_synced_at": "2026-03-28T13:19:45+00:00", "source_path": "tools/tool-descriptor-schemer.md", "source_sha256": "99c32801f678f49899bc08c56cdb4f33449d92a237e520c377c896ae1440ec08", "source_tag": "0.7.3", "translation_status": "changed"} -->
+<!-- koog-zh-meta: {"last_synced_at": "2026-03-29T03:04:26+00:00", "source_path": "tools/tool-descriptor-schemer.md", "source_sha256": "99c32801f678f49899bc08c56cdb4f33449d92a237e520c377c896ae1440ec08", "source_tag": "0.7.3", "translation_status": "changed"} -->
 # ToolDescriptorSchemer { #tooldescriptorschemer }
 
 `ToolDescriptorSchemer` 是一个扩展点，用于将 `ToolDescriptor` 转换为与特定 LLM 提供程序兼容的 JSON Schema 对象。它可以在 Kotlin 和 Java 中实现。
@@ -29,7 +29,7 @@ fun generate(toolDescriptor: ToolDescriptor): JsonObject
 === "Kotlin"
 
     ```kotlin
-    
+
     class MinimalSchemer : ToolDescriptorSchemaGenerator {
         override fun generate(toolDescriptor: ToolDescriptor): JsonObject = buildJsonObject {
             put("type", "object")
@@ -107,17 +107,17 @@ fun generate(toolDescriptor: ToolDescriptor): JsonObject
     }
     ```
 
-## Using with a client
+## 与客户一起使用 { #using-with-a-client }
 
-Typically, you do not need to call a schemer directly. Koog clients accept a list of `ToolDescriptor` objects and apply the correct schemer internally when serializing requests for the provider.
+通常，您不需要直接调用策划者。 Koog 客户端接受 `ToolDescriptor` 对象列表，并在序列化对提供者的请求时在内部应用正确的方案。
 
-The example below defines a simple tool and passes it to the OpenAI client. The client will use `OpenAICompatibleToolDescriptorSchemer` under the hood to build the JSON schema.
+下面的示例定义了一个简单的工具并将其传递给 OpenAI 客户端。客户端将在后台使用 `OpenAICompatibleToolDescriptorSchemer` 来构建 JSON 模式。
 
 === "Kotlin"
 
     ```kotlin
     val client = OpenAILLMClient(apiKey = System.getenv("OPENAI_API_KEY"), toolsConverter = MinimalSchemer())
-    
+
     val getUserTool = ToolDescriptor(
         name = "get_user",
         description = "Returns user profile by id",
@@ -129,7 +129,7 @@ The example below defines a simple tool and passes it to the OpenAI client. The 
             )
         )
     )
-    
+
     val prompt = Prompt.build(id = "p1") { user("Hello") }
     val responses = runBlocking {
         client.execute(
@@ -145,7 +145,7 @@ The example below defines a simple tool and passes it to the OpenAI client. The 
     ```java
     // Custom schemer extending the OpenAI-compatible one is Kotlin-only in the docs; for Java example we reuse MinimalSchemer from above.
     OpenAILLMClient client = new OpenAILLMClient(System.getenv("OPENAI_API_KEY"), new OpenAIClientSettings(), null, null, new OpenAICompatibleToolDescriptorSchemaGenerator());
-    
+
     ToolDescriptor getUserTool = new ToolDescriptor(
         "get_user",
         "Returns user profile by id",
@@ -164,11 +164,10 @@ The example below defines a simple tool and passes it to the OpenAI client. The 
     List<Message.Response> responses = client.execute(prompt, OpenAIModels.Chat.GPT4o, java.util.List.of(getUserTool));
     ```
 
-If you need direct access to the produced schema (for debugging or for a custom transport), you can instantiate the provider‑specific schemer and serialize the JSON yourself:
+如果您需要直接访问生成的模式（用于调试或自定义传输），您可以实例化特定于提供者的方案并自行序列化 JSON：
 
 === "Kotlin"
 
-    
     ```kotlin
     val json = Json { prettyPrint = true }
     val schema = OpenAICompatibleToolDescriptorSchemaGenerator().generate(getUserTool())

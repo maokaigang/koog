@@ -25,12 +25,10 @@ https://raw.githubusercontent.com/JetBrains/koog/develop/examples/notebooks/Bedr
 
 让我们开始构建我们的第一个 Bedrock 驱动的 AI 智能体！
 
-
 ```kotlin
 %useLatestDescriptors
 // %use koog
 ```
-
 
 ```kotlin
 import ai.koog.agents.core.tools.annotations.LLMDescription
@@ -75,7 +73,6 @@ class SwitchTools(val switch: Switch) : ToolSet {
 }
 ```
 
-
 ```kotlin
 import ai.koog.agents.core.tools.ToolRegistry
 import ai.koog.agents.core.tools.reflect.asTools
@@ -99,8 +96,6 @@ toolRegistry.tools.forEach { tool ->
       - getCurrentState
       - switchState
 
-
-
 ```kotlin
 import ai.koog.prompt.executor.clients.bedrock.BedrockClientSettings
 import ai.koog.prompt.executor.clients.bedrock.BedrockRegions
@@ -121,8 +116,6 @@ println("🔄 Max retries set to: $maxRetries")
     🌐 Bedrock 已配置区域：us-west-2
     🔄 最大重试次数设置为：3
 
-
-
 ```kotlin
 import ai.koog.prompt.executor.llms.all.simpleBedrockExecutor
 
@@ -141,8 +134,6 @@ println("💡 Pro tip: Set AWS_BEDROCK_ACCESS_KEY and AWS_BEDROCK_SECRET_ACCESS_
 
     🔐 Bedrock 执行器初始化成功
     💡 专业提示：设置 AWS_BEDROCK_ACCESS_KEY 和 AWS_BEDROCK_SECRET_ACCESS_KEY 环境变量
-
-
 
 ```kotlin
 import ai.koog.agents.core.agent.AIAgent
@@ -178,8 +169,6 @@ println("🌡️  Temperature: 0.1 (focused responses)")
     🎯 模型：LLModel(provider=Bedrock, id=us.anthropic.claude-3-5-sonnet-20241022-v2:0, capabilities=[Temperature, Tools, ToolChoice, Image, Document, Completion], contextLength=200000, maxOutputTokens=8192)
     🌡️  温度：0.1（聚焦响应）
 
-
-
 ```kotlin
 import kotlinx.coroutines.runBlocking
 
@@ -207,14 +196,11 @@ runBlocking {
        • 打开/关闭开关
        • 检查当前开关状态
        • 询问关于开关的问题
-    
+
     💡 示例：'请打开开关' 或 '当前状态是什么？'
     📝 输入你的请求：
 
-
-
     执行被中断
-
 
 ## 刚才发生了什么？ 🎯 { #what-just-happened }
 

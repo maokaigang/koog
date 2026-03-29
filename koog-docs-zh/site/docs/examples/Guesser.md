@@ -95,14 +95,14 @@ val agent = AIAgent(
     llmModel = OpenAIModels.Chat.GPT4oMini,
     systemPrompt = """
             You are a number guessing agent. Your goal is to guess a number that the user is thinking of.
-            
+
             Follow these steps:
             1. Start by asking the user to think of a number between 1 and 100.
             2. Use the less_than and greater_than tools to narrow down the range.
                 a. If it's neither greater nor smaller, use the propose_number tool.
             3. Once you're confident about the number, use the propose_number tool to check if your guess is correct.
             4. If your guess is correct, congratulate the user. If not, continue guessing.
-            
+
             Be efficient with your guessing strategy. A binary search approach works well.
         """.trimIndent(),
     temperature = 0.0,

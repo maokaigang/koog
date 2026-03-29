@@ -30,7 +30,7 @@ Koog 中的并行节点执行包含以下所述的方法与数据结构。
 val nodeName by parallel<Input, Output>(
    firstNode, secondNode, thirdNode /* Add more nodes if needed */
 ) {
-   // Merge strategy goes here, for example: 
+   // Merge strategy goes here, for example:
    selectByMax { it.length }
 }
 ```

@@ -7,7 +7,9 @@ LLM 客户端专为直接与 LLM 提供方交互而设计。
 当您与单个 LLM 提供方协作且无需高级生命周期管理时，可以使用 LLM 客户端。
 如果您需要管理多个 LLM 提供方，请使用 [提示词执行器](prompt-executors.md)。
 
- 下表展示了可用的 LLM 客户端及其功能。 | LLM 提供商 | LLMClient | 工具<br/>调用 | 流式响应 | 多<br/>选项 | 嵌入向量 | 内容审核 | <div style="width:50px">模型<br/>列表</div> | <div style="width:200px">备注</div> |
+下表展示了可用的 LLM 客户端及其功能。
+
+| LLM 提供商 | LLMClient | 工具<br/>调用 | 流式响应 | 多<br/>选项 | 嵌入向量 | 内容审核 | <div style="width:50px">模型<br/>列表</div> | <div style="width:200px">备注</div> |
 |-----------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------|-----------|----------------------|------------|------------|-------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
 | [OpenAI](https://platform.openai.com/docs/overview) | [OpenAILLMClient](api:prompt-executor-openai-client::ai.koog.prompt.executor.clients.openai.OpenAILLMClient)                | ✓                | ✓         | ✓                    | ✓          | ✓[^1]      | ✓                                               |                                                                                                                             |
 | [Anthropic](https://www.anthropic.com/)             | [AnthropicLLMClient](api:prompt-executor-anthropic-client::ai.koog.prompt.executor.clients.anthropic.AnthropicLLMClient)      | ✓                | ✓         | -                    | -          | -          | -                                               | -                                                                                                                           |
@@ -17,7 +19,9 @@ LLM 客户端专为直接与 LLM 提供方交互而设计。
 | [Amazon Bedrock](https://aws.amazon.com/bedrock/)   | [BedrockLLMClient](api:prompt-executor-bedrock-client::ai.koog.prompt.executor.clients.bedrock.BedrockLLMClient)              | ✓                | ✓         | -                    | ✓          | ✓[^2]      | -                                               | 仅支持 JVM 的 AWS SDK 客户端，兼容多种模型系列。                                                              |
 | [Mistral](https://mistral.ai/)                      | [MistralAILLMClient](api:prompt-executor-mistralai-client::ai.koog.prompt.executor.clients.mistralai.MistralAILLMClient)    | ✓                | ✓         | ✓                    | ✓          | ✓[^3]      | ✓                                               | 兼容 OpenAI 的客户端。                                                                                                   |
 | [阿里巴巴](https://www.alibabacloud.com/en?_p_lc=1)  | [DashScopeLLMClient](api:prompt-executor-dashscope-client::ai.koog.prompt.executor.clients.dashscope.DashscopeLLMClient)      | ✓                | ✓         | ✓                    | -          | -          | ✓                                               | 兼容 OpenAI 的客户端，支持提供商特定参数（`enableSearch`、`parallelToolCalls`、`enableThinking`）。 |
-| [Ollama](https://ollama.com/)                       | [OllamaClient](api:prompt-executor-ollama-client::ai.koog.prompt.executor.ollama.client.OllamaClient)                            | ✓                | ✓         | -                    | ✓          | ✓          | -                                               | 本地服务器客户端，支持模型管理 API。                                                                             |## 运行提示词
+| [Ollama](https://ollama.com/)                       | [OllamaClient](api:prompt-executor-ollama-client::ai.koog.prompt.executor.ollama.client.OllamaClient)                            | ✓                | ✓         | -                    | ✓          | ✓          | -                                               | 本地服务器客户端，支持模型管理 API。                                                                             |
+
+## 运行提示词
 
 要使用 LLM 客户端运行提示词，请执行以下操作：
 
@@ -67,7 +71,7 @@ LLM 客户端专为直接与 LLM 提供方交互而设计。
     Prompt prompt = Prompt.builder("prompt_name")
         // Add a system message to set the context
         .system("You are a helpful assistant.")
-        
+
         // Add a user message
         .user("Tell me about Kotlin")
 
@@ -134,7 +138,7 @@ LLM 客户端专为直接与 LLM 提供方交互而设计。
     Prompt prompt = Prompt.builder("stream_demo")
                 .user("Stream this response in short chunks.")
                 .build();
-    
+
     Publisher<StreamFrame> response = client.executeStreamingWithPublisher(prompt, OpenAIModels.Chat.GPT4_1);
 
     // Subscribe to the Publisher to consume frames
@@ -227,7 +231,7 @@ LLM 客户端专为直接与 LLM 提供方交互而设计。
 
     // LLMChoice is a type alias for List<Message.Response>
     List<List<Message.Response>> choices = client.executeMultipleChoices(
-        prompt, 
+        prompt,
         OpenAIModels.Chat.GPT4o
     );
 
@@ -272,7 +276,7 @@ LLM 客户端专为直接与 LLM 提供方交互而设计。
     }
     ```
 
-## Embeddings
+## 嵌入向量 { #embeddings }
 
 !!! note
     Available for `OpenAILLMClient`, `GoogleLLMClient`, `BedrockLLMClient`, `MistralAILLMClient`, and `OllamaClient`.
@@ -293,7 +297,7 @@ fun main() = runBlocking {
 }
 ```
 
-## Moderation
+## 内容审核 { #moderation }
 
 !!! note
     适用于以下LLM客户端：`OpenAILLMClient`、`BedrockLLMClient`、`MistralAILLMClient`、`OllamaClient`。
@@ -336,6 +340,6 @@ fun main() = runBlocking {
 
 [提示执行器](prompt-executors.md) 封装 LLM 客户端并提供额外功能，例如路由、回退机制以及跨提供商的统一使用方式。建议在生产环境中使用它们，因为它们在处理多个提供商时提供了灵活性。
 
-[^1]: 支持通过 OpenAI 审核 API 进行内容审核。  
-[^2]: 内容审核需配置 Guardrails。  
+[^1]: 支持通过 OpenAI 审核 API 进行内容审核。
+[^2]: 内容审核需配置 Guardrails。
 [^3]: 支持通过 Mistral `v1/moderations` 端点进行内容审核。

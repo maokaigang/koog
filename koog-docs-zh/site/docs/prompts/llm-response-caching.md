@@ -77,7 +77,7 @@
     System.out.println("Second execution took: " + secondTimeMs + "ms");
     ```
 
-The example produces the following output:
+该示例会产生如下输出：
 
 ```
 First response: Hello! It seems like we're starting a new conversation. What can I help you with today?
@@ -85,7 +85,7 @@ First execution took: 48ms
 Second response: Hello! It seems like we're starting a new conversation. What can I help you with today?
 Second execution took: 1ms
 ```
-The second response is retrieved from the cache, which took only 1ms.
+第二次响应直接从缓存中取回，因此只用了 1ms。
 
 !!!note
     * If you call `executeStreaming()` in Kotlin or `executeStreamingWithPublisher()` in Java with the cached prompt executor, it produces a response as a single chunk.

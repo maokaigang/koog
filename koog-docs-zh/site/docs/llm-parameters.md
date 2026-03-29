@@ -1,4 +1,4 @@
-<!-- koog-zh-meta: {"last_synced_at": "2026-03-28T16:46:33+00:00", "source_path": "llm-parameters.md", "source_sha256": "466f3ccc4f3e1d8bc2f0f44bfa020c41bb1f99f9beea533363d154933a3a3596", "source_tag": "0.7.3", "translation_status": "changed"} -->
+<!-- koog-zh-meta: {"last_synced_at": "2026-03-29T03:04:21+00:00", "source_path": "llm-parameters.md", "source_sha256": "466f3ccc4f3e1d8bc2f0f44bfa020c41bb1f99f9beea533363d154933a3a3596", "source_tag": "0.7.3", "translation_status": "changed"} -->
 # LLM 参数 { #llm-parameters }
 
 本页提供关于 Koog 智能体框架中 LLM 参数的详细信息。LLM 参数允许您控制和定制语言模型的行为。
@@ -103,7 +103,9 @@ LLM 参数是配置选项，可让您微调语言模型生成响应的方式。�
 ## LLM 参数参考 { #llm-parameter-reference }
 
 下表提供了 `LLMParams` 类中包含且由 Koog 开箱即用的所有 LLM 提供商支持的 LLM 参数参考。
-有关特定于某些提供商的参数列表，请参阅[提供商特定参数](#provider-specific-parameters)。| 参数                  | 类型                           | 描述                                                                                                                                                                                             |
+有关特定于某些提供商的参数列表，请参阅[提供商特定参数](#provider-specific-parameters)。
+
+| 参数                  | 类型                           | 描述                                                                                                                                                                                             |
 |------------------------|--------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `temperature`          | Double                         | 控制输出结果的随机性。较高的值（如0.7–1.0）会产生更多样化和创造性的响应，而较低的值会产生更确定性和聚焦的响应。                                                                                |
 | `maxTokens`            | Integer                        | 响应中生成的最大令牌数。用于控制响应长度。                                                                                                                                                       |
@@ -233,9 +235,7 @@ JSON 模式允许您从语言模型请求结构化的 JSON 数据。Koog 支持�
     )
     ```
 
-=== "Java"    <!--- INCLUDE
-    /**
-    -->
+=== "Java"
     ```java
     // 使用标准的 JSON 模式创建参数
     LLMParams standardJsonParams = new LLMParams(
@@ -315,7 +315,9 @@ JSON 模式允许您从语言模型请求结构化的 JSON 数据。Koog 支持�
 
 ## 供应商特定参数 { #tool-choice }
 
-Koog 支持某些 LLM 供应商的供应商特定参数。这些参数扩展了基础 `LLMParams` 类，并添加了供应商特定的功能。以下类包含按供应商特定的参数：- `OpenAIChatParams`：OpenAI 聊天补全的特定参数。
+Koog 为部分 LLM 提供商提供了供应商特定参数。这些参数扩展了基础 `LLMParams` 类，并添加了供应商专属功能。以下类包含按提供商划分的特定参数：
+
+- `OpenAIChatParams`：OpenAI Chat Completions API 的特定参数。
 - `OpenAIResponsesParams`：OpenAI 响应的特定参数。
 - `GoogleParams`：Google 模型的特定参数。
 - `AnthropicParams`：Anthropic 模型的特定参数。
@@ -329,49 +331,123 @@ Koog 支持某些 LLM 供应商的供应商特定参数。这些参数扩展了�
 === "OpenAI 聊天"
 
     --8<--
-    llm-parameters-snippets.md:标题 llm-parameters-snippets.md:音频 llm-parameters-snippets.md:频率惩罚 llm-parameters-snippets.md:对数概率 llm-parameters-snippets.md:并行工具调用 llm-parameters-snippets.md:存在惩罚 llm-parameters-snippets.md:提示缓存键 llm-parameters-snippets.md:推理努力 llm-parameters-snippets.md:安全标识符 llm-parameters-snippets.md:服务层级 llm-parameters-snippets.md:停止 llm-parameters-snippets.md:存储 llm-parameters-snippets.md:顶部对数概率 llm-parameters-snippets.md:topP llm-parameters-snippets.md:网络搜索选项
+    llm-parameters-snippets.md:heading
+    llm-parameters-snippets.md:audio
+    llm-parameters-snippets.md:frequencyPenalty
+    llm-parameters-snippets.md:logprobs
+    llm-parameters-snippets.md:parallelToolCalls
+    llm-parameters-snippets.md:presencePenalty
+    llm-parameters-snippets.md:promptCacheKey
+    llm-parameters-snippets.md:reasoningEffort
+    llm-parameters-snippets.md:safetyIdentifier
+    llm-parameters-snippets.md:serviceTier
+    llm-parameters-snippets.md:stop
+    llm-parameters-snippets.md:store
+    llm-parameters-snippets.md:topLogprobs
+    llm-parameters-snippets.md:topP
+    llm-parameters-snippets.md:webSearchOptions
     --8<--
 
 === "OpenAI 响应"
 
     --8<--
-    llm-parameters-snippets.md:标题 llm-parameters-snippets.md:背景 llm-parameters-snippets.md:包含 llm-parameters-snippets.md:对数概率 llm-parameters-snippets.md:最大工具调用 llm-parameters-snippets.md:并行工具调用 llm-parameters-snippets.md:提示缓存键 llm-parameters-snippets.md:推理 llm-parameters-snippets.md:安全标识符 llm-parameters-snippets.md:服务层级 llm-parameters-snippets.md:存储 llm-parameters-snippets.md:顶部对数概率 llm-parameters-snippets.md:顶部P值 llm-parameters-snippets.md:截断
+    llm-parameters-snippets.md:heading
+    llm-parameters-snippets.md:background
+    llm-parameters-snippets.md:include
+    llm-parameters-snippets.md:logprobs
+    llm-parameters-snippets.md:maxToolCalls
+    llm-parameters-snippets.md:parallelToolCalls
+    llm-parameters-snippets.md:promptCacheKey
+    llm-parameters-snippets.md:reasoning
+    llm-parameters-snippets.md:safetyIdentifier
+    llm-parameters-snippets.md:serviceTier
+    llm-parameters-snippets.md:store
+    llm-parameters-snippets.md:topLogprobs
+    llm-parameters-snippets.md:topP
+    llm-parameters-snippets.md:truncation
     --8<--
 
 === "Google"
 
     --8<--
-    llm-parameters-snippets.md:标题 llm-parameters-snippets.md:思考配置 llm-parameters-snippets.md:topK llm-parameters-snippets.md:topP
+    llm-parameters-snippets.md:heading
+    llm-parameters-snippets.md:thinkingConfig
+    llm-parameters-snippets.md:topK
+    llm-parameters-snippets.md:topP
     --8<--
 
 === "Anthropic"
 
     --8<--
-    llm-parameters-snippets.md:标题 llm-parameters-snippets.md:容器 llm-parameters-snippets.md:mcp服务器 llm-parameters-snippets.md:服务层级 llm-parameters-snippets.md:停止序列 llm-parameters-snippets.md:思考 llm-parameters-snippets.md:topK llm-parameters-snippets.md:topP
+    llm-parameters-snippets.md:heading
+    llm-parameters-snippets.md:container
+    llm-parameters-snippets.md:mcpServers
+    llm-parameters-snippets.md:serviceTier
+    llm-parameters-snippets.md:stopSequences
+    llm-parameters-snippets.md:thinking
+    llm-parameters-snippets.md:topK
+    llm-parameters-snippets.md:topP
     --8<--
 
 === "Mistral"
 
     --8<--
-    llm-parameters-snippets.md:标题 llm-parameters-snippets.md:frequencyPenalty llm-parameters-snippets.md:parallelToolCalls llm-parameters-snippets.md:presencePenalty llm-parameters-snippets.md:promptMode llm-parameters-snippets.md:randomSeed llm-parameters-snippets.md:safePrompt llm-parameters-snippets.md:stop llm-parameters-snippets.md:topP
+    llm-parameters-snippets.md:heading
+    llm-parameters-snippets.md:frequencyPenalty
+    llm-parameters-snippets.md:parallelToolCalls
+    llm-parameters-snippets.md:presencePenalty
+    llm-parameters-snippets.md:promptMode
+    llm-parameters-snippets.md:randomSeed
+    llm-parameters-snippets.md:safePrompt
+    llm-parameters-snippets.md:stop
+    llm-parameters-snippets.md:topP
     --8<--
 
 === "DeepSeek"
 
     --8<--
-    llm-parameters-snippets.md:标题 llm-parameters-snippets.md:frequencyPenalty llm-parameters-snippets.md:logprobs llm-parameters-snippets.md:presencePenalty llm-parameters-snippets.md:stop llm-parameters-snippets.md:topLogprobs llm-parameters-snippets.md:topP
+    llm-parameters-snippets.md:heading
+    llm-parameters-snippets.md:frequencyPenalty
+    llm-parameters-snippets.md:logprobs
+    llm-parameters-snippets.md:presencePenalty
+    llm-parameters-snippets.md:stop
+    llm-parameters-snippets.md:topLogprobs
+    llm-parameters-snippets.md:topP
     --8<--
 
 === "OpenRouter"
 
     --8<--
-    llm-parameters-snippets.md:标题 llm-parameters-snippets.md:frequencyPenalty llm-parameters-snippets.md:logprobs llm-parameters-snippets.md:minP llm-parameters-snippets.md:模型 llm-parameters-snippets.md:presencePenalty llm-parameters-snippets.md:provider llm-parameters-snippets.md:repetitionPenalty llm-parameters-snippets.md:route llm-parameters-snippets.md:stop llm-parameters-snippets.md:topA llm-parameters-snippets.md:topK llm-parameters-snippets.md:topLogprobs llm-parameters-snippets.md:topP llm-parameters-snippets.md:transforms
+    llm-parameters-snippets.md:heading
+    llm-parameters-snippets.md:frequencyPenalty
+    llm-parameters-snippets.md:logprobs
+    llm-parameters-snippets.md:minP
+    llm-parameters-snippets.md:models
+    llm-parameters-snippets.md:presencePenalty
+    llm-parameters-snippets.md:provider
+    llm-parameters-snippets.md:repetitionPenalty
+    llm-parameters-snippets.md:route
+    llm-parameters-snippets.md:stop
+    llm-parameters-snippets.md:topA
+    llm-parameters-snippets.md:topK
+    llm-parameters-snippets.md:topLogprobs
+    llm-parameters-snippets.md:topP
+    llm-parameters-snippets.md:transforms
     --8<--
 
 === "阿里巴巴 (DashScope)"
 
     --8<--
-    llm-parameters-snippets.md:标题 llm-parameters-snippets.md:启用搜索 llm-parameters-snippets.md:启用思考 llm-parameters-snippets.md:频率惩罚 llm-parameters-snippets.md:对数概率 llm-parameters-snippets.md:并行工具调用 llm-parameters-snippets.md:存在惩罚 llm-parameters-snippets.md:停止序列 llm-parameters-snippets.md:顶部对数概率 llm-parameters-snippets.md:Top P
+    llm-parameters-snippets.md:heading
+    llm-parameters-snippets.md:enableSearch
+    llm-parameters-snippets.md:enableThinking
+    llm-parameters-snippets.md:frequencyPenalty
+    llm-parameters-snippets.md:logprobs
+    llm-parameters-snippets.md:parallelToolCalls
+    llm-parameters-snippets.md:presencePenalty
+    llm-parameters-snippets.md:stopSequences
+    llm-parameters-snippets.md:topLogprobs
+    llm-parameters-snippets.md:topP
     --8<--
 
 以下示例展示了使用特定提供商的 `OpenRouterParams` 类定义 OpenRouter LLM 参数：

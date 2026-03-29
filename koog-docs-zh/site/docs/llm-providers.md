@@ -1,10 +1,10 @@
-<!-- koog-zh-meta: {"last_synced_at": "2026-03-28T13:53:13+00:00", "source_path": "llm-providers.md", "source_sha256": "0012d333c588c31cbffe34d048dbfcac1f19854925b027951160e7c4a4f7710d", "source_tag": "0.7.3", "translation_status": "changed"} -->
+<!-- koog-zh-meta: {"last_synced_at": "2026-03-29T03:04:47+00:00", "source_path": "llm-providers.md", "source_sha256": "0012d333c588c31cbffe34d048dbfcac1f19854925b027951160e7c4a4f7710d", "source_tag": "0.7.3", "translation_status": "changed"} -->
 # LLM 提供商 { #llm-providers }
 
 Koog 与各大 LLM 提供商兼容，同时支持通过 [Ollama](https://ollama.com/) 使用本地模型。
 目前支持的提供商如下：
 
-| <div style="width:115px">LLM 提供商</div>                                                                                                                 | 适用场景                                                                                                                       |
+| <div style="width:115px">LLM 提供商</div> | 适用场景 |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
 | [OpenAI](https://platform.openai.com/docs/overview)（包含 [Azure OpenAI Service](https://azure.microsoft.com/en-us/products/ai-foundry/models/openai)） | 功能全面的先进模型。                                                                               |
 | [Anthropic](https://www.anthropic.com/)                                                                                                                     | 长上下文与提示词缓存。                                                                                                |
@@ -14,7 +14,11 @@ Koog 与各大 LLM 提供商兼容，同时支持通过 [Ollama](https://ollama.
 | [Amazon Bedrock](https://aws.amazon.com/bedrock/)                                                                                                           | AWS 原生环境、企业级安全与合规、多提供商访问。                                               |
 | [Mistral](https://mistral.ai/)                                                                                                                              | 欧洲数据托管、符合 GDPR 规范。                                                                                          |
 | [阿里巴巴](https://www.alibabacloud.com/en?_p_lc=1)（[DashScope](https://dashscope.aliyun.com/) OpenAI 兼容客户端）                                    | 大上下文与高性价比的 Qwen 模型。                                                                                   |
-| [Ollama](https://ollama.com/)                                                                                                                               | 隐私保护、本地开发、离线运行且无 API 成本。                                                                 |下表展示了 Koog 支持的 LLM 能力，以及哪些提供商在其模型中提供这些能力。| <div style="width:115px">LLM 能力</div> | OpenAI                       | Anthropic                 | Google                                  | DeepSeek | OpenRouter       | Amazon Bedrock   | Mistral                   | 阿里巴巴 (DashScope OpenAI-兼容客户端) | Ollama (本地模型) |
+| [Ollama](https://ollama.com/) | 隐私保护、本地开发、离线运行且无 API 成本。 |
+
+下表展示了 Koog 支持的 LLM 能力，以及哪些提供商在其模型中提供了这些能力。
+
+| <div style="width:115px">LLM 能力</div> | OpenAI | Anthropic | Google | DeepSeek | OpenRouter | Amazon Bedrock | Mistral | 阿里巴巴（DashScope OpenAI 兼容客户端） | Ollama（本地模型） |
 |-----------------------------------------------|------------------------------|---------------------------|-----------------------------------------|----------|------------------|------------------|---------------------------|----------------------------------------------|-----------------------|
 | 支持的输入类型                               | 文本、图像、音频、文档       | 文本、图像、文档[^1]      | 文本、图像、音频、视频、文档[^1]        | 文本     | 因模型而异       | 因模型而异       | 文本、图像、文档[^1]      | 文本、图像、音频、视频[^1]                    | 文本、图像[^1]        |
 | 响应流式输出                                 | ✓                            | ✓                         | ✓                                       | ✓        | ✓                | ✓                | ✓                         | ✓                                            | ✓                     |
@@ -28,7 +32,9 @@ Koog 与各大 LLM 提供商兼容，同时支持通过 [Ollama](https://ollama.
 | 嵌入向量                                     | ✓                            | –                         | –                                       | –        | –                | ✓                | ✓                         | –                                            | ✓                     |
 | 提示词缓存                                   | ✓[^1]                        | ✓                         | –                                       | –        | –                | –                | –                         | –                                            | –                     |
 | 补全功能                                     | ✓                            | ✓                         | ✓                                       | ✓        | ✓                | ✓                | ✓                         | ✓                                            | ✓                     |
-| 本地执行                                     | –                            | –                         | –                                       | –        | –                | –                | –                         | –                                            | ✓                     |!!! note
+| 本地执行                                     | –                            | –                         | –                                       | –        | –                | –                | –                         | –                                            | ✓                     |
+
+!!! note
     Koog 支持创建 AI 代理最常用的能力。
     各提供商的 LLM 可能具备 Koog 目前尚未支持的额外功能。
     了解更多信息，请参阅 [模型能力](model-capabilities.md)。

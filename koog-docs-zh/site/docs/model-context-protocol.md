@@ -34,7 +34,9 @@ Koog框架通过[MCP SDK](https://github.com/modelcontextprotocol/kotlin-sdk)与
 
 ### 关键组件 { #key-components }
 
-以下是Koog中MCP集成的主要组件：| 组件                                                                                                                                                           | 描述                                                                                                |
+以下是Koog中MCP集成的主要组件：
+
+| 组件                                                                                                                                                           | 描述                                                                                                |
 |---------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|
 | [`McpTool`](api:agents-mcp::ai.koog.agents.mcp.McpTool)                                                                          | 作为 Koog 工具接口与 MCP SDK 之间的桥梁。                  |                                                                              |
 | [`McpToolDescriptorParser`](api:agents-mcp::ai.koog.agents.mcp.McpToolDescriptorParser)                                        | 将 MCP 工具定义解析为 Koog 工具描述符格式。                                          |
@@ -59,7 +61,7 @@ MCP 服务器支持 stdio 和 SSE 传输机制与代理通信，因此您可以�
 // Start an MCP server (for example, as a process)
 val process = ProcessBuilder("path/to/mcp/server").start()
 
-// Create the stdio transport 
+// Create the stdio transport
 val transport = McpToolRegistryProvider.defaultStdioTransport(process)
 ```
 
@@ -124,27 +126,7 @@ val result = agent.run("Use the MCP tool to perform a task")
 [//]: # (2. 使用标准的 Koog 机制，通过特定参数运行该工具。)[//]: # ()
 [//]: # (以下是一个示例：)
 
-[//]: # (<!--- INCLUDE)
-
-[//]: # (import ai.koog.agents.mcp.McpTool)
-
-[//]: # (import kotlinx.serialization.json.JsonPrimitive)
-
-[//]: # (import kotlinx.serialization.json.buildJsonObject)
-
-[//]: # (import ai.koog.agents.mcp.McpToolRegistryProvider)
-
-[//]: # (import ai.koog.agents.example.exampleModelContextProtocol04.existingMcpClient)
-
 [//]: # ()
-[//]: # ()
-[//]: # (val toolRegistry = McpToolRegistryProvider.fromClient&#40;)
-
-[//]: # (    mcpClient = existingMcpClient)
-
-[//]: # (&#41;)
-
-[//]: # (-->)
 
 [//]: # (```kotlin)
 
@@ -175,40 +157,15 @@ val result = agent.run("Use the MCP tool to perform a task")
 
 [//]: # (```)
 
-[//]: # (<!--- KNIT example-model-context-protocol-06.kt -->)
+[//]: # ()
 
 [//]: # ()
 [//]: # (你也可以从注册表中检索所有可用的 MCP 工具：)
 
 [//]: # ()
-[//]: # (<!--- INCLUDE)
-
-[//]: # (import ai.koog.agents.mcp.McpToolRegistryProvider)
-
-[//]: # (import ai.koog.agents.example.exampleModelContextProtocol04.existingMcpClient)
-
-[//]: # (import kotlinx.coroutines.runBlocking)
+[//]: # ()
 
 [//]: # ()
-[//]: # (fun main&#40;&#41; {)
-
-[//]: # (    runBlocking {)
-
-[//]: # (        val toolRegistry = McpToolRegistryProvider.fromClient&#40;)
-
-[//]: # (            mcpClient = existingMcpClient)
-
-[//]: # (        &#41;)
-
-[//]: # (-->)
-
-[//]: # (<!--- SUFFIX)
-
-[//]: # (    })
-
-[//]: # (})
-
-[//]: # (-->)
 
 [//]: # (```kotlin)
 
@@ -218,7 +175,7 @@ val result = agent.run("Use the MCP tool to perform a task")
 
 [//]: # (```)
 
-[//]: # (<!--- KNIT example-model-context-protocol-07.kt -->)
+[//]: # ()
 
 ## 使用示例 { #usage-examples }
 

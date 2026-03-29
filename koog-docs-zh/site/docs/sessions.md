@@ -339,4 +339,4 @@ llm.writeSession {
 
 ## API 文档 { #api-documentation }
 
-更多信息，请参阅完整的 [AIAgentLLMSession](api:agents-core::ai.koog.agents.core.agent.session.AIAgentLLMSession) 和 [AIAgentLLMContext](api:agents-core::ai.koog.agents.core.agent.context.AIAgentLLMContext) 参考文档。
+更多信息，请参阅 `AIAgentLLMSession` 和 [`AIAgentLLMContext`](api:agents-core::ai.koog.agents.core.agent.context.AIAgentLLMContext) 的参考文档。

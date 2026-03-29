@@ -33,7 +33,7 @@ UPSTREAM_PYTHON_VERSION = Path("docs/.python-version")
 UPSTREAM_UV_LOCK = Path("docs/uv.lock")
 UPSTREAM_LICENSE = Path("LICENSE.txt")
 META_PATTERN = re.compile(r"^<!-- koog-zh-meta: (?P<meta>\{.*\}) -->\n?", re.DOTALL)
-KNIT_COMMENT_RE = re.compile(r"(?ms)^[ \t]*<!---.*?-->[ \t]*\n?")
+KNIT_COMMENT_RE = re.compile(r"(?ms)<!---.*?-->")
 STATUS_ORDER = ("new", "changed", "outdated", "deleted", "reviewed")
 LOCAL_EXTRA_FILES = {
     "stylesheets/translation-extra.css",
@@ -43,6 +43,12 @@ HEADING_PATTERN = re.compile(r"^#\s+(?P<title>.+?)\s*$", re.MULTILINE)
 HEADING_ATTRS_SUFFIX = re.compile(r"\s+\{\s*#[^}]+\}\s*$")
 MERGED_TAB_PATTERN = re.compile(r'^(?P<indent>\s*)(?P<header>===\s+"[^"]+")(?P<rest>\S.*)$')
 MERGED_COMMENT_PATTERN = re.compile(r"^(?P<indent>\s*)(?P<comment><!--.*?-->)(?P<rest>\S.*)$")
+BROKEN_FENCE_PATTERN = re.compile(r"^\s*```[A-Za-z0-9_-]+(?:\s+(?!title=|linenums=|hl_lines=|\{)[^\s].*)$")
+MERGED_SNIPPET_PATTERN = re.compile(r"^(?!\s*#\s*--8<--)(?!\s*--8<--).*(--8<--).+$")
+MERGED_HEADING_PATTERN = re.compile(r"^(?P<prefix>.*?\S)(?P<heading>#{2,6}\s+\S.*)$")
+MERGED_LIST_PATTERN = re.compile(r"^(?P<prefix>.*[：:])(?P<list>\s*[-*]\s+\S.*)$")
+MERGED_PROSE_TABLE_PATTERN = re.compile(r"^(?P<prefix>.*?[。！？：:])\s*(?P<table>\|.+)$")
+MERGED_HEADING_TABLE_PATTERN = re.compile(r"^(?P<heading>\s*#{2,6}\s+\S.*?)\s*(?P<table>\|.+)$")
 NAV_GROUP_TRANSLATIONS = {
     "Documentation": "文档",
     "Overview": "概览",
@@ -121,6 +127,15 @@ class TabBlock:
     indent: int
 
 
+@dataclass
+class AuditFinding:
+    path: str
+    line: int
+    kind: str
+    message: str
+    excerpt: str
+
+
 def now_iso() -> str:
     return datetime.now(UTC).replace(microsecond=0).isoformat()
 
@@ -171,6 +186,7 @@ def list_files(base: Path) -> list[Path]:
 
 def strip_knit_comments(text: str) -> str:
     stripped = KNIT_COMMENT_RE.sub("", text)
+    stripped = re.sub(r"[ \t]+\n", "\n", stripped)
     return re.sub(r"\n{3,}", "\n\n", stripped)
 
 
@@ -962,9 +978,11 @@ def normalize_stray_fence_lines(text: str) -> str:
     for line in lines:
         if re.match(r"^\s*```", line):
             if in_fence:
-                stray_match = re.match(r"^(?P<indent>\s*)```(?:\s+)(?P<rest>\S.*)$", line)
+                stray_match = re.match(r"^(?P<indent>\s*)```(?P<rest>\S.*)$", line)
                 if stray_match:
-                    output.append(f"{stray_match.group('indent')}{stray_match.group('rest')}")
+                    output.append(f"{stray_match.group('indent')}```")
+                    output.append("")
+                    output.append(stray_match.group("rest"))
                     continue
             in_fence = not in_fence
             output.append(line)
@@ -977,10 +995,171 @@ def normalize_stray_fence_lines(text: str) -> str:
     return result
 
 
+def normalize_merged_heading_lines(text: str) -> str:
+    lines = text.splitlines()
+    output: list[str] = []
+    in_fence = False
+    in_comment = False
+
+    for line in lines:
+        stripped = line.strip()
+
+        if in_comment:
+            output.append(line)
+            if "-->" in line:
+                in_comment = False
+            continue
+
+        if stripped.startswith("<!--"):
+            output.append(line)
+            if "-->" not in line:
+                in_comment = True
+            continue
+
+        if re.match(r"^\s*```", line):
+            output.append(line)
+            in_fence = not in_fence
+            continue
+
+        if in_fence or not stripped or stripped.startswith(("[//]:", "# --8<--", "--8<--")):
+            output.append(line)
+            continue
+
+        if stripped.startswith("#"):
+            output.append(line)
+            continue
+
+        match = MERGED_HEADING_PATTERN.match(line)
+        if not match:
+            output.append(line)
+            continue
+
+        prefix = match.group("prefix").rstrip()
+        heading = match.group("heading").lstrip()
+        if not prefix or prefix.endswith("[//]: # ("):
+            output.append(line)
+            continue
+
+        output.append(prefix)
+        output.append("")
+        output.append(heading)
+
+    result = "\n".join(output)
+    if text.endswith("\n"):
+        result += "\n"
+    return result
+
+
+def normalize_merged_list_lines(text: str) -> str:
+    lines = text.splitlines()
+    output: list[str] = []
+    in_fence = False
+    in_comment = False
+
+    for line in lines:
+        stripped = line.strip()
+
+        if in_comment:
+            output.append(line)
+            if "-->" in line:
+                in_comment = False
+            continue
+
+        if stripped.startswith("<!--"):
+            output.append(line)
+            if "-->" not in line:
+                in_comment = True
+            continue
+
+        if re.match(r"^\s*```", line):
+            output.append(line)
+            in_fence = not in_fence
+            continue
+
+        if in_fence or not stripped or stripped.startswith(("|", "-", "*", "[//]:")):
+            output.append(line)
+            continue
+
+        match = MERGED_LIST_PATTERN.match(line)
+        if not match:
+            output.append(line)
+            continue
+
+        prefix = match.group("prefix").rstrip()
+        list_line = match.group("list").lstrip()
+        if not prefix:
+            output.append(line)
+            continue
+
+        output.append(prefix)
+        output.append("")
+        output.append(list_line)
+
+    result = "\n".join(output)
+    if text.endswith("\n"):
+        result += "\n"
+    return result
+
+
+def normalize_merged_table_lines(text: str) -> str:
+    lines = text.splitlines()
+    output: list[str] = []
+    in_fence = False
+    in_comment = False
+
+    for line in lines:
+        stripped = line.strip()
+
+        if in_comment:
+            output.append(line)
+            if "-->" in line:
+                in_comment = False
+            continue
+
+        if stripped.startswith("<!--"):
+            output.append(line)
+            if "-->" not in line:
+                in_comment = True
+            continue
+
+        if re.match(r"^\s*```", line):
+            output.append(line)
+            in_fence = not in_fence
+            continue
+
+        if in_fence or not stripped:
+            output.append(line)
+            continue
+
+        heading_match = MERGED_HEADING_TABLE_PATTERN.match(line)
+        if heading_match and not stripped.startswith("|"):
+            output.append(heading_match.group("heading").rstrip())
+            output.append("")
+            output.append(heading_match.group("table").lstrip())
+            continue
+
+        prose_match = MERGED_PROSE_TABLE_PATTERN.match(line)
+        if prose_match and not stripped.startswith("|"):
+            output.append(prose_match.group("prefix").rstrip())
+            output.append("")
+            output.append(prose_match.group("table").lstrip())
+            continue
+
+        output.append(line)
+
+    result = "\n".join(output)
+    if text.endswith("\n"):
+        result += "\n"
+    return result
+
+
 def normalize_post_translation_structure(text: str) -> str:
     normalized = normalize_merged_tab_blocks(text)
     normalized = normalize_comment_tails(normalized)
     normalized = normalize_stray_fence_lines(normalized)
+    normalized = normalize_merged_heading_lines(normalized)
+    normalized = normalize_merged_list_lines(normalized)
+    normalized = normalize_merged_table_lines(normalized)
     return normalized
 
 
@@ -1463,6 +1642,272 @@ def set_status(args: argparse.Namespace) -> None:
     print(f"updated: {path.relative_to(ROOT)} -> {args.status}")
 
 
+def strip_inline_markup_for_audit(text: str) -> str:
+    cleaned = text
+    cleaned = re.sub(r"`[^`]+`", " ", cleaned)
+    cleaned = re.sub(r"!\[[^\]]*\]\([^)]*\)", " ", cleaned)
+    cleaned = re.sub(r"\[[^\]]+\]\([^)]*\)", " ", cleaned)
+    cleaned = re.sub(r"https?://\S+", " ", cleaned)
+    cleaned = re.sub(r"\{[^}]+\}", " ", cleaned)
+    cleaned = re.sub(r"\b[A-Z][A-Z0-9_]{1,}\b", " ", cleaned)
+    cleaned = re.sub(r"api:[^\s)]+", " ", cleaned)
+    return cleaned
+
+
+def is_suspect_english_prose_line(line: str) -> bool:
+    stripped = line.strip()
+    if not stripped or not re.search(r"[A-Za-z]", stripped):
+        return False
+
+    if stripped.startswith("|") and stripped.endswith("|"):
+        return False
+
+    if re.match(r"^\s*[-*+]\s+[A-Za-z][A-Za-z0-9_-]*\s*[：:]\s*[\w./:-]+(?:、[\w./:-]+)+\s*$", stripped):
+        return False
+
+    if re.match(r"^\s*选项\s+\d+:\s+\[Call\(id=", stripped):
+        return False
+
+    if "ResponseMetaInfo(" in stripped or "LLModel(provider=" in stripped:
+        return False
+
+    if stripped.startswith("#") and re.search(r"#\w+", stripped):
+        return False
+
+    if stripped.count("#") >= 3:
+        return False
+
+    cleaned = strip_inline_markup_for_audit(stripped)
+    words = re.findall(r"[A-Za-z][A-Za-z'-]+", cleaned)
+    if len(words) < 4:
+        return False
+
+    english_chars = len(re.findall(r"[A-Za-z]", cleaned))
+    cjk_chars = len(re.findall(r"[\u4e00-\u9fff]", cleaned))
+    return english_chars >= max(18, cjk_chars * 2)
+
+
+def audit_markdown_file(path: Path) -> list[AuditFinding]:
+    doc = load_site_doc(path)
+    lines = doc.body.splitlines()
+    findings: list[AuditFinding] = []
+    in_fence = False
+    in_comment = False
+    fence_start = 0
+
+    for index, line in enumerate(lines, start=1):
+        stripped = line.strip()
+
+        if "@@koogzh_" in line:
+            findings.append(
+                AuditFinding(
+                    path=path.relative_to(ROOT).as_posix(),
+                    line=index,
+                    kind="placeholder_leak",
+                    message="存在未还原的占位符",
+                    excerpt=stripped,
+                )
+            )
+
+        if "<!---" in line:
+            findings.append(
+                AuditFinding(
+                    path=path.relative_to(ROOT).as_posix(),
+                    line=index,
+                    kind="knit_comment",
+                    message="发布文档中仍包含 KNIT/INCLUDE 注释",
+                    excerpt=stripped,
+                )
+            )
+
+        if MERGED_TAB_PATTERN.match(line):
+            findings.append(
+                AuditFinding(
+                    path=path.relative_to(ROOT).as_posix(),
+                    line=index,
+                    kind="merged_tab",
+                    message="Tab 标题和后续内容粘连在同一行",
+                    excerpt=stripped,
+                )
+            )
+
+        if MERGED_COMMENT_PATTERN.match(line):
+            findings.append(
+                AuditFinding(
+                    path=path.relative_to(ROOT).as_posix(),
+                    line=index,
+                    kind="merged_comment",
+                    message="注释和后续正文粘连在同一行",
+                    excerpt=stripped,
+                )
+            )
+
+        if BROKEN_FENCE_PATTERN.match(line):
+            findings.append(
+                AuditFinding(
+                    path=path.relative_to(ROOT).as_posix(),
+                    line=index,
+                    kind="broken_fence",
+                    message="代码围栏与代码正文可能粘连",
+                    excerpt=stripped,
+                )
+            )
+
+        if MERGED_SNIPPET_PATTERN.match(line):
+            findings.append(
+                AuditFinding(
+                    path=path.relative_to(ROOT).as_posix(),
+                    line=index,
+                    kind="merged_snippet",
+                    message="snippet 标记和其他内容粘连",
+                    excerpt=stripped,
+                )
+            )
+
+        if (
+            not stripped.startswith("#")
+            and not stripped.startswith(("[//]:", "--8<--", "# --8<--", "```"))
+            and MERGED_HEADING_PATTERN.match(line)
+        ):
+            findings.append(
+                AuditFinding(
+                    path=path.relative_to(ROOT).as_posix(),
+                    line=index,
+                    kind="merged_heading",
+                    message="标题和前一段内容粘连在同一行",
+                    excerpt=stripped,
+                )
+            )
+
+        if (
+            not stripped.startswith(("|", "-", "*", "[//]:", "```"))
+            and MERGED_LIST_PATTERN.match(line)
+        ):
+            findings.append(
+                AuditFinding(
+                    path=path.relative_to(ROOT).as_posix(),
+                    line=index,
+                    kind="merged_list",
+                    message="列表项和前一段内容粘连在同一行",
+                    excerpt=stripped,
+                )
+            )
+
+        if in_comment:
+            if "-->" in line:
+                in_comment = False
+            continue
+
+        if stripped.startswith("<!--"):
+            if "-->" not in line:
+                in_comment = True
+            continue
+
+        if re.match(r"^\s*```", line):
+            in_fence = not in_fence
+            if in_fence:
+                fence_start = index
+            continue
+
+        if in_fence:
+            continue
+
+        if not stripped:
+            continue
+
+        if stripped.startswith(("--8<--", "# --8<--", "!!!", "???", "===")):
+            continue
+
+        if re.match(r"^\s*\[[^\]]+\]:\s+\S+", stripped):
+            continue
+
+        if re.match(r"^\s*</?\w+.*>$", stripped):
+            continue
+
+        if is_probably_indented_code_line(line):
+            continue
+
+        if is_suspect_english_prose_line(line):
+            findings.append(
+                AuditFinding(
+                    path=path.relative_to(ROOT).as_posix(),
+                    line=index,
+                    kind="english_prose",
+                    message="可能存在未翻译的英文正文",
+                    excerpt=stripped,
+                )
+            )
+            continue
+
+        if re.match(r"^\s*[-*+]\s+\*\*[A-Za-z][^*]+\*\*\s*[:：]", line):
+            findings.append(
+                AuditFinding(
+                    path=path.relative_to(ROOT).as_posix(),
+                    line=index,
+                    kind="english_label",
+                    message="可见标签可能仍为英文",
+                    excerpt=stripped,
+                )
+            )
+
+    if in_fence:
+        findings.append(
+            AuditFinding(
+                path=path.relative_to(ROOT).as_posix(),
+                line=fence_start,
+                kind="unclosed_fence",
+                message="代码围栏未闭合",
+                excerpt=lines[fence_start - 1].strip() if lines else "",
+            )
+        )
+
+    return findings
+
+
+def audit_docs(args: argparse.Namespace) -> None:
+    paths = candidate_paths(set(STATUS_ORDER), args.paths)
+    if args.limit_files:
+        paths = paths[: args.limit_files]
+
+    all_findings: list[AuditFinding] = []
+    for path in paths:
+        if path.suffix != ".md":
+            continue
+        all_findings.extend(audit_markdown_file(path))
+
+    counts: dict[str, int] = {}
+    for finding in all_findings:
+        counts[finding.kind] = counts.get(finding.kind, 0) + 1
+
+    if args.json:
+        payload = {
+            "total_findings": len(all_findings),
+            "counts": counts,
+            "findings": [
+                {
+                    "path": finding.path,
+                    "line": finding.line,
+                    "kind": finding.kind,
+                    "message": finding.message,
+                    "excerpt": finding.excerpt,
+                }
+                for finding in all_findings
+            ],
+        }
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
+    else:
+        print(f"audited files: {len(paths)}")
+        print(f"total findings: {len(all_findings)}")
+        for kind in sorted(counts):
+            print(f"{kind}: {counts[kind]}")
+        for finding in all_findings[: args.limit]:
+            print(f"{finding.path}:{finding.line}: [{finding.kind}] {finding.message}")
+            print(f"  {finding.excerpt}")
+
+    if args.fail_on_findings and all_findings:
+        raise SystemExit(1)
+
+
 def build_site(_args: argparse.Namespace) -> None:
     if shutil.which("uv") is None:
         raise SystemExit("找不到 uv，请先安装 uv: https://docs.astral.sh/uv/")
@@ -1506,6 +1951,14 @@ def parse_args() -> argparse.Namespace:
 
     build_parser = subparsers.add_parser("build-site")
     build_parser.set_defaults(func=build_site)
+
+    audit_parser = subparsers.add_parser("audit-docs")
+    audit_parser.add_argument("--json", action="store_true", help="Print JSON output")
+    audit_parser.add_argument("--limit", type=int, default=50, help="Max findings shown in text mode")
+    audit_parser.add_argument("--limit-files", type=int, help="Max files to audit")
+    audit_parser.add_argument("--fail-on-findings", action="store_true", help="Exit 1 when findings exist")
+    audit_parser.add_argument("paths", nargs="*", help="Optional explicit site markdown paths")
+    audit_parser.set_defaults(func=audit_docs)
 
     status_parser = subparsers.add_parser("set-status")
     status_parser.add_argument("path", help="Site markdown path")

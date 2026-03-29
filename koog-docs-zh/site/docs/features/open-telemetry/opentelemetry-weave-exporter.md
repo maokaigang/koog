@@ -2,7 +2,7 @@
 # W&B Weave 导出器 { #w-b-weave-exporter }
 
 Koog 内置支持将智能体追踪数据导出到 [W&B Weave](https://wandb.ai/site/weave/)，
-这是 Weights & Biases 提供的一款用于 AI 应用可观测性和分析的开发者工具。  
+这是 Weights & Biases 提供的一款用于 AI 应用可观测性和分析的开发者工具。
 通过 Weave 集成，您可以捕获提示词、补全结果、系统上下文和执行追踪，
 并直接在您的 W&B 工作区中可视化这些数据。
 
@@ -37,12 +37,12 @@ export WEAVE_PROJECT_NAME="koog-tracing"
 
     ```kotlin
     fun main() = runBlocking {
-        val entity = System.getenv()["WEAVE_ENTITY"] 
+        val entity = System.getenv()["WEAVE_ENTITY"]
             ?: throw IllegalArgumentException("WEAVE_ENTITY is not set")
-        
-        val projectName = System.getenv()["WEAVE_PROJECT_NAME"] 
+
+        val projectName = System.getenv()["WEAVE_PROJECT_NAME"]
             ?: "koog-tracing"
-        
+
         val agent = AIAgent(
             promptExecutor = promptExecutor,
             llmModel = OpenAIModels.Chat.GPT4oMini,
@@ -52,9 +52,9 @@ export WEAVE_PROJECT_NAME="koog-tracing"
                 addWeaveExporter()
             }
         }
-    
+
         println("Running agent with Weave tracing")
-    
+
         val result = agent.run("Tell me a joke about programming")
         println("Result: $result\nSee traces on https://wandb.ai/$entity/$projectName/weave/traces")
     }
@@ -93,11 +93,11 @@ export WEAVE_PROJECT_NAME="koog-tracing"
 启用后，Weave导出器会捕获与Koog通用OpenTelemetry集成相同的跨度，包括：
 
 - **智能体生命周期事件**：启动、停止、错误
-- **LLM 交互**：提示、完成、延迟
+- **模型交互**（LLM 交互）：提示、完成、延迟
 - **工具调用**：工具调用的执行轨迹
 - **系统上下文**：元数据，例如模型名称、环境、Koog 版本
 
-出于安全考虑，OpenTelemetry 的部分追踪内容默认会被屏蔽。若要在 Weave 中查看这些内容，请在 OpenTelemetry 配置中使用 [设置详细模式](opentelemetry-support.md#setverbose) 方法，并将其 `verbose` 参数设置为 `true`，具体操作如下：
+出于安全考虑，OpenTelemetry 的部分追踪内容默认会被屏蔽。若要在 Weave 中查看这些内容，请在 OpenTelemetry 配置中使用 [设置详细模式](index.md#setverbose) 方法，并将其 `verbose` 参数设置为 `true`，具体操作如下：
 
 === "Kotlin"
 
@@ -118,14 +118,14 @@ export WEAVE_PROJECT_NAME="koog-tracing"
     ```
 
 在 W&B Weave 中可视化时，追踪记录会呈现如下所示：
-![W&B Weave traces](img/opentelemetry-weave-exporter-light.png#only-light)
-![W&B Weave traces](img/opentelemetry-weave-exporter-dark.png#only-dark)
+![W&B Weave traces](../../img/opentelemetry-weave-exporter-light.png#only-light)
+![W&B Weave traces](../../img/opentelemetry-weave-exporter-dark.png#only-dark)
 
 更多详情，请参阅官方[Weave OpenTelemetry 文档](https://weave-docs.wandb.ai/guides/tracking/otel/)。
 
 ---
 
-## Troubleshooting
+## 故障排查 { #troubleshooting }
 
 ### Weave中没有出现任何追踪记录 { #no-traces-appear-in-weave }
 - 确认您的环境中已设置 `WEAVE_API_KEY`、`WEAVE_ENTITY` 和 `WEAVE_PROJECT_NAME`。

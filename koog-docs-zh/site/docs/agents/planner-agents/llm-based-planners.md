@@ -91,6 +91,6 @@ Koog 提供了两种简单的规划器：
     System.out.println(result);
     ```
 
-## Next steps
+## 后续步骤 { #next-steps }
 
 - Learn about [GOAP agents](goap-agents.md)

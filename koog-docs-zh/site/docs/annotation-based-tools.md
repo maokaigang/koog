@@ -49,7 +49,7 @@ public annotation class Tool(val customName: String = "")
             // 工具实现
             return "Result"
         }
-    
+
         @Tool(customName = "customToolName")
         fun anotherTool(): String {
             // 工具实现
@@ -67,7 +67,7 @@ public annotation class Tool(val customName: String = "")
             // 工具实现
             return "Result";
         }
-    
+
         @Tool(customName = "customToolName")
         public String anotherTool() {
             // 工具实现
@@ -127,7 +127,6 @@ public annotation class LLMDescription(val description: String)
     }
     ```
 
-    
 * 参数层级：
 
 === "Kotlin"
@@ -138,7 +137,7 @@ public annotation class LLMDescription(val description: String)
     fun processTool(
         @LLMDescription("The input data to process")
         input: String,
-    
+
         @LLMDescription("Optional configuration parameters")
         config: String = ""
     ): String {
@@ -165,7 +164,7 @@ public annotation class LLMDescription(val description: String)
 
 ### 1. 实现 ToolSet 接口 { #1-implement-the-toolset-interface }
 
-创建一个实现 [`ToolSet`](api:agents-tools::ai.koog.agents.core.tools.reflect.ToolSet) 接口的类。
+创建一个实现 `ToolSet` 接口的类。
 此接口将您的类标记为工具的容器。
 
 === "Kotlin"
@@ -254,15 +253,15 @@ public annotation class LLMDescription(val description: String)
 现在您可以将您的工具与智能体一起使用：
 
 === "Kotlin"
-    
+
     ```kotlin
     fun main() {
         runBlocking {
             // 创建您的工具集
             val weatherTools = MyFirstToolSet()
-    
+
             // 使用您的工具创建一个智能体
-    
+
             val agent = AIAgent(
                 promptExecutor = simpleOpenAIExecutor(apiToken),
                 systemPrompt = "Provide weather information for a given location.",
@@ -271,7 +270,7 @@ public annotation class LLMDescription(val description: String)
                     tools(weatherTools)
                 }
             )
-    
+
             // 智能体现在可以使用您的天气工具了
             agent.run("What's the weather like in New York?")
         }
@@ -325,7 +324,7 @@ public annotation class LLMDescription(val description: String)
             switch.switch(state)
             return "已切换到 ${if (state) "开" else "关"}"
         }
-    
+
         @Tool
         @LLMDescription("返回开关的当前状态")
         fun switchState(): String {
@@ -353,7 +352,7 @@ public annotation class LLMDescription(val description: String)
             return state;
         }
     }
-    
+
     @LLMDescription(description = "用于控制开关的工具")
     public class SwitchTools implements ToolSet {
         private final Switch sw;
@@ -468,7 +467,9 @@ public annotation class LLMDescription(val description: String)
 
 ### 工具未被识别 { #tools-not-being-recognized }
 
-如果代理无法识别您的工具，请检查以下事项：- 您的类实现了 `ToolSet` 接口。
+如果代理无法识别您的工具，请检查以下事项：
+
+- 您的类实现了 `ToolSet` 接口。
 - 所有工具函数或方法均使用 `@Tool` 进行注解。
 - 工具函数或方法具有适当的返回类型（建议使用 `String` 以简化）。
 - 您的工具已正确注册到代理中。

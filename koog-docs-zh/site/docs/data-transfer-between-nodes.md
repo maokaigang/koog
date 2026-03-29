@@ -47,11 +47,11 @@ Koog 提供了一种使用 `AIAgentStorage` 存储和传递数据的方式，这
     ) {}
     ```
 
-Once defined, use the class to create a storage key as described below.
+定义完成后，按照以下描述使用该类创建存储密钥。
 
-### Creating a storage key
+### 创建存储密钥 { #creating-a-storage-key }
 
-Create a typed storage key for the defined data structure:
+为定义的数据结构创建类型化存储键：
 
 === "Kotlin"
 
@@ -65,11 +65,11 @@ Create a typed storage key for the defined data structure:
     AIAgentStorageKey<UserData> userDataKey = AIAgentStorage.createStorageKey("user-data");
     ```
 
-The `createStorageKey` function takes a single string parameter that uniquely identifies the key.
+`createStorageKey` 函数接收一个字符串参数，该参数用于唯一标识密钥。
 
-### Storing data
+### 存储数据 { #storing-data }
 
-To save data using a created storage key, use the `storage.set(key: AIAgentStorageKey<T>, value: T)` method in a node:
+要使用已创建的存储键保存数据，请在节点中使用 `storage.set(key: AIAgentStorageKey<T>, value: T)` 方法：
 
 === "Kotlin"
 
@@ -92,9 +92,9 @@ To save data using a created storage key, use the `storage.set(key: AIAgentStora
         .build();
     ```
 
-### Retrieving data
+### 正在检索数据 { #retrieving-data }
 
-To retrieve the data, use the `storage.get` method in a node:
+要检索数据，请在节点中使用 `storage.get` 方法：
 
 === "Kotlin"
 
@@ -120,11 +120,11 @@ To retrieve the data, use the `storage.get` method in a node:
         .build();
     ```
 
-## API documentation
+## API 文档 { #api-documentation }
 
-For a complete reference related to the `AIAgentStorage` class, see [AIAgentStorage](api:agents-core::ai.koog.agents.core.agent.entity.AIAgentStorage).
+有关 `AIAgentStorage` 类的完整参考，请参阅 [AIAgent存储](api:agents-core::ai.koog.agents.core.agent.entity.AIAgentStorage)。
 
-For individual functions available in the `AIAgentStorage` class, see the following API references:
+有关 `AIAgentStorage` 类中可用的独立函数，请参阅以下 API 参考资料：
 
 - [clear](api:agents-core::ai.koog.agents.core.agent.entity.AIAgentStorage.clear)
 - [get](api:agents-core::ai.koog.agents.core.agent.entity.AIAgentStorage.get)
@@ -134,9 +134,9 @@ For individual functions available in the `AIAgentStorage` class, see the follow
 - [set](api:agents-core::ai.koog.agents.core.agent.entity.AIAgentStorage.set)
 - [toMap](api:agents-core::ai.koog.agents.core.agent.entity.AIAgentStorage.toMap)
 
-## Additional information
+## 附加信息 { #additional-information }
 
-- `AIAgentStorage` is thread-safe, using a Mutex to ensure concurrent access is handled properly.
-- When retrieving values, type casting is handled automatically, ensuring type safety throughout your application.
-- For non-nullable access to values, use the `getValue` method which throws an exception if the key does not exist.
-- You can clear the storage entirely using the `clear` method, which removes all stored key-value pairs.
+- `AIAgentStorage` 是线程安全的，它使用互斥锁来确保并发访问得到正确处理。
+- 在检索数值时，类型转换会自动处理，确保整个应用程序的类型安全。
+- 对于非空值访问，请使用 `getValue` 方法，该方法会在键不存在时抛出异常。
+- 您可以使用 `clear` 方法完全清空存储，该方法会移除所有已存储的键值对。

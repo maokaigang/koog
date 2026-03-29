@@ -157,7 +157,7 @@ val agentCard = AgentCard(
 
     // Enable extended card for authenticated users
     supportsAuthenticatedExtendedCard = true,
-    
+
     // Skills/Capabilities
     skills = listOf(
         AgentSkill(
@@ -208,9 +208,11 @@ transport.start(
 ### 存储 { #storage }
 
 A2A 服务器采用可插拔的存储架构，分离不同类型的数据。
-所有存储实现都是可选的，默认情况下使用内存版本用于开发。- **TaskStorage**：任务生命周期管理 - 存储并管理任务状态、历史记录与产物
-- **MessageStorage**：对话历史管理 - 在会话上下文中管理消息历史
-- **PushNotificationConfigStorage**：Webhook 管理 - 管理异步通知的 Webhook 配置
+所有存储实现都是可选的，默认情况下使用内存版本用于开发。
+
+- **任务存储**（`TaskStorage`）：任务生命周期管理，用于存储并管理任务状态、历史记录与产物。
+- **消息存储**（`MessageStorage`）：对话历史管理，用于在会话上下文中管理消息历史。
+- **推送通知配置存储**（`PushNotificationConfigStorage`）：Webhook 管理，用于管理异步通知的 Webhook 配置。
 
 ## 快速开始 { #quickstart }
 

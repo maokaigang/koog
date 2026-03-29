@@ -59,7 +59,7 @@ Koog 框架提供了预定义节点，同时也允许您使用 `node` 函数创�
 === "Kotlin"
 
     ```kotlin
-    edge(sourceNode forwardTo targetNode 
+    edge(sourceNode forwardTo targetNode
             onCondition { input -> input.length > 10 }
             transformed { input -> input.uppercase() }
     )
@@ -166,7 +166,7 @@ Koog 框架提供了预定义节点，同时也允许您使用 `node` 函数创�
         val nodeCallLLM by nodeLLMRequest()
         val executeToolCall by nodeExecuteTool()
         val sendToolResult by nodeLLMSendToolResult()
-    
+
         edge(nodeStart forwardTo nodeCallLLM)
         edge(nodeCallLLM forwardTo nodeFinish onAssistantMessage { true })
         edge(nodeCallLLM forwardTo executeToolCall onToolCall { true })
@@ -228,10 +228,9 @@ Koog 框架提供了预定义节点，同时也允许您使用 `node` 函数创�
 
 === "Kotlin"
 
-    
     ```kotlin
     val mermaidDiagram: String = myStrategy.asMermaidDiagram()
-    
+
     println(mermaidDiagram)
     ```
 

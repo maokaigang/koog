@@ -40,9 +40,9 @@ Koog 内置支持将智能体追踪数据导出到 [Langfuse](https://langfuse.c
                 addLangfuseExporter()
             }
         }
-    
+
         println("Running agent with Langfuse tracing")
-    
+
         val result = agent.run("Tell me a joke about programming")
         println("Result: $result\nSee traces on the Langfuse instance")
     }
@@ -144,7 +144,7 @@ Common attributes:
     ```kotlin
     fun main() = runBlocking {
         val sessionId = UUID.randomUUID().toString()
-    
+
         val agent = AIAgent(
             promptExecutor = promptExecutor,
             llmModel = OpenAIModels.Chat.GPT4oMini,
@@ -159,7 +159,7 @@ Common attributes:
                 )
             }
         }
-    
+
         println("Running agent with Langfuse tracing")
 
         // Multiple runs with the same session ID will be grouped in Langfuse
@@ -201,13 +201,13 @@ Common attributes:
 启用后，Langfuse导出器会捕获与Koog通用OpenTelemetry集成相同的跨度，包括：
 
 - **智能体生命周期事件**：启动、停止、错误
-- **LLM 交互**：提示、响应、令牌使用量、延迟
+- **模型交互**（LLM 交互）：提示、响应、令牌使用量、延迟
 - **工具调用**：工具调用的执行轨迹
 - **系统上下文**：元数据，如模型名称、环境、Koog 版本
 
 Koog 还捕获了 Langfuse 显示 [智能体图](https://langfuse.com/docs/observability/features/agent-graphs) 所需的 span 属性。
 
-出于安全考虑，OpenTelemetry 的部分追踪内容默认会被屏蔽。若要在 Langfuse 中查看这些内容，请在 OpenTelemetry 配置中使用 [设置详细模式](opentelemetry-support.md#setverbose) 方法，并将其 `verbose` 参数设置为 `true`，具体操作如下：
+出于安全考虑，OpenTelemetry 的部分追踪内容默认会被屏蔽。若要在 Langfuse 中查看这些内容，请在 OpenTelemetry 配置中使用 [设置详细模式](index.md#setverbose) 方法，并将其 `verbose` 参数设置为 `true`，具体操作如下：
 
 === "Kotlin"
 
@@ -228,14 +228,14 @@ Koog 还捕获了 Langfuse 显示 [智能体图](https://langfuse.com/docs/obser
     ```
 
 在 Langfuse 中可视化时，追踪记录显示如下：
-![Langfuse traces](img/opentelemetry-langfuse-exporter-light.png#only-light)
-![Langfuse traces](img/opentelemetry-langfuse-exporter-dark.png#only-dark)
+![Langfuse traces](../../img/opentelemetry-langfuse-exporter-light.png#only-light)
+![Langfuse traces](../../img/opentelemetry-langfuse-exporter-dark.png#only-dark)
 
 有关 Langfuse OpenTelemetry 追踪的更多详情，请参阅：[Langfuse OpenTelemetry 文档](https://langfuse.com/integrations/native/opentelemetry#opentelemetry-endpoint)。
 
 ---
 
-## Troubleshooting
+## 故障排查 { #troubleshooting }
 
 ### Langfuse 中没有出现追踪记录 { #no-traces-appear-in-langfuse }
 - 请确认您的环境中已设置 `LANGFUSE_HOST`、`LANGFUSE_PUBLIC_KEY` 和 `LANGFUSE_SECRET_KEY`。

@@ -1,4 +1,4 @@
-<!-- koog-zh-meta: {"last_synced_at": "2026-03-28T13:01:07+00:00", "source_path": "ktor-plugin.md", "source_sha256": "d19fcd56839b70cdecb4fa2874144b3c4e575faa3f970489709df2a938fb26b2", "source_tag": "0.7.3", "translation_status": "changed"} -->
+<!-- koog-zh-meta: {"last_synced_at": "2026-03-29T03:04:21+00:00", "source_path": "ktor-plugin.md", "source_sha256": "d19fcd56839b70cdecb4fa2874144b3c4e575faa3f970489709df2a938fb26b2", "source_tag": "0.7.3", "translation_status": "changed"} -->
 # Ktor 集成：Koog 插件 { #ktor-integration-koog-plugin }
 
 Koog 自然地融入您的 Ktor 服务器，让您能够使用符合语言习惯的 Kotlin API 来编写服务器端 AI 应用程序。
@@ -9,11 +9,12 @@ Koog 自然地融入您的 Ktor 服务器，让您能够使用符合语言习惯
 
 `koog-ktor` 模块为服务器端智能体开发提供了符合语言习惯的 Kotlin/Ktor 集成：
 
-- 即插即用的 Ktor 插件：在您的 Application 中 `install(Koog)`
-- 对 OpenAI、Anthropic、Google、OpenRouter、DeepSeek 和 Ollama 的一流支持
+- 即插即用的 Ktor 插件：在您的应用程序中 `install(Koog)`
+- 支持多家主流 LLM 提供商。
+- 包括 `OpenAI`、`Anthropic`、`Google`、`OpenRouter`、`DeepSeek` 和 `Ollama`。
 - 通过 YAML/CONF 和/或代码进行集中配置
 - 智能体设置（包括提示、工具、功能）；为路由提供简单的扩展函数
-- 直接使用 LLM（execute、executeStreaming、moderate）
+- 直接使用 LLM（执行、executeStreaming、中等）
 - 集成仅限 JVM 的模型上下文协议（MCP）工具
 
 ## 添加依赖 { #add-dependency }
@@ -217,8 +218,8 @@ install(Koog) {
 
 注意
 
-- 对于 OpenAI，您必须包含类别（chat、reasoning、costoptimized、audio、embeddings、moderation）。
-- 对于 Ollama，同时支持 ollama.model 和 ollama.<maker>.<model> 格式。
+- 对于 OpenAI，您必须包含类别（聊天、推理、成本优化、音频、嵌入、审核）。
+- 对于 Ollama，同时支持 `ollama.model` 和 `ollama.<maker>.<model>` 两种格式。
 
 ## MCP 工具（仅限 JVM） { #mcp-tools-jvm-only }
 

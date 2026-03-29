@@ -58,9 +58,9 @@ Koog 的 **流式传输 API** 允许你将 **LLM 输出** 作为 `Flow<StreamFra
     ```kotlin
     llm.writeSession {
         appendPrompt { user("Tell me a joke, then call a tool with JSON args.") }
-    
+
         val stream = requestLLMStreaming() // Flow<StreamFrame>
-    
+
         stream.collect { frame ->
             when (frame) {
                 is StreamFrame.TextDelta -> print(frame.text)
@@ -125,7 +125,7 @@ llm.writeSession {
     stream.collect { frame ->
         when (frame) {
             is StreamFrame.ReasoningDelta -> {
-                frame.text?.let { 
+                frame.text?.let {
                     reasoningSteps.add(it)
                     print(frame.text) // Display reasoning as it arrives
                 }
@@ -203,7 +203,7 @@ llm.writeSession {
     ```java
     ```
 
-### Converting frames to `Message.Response`
+### 将帧转换为 `Message.Response` { #converting-frames-to-message-response }
 
 您可以将收集到的帧列表转换为标准消息对象：
 - `toAssistantMessageOrNull()` — 从文本帧中提取 `Message.Assistant`
@@ -211,7 +211,7 @@ llm.writeSession {
 - `toToolCallMessages()` — 从工具调用帧中提取 `Message.Tool.Call`
 - `toMessageResponses()` — 将所有完整帧转换为对应的`Message.Response`对象
 
-## Examples
+## 示例 { #examples }
 
 ### 流式传输中的结构化数据（Markdown示例） { #structured-data-while-streaming-markdown-example }
 
@@ -415,15 +415,15 @@ llm.writeSession {
        val author: String,
        val description: String
     )
-    
+
     class BookTool(): SimpleTool<Book>(
         argsType = typeToken<Book>(),
         name = NAME,
         description = "A tool to parse book information from Markdown"
     ) {
-    
+
         companion object { const val NAME = "book" }
-    
+
         override suspend fun execute(args: Book): String {
             println("${args.title} by ${args.author}:\n ${args.description}")
             return "Done"
@@ -489,7 +489,7 @@ val runner = AIAgent(
 )
 ```
 
-## Best practices
+## 最佳实践 { #best-practices }
 
 1. **定义清晰的结构**：为你的数据创建清晰且无歧义的Markdown结构。
 

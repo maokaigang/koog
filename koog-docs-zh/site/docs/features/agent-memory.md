@@ -22,19 +22,19 @@ AgentMemory 功能建立在分层结构之上。该结构的元素在以下部�
 
 ***事实*** 是存储在记忆中的独立信息片段。事实代表实际存储的信息。事实有两种类型：
 
-- **SingleFact**：与概念关联的单个值。例如，IDE 用户当前偏好的主题：
+- **单值事实**（`SingleFact`）：与概念关联的单个值。例如，IDE 用户当前偏好的主题：
 ```kotlin
 // Storing favorite IDE theme (single value)
 val themeFact = SingleFact(
     concept = Concept(
-        "ide-theme", 
-        "User's preferred IDE theme", 
+        "ide-theme",
+        "User's preferred IDE theme",
         factType = FactType.SINGLE),
     value = "Dark Theme",
     timestamp = Clock.System.now().toEpochMilliseconds(),
 )
 ```
-- **MultipleFacts**：与概念关联的多个值。例如，用户掌握的所有语言：
+- **多值事实**（`MultipleFacts`）：与概念关联的多个值。例如，用户掌握的所有语言：
 ```kotlin
 // Storing programming languages (multiple values)
 val languagesFact = MultipleFacts(
@@ -52,9 +52,9 @@ val languagesFact = MultipleFacts(
 
 ***概念*** 是具有关联元数据的信息类别。
 
-- **Keyword**：概念的唯一标识符。
-- **Description**：对概念所代表内容的详细说明。
-- **FactType**：概念存储的是单个事实还是多个事实（`FactType.SINGLE` 或 `FactType.MULTIPLE`）。
+- **关键词**（`Keyword`）：概念的唯一标识符。
+- **描述**（`Description`）：对概念所代表内容的详细说明。
+- **事实类型**（`FactType`）：概念存储的是单个事实还是多个事实（`FactType.SINGLE` 或 `FactType.MULTIPLE`）。
 
 #### 主题 { #subjects }
 
@@ -62,8 +62,8 @@ val languagesFact = MultipleFacts(
 
 主题的常见示例包括：
 
-- **User**：个人偏好和设置
-- **Environment**：与应用程序环境相关的信息
+- **用户主题**（`User`）：个人偏好和设置
+- **环境主题**（`Environment`）：与应用程序环境相关的信息
 
 有一个预定义的 `MemorySubject.Everything`，您可以用作所有事实的默认主题。此外，您可以通过扩展 `MemorySubject` 抽象类来定义自己的自定义记忆主题：
 
@@ -99,10 +99,10 @@ object MemorySubjects {
 
 ***记忆范围*** 是事实相关的上下文：
 
-- **Agent**：特定于某个智能体。
-- **Feature**：特定于某个功能。
-- **Product**：特定于某个产品。
-- **CrossProduct**：跨多个产品相关。
+- **智能体范围**（`Agent`）：特定于某个智能体。
+- **功能范围**（`Feature`）：特定于某个功能。
+- **产品范围**（`Product`）：特定于某个产品。
+- **跨产品范围**（`CrossProduct`）：跨多个产品相关。
 
 ## 配置与初始化 { #configuration-and-initialization }
 
@@ -336,7 +336,7 @@ AgentMemory 功能包含多种处理边界情况的机制：
 
 - [ai.koog.agents.local.memory.feature](api:agents-features-memory::ai.koog.agents.memory.feature)：包含 `AgentMemory` 类以及 AI 代理记忆功能的核心实现。
 - [ai.koog.agents.local.memory.feature.nodes](api:agents-features-memory::ai.koog.agents.memory.feature.nodes)：包含可在子图中使用的预定义记忆相关节点。
-- [ai.koog.agents.local.memory.config](api:agents-features-memory::ai.koog.agents.memory.config)：提供用于记忆操作的内存范围定义。
+- `ai.koog.agents.memory.config`：提供用于记忆操作的内存范围定义。
 - [ai.koog.agents.local.memory.model](api:agents-features-memory::ai.koog.agents.memory.model)：包含核心数据结构和接口的定义，使代理能够在不同上下文和时间段内存储、组织和检索信息。
 - [ai.koog.agents.local.memory.feature.history](api:agents-features-memory::ai.koog.agents.memory.feature.history)：提供历史压缩策略，用于从过去的会话活动或存储的记忆中检索和整合关于特定概念的事实知识。
 - [ai.koog.agents.local.memory.providers](api:agents-features-memory::ai.koog.agents.memory.providers)：提供核心接口，该接口定义了以结构化、上下文感知的方式存储和检索知识的基本操作及其实现。

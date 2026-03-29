@@ -233,10 +233,6 @@ runBlocking {
     2. Daniel Garcia (+34 612 345 678)
     请确认向 Daniel Garcia (+34 612 345 678) 转账 €25.00，用途为“餐厅晚餐”。
 
-
-
-
-
     任务成功完成。
 
 ## 添加交易分析 { #adding-transaction-analytics }
@@ -452,12 +448,8 @@ runBlocking {
 
     交易分析助手已启动
 
-
-
-
-
     本月您在餐厅总共消费了 $517.64。
-    
+
     任务成功完成。
 
 ## 使用图构建代理 { #building-an-agent-with-graph }
@@ -646,27 +638,24 @@ runBlocking {
     val result = agent.run(testMessage)
     "Result: $result"
 }
-```银行助手已启动  
-我找到了多个名为Daniel的联系人。请选择正确的一位：  
-1. Daniel Anderson (+46 70 123 45 67)  
-2. Daniel Garcia (+34 612 345 678)  
-请指定正确收件人的编号。  
+```
+
+银行助手已启动
+我找到了多个名为Daniel的联系人。请选择正确的一位：
+1. Daniel Anderson (+46 70 123 45 67)
+2. Daniel Garcia (+34 612 345 678)
+请指定正确收件人的编号。
 请确认是否要继续向Daniel Garcia发送25欧元，用途为“餐厅晚餐”。
 
-
-
-
-
 结果：任务成功完成。
-
-
 
 ## 智能体组合——将智能体作为工具使用 { #agent-composition-using-agents-as-tools }
 
 Koog允许您在其他智能体中将智能体作为工具使用，从而实现强大的组合模式。
 
+```
 
-```kotlin
+kotlin
 import ai.koog.agents.core.agent.createAgentTool
 import ai.koog.agents.core.tools.ToolParameterDescriptor
 import ai.koog.agents.core.tools.ToolParameterType
@@ -708,7 +697,6 @@ val classifierAgent = AIAgent(
 
 ## 运行组合智能体 { #run-composed-agent }
 
-
 ```kotlin
 println("Banking Assistant started")
 val composedMessage = "Send 25 euros to Daniel for dinner at the restaurant."
@@ -719,33 +707,27 @@ runBlocking {
 }
 ```
 
-    银行助手已启动  
-    有两位名为Daniel的联系人。请确认您希望向哪一位转账：  
-    1. Daniel Anderson (+46 70 123 45 67)  
-    2. Daniel Garcia (+34 612 345 678)  
+    银行助手已启动
+    有两位名为Daniel的联系人。请确认您希望向哪一位转账：
+    1. Daniel Anderson (+46 70 123 45 67)
+    2. Daniel Garcia (+34 612 345 678)
     请确认向Daniel Anderson (+46 70 123 45 67)转账25.00欧元，用途为“餐厅晚餐”。
 
-
-
-
-
     结果：无法执行任务。
-
-
 
 ## 总结 { #summary }
 在本教程中，您已学习如何：
 
-1. 创建具有清晰描述的LLM驱动工具，帮助AI理解何时及如何使用它们  
-2. 构建结合LLM与工具以完成特定任务的单一功能智能体  
-3. 使用策略和子图实现复杂工作流的图智能体  
-4. 通过在其他智能体中作为工具使用来组合智能体  
-5. 处理用户交互，包括确认和消歧操作  
+1. 创建具有清晰描述的LLM驱动工具，帮助AI理解何时及如何使用它们
+2. 构建结合LLM与工具以完成特定任务的单一功能智能体
+3. 使用策略和子图实现复杂工作流的图智能体
+4. 通过在其他智能体中作为工具使用来组合智能体
+5. 处理用户交互，包括确认和消歧操作
 
 ## 最佳实践 { #best-practices }
 
-1. 清晰的工具描述：编写详细的LLMDescription注解，帮助AI理解工具用途  
-2. 符合Kotlin习惯：使用Kotlin特性，如数据类、扩展函数和作用域函数  
-3. 错误处理：始终验证输入并提供有意义的错误信息  
-4. 用户体验：对关键操作（如转账）包含确认步骤  
+1. 清晰的工具描述：编写详细的LLMDescription注解，帮助AI理解工具用途
+2. 符合Kotlin习惯：使用Kotlin特性，如数据类、扩展函数和作用域函数
+3. 错误处理：始终验证输入并提供有意义的错误信息
+4. 用户体验：对关键操作（如转账）包含确认步骤
 5. 模块化：将不同关注点分离到独立的工具和智能体中，以提高可维护性

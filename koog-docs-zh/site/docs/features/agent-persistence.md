@@ -27,7 +27,6 @@
 
 === "Kotlin"
 
-    
     ```kotlin
     val agent = AIAgent(
         promptExecutor = executor,
@@ -99,7 +98,6 @@ Agent Persistence 功能提供三种主要配置选项：
 
 === "Kotlin"
 
-    
     ```kotlin
     install(Persistence) {
         enableAutomaticPersistence = false
@@ -196,9 +194,9 @@ tool call: createUser "Maria"
     install(Persistence) {
         enableAutomaticPersistence = true
         rollbackToolRegistry = RollbackToolRegistry {
-            // For every `createUser` tool call there will be a `removeUser` invocation in the reverse order 
+            // For every `createUser` tool call there will be a `removeUser` invocation in the reverse order
             // when rolling back to the desired execution point.
-            // Note: `removeUser` tool should take the same exact arguments as `createUser`. 
+            // Note: `removeUser` tool should take the same exact arguments as `createUser`.
             // It's the developer's responsibility to make sure that `removeUser` invocation rolls back all side-effects of `createUser`:
             registerRollback(::createUser, ::removeUser)
         }

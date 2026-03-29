@@ -114,7 +114,7 @@ Koog 使用一个轻量级、与库无关的序列化层，将工具参数和结
 
 `JSONElement` 是 JSON 数据的一种中性中间表示。它的存在使得序列化器、工具和代理内部实现无需依赖特定库中的 JSON 类型。
 
-### Hierarchy
+### 层级结构 { #hierarchy }
 
 ```
 JSONElement
@@ -287,7 +287,7 @@ dependencies {
 
 ## 在 `AIAgentConfig` 中配置序列化器 { #configuring-the-serializer-in-aiagentconfig }
 
-=== "Kotlin" 
+=== "Kotlin"
 
     在构造 `AIAgentConfig` 时传入 `serializer` 参数。
     如果省略，则使用 `KotlinxSerializer`。

@@ -29,13 +29,10 @@ export LANGFUSE_PUBLIC_KEY=pk_...
 export LANGFUSE_SECRET_KEY=sk_...
 ```
 
-
-
 ```kotlin
 %useLatestDescriptors
 //%use koog
 ```
-
 
 ```kotlin
 import ai.koog.agents.core.agent.AIAgent
@@ -76,8 +73,6 @@ val agent = AIAgent(
 - 依赖环境变量进行 Langfuse 配置
 
 在底层，Koog 会为智能体生命周期、LLM 调用和工具执行（如果有）发出跨度。Langfuse 导出器通过 OpenTelemetry 端点将这些跨度发送到您的 Langfuse 实例。
-
-
 
 ```kotlin
 import kotlinx.coroutines.runBlocking

@@ -13,7 +13,6 @@ https://raw.githubusercontent.com/JetBrains/koog/develop/examples/notebooks/Weav
 
 有关背景信息，请参阅 Weave OpenTelemetry 文档：https://weave-docs.wandb.ai/guides/tracking/otel/
 
-
 ## 先决条件 { #prerequisites }
 
 在运行示例之前，请确保您已具备：
@@ -33,12 +32,9 @@ export WEAVE_PROJECT_NAME=koog-tracing
 export OPENAI_API_KEY=...
 ```
 
-
 ## 笔记本设置 { #notebook-setup }
 
 我们使用最新的 Kotlin Jupyter 描述符。如果您已将 Koog 预配置为 `%use` 插件，可以取消注释以下行。
-
-
 
 ```kotlin
 %useLatestDescriptors
@@ -53,8 +49,6 @@ export OPENAI_API_KEY=...
 - `WEAVE_API_KEY` — 对 Weave 的身份验证
 - `WEAVE_ENTITY` — 拥有追踪的团队/用户
 - `WEAVE_PROJECT_NAME` — 用于存储追踪的 Weave 项目
-
-
 
 ```kotlin
 import ai.koog.agents.core.agent.AIAgent
@@ -84,8 +78,6 @@ val agent = AIAgent(
 
 执行一个简单的提示。完成后，打开打印的链接以在 Weave 中查看追踪。
 您应该能看到代理运行、模型调用和其他已检测操作的跨度。
-
-
 
 ```kotlin
 import kotlinx.coroutines.runBlocking

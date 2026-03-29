@@ -12,8 +12,6 @@ https://raw.githubusercontent.com/JetBrains/koog/develop/examples/notebooks/Play
 
 我们将保持简单和可复现性，专注于一个最小化但实用的智能体 + 工具设置，您可以发布并重复使用。
 
-
-
 ```kotlin
 %useLatestDescriptors
 %use koog
@@ -27,11 +25,8 @@ https://raw.githubusercontent.com/JetBrains/koog/develop/examples/notebooks/Play
 
 提示：在可见模式下运行 Playwright MCP 服务器，以观察浏览器自动执行步骤。
 
-
 ## 1) 提供您的 OpenAI API 密钥 { #1-provide-your-openai-api-key }
 我们从 `OPENAI_API_KEY` 环境变量中读取 API 密钥。这可以避免将密钥暴露在笔记本中。
-
-
 
 ```kotlin
 // Get the API key from environment variables
@@ -41,8 +36,6 @@ val openAIApiToken = System.getenv("OPENAI_API_KEY") ?: error("OPENAI_API_KEY en
 
 ## 2) 启动 Playwright MCP 服务器 { #2-start-the-playwright-mcp-server }
 我们将使用 `npx` 在本地启动 Playwright 的 MCP 服务器。默认情况下，它将暴露一个 SSE 端点，我们可以从 Koog 连接到此端点。
-
-
 
 ```kotlin
 // Start the Playwright MCP server via npx
@@ -57,8 +50,6 @@ val process = ProcessBuilder(
 
 ## 3) 从 Koog 连接并运行智能体 { #3-connect-from-koog-and-run-the-agent }
 我们构建一个最小化的 Koog `AIAgent`，其中包含一个 OpenAI 执行器，并将其工具注册表指向通过 SSE 连接的 MCP 服务器。然后，我们要求它严格通过工具完成浏览器任务。
-
-
 
 ```kotlin
 import kotlinx.coroutines.runBlocking
@@ -90,8 +81,6 @@ runBlocking {
 
 ## 4) 关闭 MCP 进程 { #4-shut-down-the-mcp-process }
 始终在运行结束时清理外部进程。
-
-
 
 ```kotlin
 // Shutdown the Playwright MCP process

@@ -12,11 +12,11 @@
 graph LR
     in:::hidden
     out:::hidden
-    
+
     subgraph node ["node"]
         execute(Do stuff)
     end
-    
+
     in --Input--> execute --Output--> out
 
     classDef hidden display: none;
@@ -41,7 +41,7 @@ graph LR
         .build();
     ```
 
-更多信息，请参阅 [`node()`](api:agents-core::ai.koog.agents.core.dsl.builder.AIAgentSubgraphBuilderBase.node)。
+更多信息，请参阅 `node()` 的 API 文档。
 
 ## 实用节点 { #utility-nodes }
 
@@ -53,11 +53,11 @@ graph LR
 graph LR
     in:::hidden
     out:::hidden
-    
+
     subgraph node ["nodeDoNothing"]
         execute(Do nothing)
     end
-    
+
     in ---|T| execute --T--> out
 
     classDef hidden display: none;
@@ -80,7 +80,7 @@ graph LR
     ```
 
 === "Java"
-    
+
     ```java
     var passthrough = AIAgentNode.doNothing(String.class);
 
@@ -99,11 +99,11 @@ graph LR
 graph LR
     in:::hidden
     out:::hidden
-    
+
     subgraph node ["nodeAppendPrompt"]
         execute(Append prompt)
     end
-    
+
     in ---|T| execute --T--> out
 
     classDef hidden display: none;
@@ -178,11 +178,11 @@ strategy.edge(setupContext, secondNode);
 graph LR
     in:::hidden
     out:::hidden
-    
+
     subgraph node ["nodeLLMSendMessageOnlyCallingTools"]
         execute(Request LLM expecting only tool calls)
     end
-    
+
     in --String--> execute --Message.Response--> out
 
     classDef hidden display: none;
@@ -190,17 +190,17 @@ graph LR
 
 ### nodeLLMSendMessageForceOneTool { #nodellmsendmessageforceonetool }
 
-一个向 LLM 提示追加用户消息并强制 LLM 使用特定工具的节点。详情请参阅 [API 参考](api:agents-core::ai.koog.agents.core.dsl.extension.nodeLLMSendMessageForceOneTool)。
+一个向 LLM 提示追加用户消息并强制 LLM 使用特定工具的节点。详情请参阅 `nodeLLMSendMessageForceOneTool` 的 API 文档。
 
 ```mermaid
 graph LR
     in:::hidden
     out:::hidden
-    
+
     subgraph node ["nodeLLMSendMessageForceOneTool"]
         execute(Request LLM expecting a specific tool call)
     end
-    
+
     in --String--> execute --Message.Response--> out
 
     classDef hidden display: none;
@@ -214,11 +214,11 @@ graph LR
 graph LR
     in:::hidden
     out:::hidden
-    
+
     subgraph node ["nodeLLMRequest"]
         execute(Request LLM)
     end
-    
+
     in --String--> execute --Message.Response--> out
 
     classDef hidden display: none;
@@ -253,11 +253,11 @@ strategy.edge(getUserQuestion, requestLLM);
 graph LR
     in:::hidden
     out:::hidden
-    
+
     subgraph node ["nodeLLMRequestStructured"]
         execute(Request LLM structured)
     end
-    
+
     in --String--> execute -- "Result&lt;StructuredResponse&gt;" --> out
 
     classDef hidden display: none;
@@ -271,11 +271,11 @@ graph LR
 graph LR
     in:::hidden
     out:::hidden
-    
+
     subgraph node ["nodeLLMRequestStreaming"]
         execute(Request LLM streaming)
     end
-    
+
     in --String--> execute --Flow--> out
 
     classDef hidden display: none;
@@ -289,11 +289,11 @@ graph LR
 graph LR
     in:::hidden
     out:::hidden
-    
+
     subgraph node ["nodeLLMRequestMultiple"]
         execute(Request LLM expecting multiple responses)
     end
-    
+
     in --String--> execute -- "List&lt;Message.Response&gt;" --> out
 
     classDef hidden display: none;
@@ -331,11 +331,11 @@ graph LR
 graph LR
     in:::hidden
     out:::hidden
-    
+
     subgraph node ["nodeLLMCompressHistory"]
         execute(Compress current prompt)
     end
-    
+
     in ---|T| execute --T--> out
 
     classDef hidden display: none;
@@ -363,7 +363,7 @@ graph LR
     ```
 
 === "Java"
-    
+
     ```java
     var compressHistory = AIAgentNode.llmCompressHistory("compressHistory")
         .withInput(String.class)
@@ -382,11 +382,11 @@ graph LR
 graph LR
     in:::hidden
     out:::hidden
-    
+
     subgraph node ["nodeExecuteTool"]
         execute(Execute tool call)
     end
-    
+
     in --Message.Tool.Call--> execute --ReceivedToolResult--> out
 
     classDef hidden display: none;
@@ -429,11 +429,11 @@ graph LR
 graph LR
     in:::hidden
     out:::hidden
-    
+
     subgraph node ["nodeLLMSendToolResult"]
         execute(Request LLM)
     end
-    
+
     in --ReceivedToolResult--> execute --Message.Response--> out
 
     classDef hidden display: none;
@@ -456,7 +456,7 @@ graph LR
     ```
 
 === "Java"
-    
+
     ```java
     var executeTool = AIAgentNode.executeTool("executeTool");
     var sendToolResultToLLM = AIAgentNode.llmSendToolResult("sendToolResultToLLM");
@@ -466,17 +466,17 @@ graph LR
 
 ### nodeExecuteMultipleTools { #nodeexecutemultipletools }
 
-一个执行多个工具调用的节点。这些调用可以选择并行执行。详细信息请参阅 [API 参考](api:agents-core::ai.koog.agents.core.dsl.extension.nodeExecuteMultipleTools)。
+一个执行多个工具调用的节点。这些调用可以选择并行执行。详细信息请参阅 `nodeExecuteMultipleTools` 的 API 文档。
 
 ```mermaid
 graph LR
     in:::hidden
     out:::hidden
-    
+
     subgraph node ["nodeExecuteMultipleTools"]
         execute(Execute multiple tool calls)
     end
-    
+
     in -- "List&lt;Message.Tool.Call&gt;" --> execute -- "List&lt;ReceivedToolResult&gt;" --> out
 
     classDef hidden display: none;
@@ -523,11 +523,11 @@ graph LR
 graph LR
     in:::hidden
     out:::hidden
-    
+
     subgraph node ["nodeLLMSendMultipleToolResults"]
         execute(Request LLM expecting multiple responses)
     end
-    
+
     in -- "List&lt;ReceivedToolResult&gt;" --> execute -- "List&lt;Message.Response&gt;" --> out
 
     classDef hidden display: none;
@@ -550,7 +550,7 @@ graph LR
     ```
 
 === "Java"
-    
+
     ```java
     var executeMultipleTools = AIAgentNode.executeMultipleTools(false, "executeMultipleTools");
     var sendMultipleToolResultsToLLM = AIAgentNode.llmSendMultipleToolResults("sendMultipleToolResultsToLLM");
@@ -566,14 +566,14 @@ graph LR
 graph LR
     in:::hidden
     out:::hidden
-    
+
     subgraph nodeWithTransform [transformed node]
         subgraph node ["node"]
             execute(Do stuff)
         end
         transform
     end
-    
+
     in --Input--> execute --> transform --Output--> out
 
     classDef hidden display: none;
@@ -615,7 +615,7 @@ graph LR
     ```
 
 === "Java"
-    
+
     ```java
     var textNode = AIAgentNode.builder("textNode")
         .withInput(String.class)
@@ -652,7 +652,7 @@ graph LR
     ```
 
 === "Java"
-    
+
     ```java
     var llmRequest = AIAgentNode.llmRequest(true, "llmRequest");
     var lengthNode = AIAgentNode.builder("lengthNode")
@@ -683,7 +683,7 @@ graph LR
 
 ### subgraphWithTask { #subgraphwithtask }
 
-一个使用提供的工具执行特定任务并返回结构化结果的子图。它支持多响应 LLM 交互（助手可能产生多个与工具调用交错的响应），并允许您控制工具调用的执行方式。详情请参阅 [API 参考](api:agents-ext::ai.koog.agents.ext.agent.subgraphWithTask)。
+一个使用提供的工具执行特定任务并返回结构化结果的子图。它支持多响应 LLM 交互（助手可能产生多个与工具调用交错的响应），并允许您控制工具调用的执行方式。详情请参阅 `subgraphWithTask` 的 API 文档。
 
 您可以使用此子图实现以下目的：
 
@@ -694,7 +694,9 @@ graph LR
 - 开发结构化的智能体工作流和任务执行流程。
 - 从 LLM 任务执行生成结构化结果，包括包含多个助手响应和工具调用的流程。
 
-API 允许您通过可选参数微调执行：- runMode：控制任务期间工具调用的执行方式（默认为顺序执行）。当底层模型/执行器支持时，可使用此参数在不同工具执行策略之间切换。
+API 允许您通过可选参数微调执行：
+
+- runMode：控制任务期间工具调用的执行方式（默认为顺序执行）。当底层模型/执行器支持时，可使用此参数在不同工具执行策略之间切换。
 - assistantResponseRepeatMax：限制在判定任务无法完成之前允许的助手响应次数（如果未提供，则默认为安全的内部限制）。
 
 您可以将任务以文本形式提供给子图，根据需要配置 LLM，并提供必要的工具，子图将处理并解决该任务。示例如下：
@@ -717,7 +719,7 @@ API 允许您通过可选参数微调执行：- runMode：控制任务期间工�
     ```
 
 === "Java"
-    
+
     ```java
     var processQuery = AIAgentSubgraph.builder("processQuery")
         .limitedTools(List.of(searchTool, calculatorTool, weatherTool))
@@ -732,7 +734,7 @@ API 允许您通过可选参数微调执行：- runMode：控制任务期间工�
 
 ### subgraphWithVerification { #subgraphwithverification }
 
-`subgraphWithTask` 的特殊版本，用于验证任务是否正确执行，并提供遇到的问题详情。该子图适用于需要验证或质量检查的工作流。详细信息请参阅 [API 参考](api:agents-ext::ai.koog.agents.ext.agent.subgraphWithVerification)。
+`subgraphWithTask` 的特殊版本，用于验证任务是否正确执行，并提供遇到的问题详情。该子图适用于需要验证或质量检查的工作流。详细信息请参阅 `subgraphWithVerification` 的 API 文档。
 
 您可以将此子图用于以下目的：
 
@@ -812,7 +814,7 @@ API 允许您通过可选参数微调执行：- runMode：控制任务期间工�
     ```
 
 === "Java"
-    
+
     ```java
     public static AIAgentGraphStrategy<String, String> singleRunStrategy() {
         var strategy = AIAgentGraphStrategy.builder("single_run")
@@ -904,7 +906,7 @@ API 允许您通过可选参数微调执行：- runMode：控制任务期间工�
     ```
 
 === "Java"
-    
+
     ```java
     public static AIAgentGraphStrategy<String, String> toolBasedStrategy(String name, ToolRegistry toolRegistry) {
         var strategy = AIAgentGraphStrategy.builder(name)

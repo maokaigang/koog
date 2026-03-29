@@ -70,7 +70,7 @@ val chatAgent = AIAgent(
     }
 )
 
-suspend fun main() { 
+suspend fun main() {
     // Run the agent with a user query
     val result = chatAgent.run("What's the weather like today and should I bring an umbrella?")
 }
@@ -124,7 +124,9 @@ val reActAgent = AIAgent(
 
 ### 参数 { #parameters }
 
-`reActStrategy` 函数接受以下参数：| 参数                | 类型   | 默认值   | 描述                                                             |
+`reActStrategy` 函数接受以下参数：
+
+| 参数                | 类型   | 默认值   | 描述                                                             |
 |---------------------|--------|----------|---------------------------------------------------------------------|
 | `reasoningInterval` | 整型   | 1        | 指定推理步骤的间隔。必须大于0。                                      |
 | `name`              | 字符串 | `re_act` | 策略的名称。                                                         |
@@ -230,7 +232,7 @@ val bankingAgent = AIAgent(
     }
 )
 
-suspend fun main() { 
+suspend fun main() {
     // Run the agent with a user query
     val result = bankingAgent.run("How much did I spend last month?")
 }

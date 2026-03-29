@@ -1,5 +1,5 @@
 <!-- koog-zh-meta: {"last_synced_at": "2026-03-28T12:57:55+00:00", "source_path": "examples/WebMcpClient.md", "source_sha256": "c06b0dbd4076832b1ffd47228fd8d1a6fe7cfbbf8c106f14393e064eff5926f5", "source_tag": "0.7.3", "translation_status": "changed"} -->
-# 使用 Bright Data 的 The Web MCP 和 Koog 进行网络爬取 { #web-scraping-with-the-web-mcp-by-bright-data-and-koog }
+# 使用 Bright Data 提供的 Web MCP 与 Koog 进行网页抓取 { #web-scraping-with-the-web-mcp-by-bright-data-and-koog }
 
 [:material-github: 在 GitHub 上打开](https://github.com/JetBrains/koog/blob/develop/examples/bright-data-mcp/){ .md-button .md-button--primary }
 [:material-download: 下载 .kt](https://raw.githubusercontent.com/JetBrains/koog/develop/examples/bright-data-mcp/Main.kt){ .md-button }
@@ -59,22 +59,22 @@ println("Creating STDIO transport...")
 try {
     // Create the STDIO transport
     val transport = McpToolRegistryProvider.defaultStdioTransport(process)
-    
+
     println("Creating tool registry...")
-    
+
     // Create a tool registry with tools from the Bright Data MCP server
     val toolRegistry = McpToolRegistryProvider.fromTransport(
         transport = transport,
         name = "bright-data-client",
         version = "1.0.0"
     )
-    
+
     // Print available tools (optional - for debugging)
     println("Available tools from Bright Data MCP server:")
     toolRegistry.tools.forEach { tool ->
         println("- ${tool.name}")
     }
-    
+
     // Create the agent with MCP tools
     val agent = AIAgent(
         executor = simpleOpenAIExecutor(openAIApiKey),
@@ -84,12 +84,12 @@ try {
         toolRegistry = toolRegistry,
         maxIterations = 100
     )
-    
+
     val result = agent.run("Please search for Koog.ai and tell me what is it and who invented it")
-    
+
     println("\nAgent response:")
     println(result)
-    
+
 } catch (e: Exception) {
     println("Error: ${e.message}")
     e.printStackTrace()
@@ -157,22 +157,22 @@ fun main() = runBlocking {
     try {
         // Create the STDIO transport
         val transport = McpToolRegistryProvider.defaultStdioTransport(process)
-        
+
         println("Creating tool registry...")
-        
+
         // Create a tool registry with tools from the Bright Data MCP server
         val toolRegistry = McpToolRegistryProvider.fromTransport(
             transport = transport,
             name = "bright-data-client",
             version = "1.0.0"
         )
-        
+
         // Print available tools (optional - for debugging)
         println("Available tools from Bright Data MCP server:")
         toolRegistry.tools.forEach { tool ->
             println("- ${tool.name}")
         }
-        
+
         // Create the agent with MCP tools
         val agent = AIAgent(
             executor = simpleOpenAIExecutor(openAIApiKey),
@@ -182,12 +182,12 @@ fun main() = runBlocking {
             toolRegistry = toolRegistry,
             maxIterations = 100
         )
-        
+
         val result = agent.run("Please search for Koog.ai and tell me what is it and who invented it")
-        
+
         println("\nAgent response:")
         println(result)
-        
+
     } catch (e: Exception) {
         println("Error: ${e.message}")
         e.printStackTrace()
@@ -201,8 +201,8 @@ fun main() = runBlocking {
 ## 故障排除 { #troubleshooting }
 
 - **连接问题**：如果代理无法连接到 MCP 服务器，请确保已通过 `npx @brightdata/mcp` 正确安装了 Bright Data MCP 包。
-- **API 令牌错误**：请仔细检查您的 `BRIGHT_DATA_API_TOKEN` 是否有效，并具有网络爬取所需的必要权限。
-- **OpenAI 身份验证**：请验证您的 `OPENAI_API_KEY` 环境变量是否正确设置，并且 API 密钥有效。
+- **令牌错误**（Bright Data API）：请仔细检查您的 `BRIGHT_DATA_API_TOKEN` 是否有效，并具备网页抓取所需的必要权限。
+- **身份验证问题**（OpenAI）：请确认 `OPENAI_API_KEY` 环境变量已正确设置，并且对应的 API 密钥有效。
 - **进程超时**：如果服务器启动时间较长，请增加 `Thread.sleep(2000)` 时长。
 
 ## 后续步骤 { #next-steps }
@@ -211,7 +211,9 @@ fun main() = runBlocking {
 - **自定义工具集成**：在 Bright Data 的网络爬取能力之外添加您自己的工具。
 - **高级爬取**：利用 Bright Data 的高级功能，如住宅代理、CAPTCHA 解决和 JavaScript 渲染。
 - **数据处理**：将爬取的数据与其他 Koog 代理结合进行分析和洞察。
-- **生产部署**：将此模式集成到您的应用程序中，实现自动化的网络数据收集。## 所学内容
+- **生产部署**：将此模式集成到您的应用程序中，实现自动化的网络数据收集。
+
+## 所学内容
 
 本教程演示了如何：
 - 设置并配置 Bright Data 的 The Web MCP

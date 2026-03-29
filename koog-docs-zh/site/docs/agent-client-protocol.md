@@ -81,10 +81,10 @@ val agent = AIAgent(
         private val protocol: Protocol,
         private val clock: Clock
     ) : AgentSession {
-    
+
         private var agentJob: Deferred<Unit>? = null
         private val agentMutex = Mutex()
-    
+
         override suspend fun prompt(
             content: List<ContentBlock>,
             _meta: JsonElement?
@@ -96,7 +96,7 @@ val agent = AIAgent(
                 model = OpenAIModels.Chat.GPT4o,
                 maxAgentIterations = 1000
             )
-    
+
             // Ensure only one agent session runs at a time
             agentMutex.withLock {
                 val agent = AIAgent(
@@ -115,13 +115,13 @@ val agent = AIAgent(
                 agentJob?.await()
             }
         }
-    
+
         private fun Prompt.appendPrompt(content: List<ContentBlock>): Prompt {
             return withMessages { messages ->
                 messages + listOf(content.toKoogMessage(clock))
             }
         }
-    
+
         override suspend fun cancel() {
             agentJob?.cancel()
         }
@@ -136,7 +136,7 @@ val agent = AIAgent(
         private val clock: Clock,
         private val protocol: Protocol,
     ) : AgentSupport {
-    
+
         override suspend fun initialize(clientInfo: ClientInfo): AgentInfo {
             return AgentInfo(
                 protocolVersion = LATEST_PROTOCOL_VERSION,
@@ -150,13 +150,13 @@ val agent = AIAgent(
                 )
             )
         }
-    
+
         @OptIn(ExperimentalUuidApi::class)
         override suspend fun createSession(sessionParameters: SessionCreationParameters): AgentSession {
             val sessionId = SessionId(Uuid.random().toString())
             return MyAgentSession(sessionId, promptExecutor, protocol, clock)
         }
-    
+
         override suspend fun loadSession(sessionId: SessionId, sessionParameters: SessionCreationParameters): AgentSession {
             throw UnsupportedOperationException("Session loading not implemented")
         }
@@ -175,7 +175,7 @@ val agent = AIAgent(
 
 ## 处理 ACP 客户端输入 { #handling-acp-client-input }
 
-ACP 客户端将用户输入作为 [`ContentBlock`](https://agentclientprotocol.com/protocol/schema#contentblock) 对象列表发送。要在 Koog 中处理这些输入，请使用 `List<ContentBlock>.toKoogMessage()` 扩展函数将 ACP 内容块转换为 [`Message.User`](api:prompt-model::ai.koog.prompt.message.Message.User) 并附加到您的 [代理的提示](prompts/index.md) 中。
+ACP 客户端将用户输入作为 [`ContentBlock`](https://agentclientprotocol.com/protocol/schema#contentblock) 对象列表发送。要在 Koog 中处理这些输入，请使用 `List<ContentBlock>.toKoogMessage()` 扩展函数将 ACP 内容块转换为 `Message.User` 并附加到您的 [代理提示](prompts/index.md) 中。
 
 示例中的`AgentSession`定义了一个私有函数，用于在ACP会话中扩展初始代理提示。
 
@@ -199,7 +199,7 @@ private fun Prompt.appendPrompt(content: List<ContentBlock>): Prompt {
 
 当接收到来自ACP客户端的输入时，请使用以下函数：
 
-- `List<ContentBlock>.toKoogMessage()` 将一系列 ACP 内容块转换为 [`Message.User`](api:prompt-model::ai.koog.prompt.message.Message.User)
+- `List<ContentBlock>.toKoogMessage()` 将一系列 ACP 内容块转换为 `Message.User`
 - `ContentBlock.toKoogContentPart()` 将单个 ACP 内容块转换为 [`ContentPart`](api:prompt-model::ai.koog.prompt.message.ContentPart)
 
 使用以下函数从Koog消息中构建ACP事件或内容块：
@@ -221,7 +221,7 @@ private fun Prompt.appendPrompt(content: List<ContentBlock>): Prompt {
 
     - `StopReason.MAX_TURN_REQUESTS` 当代理超过最大迭代次数时
     - `StopReason.REFUSAL` 针对其他执行失败的情况
-  
+
 - **LLM responses**
 
     将LLM响应转换为ACP事件（文本、工具调用、推理）并发送

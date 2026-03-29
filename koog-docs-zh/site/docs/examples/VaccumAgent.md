@@ -73,7 +73,6 @@ import ai.koog.agents.core.tools.annotations.LLMDescription
 import ai.koog.agents.core.tools.annotations.Tool
 import ai.koog.agents.core.tools.reflect.ToolSet
 
-
 /**
  * Provides tools for the LLM agent to control the vacuum robot.
  * All methods either mutate or read from the VacuumEnv passed to the constructor.
@@ -124,7 +123,6 @@ import ai.koog.prompt.dsl.prompt
 import ai.koog.prompt.executor.clients.openai.OpenAIModels
 import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
 import ai.koog.prompt.params.LLMParams
-
 
 val env = VacuumEnv()
 val apiToken = System.getenv("OPENAI_API_KEY") ?: error("OPENAI_API_KEY environment variable not set")

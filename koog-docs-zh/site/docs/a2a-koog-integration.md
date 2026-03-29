@@ -249,7 +249,10 @@ val client = A2AClient(transport = transport, agentCardResolver = agentCardResol
 
 val agentId = "koog"
 client.connect()
-```### 创建 Koog 代理并将 A2A 客户端添加到 A2AAgentClient 功能
+```
+
+### 创建 Koog 智能体并将 A2A 客户端添加到 A2AAgentClient 功能 { #create-koog-agent-and-add-a2a-client-to-a2aagentclient-feature }
+
 要从您的 Koog 代理连接到 A2A 代理，您可以使用 A2AAgentClient 功能，该功能提供了一个客户端 API 用于连接到 A2A 代理。
 该客户端的原理与服务器相同：您安装该功能，并传递 `A2AAgentClient` 功能以及 `RequestContext` 和 `SessionEventProcessor`。
 
@@ -335,7 +338,6 @@ val agent = AIAgent(
         this.a2aClients = mapOf(agentId to client)
     }
 }
-
 
 @OptIn(ExperimentalUuidApi::class)
 private fun AIAgentGraphContextBase.buildA2ARequest(agentId: String): A2AClientRequest<MessageSendParams> =

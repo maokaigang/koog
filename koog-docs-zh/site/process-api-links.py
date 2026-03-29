@@ -1,3 +1,4 @@
+import os
 import re
 from urllib import request, error
 from urllib.parse import urljoin
@@ -8,6 +9,7 @@ reset = '\033[0m'
 
 # Simple in-memory cache for URL existence checks during a single MkDocs build run
 _URL_EXISTS_CACHE: dict[str, bool] = {}
+VALIDATE_RESOLVED_URLS = os.getenv("KOOG_VALIDATE_API_URLS") == "1"
 
 
 def _check_url_exists(url: str, timeout: float = 5.0) -> bool:
@@ -307,8 +309,10 @@ def on_page_markdown(markdown, page, config, files):
         # Prefer absolute URL to avoid relative path issues
         resolved_href = urljoin(BASE_URL, href)
 
-        # Verify that the resolved URL actually exists
-        if not _check_url_exists(resolved_href):
+        # Optional validation is useful for debugging the hook itself, but it is
+        # too expensive for routine local/Vercel builds because it performs a
+        # network request for every resolved API link.
+        if VALIDATE_RESOLVED_URLS and not _check_url_exists(resolved_href):
             try:
                 page_path = getattr(getattr(page, 'file', None), 'src_path', '<unknown>')
             except Exception:

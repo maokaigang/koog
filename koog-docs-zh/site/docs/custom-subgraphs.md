@@ -19,7 +19,7 @@
         ) {
             // Define nodes and edges for this subgraph
         }
-    
+
         nodeStart then subgraphIdentifier then nodeFinish
     }
     ```
@@ -83,7 +83,7 @@
         .build();
     ```
 
-有关参数和参数值的更多信息，请参阅`subgraph` [API 参考](api:agents-core::ai.koog.agents.core.dsl.builder.AIAgentSubgraphBuilderBase.subgraph)。有关工具的更多信息，请参阅[工具](tools-overview.md)。
+有关参数和参数值的更多信息，请参阅 `subgraph` 的 API 文档。有关工具的更多信息，请参阅[工具](tools-overview.md)。
 
 以下代码示例展示了一个自定义子图的实际实现：
 
@@ -336,7 +336,7 @@
 
 5. **考虑令牌使用**：注意令牌使用情况，尤其是在子图之间传递大量历史记录时。
 
-## Troubleshooting
+## 故障排查 { #troubleshooting }
 
 ### 工具不可用 { #tools-not-available }
 
@@ -352,7 +352,7 @@
 - 验证每个子图是否正确将其输出传递给下一个子图。
 - 确保你的子图与其余子图相连，并且可以从起点（和终点）访问。注意条件边，确保它们覆盖所有可能的继续条件，以免在子图或节点中被阻塞。
 
-## Examples
+## 示例 { #examples }
 
 以下示例展示了在实际场景中如何使用子图来构建智能体策略。代码示例包含三个已定义的子图：`researchSubgraph`、`planSubgraph` 和 `executeSubgraph`，每个子图在助手流程中都具有明确且独立的功能定位。
 

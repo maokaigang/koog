@@ -59,7 +59,9 @@ fun main() {
 | BGE_LARGE         | bge-large         | 335M       | 1024       | 512            | 适用于英文文本检索和语义搜索的卓越性能                                    | 模型尺寸较大，但提供高质量的嵌入向量                                     |
 | MXBAI_EMBED_LARGE | mxbai-embed-large | -          | -          | -              | 文本数据的高维嵌入向量                                                    | 专为创建高维嵌入向量而设计                                              |
 
-有关这些模型的更多信息，请参阅 Ollama 的 [嵌入模型](https://ollama.com/blog/embedding-models) 博客文章。### 选择模型
+有关这些模型的更多信息，请参阅 Ollama 的 [嵌入模型](https://ollama.com/blog/embedding-models) 博客文章。#
+
+## 选择模型
 
 以下是根据您的需求选择 Ollama 嵌入模型的一些通用建议：
 
@@ -230,5 +232,7 @@ suspend fun compareCodeToCode(embedder: Embedder) { // Embedder type
 
 ## API 文档
 
-有关嵌入的完整 API 参考，请参阅以下模块的参考文档：- [embeddings-base](api:embeddings-base::ai.koog.embeddings.base)：提供核心接口与数据结构，用于表示和比较文本及代码的嵌入向量。
+有关嵌入的完整 API 参考，请参阅以下模块的参考文档：
+
+- [embeddings-base](api:embeddings-base::ai.koog.embeddings.base)：提供核心接口与数据结构，用于表示和比较文本及代码的嵌入向量。
 - [embeddings-llm](api:embeddings-llm::)：包含用于处理本地嵌入模型的相关实现。

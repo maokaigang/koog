@@ -190,7 +190,7 @@ RAG 解决了传统 LLM 的几个限制：
 
 为方便RAG系统的实现，Koog提供了多种开箱即用的向量存储、文档嵌入以及结合嵌入与存储功能的组件实现。
 
-### Vector storage
+### 向量存储 { #vector-storage }
 
 #### InMemoryVectorStorage
 
@@ -208,7 +208,7 @@ RAG 解决了传统 LLM 的几个限制：
     InMemoryVectorStorage<Path> inMemoryStorage = new InMemoryVectorStorage<>();
     ```
 
-如需更多信息，请参阅 [InMemoryVectorStorage](api:vector-storage::ai.koog.rag.vector.InMemoryVectorStorage) 参考文档。
+如需更多信息，请参阅 `InMemoryVectorStorage` 参考文档。
 
 #### FileVectorStorage
 
@@ -248,7 +248,7 @@ RAG 解决了传统 LLM 的几个限制：
 
 如需更多信息，请参阅 [JVM文件向量存储](api:vector-storage::ai.koog.rag.vector.JVMFileVectorStorage) 参考文档。
 
-### Document embedder
+### 文档嵌入器 { #document-embedder }
 
 #### TextDocumentEmbedder
 
@@ -290,7 +290,7 @@ RAG 解决了传统 LLM 的几个限制：
 
 如需更多信息，请参阅 [JVM文本文档嵌入器](api:vector-storage::ai.koog.rag.vector.JVMTextDocumentEmbedder) 参考文档。
 
-### Combined storage implementations
+### 组合存储实现 { #combined-storage-implementations }
 
 #### EmbeddingBasedDocumentStorage
 
@@ -311,7 +311,7 @@ RAG 解决了传统 LLM 的几个限制：
     LLMEmbedder embedder = new LLMEmbedder(new OllamaClient("http://localhost:11434"), OllamaModels.Embeddings.NOMIC_EMBED_TEXT);
     JVMTextDocumentEmbedder documentEmbedder = new JVMTextDocumentEmbedder(embedder);
     InMemoryVectorStorage<Path> vectorStorage = new InMemoryVectorStorage<>();
-    
+
     EmbeddingBasedDocumentStorage<Path> embeddingStorage = new EmbeddingBasedDocumentStorage<>(
         documentEmbedder,
         vectorStorage

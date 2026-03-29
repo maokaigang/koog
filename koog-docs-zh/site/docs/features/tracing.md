@@ -34,7 +34,7 @@
 4. 将消息处理器添加到该功能中。
 
 ```kotlin
-// Defining a logger/file that will be used as a destination of trace messages 
+// Defining a logger/file that will be used as a destination of trace messages
 val logger = KotlinLogging.logger { }
 val outputPath = Path("/path/to/trace.log")
 
@@ -75,7 +75,7 @@ fileWriter.setMessageFilter { message ->
 }
 
 // Filter for tool-related events only
-fileWriter.setMessageFilter { message -> 
+fileWriter.setMessageFilter { message ->
     message is ToolCallStartingEvent ||
            message is ToolCallCompletedEvent ||
            message is ToolValidationFailedEvent ||
@@ -83,7 +83,7 @@ fileWriter.setMessageFilter { message ->
 }
 
 // Filter for node execution events only
-fileWriter.setMessageFilter { message -> 
+fileWriter.setMessageFilter { message ->
     message is NodeExecutionStartingEvent || message is NodeExecutionCompletedEvent
 }
 ```
@@ -204,13 +204,13 @@ agent.run(input)
 
 ```kotlin
 install(Tracing) {
-    
+
     val fileWriter = TraceFeatureMessageFileWriter(
-        outputPath, 
+        outputPath,
         { path: Path -> SystemFileSystem.sink(path).buffered() }
     )
     addMessageProcessor(fileWriter)
-    
+
     // Only trace LLM calls
     fileWriter.setMessageFilter { message ->
         message is LLMCallStartingEvent || message is LLMCallCompletedEvent
@@ -220,22 +220,7 @@ install(Tracing) {
 
 ### 追踪特定事件到远程端点 { #tracing-specific-events-to-remote-endpoint }
 
-当需要通过网络发送事件数据时，您可以使用追踪到远程端点。一旦启动，追踪到远程端点会在指定端口号启动一个轻量级服务器，并通过 Kotlin 服务器发送事件（SSE）。<!--- INCLUDE
-import ai.koog.agents.core.agent.AIAgent
-import ai.koog.agents.core.feature.remote.server.config.DefaultServerConnectionConfig
-import ai.koog.agents.features.tracing.feature.Tracing
-import ai.koog.agents.features.tracing.writer.TraceFeatureMessageRemoteWriter
-import ai.koog.prompt.executor.llms.all.simpleOllamaAIExecutor
-import ai.koog.prompt.executor.ollama.client.OllamaModels
-import kotlinx.coroutines.runBlocking
-
-const val input = "What's the weather like in New York?"
-const val port = 4991
-const val host = "localhost"
-
-fun main() {
-   runBlocking {
--->
+当需要通过网络发送事件数据时，您可以使用追踪到远程端点。一旦启动，追踪到远程端点会在指定端口号启动一个轻量级服务器，并通过 Kotlin 服务器发送事件（SSE）。
 ```kotlin
 // Creating an agent
 val agent = AIAgent(

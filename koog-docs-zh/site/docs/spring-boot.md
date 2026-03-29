@@ -1,4 +1,4 @@
-<!-- koog-zh-meta: {"last_synced_at": "2026-03-28T13:17:08+00:00", "source_path": "spring-boot.md", "source_sha256": "cbc8f9b94f02945bb7a4f1d286d729ace40c146aee3971a806edc3b14a3ded1a", "source_tag": "0.7.3", "translation_status": "changed"} -->
+<!-- koog-zh-meta: {"last_synced_at": "2026-03-29T03:04:35+00:00", "source_path": "spring-boot.md", "source_sha256": "cbc8f9b94f02945bb7a4f1d286d729ace40c146aee3971a806edc3b14a3ded1a", "source_tag": "0.7.3", "translation_status": "changed"} -->
 # Spring Boot 集成 { #spring-boot-integration }
 
 Koog 通过其自动配置启动器提供无缝的 Spring Boot 集成，使得在 Spring Boot 应用中集成 AI 代理变得非常简单，只需最少的设置。
@@ -39,7 +39,7 @@ dependencies {
 请确保您的 Kotlin 或 Java 项目满足以下条件：
 - Spring Boot 3（需要 Java 17 或更高版本）
 - Kotlin 版本 2.3.10+
-- kotlinx-serialization 版本 1.10.0（即 kotlinx-serialization-core-jvm 和 kotlinx-serialization-json-jvm）
+- kotlinx-serialization 版本 1.10.0（即 kotlinx-serialization-core-jvm 与 kotlinx-serialization-json-jvm）
 
 ### 2. 配置提供商 { #2-configure-providers }
 
@@ -111,7 +111,7 @@ ai:
 
 `ai.koog.PROVIDER.api-key` 和 `ai.koog.PROVIDER.enabled` 属性都用于激活提供商。
 
-如果提供商支持 API 密钥（如 OpenAI、Anthropic、Google），则 `ai.koog.PROVIDER.enabled` 默认设置为 `true`。
+如果支持 API 按键（例如 OpenAI、Anthropic、Google），则 `ai.koog.PROVIDER.enabled` 默认设置为 `true`。
 
 如果提供商不支持 API 密钥，例如 Ollama，则 `ai.koog.PROVIDER.enabled` 默认设置为 `false`，并且需要在应用配置中显式启用该提供商。
 
@@ -136,8 +136,8 @@ ai:
 
 以下是在 Spring MVC RestController 中使用自动配置的执行器的示例。它需要满足以下条件：
 - 添加 spring-boot-starter-web 依赖
-- 对于 Kotlin，需要添加 kotlinx-coroutines-core 和 kotlinx-coroutines-reactor 依赖（Java 版本调用阻塞的 `execute` 方法）
-- 通过属性启用 Anthropic（ai.koog.anthropic.enabled=true）
+- 对于 Kotlin，需要额外添加 `kotlinx-coroutines-core` 和 `kotlinx-coroutines-reactor` 依赖。
+- 通过属性启用 Anthropic（`ai.koog.anthropic.enabled=true`）。
 
 === "Kotlin"
 
@@ -224,13 +224,12 @@ ai:
     }
     ```
 
-Spring Framework injected the executor for Anthropic by bean name (`anthropicExecutor`),
-but you can also inject multiple `PromptExecutor` beans using `@Qualifier` annotation (see "Multiple beans error" below).
+Spring Framework 通过 bean 名称（`anthropicExecutor`）注入了 Anthropic 的执行器，但你也可以使用 `@Qualifier` 注解注入多个 `PromptExecutor` bean（参见下方的“多个 bean 错误”说明）。
 
-## Advanced usage
-### LLM Provider Fallback
+## 高级用法 { #advanced-usage }
+### LLM 提供者回退 { #llm-provider-fallback }
 
-After configuring multiple LLM providers you can send request to multiple LLMs via `MultiLLMPromptExecutor`:
+配置多个 LLM 提供者后，您可以通过 `MultiLLMPromptExecutor` 向多个 LLM 发送请求：
 
 === "Kotlin"
 
@@ -321,53 +320,52 @@ After configuring multiple LLM providers you can send request to multiple LLMs v
     }
     ```
 
-You can also register your own `MultiLLMPromptExecutor` bean and pass a `FallbackPromptExecutorSettings` to it.
-To override the auto-configuration for your beans you can use `@Primary` annotation.
+您也可以注册自己的`MultiLLMPromptExecutor` bean并向其传递`FallbackPromptExecutorSettings`。要覆盖您bean的自动配置，可以使用`@Primary`注解。
 
-## Configuration Reference
+## 配置参考 { #configuration-reference }
 
-### Available Properties
+### 可用属性 { #available-properties }
 
-| Property                      | Description         | Bean Condition                         | Default                                     |
+| 属性 | 描述 | Bean 条件 | 默认 |
 |-------------------------------|---------------------|----------------------------------------|---------------------------------------------|
-| `ai.koog.openai.api-key`      | OpenAI API key      | Required for `openAIExecutor` bean     | -                                           |
-| `ai.koog.openai.base-url`     | OpenAI base URL     | Optional                               | `https://api.openai.com`                    |
-| `ai.koog.anthropic.api-key`   | Anthropic API key   | Required for `anthropicExecutor` bean  | -                                           |
-| `ai.koog.anthropic.base-url`  | Anthropic base URL  | Optional                               | `https://api.anthropic.com`                 |
-| `ai.koog.google.api-key`      | Google API key      | Required for `googleExecutor` bean     | -                                           |
-| `ai.koog.google.base-url`     | Google base URL     | Optional                               | `https://generativelanguage.googleapis.com` |
-| `ai.koog.openrouter.api-key`  | OpenRouter API key  | Required for `openRouterExecutor` bean | -                                           |
-| `ai.koog.openrouter.base-url` | OpenRouter base URL | Optional                               | `https://openrouter.ai`                     |
-| `ai.koog.deepseek.api-key`    | DeepSeek API key    | Required for `deepSeekExecutor` bean   | -                                           |
-| `ai.koog.deepseek.base-url`   | DeepSeek base URL   | Optional                               | `https://api.deepseek.com`                  |
-| `ai.koog.mistral.api-key`     | Mistral API key     | Required for `mistralAIExecutor` bean  | -                                           |
-| `ai.koog.mistral.base-url`    | Mistral base URL    | Optional                               | `https://api.mistral.ai`                    |
-| `ai.koog.ollama.base-url`     | Ollama base URL     | Optional                               | `http://127.0.0.1:11434`                    |
+| `ai.koog.openai.api-key` | OpenAI API 密钥 | `openAIExecutor` bean 所需 | - |
+| `ai.koog.openai.base-url` | OpenAI 基础 URL | 可选 | `https://api.openai.com` |
+| `ai.koog.anthropic.api-key` | Anthropic API 密钥 | `anthropicExecutor` bean 所需 | - |
+| `ai.koog.anthropic.base-url` | Anthropic 基础 URL | 可选 | `https://api.anthropic.com` |
+| `ai.koog.google.api-key` | Google API 密钥 | `googleExecutor` bean 所需 | - |
+| `ai.koog.google.base-url` | Google 基础 URL | 可选 | `https://generativelanguage.googleapis.com` |
+| `ai.koog.openrouter.api-key` | OpenRouter API 密钥 | `openRouterExecutor` bean 所需 | - |
+| `ai.koog.openrouter.base-url` | OpenRouter 基础 URL | 可选 | `https://openrouter.ai` |
+| `ai.koog.deepseek.api-key` | DeepSeek API 密钥 | `deepSeekExecutor` bean 所需 | - |
+| `ai.koog.deepseek.base-url` | DeepSeek 基础 URL | 可选 | `https://api.deepseek.com` |
+| `ai.koog.mistral.api-key` | Mistral API 密钥 | `mistralAIExecutor` bean 所需 | - |
+| `ai.koog.mistral.base-url` | Mistral 基础 URL | 可选 | `https://api.mistral.ai` |
+| `ai.koog.ollama.base-url` | Ollama 基础 URL | 可选 | `http://127.0.0.1:11434` |
 
-### Bean Names
+### Bean 名称 { #bean-names }
 
-The auto-configuration creates the following beans (when configured):
+自动配置会创建以下 bean（当配置时）：
 
-- `openAIExecutor` - OpenAI executor (requires `ai.koog.openai.api-key`)
-- `anthropicExecutor` - Anthropic executor (requires `ai.koog.anthropic.api-key`)
-- `googleExecutor` - Google executor (requires `ai.koog.google.api-key`)
-- `openRouterExecutor` - OpenRouter executor (requires `ai.koog.openrouter.api-key`)
-- `deepSeekExecutor` - DeepSeek executor (requires `ai.koog.deepseek.api-key`)
-- `mistralAIExecutor` - Mistral AI executor (requires `ai.koog.mistral.api-key`)
-- `ollamaExecutor` - Ollama executor (requires `ai.koog.ollama.enabled=true`)
+- `openAIExecutor` - OpenAI 执行器（需要 `ai.koog.openai.api-key`）
+- `anthropicExecutor` - Anthropic 执行器（需要 `ai.koog.anthropic.api-key`）
+- `googleExecutor` - Google 执行器（需要 `ai.koog.google.api-key`）
+- `openRouterExecutor` - OpenRouter 执行器（需要 `ai.koog.openrouter.api-key`）
+- `deepSeekExecutor` - DeepSeek 执行器（需要 `ai.koog.deepseek.api-key`）
+- `mistralAIExecutor` - Mistral AI执行器（需要`ai.koog.mistral.api-key`）
+- `ollamaExecutor` - Ollama 执行器（需要 `ai.koog.ollama.enabled=true`）
 - `multiLLMPromptExecutor` - MultiLLMPromptExecutor
 
-## Troubleshooting
+## 故障排查 { #troubleshooting }
 
-### Common Issues
+### 常见问题 { #common-issues }
 
-**Error: No qualifying bean of type 'PromptExecutor' available**
+**错误：没有符合条件的 'PromptExecutor' 类型 Bean 可用**
 
-**Solution:** Ensure you have configured at least one provider in your properties file.
+**解决方案：** 确保您已在属性文件中配置至少一个提供程序。
 
-**Error: Multiple qualifying beans of type 'PromptExecutor' available**
+**错误：找到多个符合条件的 'PromptExecutor' 类型 Bean**
 
-**Solution:** Use `@Qualifier` to specify which bean you want:
+**解决方案：** 使用 `@Qualifier` 来指定所需的 bean：
 
 === "Kotlin"
 
@@ -398,23 +396,23 @@ The auto-configuration creates the following beans (when configured):
     }
     ```
 
-**Error: API key is required but not provided**
+**错误：API 键为必填项但未提供**
 
-**Solution:** Check that your environment variables are properly set and accessible to your Spring Boot application.
+**解决方案：** 请检查您的环境变量是否正确设置，并确保您的 Spring Boot 应用程序能够访问这些变量。
 
-## Best Practices
+## 最佳实践 { #best-practices }
 
-1. **Environment Variables**: Always use environment variables for API keys
-2. **Nullable Injection**: Use nullable types to handle cases where providers aren't configured
-3. **Fallback Logic**: Implement fallback mechanisms when using multiple providers
-4. **Error Handling**: Always wrap executor calls in try-catch blocks for production code
-5. **Testing**: Use mocks in tests to avoid making actual API calls
-6. **Configuration Validation**: Check if executors are available before using them
+1. **环境变量**：始终使用环境变量来存储 API 密钥
+2. **可为空注入**：使用可为空类型处理提供程序未配置的情况
+3. **回退逻辑**：在使用多个服务提供商时实现回退机制
+4. **错误处理**：在生产代码中，始终将执行器调用包裹在 try-catch 块中
+5. **测试**：在测试中使用模拟对象，避免进行实际的API调用
+6. **配置验证**：在使用执行器之前检查其是否可用
 
-## Next Steps
+## 下一步 { #next-steps }
 
-- Learn about the [basic agents](agents/basic-agents.md) to build minimal AI workflows
-- Explore [graph-based agents](agents/graph-based-agents.md) for advanced use cases
-- See the [tools overview](tools-overview.md) to extend your agents' capabilities
-- Check out [examples](examples.md) for real-world implementations
-- Read the [glossary](glossary.md) to understand the framework better
+- 了解[基础智能体](agents/basic-agents.md)，构建极简AI工作流
+- 探索[基于图的智能体](agents/graph-based-agents.md)以了解高级用例
+- 请参阅[工具概览](tools-overview.md)以扩展您的智能体能力
+- 查看 [示例](examples.md) 获取实际应用案例
+- 阅读[术语表](glossary.md)以更好地理解该框架

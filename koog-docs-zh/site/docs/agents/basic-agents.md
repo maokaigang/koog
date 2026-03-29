@@ -76,7 +76,7 @@ I can assist with a wide range of topics and tasks. Here are some examples:
 What's on your mind? Do you have a specific question, topic, or task you'd like to tackle?
 ```
 
-## Add a system prompt
+## 添加系统提示 { #add-a-system-prompt }
 
 提供一个[系统消息](../prompts/prompt-creation/index.md#system-message)来定义代理的角色，以及任务相关的目的、背景和说明。
 
@@ -108,7 +108,7 @@ I'm here to help you navigate the wild world of internet memes!
 What's on your mind? Are you trying to understand a specific meme, need help finding a popular joke, or perhaps want some recommendations for trending memes? Let me know, and I'll do my best to provide you with some LOLs!
 ```
 
-## Configure LLM output
+## 配置 LLM 输出 { #configure-llm-output }
 
 您可以直接向代理构造函数（Kotlin）提供一些[LLM 参数](../llm-parameters.md#llm-parameter-reference)，或通过构建器方法（Java）来自定义LLM的行为。例如，使用`temperature`参数来调整生成响应的随机性：
 
@@ -137,7 +137,7 @@ What's on your mind? Are you trying to understand a specific meme, need help fin
 以下是不同温度值下的响应示例：
 
 === "0.4"
-    
+
     ```text
     I'm here to help you navigate the wild world of internet memes! Whether you're looking for explanations, examples, or just want to share a meme with someone, I'm your go-to expert. What's on your mind? Got a specific meme in mind that's got you curious? Or maybe you need some meme-related advice? Fire away!
     ```
@@ -146,7 +146,7 @@ What's on your mind? Are you trying to understand a specific meme, need help fin
 
     ```text
     I'm here to help you navigate the wild world of internet memes!
-    
+
     What's on your mind? Need help understanding a specific meme, finding a popular joke or trend, or maybe even creating your own meme? Let's get this meme party started!
     ```
 
@@ -154,13 +154,13 @@ What's on your mind? Are you trying to understand a specific meme, need help fin
 
     ```text
     I'd be happy to help you navigate the wild world of internet memes!
-    
+
     Whether you're looking for explanations of classic memes, suggestions for new ones to try out, or just want to discuss your favorite meme culture trends, I'm here to assist. What's on your mind?
-    
+
     Do you have a specific question about memes (e.g., "What does this meme mean?"), or are you looking for some meme-related recommendations (e.g., "Can you recommend a funny meme to share with friends?"). Let me know how I can help!
     ```
 
-## Add tools
+## 添加工具 { #add-tools }
 
 代理可以使用[工具](../tools-overview.md)来执行特定任务。
 
@@ -213,7 +213,7 @@ What's on your mind? Are you trying to understand a specific meme, need help fin
         }
     }
     ```
-    
+
     然后，使用[`ToolRegistry`](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-tool-registry/index.html)使该工具对代理可用：
 
     ```java
@@ -262,7 +262,7 @@ Examples of Doge memes might include:
 The meme is known for its lighthearted and playful tone, and is often used to express excitement, happiness, or silliness. The meme has since become a cultural phenomenon, with countless variations and parodies emerging online.
 ```
 
-## Adjust agent iterations
+## 调整智能体迭代次数 { #adjust-agent-iterations }
 
 为避免无限循环，Koog 允许任何代理执行有限数量的步骤（默认为50步）。您可以通过 `maxIterations` 参数来调整此限制：若预期代理需要更多步骤（例如工具调用和 LLM 请求），可增加该值；对于仅需少量步骤的代理，则可减少限制。例如，此处描述的简单代理很可能不需要超过10个步骤：
 
@@ -348,14 +348,7 @@ The meme is known for its lighthearted and playful tone, and is often used to ex
     ```
 
 === "Java"
-    使用智能体构建器上的 `.install()` 方法，通过 `EventHandler.Feature` 注册事件处理器：<!--- INCLUDE import ai.koog.agents.core.agent.AIAgent; import ai.koog.agents.core.tools.ToolRegistry; import ai.koog.agents.core.tools.annotations.LLMDescription; import ai.koog.agents.core.tools.annotations.Tool; import ai.koog.agents.core.tools.reflect.ToolSet; import ai.koog.agents.features.eventHandler.feature.EventHandler; import ai.koog.prompt.executor.clients.openai.OpenAIModels;
-
-    
-    import java.util.Scanner;
-    
-    import static ai.koog.prompt.executor.llms.all.SimplePromptExecutorsKt.simpleOpenAIExecutor;
-
-    class exampleBasicJava06 { public static void main(String[] args) { -->
+    使用智能体构建器上的 `.install()` 方法，通过 `EventHandler.Feature` 注册事件处理器：
 ```java
 // 创建一个 ToolSet 类
 class UserConversationTools implements ToolSet {

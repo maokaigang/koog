@@ -17,6 +17,7 @@
 ./bin/sync-upstream <tag>
 ./bin/diff-report
 ./bin/translate-changed
+./bin/audit-docs
 ./bin/build-site
 ```
 
@@ -31,6 +32,9 @@
 
 # 用机器初译刷新新增或过期页面
 ./bin/translate-changed --provider google-web
+
+# 审计发布前风险：结构损坏、占位符泄漏、英文残留
+./bin/audit-docs --limit 100
 
 # 人工审校完成后，标记页面为 reviewed
 python3 tools/cli.py set-status site/docs/quickstart.md reviewed
@@ -66,6 +70,7 @@ Vercel 的 Python 环境已经自带 `uv`，不要再执行 `pip install uv`，�
 - 机器翻译只生成草稿，页面状态会被标为 `changed`
 - 人工审校完成后，使用 `set-status` 标记为 `reviewed`
 - 如果上游更新了已翻译页面，`sync-upstream` 会把它标为 `outdated`，不会静默覆盖旧内容
+- 发布前建议至少跑一次 `./bin/audit-docs` 和 `./bin/build-site`
 
 ## 术语和风格
 

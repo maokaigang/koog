@@ -63,11 +63,11 @@ Koog 框架中有三种类型的工具：
     val firstToolRegistry = ToolRegistry {
         tools(firstSampleTool)
     }
-    
+
     val secondToolRegistry = ToolRegistry {
         tools(secondSampleTool)
     }
-    
+
     val newRegistry = firstToolRegistry + secondToolRegistry
     ```
 
@@ -151,7 +151,7 @@ Koog 框架中有三种类型的工具：
         val author: String,
         val description: String
     )
-    
+
     class BookTool() : SimpleTool<Book>(
         argsType = typeToken<Book>(),
         name = NAME,
@@ -160,17 +160,17 @@ Koog 框架中有三种类型的工具：
         companion object {
             const val NAME = "book"
         }
-    
+
         override suspend fun execute(args: Book): String {
             println("${args.title} by ${args.author}:\n ${args.description}")
             return "Done"
         }
     }
-    
+
     val strategy = strategy<Unit, Unit>("strategy-name") {
-    
+
         /*...*/
-    
+
         val myNode by node<Unit, Unit> { _ ->
             llm.writeSession {
                 flow {
@@ -179,7 +179,7 @@ Koog 框架中有三种类型的工具：
             }
         }
     }
-    
+
     ```
 
 === "Java"
@@ -191,11 +191,11 @@ Koog 框架中有三种类型的工具：
 
 在构建基于节点的智能体工作流时，您可以使用特殊节点来调用工具：
 
-* **nodeExecuteTool**：调用单个工具调用并返回其结果。详情请参阅[API 参考](api:agents-core::ai.koog.agents.core.dsl.extension.nodeExecuteTool)。
+* **单工具执行节点**（`nodeExecuteTool`）：调用单个工具调用并返回其结果。详情请参阅[API 参考](api:agents-core::ai.koog.agents.core.dsl.extension.nodeExecuteTool)。
 
 * **nodeExecuteSingleTool**，用于调用指定工具并传入相应参数。详情请参阅[API 参考](api:agents-core::ai.koog.agents.core.dsl.extension.nodeExecuteSingleTool)。
 
-* **nodeExecuteMultipleTools** 用于执行多个工具调用并返回其结果。详情请参阅 [API 参考](api:agents-core::ai.koog.agents.core.dsl.extension.nodeExecuteMultipleTools)。
+* **nodeExecuteMultipleTools** 用于执行多个工具调用并返回其结果。详情请参阅 `nodeExecuteMultipleTools` 的 API 文档。
 
 * **nodeLLMSendToolResult** 用于向 LLM 发送工具执行结果并获取响应。详细信息请参阅 [API 参考](api:agents-core::ai.koog.agents.core.dsl.extension.nodeLLMSendToolResult)。
 
@@ -219,7 +219,7 @@ Koog 框架中有三种类型的工具：
         systemPrompt = "You are a financial analysis specialist.",
         toolRegistry = analysisToolRegistry
     )
-    
+
     // Create a tool that would run financial analysis agent once called.
     val analysisAgentTool = analysisAgentService.createAgentTool(
         agentName = "analyzeTransactions",

@@ -1,4 +1,4 @@
-<!-- koog-zh-meta: {"last_synced_at": "2026-03-28T16:52:54+00:00", "source_path": "testing.md", "source_sha256": "47bd4d8f87c7b023126a50377aaac7a61a65fe2722a132d2b8888b8afb9a2ebe", "source_tag": "0.7.3", "translation_status": "changed"} -->
+<!-- koog-zh-meta: {"last_synced_at": "2026-03-29T03:04:14+00:00", "source_path": "testing.md", "source_sha256": "47bd4d8f87c7b023126a50377aaac7a61a65fe2722a132d2b8888b8afb9a2ebe", "source_tag": "0.7.3", "translation_status": "changed"} -->
 # 测试 { #testing }
 
 ## 概述 { #overview }
@@ -232,7 +232,9 @@ dependencies {
     ```java
     ```
 
-这验证了当工具执行节点收到特定工具调用签名时，是否会产生预期的工具结果。#### 高级节点测试
+这验证了当工具执行节点收到特定工具调用签名时，是否会产生预期的工具结果。
+
+## 高级节点测试
 
 对于更复杂的场景，您可以测试具有结构化输入和输出的节点：
 
@@ -454,107 +456,170 @@ dependencies {
                 toolCalls += "Neutral tone tool called"
                 neutralResponse
             }
-        }```kotlin
-    // 创建策略
-    val strategy = toneStrategy("tone_analysis")
-
-    // 创建智能体配置
-    val agentConfig = AIAgentConfig(
-        prompt = prompt("test-agent") {
-            system(
-                """
-                    你是一个能够使用语气分析工具的问答智能体。
-                    你需要尽你所能回答1个问题。
-                    回答请尽可能简洁。
-                    请勿 NOT ANSWER ANY QUESTIONS THAT ARE BESIDES PERFORMING TONE ANALYSIS！
-                    请勿 NOT HALLUCINATE！
-                """.trimIndent()
-            )
-        },
-        model = mockk<LLModel>(relaxed = true),
-        maxAgentIterations = 10
-    )
-
-    // 创建启用测试的智能体
-    val agent = AIAgent(
-        promptExecutor = mockLLMApi,
-        toolRegistry = toolRegistry,
-        strategy = strategy,
-        eventHandler = eventHandler,
-        agentConfig = agentConfig,
-    ) {
-        withTesting()
-    }
-
-    // 测试积极文本
-    agent.run(positiveText)
-    assertEquals("文本语气积极。", result, "积极语气结果应匹配")
-    assertEquals(1, toolCalls.size, "预期调用一个工具")
-
-    // 测试消极文本
-    agent.run(negativeText)
-    assertEquals("文本语气消极。", result, "消极语气结果应匹配")
-    assertEquals(2, toolCalls.size, "预期调用两个工具")
-
-    // 测试中性文本
-    agent.run(defaultText)
-    assertEquals("文本语气中性。", result, "中性语气结果应匹配")
-    assertEquals(3, toolCalls.size, "预期调用三个工具")
+        }
     ```
 
 === "Java"
-```<!--- INCLUDE
-    /**
-    -->
-```java
-```
+
+    ```java
+    ```
+
+这验证了当工具执行节点收到特定工具调用签名时，是否会产生预期的工具结果。
+
+#### 高级节点测试
+
+对于更复杂的场景，您可以测试具有结构化输入和输出的节点：
+
+=== "Kotlin"
+
+    ```kotlin
+    assertNodes {
+        // Test with different inputs to the same node
+        askLLM withInput "Simple query" outputs assistantMessage("Simple response")
+
+        // Test with complex parameters
+        askLLM withInput "Complex query with parameters" outputs toolCallMessage(
+            AnalyzeTool,
+            AnalyzeTool.Args(query = "parameters", depth = 3)
+        )
+    }
+    ```
+
+=== "Java"
+
+    ```java
+    ```
+
+您还可以测试带有详细结果结构的复杂工具调用场景：
+
+=== "Kotlin"
+
+    ```kotlin
+    assertNodes {
+        callTool withInput toolCallMessage(
+            AnalyzeTool,
+            AnalyzeTool.Args("deep analysis", 5)
+        ) outputs toolResult(
+            AnalyzeTool,
+            AnalyzeTool.Result(
+                analysis = "Detailed analysis complete",
+                confidence = 0.95,
+                metadata = mapOf("source" to "mock", "timestamp" to "2023-06-15")
+            )
+        )
+    }
+    ```
+
+=== "Java"
+
+    ```java
+    ```
 
 对于包含多个子图的更复杂智能体，您也可以测试图结构：
 
 === "Kotlin"
 
     ```kotlin
-    @Test fun testMultiSubgraphAgentStructure() = runTest { val strategy = strategy("test") { val firstSubgraph by subgraph( "first", tools = listOf(DummyTool, CreateTool, SolveTool) ) { val callLLM by nodeLLMRequest(allowToolCalls = false) val executeTool by nodeExecuteTool() val sendToolResult by nodeLLMSendToolResult() val giveFeedback by node<String, String> { input -> llm.writeSession { appendPrompt { user("调用工具！不要闲聊！") } } input }
+    @Test
+    fun testMultiSubgraphAgentStructure() = runTest {
+        val strategy = strategy("test") {
+            val firstSubgraph by subgraph(
+                "first",
+                tools = listOf(DummyTool, CreateTool, SolveTool)
+            ) {
+                val callLLM by nodeLLMRequest(allowToolCalls = false)
+                val executeTool by nodeExecuteTool()
+                val sendToolResult by nodeLLMSendToolResult()
+                val giveFeedback by node<String, String> { input ->
+                    llm.writeSession {
+                        appendPrompt {
+                            user("Call tools! Don't chat!")
+                        }
+                    }
+                    input
+                }
 
-                edge(nodeStart 转发至 callLLM)  
-edge(callLLM 转发至 executeTool onToolCall { true })  
-edge(callLLM 转发至 giveFeedback onAssistantMessage { true })  
-edge(giveFeedback 转发至 giveFeedback onAssistantMessage { true })  
-edge(giveFeedback 转发至 executeTool onToolCall { true })  
-edge(executeTool 转发至 nodeFinish transformed { it.content })
+                edge(nodeStart forwardTo callLLM)
+                edge(callLLM forwardTo executeTool onToolCall { true })
+                edge(callLLM forwardTo giveFeedback onAssistantMessage { true })
+                edge(giveFeedback forwardTo giveFeedback onAssistantMessage { true })
+                edge(giveFeedback forwardTo executeTool onToolCall { true })
+                edge(executeTool forwardTo nodeFinish transformed { it.content })
+            }
 
-            val secondSubgraph 由 subgraph<String, String>("second") { edge(nodeStart forwardTo nodeFinish) } 定义
+            val secondSubgraph by subgraph<String, String>("second") {
+                edge(nodeStart forwardTo nodeFinish)
+            }
 
-            边(节点起点 指向 第一子图) 边(第一子图 指向 第二子图) 边(第二子图 指向 节点终点) }
+            edge(nodeStart forwardTo firstSubgraph)
+            edge(firstSubgraph forwardTo secondSubgraph)
+            edge(secondSubgraph forwardTo nodeFinish)
+        }
 
-        val toolRegistry = ToolRegistry { tool(DummyTool) tool(CreateTool) tool(SolveTool) }val mockLLMApi = getMockExecutor(toolRegistry) { mockLLMAnswer("你好！") onRequestContains "Hello" mockLLMToolCall(CreateTool, CreateTool.Args("solve")) onRequestEquals "Solve task" }
+        val toolRegistry = ToolRegistry {
+            tool(DummyTool)
+            tool(CreateTool)
+            tool(SolveTool)
+        }
 
-val basePrompt = prompt("test") {}
+        val mockLLMApi = getMockExecutor(toolRegistry) {
+            mockLLMAnswer("Hello!") onRequestContains "Hello"
+            mockLLMToolCall(CreateTool, CreateTool.Args("solve")) onRequestEquals "Solve task"
+        }
 
-AIAgent( toolRegistry = toolRegistry, strategy = strategy, eventHandler = EventHandler {}, agentConfig = AIAgentConfig(prompt = basePrompt, model = OpenAIModels.Chat.GPT4o, maxAgentIterations = 100), promptExecutor = mockLLMApi, ) { testGraph("test") { val firstSubgraph = assertSubgraphByName<String, String>("first") val secondSubgraph = assertSubgraphByName<String, String>("second")
+        val basePrompt = prompt("test") {}
 
-        断言边 { 起始节点() 总是通向 第一子图 第一子图 总是通向 第二子图 第二子图 总是通向 结束节点() }
+        AIAgent(
+            toolRegistry = toolRegistry,
+            strategy = strategy,
+            eventHandler = EventHandler {},
+            agentConfig = AIAgentConfig(prompt = basePrompt, model = OpenAIModels.Chat.GPT4o, maxAgentIterations = 100),
+            promptExecutor = mockLLMApi,
+        ) {
+            testGraph("test") {
+                val firstSubgraph = assertSubgraphByName<String, String>("first")
+                val secondSubgraph = assertSubgraphByName<String, String>("second")
 
-        verifySubgraph(firstSubgraph) {
-    val start = startNode()
-    val finish = finishNode()
+                assertEdges {
+                    startNode() alwaysGoesTo firstSubgraph
+                    firstSubgraph alwaysGoesTo secondSubgraph
+                    secondSubgraph alwaysGoesTo finishNode()
+                }
 
-            val askLLM = assertNodeByName<String, Message.Response>("callLLM")
-val callTool = assertNodeByName<Message.Tool.Call, ReceivedToolResult>("executeTool")
-val giveFeedback = assertNodeByName<Any?, Any?>("giveFeedback")
+                verifySubgraph(firstSubgraph) {
+                    val start = startNode()
+                    val finish = finishNode()
 
-            assertReachable(start, askLLM) assertReachable(askLLM, callTool)
+                    val askLLM = assertNodeByName<String, Message.Response>("callLLM")
+                    val callTool = assertNodeByName<Message.Tool.Call, ReceivedToolResult>("executeTool")
+                    val giveFeedback = assertNodeByName<Any?, Any?>("giveFeedback")
 
-            assertNodes {
-  askLLM withInput "Hello" 输出 Message.Assistant("Hello!")
-  askLLM withInput "Solve task" 输出 toolCallMessage(CreateTool, CreateTool.Args("solve"))
-}
+                    assertReachable(start, askLLM)
+                    assertReachable(askLLM, callTool)
 
-                ```java
-callTool withInput toolCallSignature( CreateTool, CreateTool.Args("solve") ) outputs toolResult(CreateTool, "created") }
-```
+                    assertNodes {
+                        askLLM withInput "Hello" outputs Message.Assistant("Hello!")
+                        askLLM withInput "Solve task" outputs toolCallMessage(CreateTool, CreateTool.Args("solve"))
 
-                    assertEdges { askLLM withOutput Message.Assistant("你好！") goesTo giveFeedback askLLM withOutput toolCallMessage(CreateTool, CreateTool.Args("solve")) goesTo callTool } } } } }
+                        callTool withInput toolCallSignature(
+                            SolveTool,
+                            SolveTool.Args("solve")
+                        ) outputs toolResult(SolveTool, "solved")
+
+                        callTool withInput toolCallSignature(
+                            CreateTool,
+                            CreateTool.Args("solve")
+                        ) outputs toolResult(CreateTool, "created")
+                    }
+
+                    assertEdges {
+                        askLLM withOutput Message.Assistant("Hello!") goesTo giveFeedback
+                        askLLM withOutput toolCallMessage(CreateTool, CreateTool.Args("solve")) goesTo callTool
+                    }
+                }
+            }
+        }
+    }
     ```
 
 === "Java"
@@ -564,20 +629,23 @@ callTool withInput toolCallSignature( CreateTool, CreateTool.Args("solve") ) out
 
 ## API 参考 { #complete-testing-example }
 
-关于测试功能的完整 API 参考，请查阅 [agents-test](api:agents-test::) 模块的参考文档。
+关于 Testing 功能的完整 API 参考，请参阅 [agents-test](api:agents-test::) 模块文档。
 
 ## FAQ 与故障排除 { #api-reference }
 
-#### 如何模拟特定的工具响应？
+#### 如何模拟特定的工具响应？ { #how-do-i-mock-a-specific-tool-response }
 
 在 `MockLLMBuilder` 中使用 `mockTool` 方法：
 
 === "Kotlin"
 
     ```kotlin
-    val mockExecutor = getMockExecutor { mockTool(myTool) alwaysReturns myResult
+    val mockExecutor = getMockExecutor {
+        mockTool(myTool) alwaysReturns myResult
 
-        // 或使用条件 mockTool(myTool) 在参数 myArgs 时返回 myResult }
+        // Or with conditions
+        mockTool(myTool) returns myResult onArguments myArgs
+    }
     ```
 
 === "Java"
@@ -585,22 +653,25 @@ callTool withInput toolCallSignature( CreateTool, CreateTool.Args("solve") ) out
     ```java
     ```
 
-#### 如何测试复杂的图结构？ { #how-do-i-mock-a-specific-tool-response }
+#### 如何测试复杂的图结构？ { #how-can-i-test-complex-graph-structures }
 
 使用子图断言、`verifySubgraph` 和节点引用：
 
 === "Kotlin"
 
     ```kotlin
-    testGraph<Unit, String>("test") { val mySubgraph = assertSubgraphByName<Unit, String>("mySubgraph")
+    testGraph<Unit, String>("test") {
+        val mySubgraph = assertSubgraphByName<Unit, String>("mySubgraph")
 
-        verifySubgraph(mySubgraph) { // 获取节点引用
-    val nodeA = assertNodeByName<Unit, String>("nodeA")
-    val nodeB = assertNodeByName<String, String>("nodeB")
+        verifySubgraph(mySubgraph) {
+            // Get references to nodes
+            val nodeA = assertNodeByName<Unit, String>("nodeA")
+            val nodeB = assertNodeByName<String, String>("nodeB")
 
-            // 断言可达性
+            // Assert reachability
             assertReachable(nodeA, nodeB)
-```// 断言边连接
+
+            // Assert edge connections
             assertEdges {
                 nodeA.withOutput("result") goesTo nodeB
             }
@@ -613,7 +684,7 @@ callTool withInput toolCallSignature( CreateTool, CreateTool.Args("solve") ) out
     ```java
     ```
 
-#### 如何根据输入模拟不同的 LLM 响应？ { #how-can-i-test-complex-graph-structures }
+#### 如何根据输入模拟不同的 LLM 响应？ { #how-do-i-simulate-different-llm-responses-based-on-input }
 
 使用模式匹配方法：
 
@@ -644,11 +715,11 @@ callTool withInput toolCallSignature( CreateTool, CreateTool.Args("solve") ) out
 
 ### 故障排除
 
-#### 模拟执行器始终返回默认响应
+#### 模拟执行器始终返回默认响应 { #mock-executor-always-returns-the-default-response }
 
 检查您的模式匹配是否正确。模式区分大小写，且必须完全按照指定方式匹配。
 
-#### 工具调用未被拦截 { #mock-executor-always-returns-the-default-response }
+#### 工具调用未被拦截 { #tool-calls-are-not-being-intercepted }
 
 请确保：
 

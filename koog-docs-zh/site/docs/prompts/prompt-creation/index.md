@@ -206,7 +206,7 @@ Kotlin DSL 和 Java 构建器 API 支持以下类型的消息，每种消息对�
         .toolCall("calculator_tool_id", "calculator", "{\"operation\": \"add\", \"a\": 5, \"b\": 3}")
         // 工具结果
         .toolResult("calculator_tool_id", "calculator", "8")
-        // LLM 基于工具结果的响应    
+        // LLM 基于工具结果的响应
         .assistant("5 + 3 的结果是 8。")
         .user("4 + 5 等于多少？")
         .build();
@@ -313,7 +313,7 @@ val prompt = prompt(
         .system("你是一位创意写作助手。")
         .user("写一首关于冬天的歌。")
         .build();
-        
+
     // 将参数应用到已构建的提示词
     prompt = prompt.withParams(params);
     ```

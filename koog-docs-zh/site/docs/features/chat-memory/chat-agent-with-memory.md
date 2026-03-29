@@ -20,15 +20,15 @@ graph TB
         load[Load chat history]
         save[Save chat history]
         llm([LLM interaction])
-        
+
         load --> llm --> save
     end
-    
+
     start((Start))
     read[Read input]
     print[Print response]
     exit((Exit))
-    
+
     start --> read
     read --"/bye"--> exit
     read --"empty"--> read
@@ -47,25 +47,25 @@ graph TB
     作为依赖项：
 
     === "Gradle (Kotlin)"
-    
+
         ```kotlin title="build.gradle.kts"
         dependencies {
             implementation("ai.koog:koog-agents:0.7.0")
             implementation("ai.koog:agents-features-memory:0.7.0")
         }
         ```
-    
+
     === "Gradle（Groovy）"
-    
+
         ```groovy title="build.gradle"
         dependencies {
             implementation 'ai.koog:koog-agents:0.7.0'
             implementation 'ai.koog:agents-features-memory:0.7.0'
         }
         ```
-    
+
     === "Maven"
-    
+
         ```xml title="pom.xml"
         <dependency>
             <groupId>ai.koog</groupId>
@@ -119,7 +119,7 @@ graph TB
     public class ExampleChatAgentOpenAI {
         public static void main(String[] args) {
             String sessionId = "my-conversation";
-    
+
             try (var executor = simpleOpenAIExecutor(System.getenv("OPENAI_API_KEY"))) {
                 AIAgent<String, String> agent = AIAgent.builder()
                         .promptExecutor(executor)
@@ -129,14 +129,14 @@ graph TB
                             config.windowSize(20); // keep only the last 20 messages
                         })
                         .build();
-    
+
                 Scanner scanner = new Scanner(System.in);
                 while (true) {
                     System.out.print("You: ");
                     String input = scanner.nextLine().trim();
                     if (input.equals("/bye")) break;
                     if (input.isEmpty()) continue;
-    
+
                     String reply = agent.run(input, sessionId);
                     System.out.println("Assistant: " + reply + "\n");
                 }

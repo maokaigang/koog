@@ -1,4 +1,4 @@
-<!-- koog-zh-meta: {"last_synced_at": "2026-03-28T16:49:25+00:00", "source_path": "prompts/prompt-executors.md", "source_sha256": "b7e65e777811281be076afb910954f0aa731b009d0737b213b05f0b52f1529fe", "source_tag": "0.7.3", "translation_status": "changed"} -->
+<!-- koog-zh-meta: {"last_synced_at": "2026-03-29T03:05:04+00:00", "source_path": "prompts/prompt-executors.md", "source_sha256": "b7e65e777811281be076afb910954f0aa731b009d0737b213b05f0b52f1529fe", "source_tag": "0.7.3", "translation_status": "changed"} -->
 # 提示词执行器 { #prompt-executors }
 
 提示词执行器提供了一个更高层次的抽象，让你能够管理一个或多个 LLM 客户端的生命周期。
@@ -7,7 +7,9 @@
 
 ## 执行器类型 { #executor-types }
 
-Koog 提供了三种主要类型的提示词执行器，它们都实现了 [`PromptExecutor`](api:prompt-executor-model::ai.koog.prompt.executor.model.PromptExecutor) 接口：| 类型            | <div style="width:175px">类</div>                                                                                                                               | 描述                                                                                                                                                                                                                                                          |
+Koog 提供了三种主要类型的提示词执行器，它们都实现了 [`PromptExecutor`](api:prompt-executor-model::ai.koog.prompt.executor.model.PromptExecutor) 接口：
+
+| 类型            | <div style="width:175px">类</div>                                                                                                                               | 描述                                                                                                                                                                                                                                                          |
 |-----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 单提供商        | [`SingleLLMPromptExecutor`](api:prompt-executor-model::ai.koog.prompt.executor.llms.SingleLLMPromptExecutor) | 包装单个提供商的 LLM 客户端。如果您的智能体仅需在单个 LLM 提供商的不同模型间切换，请使用此执行器。                                                                                                                     |
 | 多提供商        | [`MultiLLMPromptExecutor`](api:prompt-executor-model::ai.koog.prompt.executor.llms.MultiLLMPromptExecutor)   | 包装多个 LLM 客户端，并根据 LLM 提供商路由调用。它可选择性地在请求的客户端不可用时使用配置的备用提供商和 LLM。如果您的智能体需要在不同提供商的 LLM 之间切换，请使用此执行器。 |
@@ -15,7 +17,9 @@ Koog 提供了三种主要类型的提示词执行器，它们都实现了 [`Pro
 
 ## 创建单提供商执行器 { #creating-a-single-provider-executor }
 
-要为特定 LLM 提供商创建提示执行器，请执行以下操作：1. 为特定提供商配置一个 LLM 客户端，并提供相应的 API 密钥。
+要为特定 LLM 提供商创建提示执行器，请执行以下操作：
+
+1. 为特定提供商配置一个 LLM 客户端，并提供相应的 API 密钥。
 2. 使用 [`MultiLLMPromptExecutor`](api:prompt-executor-model::ai.koog.prompt.executor.llms.MultiLLMPromptExecutor) 创建一个提示执行器。
 
 示例如下：
@@ -34,7 +38,7 @@ Koog 提供了三种主要类型的提示词执行器，它们都实现了 [`Pro
     MultiLLMPromptExecutor promptExecutor = new MultiLLMPromptExecutor(openAIClient);
     ```
 
-## Creating a multi-provider executor { #creating-a-multi-provider-executor }
+## 创建多提供商执行器 { #creating-a-multi-provider-executor }
 
 要创建一个能与多个LLM提供者协同工作的提示执行器，请按以下步骤操作：
 
@@ -63,9 +67,9 @@ Koog 提供了三种主要类型的提示词执行器，它们都实现了 [`Pro
     MultiLLMPromptExecutor promptExecutor = new MultiLLMPromptExecutor(openAIClient, ollamaClient);
     ```
 
-## Creating a routing executor { #creating-a-routing-executor }
+## 创建路由执行器 { #creating-a-routing-executor }
 
-!!! warning "Experimental API"
+!!! warning "实验API"
     路由功能目前处于实验阶段，未来版本中可能发生变化。如需使用，请通过`@OptIn(ExperimentalRoutingApi::class)`选择启用。
 
 要创建一个提示执行器，通过路由策略将请求分发到多个LLM客户端实例，请按以下步骤操作：
@@ -110,7 +114,7 @@ Koog 提供了三种主要类型的提示词执行器，它们都实现了 [`Pro
 
 您也可以通过创建一个实现 [`LLMClientRouter`](api:prompt-executor-model::ai.koog.prompt.executor.llms.LLMClientRouter) 接口的类来实现自定义路由策略。
 
-## Pre-defined prompt executors { #pre-defined-prompt-executors }
+## 预定义提示执行器 { #pre-define-prompt-executors }
 
 为加快设置速度，Koog 为常见服务商提供了开箱即用的执行器实现，同时支持 Kotlin 和 Java 两种环境。
 
@@ -122,11 +126,11 @@ the predefined executors will return a PromptExecutor instance configured with a
 | LLM 提供商 | 提示执行器 | 描述 |
 |----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
 | OpenAI | [简单OpenAI执行器](api:prompt-executor-llms-all::ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor) | 封装了`OpenAILLMClient`，用于运行基于OpenAI模型的提示。 |
-| OpenAI | [simpleAzureOpenAIExecutor](api:prompt-executor-llms-all::ai.koog.prompt.executor.llms.all.simpleAzureOpenAIExecutor) | 包装`OpenAILLMClient`以适配Azure OpenAI Service的使用配置。 |
-| Anthropic | [简单Anthropic执行器](api:prompt-executor-llms-all::ai.koog.prompt.executor.llms.all.simpleAnthropicExecutor) | 封装了`AnthropicLLMClient`，用于运行基于Anthropic模型的提示。 |
+| OpenAI | [simpleAzureOpenAI执行器](api:prompt-executor-llms-all::ai.koog.prompt.executor.llms.all.simpleAzureOpenAIExecutor) | 包装`OpenAILLMClient`以车辆Azure OpenAI Service的使用配置。 |
+| Anthropic | `simpleAnthropicExecutor` | 封装了`AnthropicLLMClient`，用于运行基于Anthropic模型的提示。 |
 | Google | [simpleGoogleAIExecutor](api:prompt-executor-llms-all::ai.koog.prompt.executor.llms.all.simpleGoogleAIExecutor) | 封装了`GoogleLLMClient`，用于运行基于Google模型的提示。 |
-| OpenRouter | [简单OpenRouter执行器](api:prompt-executor-llms-all::ai.koog.prompt.executor.llms.all.simpleOpenRouterExecutor) | 包装`OpenRouterLLMClient`，使其能够通过OpenRouter运行提示。 |
-| Amazon Bedrock | [简单Bedrock执行器](api:prompt-executor-llms-all::ai.koog.prompt.executor.llms.all.simpleBedrockExecutor) | 包装 `BedrockLLMClient`，使其通过 AWS Bedrock 运行提示。 |
+| OpenRouter | `simpleOpenRouterExecutor` | 包装`OpenRouterLLMClient`，使其能够通过OpenRouter运行提示。 |
+| Amazon Bedrock | [简单Bedrock执行器](api:prompt-executor-llms-all::ai.koog.prompt.executor.llms.all.simpleBedrockExecutor) | 包装`BedrockLLMClient`，通过AWSBedrock运行提示。 |
 | Amazon Bedrock | [简单BedrockExecutorWithBearerToken](api:prompt-executor-llms-all::ai.koog.prompt.executor.llms.all.simpleBedrockExecutorWithBearerToken) | 包装 `BedrockLLMClient` 并使用提供的 Bedrock API 密钥发送请求。 |
 | Mistral | [simpleMistralAIExecutor](api:prompt-executor-llms-all::ai.koog.prompt.executor.llms.all.simpleMistralAIExecutor) | 包装`MistralAILLMClient`，使其能够使用Mistral模型运行提示。 |
 | Ollama | [simpleOllamaAIExecutor](api:prompt-executor-llms-all::ai.koog.prompt.executor.llms.all.simpleOllamaAIExecutor) | 封装了`OllamaClient`，使其能够通过Ollama运行提示。 |
@@ -147,11 +151,11 @@ the predefined executors will return a PromptExecutor instance configured with a
     PromptExecutor openAIExecutor = simpleOpenAIExecutor("OPENAI_API_KEY");
     ```
 
-## Running a prompt { #running-a-prompt }
+## 运行提示符 { #running-a-prompt }
 
 要使用提示执行器运行提示，请按以下步骤操作：
 
-1. Create a prompt executor.
+1. 创建提示执行器。
 2. 使用 `execute()` 方法运行带有特定 LLM 的提示。
 
 这是一个示例：
@@ -189,7 +193,7 @@ the predefined executors will return a PromptExecutor instance configured with a
 !!! note
     提示执行器提供了多种方法来运行提示，包括流式处理、多选生成和内容审核等功能。由于提示执行器封装了LLM客户端，因此每个执行器都支持对应客户端的全部能力。具体细节请参阅[LLM 客户端](llm-clients.md)。
 
-## Switching between providers { #switching-between-providers }
+## 在提供商之间切换 { #switching- Between-providers }
 
 当您使用`MultiLLMPromptExecutor`与多个LLM提供商协作时，可以在它们之间进行切换。具体流程如下：
 
@@ -256,7 +260,7 @@ the predefined executors will return a PromptExecutor instance configured with a
 
 您可以选择配置一个备用的 LLM 提供者和模型，以便在请求的客户端不可用时使用。具体详情请参阅 [配置回退机制](#configuring-fallbacks)。
 
-## Configuring fallbacks { #configuring-fallbacks }
+## 配置回退 { #configuring-fallbacks }
 
 多提供商和路由提示执行器可以配置为在请求的LLM客户端不可用时，使用备用的LLM提供商和模型。
 
@@ -321,4 +325,3 @@ the predefined executors will return a PromptExecutor instance configured with a
 
 !!! note
     仅针对`execute()`和`executeMultipleChoices()`方法提供回退机制。
-

@@ -62,26 +62,24 @@ Koog 中的 OpenTelemetry 功能会自动为各种代理事件创建跨度，包
         .build();
     ```
 
-## Configuration { #configuration }
+## 配置 { #configuration }
 
-### Basic configuration { #basic-configuration }
+### 基本配置 { #basic-configuration }
 
-Here is the full list of available properties that you set when configuring the OpenTelemetry feature in an agent:
+以下是您在代理中配置 OpenTelemetry 功能时设置的可用属性的完整列表：
 
-| Name             | Data type          | Default value                | Description                                                                  |
+| 名称 | 数据类型 | 默认值 | 描述 |
 |------------------|--------------------|------------------------------|------------------------------------------------------------------------------|
-| `serviceName`    | `String`           | `ai.koog`                    | The name of the service being instrumented.                                  |
-| `serviceVersion` | `String`           | Current Koog library version | The version of the service being instrumented.                               |
-| `isVerbose`      | `Boolean`          | `false`                      | Whether to enable verbose logging for debugging OpenTelemetry configuration. |
-| `sdk`            | `OpenTelemetrySdk` |                              | The OpenTelemetry SDK instance to use for telemetry collection.              |
-| `tracer`         | `Tracer`           |                              | The OpenTelemetry tracer instance used for creating spans.                   |
+| `serviceName` | `String` | `ai.koog` | 正在检测的服务的名称。 |
+| `serviceVersion` | `String` | 当前 Koog 库版本 | 正在检测的服务的版本。 |
+| `isVerbose` | `Boolean` | `false` | 是否启用详细日志记录以调试 OpenTelemetry 配置。 |
+| `sdk` | `OpenTelemetrySdk` |  | 用于遥测收集的 OpenTelemetry SDK 实例。 |
+| `tracer` | `Tracer` |  | 用于创建跨度的 OpenTelemetry 跟踪器实例。 |
 
 !!! note
-The `sdk` and `tracer` properties are public properties that you can access, but you can only set them using the
-public methods listed below.
+`sdk` 和 `tracer` 属性是您可以访问的公共属性，但您只能使用下面列出的公共方法来设置它们。
 
-The `OpenTelemetryConfig` class also includes methods that represent actions related to different configuration
-items. Here is an example of installing the OpenTelemetry feature with a basic set of configuration items:
+`OpenTelemetryConfig` 类还包括表示与不同配置项相关的操作的方法。以下是使用一组基本配置项安装 OpenTelemetry 功能的示例：
 
 === "Kotlin"
 
@@ -89,7 +87,7 @@ items. Here is an example of installing the OpenTelemetry feature with a basic s
     install(OpenTelemetry) {
         // Set your service configuration
         setServiceInfo("my-agent-service", "1.0.0")
-        
+
         // Add the Logging exporter
         addSpanExporter(LoggingSpanExporter.create())
     }
@@ -107,78 +105,78 @@ items. Here is an example of installing the OpenTelemetry feature with a basic s
     })
     ```
 
-For a reference of available methods, see the sections below.
+有关可用方法的参考，请参阅以下部分。
 
 #### setServiceInfo { #setserviceinfo }
 
-Sets the service information including name and version. Takes the following arguments:
+设置服务信息，包括名称和版本。采用以下参数：
 
-| Name               | Data type | Required | Default value | Description                                                 |
+| 名称 | 数据类型 | 必填 | 默认值 | 描述 |
 |--------------------|-----------|----------|---------------|-------------------------------------------------------------|
-| `serviceName`      | String    | Yes      |               | The name of the service being instrumented.                 |
-| `serviceVersion`   | String    | Yes      |               | The version of the service being instrumented.              |
+| `serviceName` | String | 是 |  | 正在检测的服务的名称。 |
+| `serviceVersion` | String | 是 |  | 正在检测的服务的版本。 |
 
 #### addSpanExporter { #addspanexporter }
 
-Adds a span exporter to send telemetry data to external systems. Takes the following argument:
+添加跨度导出器以将遥测数据发送到外部系统。采用以下参数：
 
-| Name       | Data type      | Required | Default value | Description                                                                   |
+| 名称 | 数据类型 | 必填 | 默认值 | 描述 |
 |------------|----------------|----------|---------------|-------------------------------------------------------------------------------|
-| `exporter` | `SpanExporter` | Yes      |               | The `SpanExporter` instance to be added to the list of custom span exporters. |
+| `exporter` | `SpanExporter` | 是 |  | 要添加到自定义跨度导出器列表中的 `SpanExporter` 实例。 |
 
 #### addSpanProcessor { #addspanprocessor }
 
-Adds a span processor factory to process spans before they are exported. Takes the following argument:
+添加一个跨度处理器工厂以在导出跨度之前对其进行处理。采用以下参数：
 
-| Name        | Data type                         | Required | Default value | Description                                                                                                  |
+| 名称 | 数据类型 | 必填 | 默认值 | 描述 |
 |-------------|-----------------------------------|----------|---------------|--------------------------------------------------------------------------------------------------------------|
-| `processor` | `(SpanExporter) -> SpanProcessor` | Yes      |               | A function that creates a span processor for a given exporter. Lets you customize processing per exporter.   |
+| `processor` | `(SpanExporter) -> SpanProcessor` | 是 |  | 为给定导出器创建跨度处理器的函数。允许您自定义每个导出器的处理。 |
 
 #### addResourceAttributes { #addresourceattributes }
 
-Adds resource attributes to provide additional context about the service. Takes the following argument:
+添加资源属性以提供有关服务的附加上下文。采用以下参数：
 
-| Name         | Data type                 | Required | Default value | Description                                                            |
+| 名称 | 数据类型 | 必填 | 默认值 | 描述 |
 |--------------|---------------------------|----------|---------------|------------------------------------------------------------------------|
-| `attributes` | `Map<AttributeKey<T>, T>` | Yes      |               | The key-value pairs that provide additional details about the service. |
+| `attributes` | `Map<AttributeKey<T>, T>` | 是 |  | 提供有关服务的其他详细信息的键值对。 |
 
 #### setSampler { #setsampler }
 
-Sets the sampling strategy to control which spans are collected. Takes the following argument:
+设置采样策略以控制收集哪些范围。采用以下参数：
 
-| Name      | Data type | Required | Default value | Description                                                      |
+| 名称 | 数据类型 | 必填 | 默认值 | 描述 |
 |-----------|-----------|----------|---------------|------------------------------------------------------------------|
-| `sampler` | `Sampler` | Yes      |               | The sampler instance to set for the OpenTelemetry configuration. |
+| `sampler` | `Sampler` | 是 |  | 为 OpenTelemetry 配置设置的采样器实例。 |
 
 #### setVerbose { #setverbose }
 
-Enables or disables verbose logging. Takes the following argument:
+启用或禁用详细日志记录。采用以下参数：
 
-| Name      | Data type | Required | Default value | Description                                                     |
+| 名称 | 数据类型 | 必填 | 默认值 | 描述 |
 |-----------|-----------|----------|---------------|-----------------------------------------------------------------|
-| `verbose` | `Boolean` | Yes      | `false`       | If true, the application collects more detailed telemetry data. |
+| `verbose` | `Boolean` | 是 | `false` | 如果为 `true`，应用程序会收集更详细的遥测数据。 |
 
 !!! note
 
-    Some content of OpenTelemetry spans is masked by default for security reasons. For example, LLM messages are masked as `HIDDEN:non-empty` instead of the actual message content. To get the content, set the value of the `verbose` argument to `true`.
+    出于安全原因，默认情况下会屏蔽 OpenTelemetry span 的某些内容。例如，LLM消息被屏蔽为`HIDDEN:non-empty`而不是实际的消息内容。要获取内容，请将 `verbose` 参数的值设置为 `true`。
 
 #### setSdk { #setsdk }
 
-Injects a pre-configured OpenTelemetrySdk instance.
+注入预先配置的 OpenTelemetrySdk 实例。
 
-- When you call setSdk(sdk), the provided SDK is used as-is, and any custom configuration applied via addSpanExporter, addSpanProcessor, addResourceAttributes, or setSampler is ignored.
-- The tracer’s instrumentation scope name/version are aligned with your service info.
+- 调用 `setSdk(sdk)` 后，传入的 SDK 会被原样使用，并且此前通过 `addSpanExporter`、`addSpanProcessor`、`addResourceAttributes` 或 `setSampler` 设置的自定义配置都会被忽略。
+- 跟踪器的检测范围名称/版本与您的服务信息一致。
 
-| Name  | Data type          | Required | Description                           |
+| 名称 | 数据类型 | 必填 | 描述 |
 |-------|--------------------|----------|---------------------------------------|
-| `sdk` | `OpenTelemetrySdk` | Yes      | The SDK instance to use in the agent. |
+| `sdk` | `OpenTelemetrySdk` | 是 | 在代理中使用的 SDK 实例。 |
 
-### Advanced configuration { #advanced-configuration }
+### 高级配置 { #advanced-configuration }
 
-For more advanced configuration, you can also customize the following configuration options:
+对于更高级的配置，您还可以自定义以下配置选项：
 
-- Sampler: configure the sampling strategy to adjust the frequency and amount of collected data.
-- Resource attributes: add more information about the process that is producing telemetry data.
+- 采样器：配置采样策略，调整采集数据的频率和数量。
+- 资源属性：添加有关生成遥测数据的过程的更多信息。
 
 === "Kotlin"
 
@@ -186,13 +184,13 @@ For more advanced configuration, you can also customize the following configurat
     install(OpenTelemetry) {
         // Set your service configuration
         setServiceInfo("my-agent-service", "1.0.0")
-        
+
         // Add the Logging exporter
         addSpanExporter(LoggingSpanExporter.create())
-        
-        // Set the sampler 
-        setSampler(Sampler.traceIdRatioBased(0.5)) 
-    
+
+        // Set the sampler
+        setSampler(Sampler.traceIdRatioBased(0.5))
+
         // Add resource attributes
         addResourceAttributes(mapOf(
             AttributeKey.stringKey("custom.attribute") to "custom-value")
@@ -220,21 +218,19 @@ For more advanced configuration, you can also customize the following configurat
     })
     ```
 
-#### Sampler { #sampler }
+#### 采样器 { #sampler }
 
-To define a sampler, use a corresponding method of the `Sampler` class (`io.opentelemetry.sdk.trace.samplers.Sampler`)
-from the `opentelemetry-java` SDK that represents the sampling strategy you want to use.
+要定义采样器，请使用 `opentelemetry-java` SDK 中的 `Sampler` 类 (`io.opentelemetry.sdk.trace.samplers.Sampler`) 的相应方法来表示您要使用的采样策略。
 
-The default sampling strategy is as follows:
+默认的采样策略如下：
 
-- `Sampler.alwaysOn()`: The default sampling strategy where every span (trace) is sampled.
+- `Sampler.alwaysOn()`：默认采样策略，对每个跨度（迹线）进行采样。
 
-For more information about available samplers and sampling strategies, see the OpenTelemetry [Sampler](https://opentelemetry.io/docs/languages/java/sdk/#sampler) documentation.
+有关可用采样器和采样策略的更多信息，请参阅 OpenTelemetry [采样器](https://opentelemetry.io/docs/languages/java/sdk/#sampler) 文档。
 
-#### Resource attributes { #resource-attributes }
+#### 资源属性 { #resource-attributes }
 
-Resource attributes represent additional information about a process producing telemetry data. Koog includes a set of
-resource attributes that are set by default:
+资源属性表示有关生成遥测数据的过程的附加信息。 Koog 包括一组默认设置的资源属性：
 
 - `service.name`
 - `service.version`
@@ -243,12 +239,9 @@ resource attributes that are set by default:
 - `os.version`
 - `os.arch`
 
-The default value of the `service.name` attribute is `ai.koog`, while the default `service.version` value is the
-currently used Koog library version.
+`service.name` 属性的默认值为 `ai.koog`，而默认的 `service.version` 值为当前使用的 Koog 库版本。
 
-In addition to default resource attributes, you can also add custom attributes. To add a custom attribute to an
-OpenTelemetry configuration in Koog, use the `addResourceAttributes()` method in an OpenTelemetry configuration that
-takes a key and a value as its arguments.
+除了默认资源属性之外，您还可以添加自定义属性。要将自定义属性添加到 Koog 中的 OpenTelemetry 配置，请在 OpenTelemetry 配置中使用 `addResourceAttributes()` 方法，该方法将键和值作为其参数。
 
 === "Kotlin"
 
@@ -266,20 +259,20 @@ takes a key and a value as its arguments.
     ));
     ```
 
-## Span types and attributes { #span-types-and-attributes }
+## Span 类型和属性 { #span-types-and-attributes }
 
-The OpenTelemetry feature automatically creates different types of spans to track various operations in your agent:
+OpenTelemetry 功能会自动创建不同类型的跨度来跟踪代理中的各种操作：
 
-- **CreateAgentSpan**: created when you run an agent, closed when the agent is closed or the process is terminated.
-- **InvokeAgentSpan**: the invocation of an agent.
-- **StrategySpan**: the execution of an agent's strategy (the top-level execution flow).
-- **NodeExecuteSpan**: the execution of a node in the agent's strategy. This is a custom, Koog-specific span.
-- **SubgraphExecuteSpan**: the execution of a subgraph within the agent strategy. This is a custom, Koog-specific span.
-- **InferenceSpan**: an LLM call.
-- **ExecuteToolSpan**: a tool call.
-- **McpClientSpan**: an MCP (Model Context Protocol) client operation. This span follows OpenTelemetry semantic conventions for MCP.
+- **创建智能体跨度**（`CreateAgentSpan`）：运行代理时创建，在代理关闭或进程终止时结束。
+- **调用智能体跨度**（`InvokeAgentSpan`）：表示一次代理调用。
+- **策略跨度**（`StrategySpan`）：表示代理策略的执行，也就是顶层执行流程。
+- **节点执行跨度**（`NodeExecuteSpan`）：表示代理策略中某个节点的执行。这是 Koog 自定义的跨度。
+- **子图执行跨度**（`SubgraphExecuteSpan`）：表示代理策略内某个子图的执行。这也是 Koog 自定义的跨度。
+- **推理跨度**（`InferenceSpan`）：表示一次 LLM 调用。
+- **工具执行跨度**（`ExecuteToolSpan`）：表示一次工具调用。
+- **MCP 客户端跨度**（`McpClientSpan`）：表示 MCP（Model Context Protocol）客户端操作。此跨度遵循 MCP 的 OpenTelemetry 语义约定。
 
-Spans are organized in a nested, hierarchical structure. Here is an example of a span structure:
+Span 以嵌套的层次结构进行组织。下面是一个跨度结构的例子：
 
 ```text
 CreateAgentSpan
@@ -294,70 +287,57 @@ CreateAgentSpan
                     InferenceSpan
 ```
 
-### Span attributes { #span-attributes }
+### 跨度属性 { #span-attributes }
 
-Span attributes provide metadata related to a span. Each span has its set of attributes, while some spans can also
-repeat attributes.
+Span 属性提供与 Span 相关的元数据。每个跨度都有其一组属性，而某些跨度还可以重复属性。
 
-Koog supports a list of predefined attributes that follow OpenTelemetry's [Semantic conventions for generative AI events](https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-spans/). For example, the conventions define an attribute named
-`gen_ai.conversation.id`, which is usually a required attribute for a span. In Koog, the value of this attribute is the
-unique identifier for an agent run, that is automatically set when you call the `agent.run()` method.
+Koog 支持遵循 OpenTelemetry 的 [生成人工智能事件的语义约定](https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-spans/) 的预定义属性列表。例如，约定定义了一个名为 `gen_ai.conversation.id` 的属性，该属性通常是跨度的必需属性。在 Koog 中，此属性的值是代理运行的唯一标识符，在调用 `agent.run()` 方法时自动设置。
 
-In addition, Koog also includes custom, Koog-specific attributes. You can recognize most of these attributes by the
-`koog.` prefix. Here are the available custom attributes:
+此外，Koog 还包括自定义的、Koog 特定的属性。您可以通过 `koog.` 前缀来识别大多数属性。以下是可用的自定义属性：
 
-- `koog.strategy.name`: the name of the agent strategy. A strategy is a Koog-related entity that describes the
-  purpose of the agent. Used in the `StrategySpan` span.
-- `koog.node.id`: the identifier (name) of the node being executed. Used in the `NodeExecuteSpan` span.
-- `koog.node.input`: the input passed to the node at the beginning of execution. Present on `NodeExecuteSpan` when node starts.
-- `koog.node.output`: the output produced by the node upon completion. Present on `NodeExecuteSpan` when node completes successfully.
-- `koog.subgraph.id`: the identifier (name) of the subgraph being executed. Used in the `SubgraphExecuteSpan` span.
-- `koog.subgraph.input`: the input passed to the subgraph at the beginning of execution. Present on `SubgraphExecuteSpan` when subgraph starts.
-- `koog.subgraph.output`: the output produced by the subgraph upon completion. Present on `SubgraphExecuteSpan` when subgraph completes successfully.
+- `koog.strategy.name`：代理策略的名称。策略是 Koog 中用于描述
+  代理用途的实体。用于 `StrategySpan` 跨度。
+- `koog.node.id`：正在执行的节点标识符（名称）。用于 `NodeExecuteSpan` 跨度。
+- `koog.node.input`：执行开始时传递给节点的输入。节点启动时出现在 `NodeExecuteSpan` 上。
+- `koog.node.output`：节点完成后产生的输出。当节点成功完成时出现在 `NodeExecuteSpan` 上。
+- `koog.subgraph.id`：正在执行的子图标识符（名称）。用于 `SubgraphExecuteSpan` 跨度。
+- `koog.subgraph.input`：在执行开始时传递给子图的输入。当子图开始时出现在 `SubgraphExecuteSpan` 上。
+- `koog.subgraph.output`：子图完成后产生的输出。当子图成功完成时出现在 `SubgraphExecuteSpan` 上。
 
-### Events { #events }
+### 事件 { #events }
 
-A span can also have an _event_ attached to the span. Events describe a specific point in time when something relevant
-happened. For example, when an LLM call started or finished. Events also have attributes and additionally include event
-_body fields_.
+跨度还可以附加_事件_。事件描述某个相关动作发生的具体时间点，例如 LLM 调用开始或结束的时刻。事件同样带有属性，也可以包含事件 `body` 字段。
 
-The following event types are supported in line with OpenTelemetry's [Semantic conventions for generative AI events](https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-events/):
+根据 OpenTelemetry 的 [生成人工智能事件的语义约定](https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-events/) 支持以下事件类型：
 
-- **SystemMessageEvent**: the system instructions passed to the model.
-- **UserMessageEvent**: the user message passed to the model.
-- **AssistantMessageEvent**: the assistant message passed to the model.
-- **ToolMessageEvent**: the response from a tool or function call passed to the model.
-- **ChoiceEvent**: the response message from a model.
-- **ModerationResponseEvent**: the model moderation result or signal.
-
-!!! note   
-The `optentelemetry-java` SDK does not support the event body fields parameter when adding an event. Therefore, in
-the OpenTelemetry support in Koog, event body fields are a separate attribute whose key is `body` and value type is
-string. The string includes the content or payload for the event body field, which is usually a JSON-like object. For
-examples of event body fields, see the [OpenTelemetry documentation](https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-events/#examples). For the state of support for event body
-fields in `opentelemetry-java`, see the related [GitHub issue](https://github.com/open-telemetry/semantic-conventions/issues/1870).
-
-## Exporters { #exporters }
-
-Exporters send collected telemetry data to an OpenTelemetry Collector or other types of destinations or backend
-implementations. To add an exporter, use the `addSpanExporter()` method when installing the OpenTelemetry feature. The
-method takes the following argument:
-
-| Name       | Data type    | Required | Default | Description                                                                 |
-|------------|--------------|----------|---------|-----------------------------------------------------------------------------|
-| `exporter` | SpanExporter | Yes      |         | The SpanExporter instance to be added to the list of custom span exporters. |
-
-The sections below provide information about some of the most commonly used exporters from the `opentelemetry-java` SDK.
+- **系统消息事件**（`SystemMessageEvent`）：传递给模型的系统指令。
+- **用户消息事件**（`UserMessageEvent`）：传递给模型的用户消息。
+- **助手消息事件**（`AssistantMessageEvent`）：传递给模型的助手消息。
+- **工具消息事件**（`ToolMessageEvent`）：传递给模型的工具或函数调用结果。
+- **候选项事件**（`ChoiceEvent`）：来自模型的响应消息。
+- **审核结果事件**（`ModerationResponseEvent`）：模型返回的审核结果或信号。
 
 !!! note
-If you do not configure any custom exporters, Koog will use a console LoggingSpanExporter by default. This helps during local development and debugging.
+`opentelemetry-java` SDK 在添加事件时不支持事件正文字段参数。因此，在 Koog 的 OpenTelemetry 支持中，事件体字段会作为一个单独属性存储，键名为 `body`，值类型为字符串。该字符串包含事件体字段的内容或载荷，通常是类似 JSON 的对象。事件体字段的示例可参考 [OpenTelemetry 文档](https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-events/#examples)。关于 `opentelemetry-java` 对事件体字段的支持情况，请参见相关 [GitHub issue](https://github.com/open-telemetry/semantic-conventions/issues/1870)。
 
-### Logging exporter { #logging-exporter }
+## 导出器 { #exporters }
 
-A logging exporter that outputs trace information to the console. `LoggingSpanExporter`
-(`io.opentelemetry.exporter.logging.LoggingSpanExporter`) is a part of the `opentelemetry-java` SDK.
+导出器将收集的遥测数据发送到 OpenTelemetry Collector 或其他类型的目的地或后端实现。要添加导出器，请在安装 OpenTelemetry 功能时使用 `addSpanExporter()` 方法。该方法采用以下参数：
 
-This type of export is useful for development and debugging purposes.
+| 名称 | 数据类型 | 必填 | 默认 | 描述 |
+|------------|--------------|----------|---------|-----------------------------------------------------------------------------|
+| `exporter` | `SpanExporter` | 是 |  | 要添加到自定义跨度导出器列表中的 `SpanExporter` 实例。 |
+
+以下部分提供了有关 `opentelemetry-java` SDK 中一些最常用导出器的信息。
+
+!!! note
+如果您没有配置任何自定义导出器，Koog 默认情况下将使用控制台 LoggingSpanExporter。这有助于本地开发和调试。
+
+### 日志导出器 { #logging-exporter }
+
+将跟踪信息输出到控制台的日志记录导出器。 `LoggingSpanExporter` (`io.opentelemetry.exporter.logging.LoggingSpanExporter`) 是 `opentelemetry-java` SDK 的一部分。
+
+这种类型的导出对于开发和调试目的很有用。
 
 === "Kotlin"
 
@@ -379,19 +359,18 @@ This type of export is useful for development and debugging purposes.
     })
     ```
 
-### OpenTelemetry HTTP exporter { #opentelemetry-http-exporter }
+### OpenTelemetry HTTP 导出器 { #opentelemetry-http-exporter }
 
-OpenTelemetry HTTP exporter (`OtlpHttpSpanExporter`) is a part of the `opentelemetry-java` SDK
-(`io.opentelemetry.exporter.otlp.http.trace.OtlpHttpSpanExporter`) and sends span data to a backend through HTTP.
+OpenTelemetry HTTP 导出器 (`OtlpHttpSpanExporter`) 是 `opentelemetry-java` SDK (`io.opentelemetry.exporter.otlp.http.trace.OtlpHttpSpanExporter`) 的一部分，并通过 HTTP 将跨度数据发送到后端。
 
 === "Kotlin"
 
     ```kotlin
     install(OpenTelemetry) {
-        // Add OpenTelemetry HTTP exporter 
+        // Add OpenTelemetry HTTP exporter
         addSpanExporter(
             OtlpHttpSpanExporter.builder()
-                // Set the maximum time to wait for the collector to process an exported batch of spans 
+                // Set the maximum time to wait for the collector to process an exported batch of spans
                 .setTimeout(30, TimeUnit.SECONDS)
                 // Set the OpenTelemetry endpoint to connect to
                 .setEndpoint("http://localhost:3000/api/public/otel/v1/traces")
@@ -420,18 +399,15 @@ OpenTelemetry HTTP exporter (`OtlpHttpSpanExporter`) is a part of the `opentelem
     })
     ```
 
-### OpenTelemetry gRPC exporter { #opentelemetry-grpc-exporter }
+### OpenTelemetry gRPC 导出器 { #opentelemetry-grpc-exporter }
 
-OpenTelemetry gRPC exporter (`OtlpGrpcSpanExporter`) is a part of the `opentelemetry-java` SDK
-(`io.opentelemetry.exporter.otlp.trace.OtlpGrpcSpanExporter`). It exports telemetry data to a backend through gRPC and
-lets you define the host and port of the backend, collector, or endpoint that receives the data. The default port is
-`4317`.
+OpenTelemetry gRPC 导出器 (`OtlpGrpcSpanExporter`) 是 `opentelemetry-java` SDK (`io.opentelemetry.exporter.otlp.trace.OtlpGrpcSpanExporter`) 的一部分。它通过 gRPC 将遥测数据导出到后端，并允许您定义接收数据的后端、收集器或端点的主机与端口。默认端口是 `4317`。
 
 === "Kotlin"
 
     ```kotlin
     install(OpenTelemetry) {
-        // Add OpenTelemetry gRPC exporter 
+        // Add OpenTelemetry gRPC exporter
         addSpanExporter(
             OtlpGrpcSpanExporter.builder()
                 // Set the host and the port
@@ -455,11 +431,11 @@ lets you define the host and port of the backend, collector, or endpoint that re
     })
     ```
 
-## Integration with Langfuse { #integration-with-langfuse }
+## 与 Langfuse 集成 { #integration-with-langfuse }
 
-Langfuse provides trace visualization and analytics for LLM/agent workloads.
+Langfuse 为 LLM/代理工作负载提供跟踪可视化和分析。
 
-You can configure Koog to export OpenTelemetry traces directly to Langfuse using a helper function:
+您可以配置 Koog 使用辅助函数将 OpenTelemetry 跟踪直接导出到 Langfuse：
 
 === "Kotlin"
 
@@ -487,11 +463,11 @@ You can configure Koog to export OpenTelemetry traces directly to Langfuse using
     })
     ```
 
-Please read the [full documentation](opentelemetry-langfuse-exporter.md) about integration with Langfuse.
+请阅读 [完整的文档](opentelemetry-langfuse-exporter.md) 有关与 Langfuse 集成的信息。
 
-## Integration with W&B Weave { #integration-with-w-b-weave }
+## 与 W&B Weave 集成 { #integration-with-w-b-weave }
 
-W&B Weave provides trace visualization and analytics for LLM/agent workloads. Integration with W&B Weave can be configured via a predefined exporter:
+W&B Weave 为 LLM/代理工作负载提供跟踪可视化和分析。与 W&B Weave 的集成可以通过预定义的导出器进行配置：
 
 === "Kotlin"
 
@@ -519,23 +495,21 @@ W&B Weave provides trace visualization and analytics for LLM/agent workloads. In
     })
     ```
 
-Please read the [full documentation](opentelemetry-weave-exporter.md) about integration with W&B Weave.
+请阅读 [完整的文档](opentelemetry-weave-exporter.md) 有关与 W&B Weave 集成的信息。
 
-## Integration with Jaeger { #integration-with-jaeger }
+## 与 Jaeger 集成 { #integration-with-jaeger }
 
-Jaeger is a popular distributed tracing system that works with OpenTelemetry. The `opentelemetry` directory within
-`examples` in the Koog repository includes an example of using OpenTelemetry with Jaeger and Koog agents.
+Jaeger 是一个常用的分布式追踪系统，可与 OpenTelemetry 搭配使用。Koog 仓库 `examples` 目录下的 `opentelemetry` 示例展示了如何将 OpenTelemetry、Jaeger 和 Koog 代理结合使用。
 
-### Prerequisites { #prerequisites }
+### 前置条件 { #prerequisites }
 
-To test OpenTelemetry with Koog and Jaeger, start the Jaeger OpenTelemetry all-in-one process using the provided
-`docker-compose.yaml` file, by running the following command:
+要测试 Koog 与 Jaeger 的集成，请先运行下面的命令，使用提供的 `docker-compose.yaml` 启动 Jaeger all-in-one 进程：
 
 ```bash
 docker compose up -d
 ```
 
-The provided Docker Compose YAML file includes the following content:
+提供的 Docker Compose YAML 文件内容如下：
 
 ```yaml
 # docker-compose.yaml { #docker-compose-yaml }
@@ -550,15 +524,15 @@ services:
       - "16686:16686"
 ```
 
-To access the Jaeger UI and view your traces, open `http://localhost:16686`.
+启动后，打开 `http://localhost:16686` 即可访问 Jaeger UI 并查看追踪数据。
 
-### Example { #example }
+### 示例 { #example }
 
-To export telemetry data for use in Jaeger, the example uses `LoggingSpanExporter`
-(`io.opentelemetry.exporter.logging.LoggingSpanExporter`) and `OtlpGrpcSpanExporter`
-(`io.opentelemetry.exporter.otlp.trace.OtlpGrpcSpanExporter`) from the `opentelemetry-java` SDK.
+要将遥测数据导出到 Jaeger，示例中使用了 `opentelemetry-java` SDK 提供的 `LoggingSpanExporter`
+（`io.opentelemetry.exporter.logging.LoggingSpanExporter`）和 `OtlpGrpcSpanExporter`
+（`io.opentelemetry.exporter.otlp.trace.OtlpGrpcSpanExporter`）。
 
-Here is the full code sample:
+完整代码示例如下：
 
 === "Kotlin"
 
@@ -587,8 +561,10 @@ Here is the full code sample:
 
             val result = agent.run("Tell me a joke about programming")
 
-            println("Agent run completed with result: '$result'." +
-                    "\nCheck Jaeger UI at http://localhost:16686 to view traces")
+            println(
+                "Agent run completed with result: '$result'.\n" +
+                    "Check the Jaeger UI at http://localhost:16686 to inspect the trace."
+            )
         }
     }
     ```
@@ -619,85 +595,85 @@ Here is the full code sample:
         var result = agent.run("Tell me a joke about programming");
 
         System.out.println(
-            "Agent run completed with result: '" + result + "'." +
-                "\nCheck Jaeger UI at http://localhost:16686 to view traces"
+            "Agent run completed with result: '" + result + "'.\n"
+                + "Check the Jaeger UI at http://localhost:16686 to inspect the trace."
         );
     }
     ```
 
-## Troubleshooting { #troubleshooting }
+## 故障排查 { #troubleshooting }
 
-### Common issues { #common-issues }
+### 常见问题 { #common-issues }
 
-1. **No traces appearing in Jaeger, Langfuse, or W&B Weave**
-    - Ensure the service is running and the OpenTelemetry port (4317) is accessible.
-    - Check that the OpenTelemetry exporter is configured with the correct endpoint.
-    - Make sure to wait a few seconds after agent execution for traces to be exported.
+1. **Jaeger、Langfuse 或 W&B Weave 中没有看到追踪数据**
+    - 确认目标服务已启动，并且 OpenTelemetry 端口 `4317` 可访问。
+    - 检查 OpenTelemetry 导出器是否配置了正确的端点。
+    - 代理执行结束后等待几秒钟，确保追踪数据有时间被导出。
 
-2. **Missing spans or incomplete traces**
-    - Verify that the agent execution completes successfully.
-    - Ensure that you're not closing the application too quickly after agent execution.
-    - Add a delay after agent execution to allow time for spans to be exported.
+2. **缺少 span 或追踪不完整**
+    - 确认代理执行已成功完成。
+    - 不要在代理执行结束后立刻关闭应用。
+    - 可以在执行结束后增加一点延迟，给 span 导出留出时间。
 
-3. **Excessive number of spans**
-    - Consider using a different sampling strategy by configuring the `sampler` property.
-    - For example, use `Sampler.traceIdRatioBased(0.1)` to sample only 10% of traces.
+3. **span 数量过多**
+    - 可以通过配置 `sampler` 属性使用不同的采样策略。
+    - 例如，使用 `Sampler.traceIdRatioBased(0.1)` 仅采样 10% 的追踪。
 
-4. **Span adapters override each other**
-    - Currently, the OpenTelemetry agent feature does not support applying multiple span adapters [KG-265](https://youtrack.jetbrains.com/issue/KG-265/Adding-Weave-exporter-breaks-Langfuse-exporter).
+4. **多个 span 适配器互相覆盖**
+    - 当前 OpenTelemetry 代理特性还不支持同时应用多个 span 适配器，见 [KG-265](https://youtrack.jetbrains.com/issue/KG-265/Adding-Weave-exporter-breaks-Langfuse-exporter)。
 
-## MCP (Model Context Protocol) telemetry support { #mcp-model-context-protocol-telemetry-support }
+## MCP（Model Context Protocol）遥测支持 { #mcp-model-context-protocol-telemetry-support }
 
-Koog provides comprehensive OpenTelemetry instrumentation for MCP operations following the [official OpenTelemetry semantic conventions for MCP](https://github.com/open-telemetry/semantic-conventions/pull/2083).
+Koog 为 MCP 操作提供了完整的 OpenTelemetry 插装，并遵循 [OpenTelemetry 针对 MCP 的官方语义约定](https://github.com/open-telemetry/semantic-conventions/pull/2083)。
 
-### Overview { #overview }
+### 概述 { #overview }
 
-The MCP telemetry support includes:
+MCP 遥测支持包括：
 
-- **Automatic enrichment** of tool execution spans with MCP-specific attributes
-- **Client-side instrumentation** for MCP client operations (tools/call)
-- **Full semantic convention compliance** with all required, conditionally required, and recommended attributes
+- 使用 MCP 特定属性对工具执行 span 进行**自动增强**
+- 为 MCP 客户端操作（`tools/call`）提供**客户端侧插装**
+- **完整遵循语义约定**，覆盖所有必填、条件必填和推荐属性
 
-### MCP attributes { #mcp-attributes }
+### MCP 属性 { #mcp-attributes }
 
-MCP telemetry follows OpenTelemetry semantic conventions and includes the following attribute groups:
+MCP 遥测遵循 OpenTelemetry 语义约定，包含以下属性分组：
 
-**Required attributes:**
-- `mcp.method.name`: The MCP method name (e.g., "tools/call")
+**必填属性：**
+- `mcp.method.name`：MCP 方法名，例如 `"tools/call"`
 
-**Conditionally required attributes:**
-- `gen_ai.tool.name`: When operation involves a tool
-- `gen_ai.prompt.name`: When operation involves a prompt
-- `jsonrpc.request.id`: When executing a request (not a notification)
-- `error.type`: When operation fails
+**条件必填属性：**
+- `gen_ai.tool.name`：当操作涉及工具时
+- `gen_ai.prompt.name`：当操作涉及提示词时
+- `jsonrpc.request.id`：当执行的是请求而非通知时
+- `error.type`：当操作失败时
 
-**Recommended attributes:**
-- `mcp.session.id`: Session identifier
-- `mcp.protocol.version`: MCP protocol version (e.g., "2025-06-18")
-- `network.transport`: Transport type ("pipe" for stdio, "tcp" for HTTP)
-- `server.address` and `server.port`: For client operations
+**推荐属性：**
+- `mcp.session.id`：会话标识符
+- `mcp.protocol.version`：MCP 协议版本，例如 `"2025-06-18"`
+- `network.transport`：传输类型，stdio 为 `"pipe"`，HTTP 为 `"tcp"`
+- `server.address` 和 `server.port`：客户端操作对应的服务端地址与端口
 
-### Span naming convention { #span-naming-convention }
+### Span 命名约定 { #span-naming-convention }
 
-MCP spans follow the naming convention: `{mcp.method.name} {target}`
+MCP span 使用如下命名格式：`{mcp.method.name} {target}`
 
-Where `{target}` is the tool name or prompt name when applicable. Examples:
-- `"tools/call search"` - calling a tool named "search"
+其中 `{target}` 是对应的工具名或提示词名。示例：
+- `"tools/call search"`：调用名为 `search` 的工具
 
-### Best practices { #best-practices }
+### 最佳实践 { #best-practices }
 
-- **Always set session IDs** when working with persistent MCP sessions to enable session tracking
-- **Propagate request IDs** from JSON-RPC requests for complete request tracing
-- **Monitor metrics** to identify performance bottlenecks in MCP operations
+- 在持久化 MCP 会话中**始终设置 session ID**，便于跟踪会话
+- 从 JSON-RPC 请求中**传递 request ID**，以便完整串联请求链路
+- **监控指标**，及时识别 MCP 操作中的性能瓶颈
 
-### Example: Full MCP client with telemetry { #example-full-mcp-client-with-telemetry }
+### 示例：带遥测的完整 MCP 客户端 { #example-full-mcp-client-with-telemetry }
 
 === "Kotlin"
 
     ```kotlin
     // Create MCP tools registry
     val toolRegistry = McpToolRegistryProvider.fromSseUrl("http://localhost:3000")
-    
+
     // Create agent with OpenTelemetry enabled and pass the tool registry
     val agent = AIAgent(
         promptExecutor = promptExecutor,
@@ -710,11 +686,11 @@ Where `{target}` is the tool name or prompt name when applicable. Examples:
             addSpanExporter(LoggingSpanExporter.create())
         }
     }
-    
+
     // Run agent - MCP tool calls will be automatically instrumented
     agent.use {
         it.run("Use the search tool to find information")
     }
     ```
 
-This setup provides complete observability for MCP operations with minimal code changes, following OpenTelemetry best practices and semantic conventions.
+这套配置只需极少代码改动，就能为 MCP 操作提供完整的可观测性，同时遵循 OpenTelemetry 的最佳实践与语义约定。

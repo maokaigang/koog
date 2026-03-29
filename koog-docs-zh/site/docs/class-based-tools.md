@@ -31,7 +31,9 @@ Koog 框架提供以下实现工具的方法：
 [`Tool<Args, Result>`](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-tool/index.html) 抽象类是 Kotlin 中创建工具的基类。
 它允许您创建接受特定参数类型（`Args`）并返回各种类型结果（`Result`）的工具。
 
- 每个工具包含以下组件： | <div style="width:110px">组件</div> | 描述 |
+ 每个工具包含以下组件：
+
+| <div style="width:110px">组件</div> | 描述 |
 |------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `Args`                                   | 定义工具所需参数的可序列化数据类。                                                                                                                                                                                                                                                                                                                                                             |
 | `Result`                                 | 工具返回结果的可序列化类型。若需以自定义格式呈现工具结果，请继承 [ToolResult.TextSerializable](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-tool-result/-text-serializable/index.html) 类并实现 `textForLLM(): String` 方法                                                                                                           |
@@ -151,7 +153,7 @@ Koog 框架提供以下实现工具的方法：
     // This is the recommended Java interop path instead of subclassing the Kotlin Tool base class.
     public final class CalculatorTool {
         private CalculatorTool() {}
-    
+
         @Tool(customName = "calculator")
         @LLMDescription(description = "A simple calculator that can add two digits (0-9).")
         public static int calculator(
@@ -162,7 +164,7 @@ Koog 框架提供以下实现工具的方法：
             if (digit2 < 0 || digit2 > 9) throw new IllegalArgumentException("digit2 must be a single digit (0-9)");
             return digit1 + digit2;
         }
-    
+
         public static ToolRegistry registry() throws NoSuchMethodException {
             return ToolRegistry.builder()
                 .tool(CalculatorTool.class.getMethod("calculator", int.class, int.class))
@@ -181,7 +183,7 @@ Koog 框架提供以下实现工具的方法：
     // Java equivalent of SimpleTool: provide a Java method and register it as a tool.
     public final class CastToDoubleTool {
         private CastToDoubleTool() {}
-    
+
         @Tool(customName = "cast_to_double")
         @LLMDescription(description = "casts the passed expression to double or returns 0.0 if the expression is not castable")
         public static String castToDouble(
@@ -196,7 +198,7 @@ Koog 框架提供以下实现工具的方法：
             }
             return "Result: " + value + ", the comment was: " + comment;
         }
-    
+
         public static ToolRegistry registry() throws NoSuchMethodException {
             return ToolRegistry.builder()
                 .tool(CastToDoubleTool.class.getMethod("castToDouble", String.class, String.class))
@@ -219,7 +221,7 @@ For Java:
 
 从你的注解方法中直接返回格式化文本（例如 Markdown）作为 `String`。框架会自动处理。
 
-#### Example
+#### 示例 { #example }
 
 以下是一个示例，展示了在 Kotlin 和 Java 中自定义格式化输出的效果：
 

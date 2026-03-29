@@ -167,19 +167,7 @@ val exampleForecasts = listOf(
 - 在可用时使用原生结构化输出支持
 - 可选地，在解析失败时通过辅助 LLM 提供自动错误纠正（通过 `fixingParser` 参数）
 
-以下是使用 `executeStructured` 方法的示例：<!--- INCLUDE
-import ai.koog.agents.example.exampleStructuredData03.WeatherForecast
-import ai.koog.agents.example.exampleStructuredData06.exampleForecasts
-import ai.koog.prompt.dsl.prompt
-import ai.koog.prompt.executor.clients.openai.OpenAIModels
-import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
-import ai.koog.prompt.executor.model.executeStructured
-import ai.koog.prompt.executor.model.StructureFixingParser
-import kotlinx.coroutines.runBlocking
-
-fun main() {
-    runBlocking {
--->
+以下是使用 `executeStructured` 方法的示例：
 ```kotlin
 // Define a simple, single-provider prompt executor
 val promptExecutor = simpleOpenAIExecutor(System.getenv("OPENAI_KEY"))
@@ -295,7 +283,7 @@ val agentStrategy = strategy("weather-forecast") {
     val setup by node<Unit, String> { _ ->
         "Please provide a weather forecast for Amsterdam"
     }
-    
+
     // Create a structured output node using delegate syntax
     val getWeatherForecast by nodeLLMRequestStructured<WeatherForecast>(
         name = "forecast-node",
@@ -305,7 +293,7 @@ val agentStrategy = strategy("weather-forecast") {
             retries = 3
         )
     )
-    
+
     val processResult by node<Result<StructuredResponse<WeatherForecast>>, String> { result ->
         when {
             result.isSuccess -> {
@@ -370,18 +358,18 @@ fun main(): Unit = runBlocking {
     // Define the agent strategy
     val agentStrategy = strategy("weather-forecast") {
         val setup by nodeLLMRequest()
-  
+
         val getStructuredForecast by node<Message.Response, String> { _ ->
             val structuredResponse = llm.writeSession {
                 requestLLMStructured<SimpleWeatherForecast>()
             }
-  
+
             """
             Response structure:
             $structuredResponse
             """.trimIndent()
         }
-  
+
         edge(nodeStart forwardTo setup)
         edge(setup forwardTo getStructuredForecast)
         edge(getStructuredForecast forwardTo nodeFinish)
@@ -414,7 +402,7 @@ fun main(): Unit = runBlocking {
 
 ## 高级用法 { #advanced-usage }
 
-以上示例展示了简化的 API，它能根据模型能力自动选择最佳的结构化输出方案。  
+以上示例展示了简化的 API，它能根据模型能力自动选择最佳的结构化输出方案。
 如需对结构化输出过程进行更精细的控制，可以使用高级 API，通过手动创建模式及提供特定于供应商的配置来实现。
 
 ### 手动创建模式与配置 { #manual-schema-creation-and-configuration }
@@ -466,8 +454,8 @@ val structuredResponse = promptExecutor.executeStructured(
 
 根据您的需求，可以使用不同的模式生成器：
 
-- **StandardJsonSchemaGenerator**：完整的 JSON 模式，支持多态性、定义和递归引用
-- **BasicJsonSchemaGenerator**：简化模式，不支持多态性，兼容更多模型  
+- **标准 JSON 模式生成器**（`StandardJsonSchemaGenerator`）：完整的 JSON 模式，支持多态性、定义和递归引用。
+- **基础 JSON 模式生成器**（`BasicJsonSchemaGenerator`）：简化模式，不支持多态性，但兼容更多模型。
 - **供应商特定生成器**：针对特定 LLM 供应商（如 OpenAI、Google 等）优化的模式
 
 ### 跨所有层级的用法 { #usage-across-all-layers }

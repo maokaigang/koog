@@ -50,7 +50,7 @@
 在创建代理时，使用`install()`方法安装`ChatMemory`：
 
 === "Kotlin"
-    
+
     ```kotlin
     val agent = AIAgent(
         promptExecutor = simpleOpenAIExecutor(System.getenv("OPENAI_API_KEY")),
@@ -59,9 +59,9 @@
         install(ChatMemory)
     }
     ```
-    
+
 === "Java"
-    
+
     ```java
     AIAgent<String, String> agent = AIAgent.builder()
         .promptExecutor(executor)
@@ -69,7 +69,6 @@
         .install(ChatMemory.Feature)
         .build();
     ```
-
 
 默认情况下，它使用一个无[预处理器](#preprocessors)的内存[聊天历史记录提供者](#history-providers)。配置`ChatMemory`功能以使用自定义聊天历史记录提供程序和预处理器，例如：
 
@@ -131,7 +130,7 @@ class MyDatabaseChatHistoryProvider(private val db: Database) : ChatHistoryProvi
 }
 ```
 
-## Preprocessors
+## 预处理器 { #preprocessors }
 
 预处理器在加载时（智能体接收消息前）和存储时（保存消息前）对消息列表进行转换。它们按照您在`ChatMemory`功能配置中添加的顺序依次执行。
 

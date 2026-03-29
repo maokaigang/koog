@@ -100,11 +100,11 @@ Koog 提供了预定义的重试配置和模式，这些配置和模式适用于
 
 如果任何模式返回`true`，则错误被视为可重试，LLM客户端将重试该请求。
 
-#### Default patterns { #default-patterns }
+#### 默认模式 { #default-patterns }
 
 除非您自定义重试配置，否则将默认采用以下模式：
 
-* **HTTP status codes**:
+* **状态码**（HTTP）：
     * `429`: Rate limit
     * `500`: Internal server error
     * `502`: Bad gateway
@@ -112,7 +112,7 @@ Koog 提供了预定义的重试配置和模式，这些配置和模式适用于
     * `504`: Gateway timeout
     * `529`: Anthropic overloaded
 
-* **Error keywords**:
+* **错误关键字**：
     * rate limit
     * too many requests
     * request timeout
@@ -190,9 +190,9 @@ val stream = client.executeStreaming(prompt, OpenAIModels.Chat.GPT4o)
         ),
         LLMProvider.Anthropic to RetryingLLMClient(
             AnthropicLLMClient(System.getenv("ANTHROPIC_API_KEY")),
-            RetryConfig.AGGRESSIVE  
+            RetryConfig.AGGRESSIVE
         ),
-        // The Bedrock client already has a built-in AWS SDK retry 
+        // The Bedrock client already has a built-in AWS SDK retry
         LLMProvider.Bedrock to BedrockLLMClient(
             identityProvider = StaticCredentialsProvider {
                 accessKeyId = System.getenv("AWS_ACCESS_KEY_ID")
