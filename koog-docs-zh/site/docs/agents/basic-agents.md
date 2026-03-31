@@ -35,7 +35,7 @@ LLM 可决定是否调用提供的工具。
     )
     ```
 
-    该代理期望接收字符串作为输入并返回字符串作为输出。要运行该代理，请使用 `run()` 函数并传入用户输入：
+    该智能体期望接收字符串作为输入并返回字符串作为输出。要运行该智能体，请使用 `run()` 函数并传入用户输入：
 
     ```kotlin
     fun main() = runBlocking {
@@ -53,14 +53,14 @@ LLM 可决定是否调用提供的工具。
         .build();
     ```
 
-    该代理期望接收字符串作为输入并返回字符串作为输出。要运行该代理，请使用 `run()` 方法并传入用户输入：
+    该智能体期望接收字符串作为输入并返回字符串作为输出。要运行该智能体，请使用 `run()` 方法并传入用户输入：
 
     ```java
     String result = agent.run("Hello! How can you help me?");
     System.out.println(result);
     ```
 
-代理将返回一个通用答案，例如：
+智能体将返回一个通用答案，例如：
 
 ```text
 I can assist with a wide range of topics and tasks. Here are some examples:
@@ -78,7 +78,7 @@ What's on your mind? Do you have a specific question, topic, or task you'd like 
 
 ## 添加系统提示 { #add-a-system-prompt }
 
-提供一个[系统消息](../prompts/prompt-creation/index.md#system-message)来定义代理的角色，以及任务相关的目的、背景和说明。
+提供一个[系统消息](../prompts/prompt-creation/index.md#system-message)来定义智能体的角色，以及任务相关的目的、背景和说明。
 
 === "Kotlin"
 
@@ -100,7 +100,7 @@ What's on your mind? Do you have a specific question, topic, or task you'd like 
         .build();
     ```
 
-系统提示中的指令将指导代理的响应：
+系统提示中的指令将指导智能体的响应：
 
 ```text
 I'm here to help you navigate the wild world of internet memes!
@@ -110,7 +110,7 @@ What's on your mind? Are you trying to understand a specific meme, need help fin
 
 ## 配置 LLM 输出 { #configure-llm-output }
 
-您可以直接向代理构造函数（Kotlin）提供一些[LLM 参数](../llm-parameters.md#llm-parameter-reference)，或通过构建器方法（Java）来自定义LLM的行为。例如，使用`temperature`参数来调整生成响应的随机性：
+您可以直接向智能体构造函数（Kotlin）提供一些[LLM 参数](../llm-parameters.md#llm-parameter-reference)，或通过构建器方法（Java）来自定义LLM的行为。例如，使用`temperature`参数来调整生成响应的随机性：
 
 === "Kotlin"
 
@@ -162,7 +162,7 @@ What's on your mind? Are you trying to understand a specific meme, need help fin
 
 ## 添加工具 { #add-tools }
 
-代理可以使用[工具](../tools-overview.md)来执行特定任务。
+智能体可以使用[工具](../tools-overview.md)来执行特定任务。
 
 首先，通过使用 [`@Tool`](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools.annotations/-tool/index.html) 注解标注函数（Kotlin）或方法（Java）来创建一个工具：
 
@@ -180,7 +180,7 @@ What's on your mind? Are you trying to understand a specific meme, need help fin
     }
     ```
 
-    然后，使用[`ToolRegistry`](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-tool-registry/index.html)使该工具对代理可用：
+    然后，使用[`ToolRegistry`](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-tool-registry/index.html)使该工具对智能体可用：
 
     ```kotlin
     val agent = AIAgent(
@@ -194,7 +194,7 @@ What's on your mind? Are you trying to understand a specific meme, need help fin
     )
     ```
 
-    在示例中，`askUser` 是一个工具，它通过控制台的打印和读取来帮助代理与用户保持对话。如果代理决定向用户提问，它可以调用这个工具，该工具通过 `println()` 写入 `stdout`，并通过 `readln()` 从 `stdin` 读取。
+    在示例中，`askUser` 是一个工具，它通过控制台的打印和读取来帮助智能体与用户保持对话。如果智能体决定向用户提问，它可以调用这个工具，该工具通过 `println()` 写入 `stdout`，并通过 `readln()` 从 `stdin` 读取。
 
 === "Java"
 
@@ -214,7 +214,7 @@ What's on your mind? Are you trying to understand a specific meme, need help fin
     }
     ```
 
-    然后，使用[`ToolRegistry`](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-tool-registry/index.html)使该工具对代理可用：
+    然后，使用[`ToolRegistry`](https://api.koog.ai/agents/agents-tools/ai.koog.agents.core.tools/-tool-registry/index.html)使该工具对智能体可用：
 
     ```java
     UserConversationTools askUser = new UserConversationTools();
@@ -232,7 +232,7 @@ What's on your mind? Are you trying to understand a specific meme, need help fin
         .build();
     ```
 
-    在示例中，`askUser` 是一个工具，它通过控制台的打印和读取来帮助代理与用户保持对话。
+    在示例中，`askUser` 是一个工具，它通过控制台的打印和读取来帮助智能体与用户保持对话。
 
 以下是与该智能体交互的一个示例：
 
@@ -264,7 +264,7 @@ The meme is known for its lighthearted and playful tone, and is often used to ex
 
 ## 调整智能体迭代次数 { #adjust-agent-iterations }
 
-为避免无限循环，Koog 允许任何代理执行有限数量的步骤（默认为50步）。您可以通过 `maxIterations` 参数来调整此限制：若预期代理需要更多步骤（例如工具调用和 LLM 请求），可增加该值；对于仅需少量步骤的代理，则可减少限制。例如，此处描述的简单代理很可能不需要超过10个步骤：
+为避免无限循环，Koog 允许任何智能体执行有限数量的步骤（默认为50步）。您可以通过 `maxIterations` 参数来调整此限制：若预期智能体需要更多步骤（例如工具调用和 LLM 请求），可增加该值；对于仅需少量步骤的智能体，则可减少限制。例如，此处描述的简单智能体很可能不需要超过10个步骤：
 
 === "Kotlin"
 
@@ -317,9 +317,9 @@ The meme is known for its lighthearted and playful tone, and is often used to ex
 
 !!! tip
 
-    除了直接将模型、温度、最大迭代次数等参数传递给 Kotlin 构造函数或 Java 构建器，您也可以将它们定义为一个独立的配置对象进行传递。更多信息请参阅 [代理配置](index.md#agent-configuration)。
+    除了直接将模型、温度、最大迭代次数等参数传递给 Kotlin 构造函数或 Java 构建器，您也可以将它们定义为一个独立的配置对象进行传递。更多信息请参阅 [智能体配置](index.md#agent-configuration)。
 
-## 处理代理运行期间的事件 { #handle-events-during-agent-runtime }
+## 处理智能体运行期间的事件 { #handle-events-during-agent-runtime }
 
 为便于测试和调试，以及为链式智能体交互创建钩子，Koog 提供了 [EventHandler](https://api.koog.ai/agents/agents-features/agents-features-event-handler/ai.koog.agents.features.eventHandler.feature/-event-handler/index.html) 功能。
 
