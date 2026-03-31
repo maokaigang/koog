@@ -349,43 +349,43 @@ The meme is known for its lighthearted and playful tone, and is often used to ex
 
 === "Java"
     使用智能体构建器上的 `.install()` 方法，通过 `EventHandler.Feature` 注册事件处理器：
-```java
-// 创建一个 ToolSet 类
-class UserConversationTools implements ToolSet {
-    @Tool
-    @LLMDescription("通过向标准输出发送问题来询问用户，并从标准输入返回答案")
-    public String askUser(
-        @LLMDescription("来自智能体的问题")
-        String question
-    ) {
-        System.out.println(question);
-        Scanner scanner = new Scanner(System.in);
-        return scanner.nextLine();
+    ```java
+    // 创建一个 ToolSet 类
+    class UserConversationTools implements ToolSet {
+        @Tool
+        @LLMDescription("通过向标准输出发送问题来询问用户，并从标准输入返回答案")
+        public String askUser(
+            @LLMDescription("来自智能体的问题")
+            String question
+        ) {
+            System.out.println(question);
+            Scanner scanner = new Scanner(System.in);
+            return scanner.nextLine();
+        }
     }
-}
 
-// 在 main 方法中：
-UserConversationTools askUser = new UserConversationTools();
+    // 在 main 方法中：
+    UserConversationTools askUser = new UserConversationTools();
 
-ToolRegistry toolRegistry = ToolRegistry.builder()
-        .tools(askUser)
+    ToolRegistry toolRegistry = ToolRegistry.builder()
+            .tools(askUser)
+            .build();
+
+    AIAgent<String, String> agent = AIAgent.builder()
+        .promptExecutor(simpleOpenAIExecutor(System.getenv("OPENAI_API_KEY")))
+        .systemPrompt("你是一位网络迷因专家。请保持乐于助人、态度友好，并简洁地回答用户问题，展现你对迷因的了解。")
+        .llmModel(OpenAIModels.Chat.GPT4o)
+        .temperature(0.7)
+        .toolRegistry(toolRegistry)
+        .maxIterations(10)
+        .install(EventHandler.Feature, config -> {
+            config.onToolCallStarting(eventContext -> {
+                System.out.println("工具调用开始：" + eventContext.getToolName() +
+                    "，参数为 " + eventContext.getToolArgs());
+            });
+        })
         .build();
-
-AIAgent<String, String> agent = AIAgent.builder()
-    .promptExecutor(simpleOpenAIExecutor(System.getenv("OPENAI_API_KEY")))
-    .systemPrompt("你是一位网络迷因专家。请保持乐于助人、态度友好，并简洁地回答用户问题，展现你对迷因的了解。")
-    .llmModel(OpenAIModels.Chat.GPT4o)
-    .temperature(0.7)
-    .toolRegistry(toolRegistry)
-    .maxIterations(10)
-    .install(EventHandler.Feature, config -> {
-        config.onToolCallStarting(eventContext -> {
-            System.out.println("工具调用开始：" + eventContext.getToolName() +
-                "，参数为 " + eventContext.getToolArgs());
-        });
-    })
-    .build();
-```
+    ```
 
 当智能体调用 `askUser` 工具时，现在将输出类似以下内容：
 

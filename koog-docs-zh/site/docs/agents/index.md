@@ -57,7 +57,7 @@ Koog 智能体围绕以下核心概念构建：
         .build();
     ```
 
-或者，您可以创建一个 [`AIAgentConfig`](https://api.koog.ai/agents/agents-core/ai.koog.agents.core.agent.config/-a-i-agent-config/index.html) 实例来更细致地定义代理的行为和参数，然后将其传递给代理构造函数。这样您就可以定义包含多条消息、对话历史、LLM 参数以及其他执行参数的复杂提示。
+或者，您可以创建一个 [`AIAgentConfig`](https://api.koog.ai/agents/agents-core/ai.koog.agents.core.agent.config/-a-i-agent-config/index.html) 实例来更细致地定义智能体的行为和参数，然后将其传递给智能体构造函数。这样您就可以定义包含多条消息、对话历史、LLM 参数以及其他执行参数的复杂提示。
 
 === "Kotlin"
 
@@ -113,13 +113,13 @@ Koog 智能体围绕以下核心概念构建：
 
 - `prompt` 定义了初始的 [提示](../prompts/prompt-creation/index.md) 和 [LLM 参数](../llm-parameters.md)。
 
-- `model` 指定了代理与之交互的语言模型。
+- `model` 指定了智能体与之交互的语言模型。
   您可以使用预定义的模型之一或[创建自定义模型配置](../model-capabilities.md#creating-a-model-llmodel-configuration)。
 
-- `maxAgentIterations` 限制了代理在终止前可以执行的最大步数。
+- `maxAgentIterations` 限制了智能体在终止前可以执行的最大步数。
   每个步骤都是智能体工作流中的一个[节点](../nodes-and-components.md)。
 
-- `missingToolsConversionStrategy` 定义了一种在代理执行过程中处理缺失工具的策略。
+- `missingToolsConversionStrategy` 定义了一种在智能体执行过程中处理缺失工具的策略。
 
 [//]: # (TODO 在工具部分撰写关于缺失工具的内容，并从此处链接)
 
