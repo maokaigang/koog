@@ -152,13 +152,13 @@ val exampleForecasts = listOf(
 
 在 Koog 中，您可以在三个主要层面使用结构化输出：
 
-1.  **提示执行器层**：使用提示执行器进行直接的 LLM 调用
+1.  **提示词执行器层**：使用提示词执行器进行直接的 LLM 调用
 2.  **智能体 LLM 上下文层**：在智能体会话中用于对话上下文
 3.  **节点层**：创建具有结构化输出能力的可重用智能体节点
 
-### 第一层：提示执行器 { #layer-1-prompt-executor }
+### 第一层：提示词执行器 { #layer-1-prompt-executor }
 
-提示执行器层提供了进行结构化 LLM 调用的最直接方式。使用 `executeStructured` 方法进行单一的独立请求：
+提示词执行器层提供了进行结构化 LLM 调用的最直接方式。使用 `executeStructured` 方法进行单一的独立请求：
 
 此方法执行提示并确保响应结构正确，通过：
 
@@ -462,7 +462,7 @@ val structuredResponse = promptExecutor.executeStructured(
 
 高级配置在 API 的所有三个层级中均保持一致。方法名称保持不变，仅参数从简单参数变为更高级的 `StructuredRequestConfig`：
 
-- **提示执行器**：`executeStructured(prompt, model, config: StructuredRequestConfig<T>)`
+- **提示词执行器**：`executeStructured(prompt, model, config: StructuredRequestConfig<T>)`
 - **代理 LLM 上下文**：`requestLLMStructured(config: StructuredRequestConfig<T>)`
 - **节点层**：`nodeLLMRequestStructured(config: StructuredRequestConfig<T>)`
 

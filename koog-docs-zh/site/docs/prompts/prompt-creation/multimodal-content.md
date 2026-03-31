@@ -179,4 +179,4 @@ AttachmentContent接口的实现定义了提供给LLM作为输入的内容类型
 ## 下一步 { #next-steps }
 
 - 如果使用单个LLM提供商，请通过[LLM 客户端](../llm-clients.md)运行提示。
-- 如果使用多个LLM提供商，请通过[提示执行器](../prompt-executors.md)运行提示。
+- 如果使用多个LLM提供商，请通过[提示词执行器](../prompt-executors.md)运行提示。

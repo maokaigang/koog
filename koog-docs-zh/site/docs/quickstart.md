@@ -602,4 +602,4 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
 
 ## 下一步 { #next-steps }
 
-- 了解更多关于[代理类型](agents/index.md)的信息
+- 了解更多关于[智能体类型](agents/index.md)的信息

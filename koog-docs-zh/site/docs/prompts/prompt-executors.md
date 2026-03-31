@@ -17,10 +17,10 @@ Koog 提供了三种主要类型的提示词执行器，它们都实现了 [`Pro
 
 ## 创建单提供商执行器 { #creating-a-single-provider-executor }
 
-要为特定 LLM 提供商创建提示执行器，请执行以下操作：
+要为特定 LLM 提供商创建提示词执行器，请执行以下操作：
 
 1. 为特定提供商配置一个 LLM 客户端，并提供相应的 API 密钥。
-2. 使用 [`MultiLLMPromptExecutor`](api:prompt-executor-model::ai.koog.prompt.executor.llms.MultiLLMPromptExecutor) 创建一个提示执行器。
+2. 使用 [`MultiLLMPromptExecutor`](api:prompt-executor-model::ai.koog.prompt.executor.llms.MultiLLMPromptExecutor) 创建一个提示词执行器。
 
 示例如下：
 
@@ -40,10 +40,10 @@ Koog 提供了三种主要类型的提示词执行器，它们都实现了 [`Pro
 
 ## 创建多提供商执行器 { #creating-a-multi-provider-executor }
 
-要创建一个能与多个LLM提供者协同工作的提示执行器，请按以下步骤操作：
+要创建一个能与多个LLM提供者协同工作的提示词执行器，请按以下步骤操作：
 
 1. 为所需的LLM提供者配置客户端，并使用相应的API密钥。
-2. 将配置好的客户端传递给 [`MultiLLMPromptExecutor`](api:prompt-executor-model::ai.koog.prompt.executor.llms.MultiLLMPromptExecutor) 类的构造函数以创建提示执行器
+2. 将配置好的客户端传递给 [`MultiLLMPromptExecutor`](api:prompt-executor-model::ai.koog.prompt.executor.llms.MultiLLMPromptExecutor) 类的构造函数以创建提示词执行器
    使用多个LLM提供程序。
 
 === "Kotlin"
@@ -72,7 +72,7 @@ Koog 提供了三种主要类型的提示词执行器，它们都实现了 [`Pro
 !!! warning "实验API"
     路由功能目前处于实验阶段，未来版本中可能发生变化。如需使用，请通过`@OptIn(ExperimentalRoutingApi::class)`选择启用。
 
-要创建一个提示执行器，通过路由策略将请求分发到多个LLM客户端实例，请按以下步骤操作：
+要创建一个提示词执行器，通过路由策略将请求分发到多个LLM客户端实例，请按以下步骤操作：
 
 1. 配置多个客户端实例（它们可以用于相同或不同的LLM提供商）及其对应的API密钥。
 2. 使用路由策略（例如[`RoundRobinRouter`](api:prompt-executor-model::ai.koog.prompt.executor.llms.RoundRobinRouter)）创建一个路由器。
@@ -114,7 +114,7 @@ Koog 提供了三种主要类型的提示词执行器，它们都实现了 [`Pro
 
 您也可以通过创建一个实现 [`LLMClientRouter`](api:prompt-executor-model::ai.koog.prompt.executor.llms.LLMClientRouter) 接口的类来实现自定义路由策略。
 
-## 预定义提示执行器 { #pre-define-prompt-executors }
+## 预定义提示词执行器 { #pre-define-prompt-executors }
 
 为加快设置速度，Koog 为常见服务商提供了开箱即用的执行器实现，同时支持 Kotlin 和 Java 两种环境。
 
@@ -123,7 +123,7 @@ Koog 提供了三种主要类型的提示词执行器，它们都实现了 [`Pro
 <!--TODO: SingleLLMPromptExecutor is deprecated and is being replaced by PromptExecutor. Once it is implemented,
 the predefined executors will return a PromptExecutor instance configured with a specific client.-->
 
-| LLM 提供商 | 提示执行器 | 描述 |
+| LLM 提供商 | 提示词执行器 | 描述 |
 |----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
 | OpenAI | [简单OpenAI执行器](api:prompt-executor-llms-all::ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor) | 封装了`OpenAILLMClient`，用于运行基于OpenAI模型的提示。 |
 | OpenAI | [simpleAzureOpenAI执行器](api:prompt-executor-llms-all::ai.koog.prompt.executor.llms.all.simpleAzureOpenAIExecutor) | 包装`OpenAILLMClient`以车辆Azure OpenAI Service的使用配置。 |
@@ -153,9 +153,9 @@ the predefined executors will return a PromptExecutor instance configured with a
 
 ## 运行提示符 { #running-a-prompt }
 
-要使用提示执行器运行提示，请按以下步骤操作：
+要使用提示词执行器运行提示，请按以下步骤操作：
 
-1. 创建提示执行器。
+1. 创建提示词执行器。
 2. 使用 `execute()` 方法运行带有特定 LLM 的提示。
 
 这是一个示例：
@@ -191,7 +191,7 @@ the predefined executors will return a PromptExecutor instance configured with a
 这将使用`GPT4o`模型运行提示并返回响应。
 
 !!! note
-    提示执行器提供了多种方法来运行提示，包括流式处理、多选生成和内容审核等功能。由于提示执行器封装了LLM客户端，因此每个执行器都支持对应客户端的全部能力。具体细节请参阅[LLM 客户端](llm-clients.md)。
+    提示词执行器提供了多种方法来运行提示，包括流式处理、多选生成和内容审核等功能。由于提示词执行器封装了LLM客户端，因此每个执行器都支持对应客户端的全部能力。具体细节请参阅[LLM 客户端](llm-clients.md)。
 
 ## 在提供商之间切换 { #switching- Between-providers }
 
@@ -200,7 +200,7 @@ the predefined executors will return a PromptExecutor instance configured with a
 1. 为每个要使用的提供商创建一个LLM客户端实例。
 2. 创建一个`MultiLLMPromptExecutor`，用于将LLM提供者映射到LLM客户端。
 3. 使用作为参数传递给`execute()`方法的对应客户端模型运行提示。
-   提示执行器将根据模型提供商使用相应的客户端来运行提示。
+   提示词执行器将根据模型提供商使用相应的客户端来运行提示。
 
 以下是切换提供商的示例：
 
@@ -262,7 +262,7 @@ the predefined executors will return a PromptExecutor instance configured with a
 
 ## 配置回退 { #configuring-fallbacks }
 
-多提供商和路由提示执行器可以配置为在请求的LLM客户端不可用时，使用备用的LLM提供商和模型。
+多提供商和路由提示词执行器可以配置为在请求的LLM客户端不可用时，使用备用的LLM提供商和模型。
 
 要配置回退机制，请在创建 `MultiLLMPromptExecutor` 或 `RoutingLLMPromptExecutor` 时传入回退设置：
 
@@ -300,7 +300,7 @@ the predefined executors will return a PromptExecutor instance configured with a
     );
     ```
 
-如果您传递的模型来自LLM提供商，且该模型未包含在`MultiLLMPromptExecutor`中，提示执行器将使用备用模型：
+如果您传递的模型来自LLM提供商，且该模型未包含在`MultiLLMPromptExecutor`中，提示词执行器将使用备用模型：
 
 === "Kotlin"
 

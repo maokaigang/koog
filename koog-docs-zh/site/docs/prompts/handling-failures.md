@@ -1,7 +1,7 @@
 <!-- koog-zh-meta: {"last_synced_at": "2026-03-28T16:55:03+00:00", "source_path": "prompts/handling-failures.md", "source_sha256": "5f6f1c637ffca1bb4e830c200a97215a966ebf5dca6a9fe52a2a99927ed2ab1d", "source_tag": "0.7.3", "translation_status": "changed"} -->
 # 处理故障 { #handling-failures }
 
-本页介绍如何使用内置的重试和超时机制处理 LLM 客户端和提示执行器的故障。
+本页介绍如何使用内置的重试和超时机制处理 LLM 客户端和提示词执行器的故障。
 
 ## 重试功能 { #retry-functionality }
 
@@ -168,9 +168,9 @@ val stream = client.executeStreaming(prompt, OpenAIModels.Chat.GPT4o)
 
 !!!note 流式重试仅适用于在接收到首个令牌之前发生的连接故障。一旦流式传输开始，重试逻辑将被禁用。若在流式传输过程中发生错误，操作将被终止。
 
-### 使用提示执行器重试 { #retry-with-prompt-executors }
+### 使用提示词执行器重试 { #retry-with-prompt-executors }
 
-在使用提示执行器时，你可以在创建执行器之前，为底层的LLM客户端添加重试机制，无论是在Kotlin还是Java中。要了解更多关于提示执行器的信息，请参阅[提示执行器](prompt-executors.md)。
+在使用提示词执行器时，你可以在创建执行器之前，为底层的LLM客户端添加重试机制，无论是在Kotlin还是Java中。要了解更多关于提示词执行器的信息，请参阅[提示词执行器](prompt-executors.md)。
 
 === "Kotlin"
 

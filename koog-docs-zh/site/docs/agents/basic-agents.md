@@ -24,7 +24,7 @@ LLM 可决定是否调用提供的工具。
 ## 创建最小化智能体 { #create-a-minimal-agent }
 
 要创建最基础的智能体，请实例化 [`AIAgent`](https://api.koog.ai/agents/agents-core/ai.koog.agents.core.agent/-a-i-agent/index.html)
-并提供包含[语言模型](../model-capabilities.md#creating-a-model-llmodel-configuration)的[提示执行器](../prompts/prompt-executors.md)：
+并提供包含[语言模型](../model-capabilities.md#creating-a-model-llmodel-configuration)的[提示词执行器](../prompts/prompt-executors.md)：
 
 === "Kotlin"
 

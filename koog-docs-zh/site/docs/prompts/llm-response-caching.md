@@ -1,15 +1,15 @@
 <!-- koog-zh-meta: {"last_synced_at": "2026-03-28T13:11:47+00:00", "source_path": "prompts/llm-response-caching.md", "source_sha256": "2db2c65d2d23ad47befa9fca662a62d358b47eb67d8f7930395a9ed54b9445da", "source_tag": "0.7.3", "translation_status": "changed"} -->
 # LLM 响应缓存 { #llm-response-caching }
 
-对于使用提示执行器重复运行的请求，您可以缓存 LLM 响应，以优化性能并降低 Kotlin 和 Java 中的成本。
-在 Koog 中，所有提示执行器均可通过 `CachedPromptExecutor` 实现缓存功能，
+对于使用提示词执行器重复运行的请求，您可以缓存 LLM 响应，以优化性能并降低 Kotlin 和 Java 中的成本。
+在 Koog 中，所有提示词执行器均可通过 `CachedPromptExecutor` 实现缓存功能，
 它是 `PromptExecutor` 的封装器，增加了缓存功能。
 它允许您存储先前执行的提示的响应，并在再次运行相同提示时检索它们。
 
-要在 Kotlin 或 Java 中创建缓存的提示执行器，请执行以下操作：
+要在 Kotlin 或 Java 中创建缓存的提示词执行器，请执行以下操作：
 
-1. 创建您希望缓存响应的提示执行器。
-2. 通过提供所需的缓存和您创建的提示执行器来创建 `CachedPromptExecutor` 实例。
+1. 创建您希望缓存响应的提示词执行器。
+2. 通过提供所需的缓存和您创建的提示词执行器来创建 `CachedPromptExecutor` 实例。
 3. 使用所需的提示和模型运行创建的 `CachedPromptExecutor`。
 
 以下是一个示例：

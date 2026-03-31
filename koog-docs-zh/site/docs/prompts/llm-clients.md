@@ -336,9 +336,9 @@ fun main() = runBlocking {
     System.out.println(result);
     ```
 
-## 与提示执行器的集成 { #integration-with-prompt-executors }
+## 与提示词执行器的集成 { #integration-with-prompt-executors }
 
-[提示执行器](prompt-executors.md) 封装 LLM 客户端并提供额外功能，例如路由、回退机制以及跨提供商的统一使用方式。建议在生产环境中使用它们，因为它们在处理多个提供商时提供了灵活性。
+[提示词执行器](prompt-executors.md) 封装 LLM 客户端并提供额外功能，例如路由、回退机制以及跨提供商的统一使用方式。建议在生产环境中使用它们，因为它们在处理多个提供商时提供了灵活性。
 
 [^1]: 支持通过 OpenAI 审核 API 进行内容审核。
 [^2]: 内容审核需配置 Guardrails。
