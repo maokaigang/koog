@@ -14,6 +14,7 @@ val excluded = setOf(
     ":agents:agents-features:agents-features-sql", // Optional SQL persistence provider
     ":agents:agents-features:agents-features-chat-memory-sql", // Optional SQL chat memory provider
     ":agents:agents-features:agents-features-chat-history-jdbc", // Optional JDBC chat history provider
+    ":agents:agents-features:agents-features-chat-history-aws", // Optional AWS chat history provider
     ":agents:agents-features:agents-features-persistence-jdbc", // Optional JDBC persistence provider
     ":agents:agents-mcp-server",
     ":integration-tests",
@@ -45,8 +46,11 @@ val excluded = setOf(
     ":serialization:serialization-jackson",
 
     ":koog-spring-ai",
+    ":koog-spring-ai:koog-spring-ai-common",
     ":koog-spring-ai:koog-spring-ai-starter-model-chat",
     ":koog-spring-ai:koog-spring-ai-starter-model-embedding",
+    ":koog-spring-ai:koog-spring-ai-starter-chat-memory",
+    ":koog-spring-ai:koog-spring-ai-starter-vector-store",
 
     project.path, // the current project should not depend on itself
 )
