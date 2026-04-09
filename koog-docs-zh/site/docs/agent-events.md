@@ -237,8 +237,8 @@ Koog 提供了可在自定义消息处理器中使用的预定义事件类型。
 | `provider` | String | 是 |  | 提供商标识符（例如 "openai"、"google"、"anthropic"）。 |
 | `model`           | String    | 是      |         | 模型标识符（例如 "gpt-4"、"claude-3"）。                        |
 | `displayName`     | String    | 否       | null    | 模型的可选人类可读显示名称。                      |
-| `contextLength`   | Long      | 否       | null    | 模型可处理的最大令牌数。                          |
-| `maxOutputTokens` | Long      | 否       | null    | 模型可生成的最大令牌数。                         |
+| `contextLength`   | Long      | 否       | null    | 模型可处理的最大token数。                          |
+| `maxOutputTokens` | Long      | 否       | null    | 模型可生成的最大token数。                         |
 
 #### LLMCallCompletedEvent { #llmcallcompletedevent }
 

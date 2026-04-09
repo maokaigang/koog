@@ -93,7 +93,7 @@ Java 开发者可以利用 Koog 在 JVM 上的全部能力，并通过符合语�
 
     ---
 
-    使用高级技术优化令牌使用，同时在长对话中保持上下文
+    使用高级技术优化token使用，同时在长对话中保持上下文
 
 -   :material-floppy:{ .lg .middle } [**智能体持久化**](features/agent-persistence.md)
 

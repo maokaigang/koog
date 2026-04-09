@@ -166,7 +166,7 @@ val client = RetryingLLMClient(baseClient, config)
 val stream = client.executeStreaming(prompt, OpenAIModels.Chat.GPT4o)
 ```
 
-!!!note 流式重试仅适用于在接收到首个令牌之前发生的连接故障。一旦流式传输开始，重试逻辑将被禁用。若在流式传输过程中发生错误，操作将被终止。
+!!!note 流式重试仅适用于在接收到首个token之前发生的连接故障。一旦流式传输开始，重试逻辑将被禁用。若在流式传输过程中发生错误，操作将被终止。
 
 ### 使用提示词执行器重试 { #retry-with-prompt-executors }
 

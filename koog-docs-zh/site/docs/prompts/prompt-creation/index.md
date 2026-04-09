@@ -326,7 +326,7 @@ val prompt = prompt(
 - `toolChoice`：控制模型的工具调用行为。
 - `numberOfChoices`：请求多个备选响应。
 - `schema`：定义模型响应格式的结构。
-- `maxTokens`：限制响应中的令牌数量。
+- `maxTokens`：限制响应中的token数量。
 - `speculation`：提供关于预期响应格式的提示（仅特定模型支持）。
 
 更多信息，请参阅 [LLM 参数](../../llm-parameters.md)。

@@ -325,7 +325,7 @@ graph LR
 ### 节点 LLMCompressHistory { #nodellmcompresshistory }
 
 一个节点，将当前的 LLM 提示（消息历史）压缩为摘要，用简洁的摘要（TL;DR）替换消息。详情请参阅 [API 参考](api:agents-core::ai.koog.agents.core.dsl.extension.nodeLLMCompressHistory)。
-这对于管理长对话非常有用，通过压缩历史记录来减少令牌使用量。
+这对于管理长对话非常有用，通过压缩历史记录来减少token使用量。
 
 ```mermaid
 graph LR
@@ -345,7 +345,7 @@ graph LR
 
 您可以将此节点用于以下目的：
 
-- 管理长对话以减少令牌使用量。
+- 管理长对话以减少token使用量。
 - 总结对话历史以保持上下文。
 - 在长时间运行的智能体中实现内存管理。
 

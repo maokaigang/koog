@@ -86,23 +86,23 @@ search:
 
 # --8<-- [end:truncation]
 # --8<-- [start:topK]
-| `topK` | Integer | 生成输出时考虑的最高概率令牌数量。取值需大于或等于 0（具体提供方可能有最低值要求）。 |
+| `topK` | Integer | 生成输出时考虑的最高概率token数量。取值需大于或等于 0（具体提供方可能有最低值要求）。 |
 
 # --8<-- [end:topK]
 # --8<-- [start:repetitionPenalty]
-| `repetitionPenalty` | Double | 惩罚令牌重复。对于输出中已出现过的令牌，其下一个令牌的概率将除以 `repetitionPenalty` 的值，这使得如果 `repetitionPenalty > 1`，它们再次出现的可能性降低。取值需大于 0.0 且小于或等于 2.0。 |
+| `repetitionPenalty` | Double | 惩罚token重复。对于输出中已出现过的token，其下一个token的概率将除以 `repetitionPenalty` 的值，这使得如果 `repetitionPenalty > 1`，它们再次出现的可能性降低。取值需大于 0.0 且小于或等于 2.0。 |
 
 # --8<-- [end:repetitionPenalty]
 # --8<-- [start:minP]
-| `minP` | Double | 过滤掉相对于最可能令牌的相对概率低于定义的 `minP` 值的令牌。取值范围为 0.0 至 0.1。 |
+| `minP` | Double | 过滤掉相对于最可能token的相对概率低于定义的 `minP` 值的token。取值范围为 0.0 至 0.1。 |
 
 # --8<-- [end:minP]
 # --8<-- [start:topA]
-| `topA` | Double | 根据模型置信度动态调整采样窗口。如果模型置信度高（存在占主导地位的高概率下一个令牌），则采样窗口限制在少数几个最高概率令牌内。如果置信度低（存在许多概率相似的令牌），则保留更多令牌在采样窗口中。取值范围为 0.0 至 0.1（含）。值越高意味着动态适应性越强。 |
+| `topA` | Double | 根据模型置信度动态调整采样窗口。如果模型置信度高（存在占主导地位的高概率下一个token），则采样窗口限制在少数几个最高概率token内。如果置信度低（存在许多概率相似的token），则保留更多token在采样窗口中。取值范围为 0.0 至 0.1（含）。值越高意味着动态适应性越强。 |
 
 # --8<-- [end:topA]
 # --8<-- [start:transforms]
-| `transforms` | List&lt;String&gt; | 上下文转换列表。定义当上下文超出模型的令牌限制时如何转换上下文。默认转换是 `middle-out`，即从提示的中间截断。使用空列表表示不进行转换。更多信息，请参阅 OpenRouter 文档中的 [消息转换](https://openrouter.ai/docs/guides/features/message-transforms)。 |
+| `transforms` | List&lt;String&gt; | 上下文转换列表。定义当上下文超出模型的token限制时如何转换上下文。默认转换是 `middle-out`，即从提示的中间截断。使用空列表表示不进行转换。更多信息，请参阅 OpenRouter 文档中的 [消息转换](https://openrouter.ai/docs/guides/features/message-transforms)。 |
 
 # --8<-- [end:transforms]
 # --8<-- [start:models]
@@ -138,7 +138,7 @@ search:
 
 # --8<-- [end:thinking]
 # --8<-- [start:thinkingConfig]
-| `thinkingConfig` | GoogleThinkingConfig | 控制模型是否应暴露其思维链以及可为其花费多少令牌。更多信息，请参阅 API 参考中的 [GoogleThinkingConfig](api:prompt-executor-google-client::ai.koog.prompt.executor.clients.google.models.GoogleThinkingConfig)。 |
+| `thinkingConfig` | GoogleThinkingConfig | 控制模型是否应暴露其思维链以及可为其花费多少token。更多信息，请参阅 API 参考中的 [GoogleThinkingConfig](api:prompt-executor-google-client::ai.koog.prompt.executor.clients.google.models.GoogleThinkingConfig)。 |
 
 # --8<-- [end:thinkingConfig]
 # --8<-- [start:enableSearch]

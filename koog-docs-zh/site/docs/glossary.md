@@ -47,7 +47,7 @@
 
 ## 历史压缩 { #history-compression }
 
-- **历史压缩**：通过应用各种压缩策略来减少对话历史记录的大小，以管理令牌使用量的过程。了解更多，请参阅[历史压缩](history-compression.md)。
+- **历史压缩**：通过应用各种压缩策略来减少对话历史记录的大小，以管理token使用量的过程。了解更多，请参阅[历史压缩](history-compression.md)。
 
 ## 功能 { #features }
 

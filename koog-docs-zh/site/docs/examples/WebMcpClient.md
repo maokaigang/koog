@@ -11,7 +11,7 @@
 ## 先决条件 { #prerequisites }
 
 - 一个已导出为环境变量的 OpenAI API 密钥：`OPENAI_API_KEY`
-- 一个已导出为环境变量的 Bright Data API 令牌：`BRIGHT_DATA_API_TOKEN`
+- 一个已导出为环境变量的 Bright Data API token：`BRIGHT_DATA_API_TOKEN`
 - 您的 PATH 上已安装 Node.js 和 npx
 - 具有 Koog 依赖项的 Kotlin 开发环境
 
@@ -31,7 +31,7 @@ val brightDataToken = System.getenv("BRIGHT_DATA_API_TOKEN")
 
 ## 2) 启动 Bright Data 的 The Web MCP 服务器 { #2-start-the-web-mcp-server-by-bright-data }
 
-我们将使用 `npx` 启动 Bright Data 的 MCP 服务器，并使用您的 API 令牌进行配置。该服务器将通过 Model Context Protocol 暴露网络爬取能力。
+我们将使用 `npx` 启动 Bright Data 的 MCP 服务器，并使用您的 API token进行配置。该服务器将通过 Model Context Protocol 暴露网络爬取能力。
 
 ```kotlin
 println("Starting Bright Data MCP server...")
@@ -201,7 +201,7 @@ fun main() = runBlocking {
 ## 故障排除 { #troubleshooting }
 
 - **连接问题**：如果代理无法连接到 MCP 服务器，请确保已通过 `npx @brightdata/mcp` 正确安装了 Bright Data MCP 包。
-- **令牌错误**（Bright Data API）：请仔细检查您的 `BRIGHT_DATA_API_TOKEN` 是否有效，并具备网页抓取所需的必要权限。
+- **token错误**（Bright Data API）：请仔细检查您的 `BRIGHT_DATA_API_TOKEN` 是否有效，并具备网页抓取所需的必要权限。
 - **身份验证问题**（OpenAI）：请确认 `OPENAI_API_KEY` 环境变量已正确设置，并且对应的 API 密钥有效。
 - **进程超时**：如果服务器启动时间较长，请增加 `Thread.sleep(2000)` 时长。
 

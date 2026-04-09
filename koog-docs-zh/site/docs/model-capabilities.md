@@ -82,8 +82,8 @@ LLM 能力代表了大型语言模型可以支持的特定功能或特性。在 
 | `provider`        | LLMProvider               | 是      |         | LLM的提供者，例如Google或OpenAI。这标识了创建或托管该模型的公司或组织。                                                                |
 | `id`              | String                    | 是      |         | LLM实例的唯一标识符。通常代表特定的模型版本或名称。例如：`gpt-4-turbo`、`claude-3-opus`、`llama-3-2`。                              |
 | `capabilities`    | List&lt;LLMCapability&gt; | 是      |         | LLM支持的功能列表，例如温度调整、工具使用或基于模式的任务。这些功能定义了模型能做什么以及如何配置。 |
-| `contextLength`   | Long                      | 是      |         | LLM的上下文长度。这是LLM能处理的最大令牌数。                                                                                                       |
-| `maxOutputTokens` | Long                      | 否       | `null`  | 提供者为LLM生成的最大令牌数。                                                                                                                |
+| `contextLength`   | Long                      | 是      |         | LLM的上下文长度。这是LLM能处理的最大token数。                                                                                                       |
+| `maxOutputTokens` | Long                      | 否       | `null`  | 提供者为LLM生成的最大token数。                                                                                                                |
 
 ### 示例 { #examples }
 

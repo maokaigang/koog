@@ -57,7 +57,7 @@
 
 *[JVM]: Java 虚拟机
 
-*[JWT]: JSON Web 令牌
+*[JWT]: JSON Web token
 
 *[Kotlin DSL]: 基于 Kotlin 的领域特定语言
 

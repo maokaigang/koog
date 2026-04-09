@@ -96,7 +96,7 @@ val toolRegistry = ToolRegistry {
 ## 策略：多工具调用（带可选压缩） { #strategy-multiple-tool-calls-with-optional-compression }
 
 此策略允许 LLM **一次提议多个工具调用**（例如 `plus`、`minus`、`multiply`、`divide`），然后返回结果。
-如果令牌使用量增长过大，我们会在继续之前**压缩**工具结果的历史记录。
+如果token使用量增长过大，我们会在继续之前**压缩**工具结果的历史记录。
 
 ```kotlin
 import ai.koog.agents.core.environment.ReceivedToolResult
