@@ -390,7 +390,7 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
 
 === "OpenRouter"
 
-    以下示例使用 [`GPT-4o`](https://openrouter.ai/openai/gpt-4o) 模型，通过 OpenRouter API 创建并运行一个简单的 Koog 代理。
+    以下示例使用 [`GPT-4o`](https://openrouter.ai/openai/gpt-4o) 模型，通过 OpenRouter API 创建并运行一个简单的 Koog 智能体。
 
     === "Kotlin"
 
@@ -440,7 +440,7 @@ Koog 需要来自 [支持的 LLM 提供商](llm-providers.md) 的 API 密钥，�
 
 === "Bedrock"
 
-    以下示例使用 [`Claude Sonnet 4.5`](https://www.anthropic.com/news/claude-sonnet-4-5) 模型，通过 Bedrock API 创建并运行一个简单的 Koog 代理。
+    以下示例使用 [`Claude Sonnet 4.5`](https://www.anthropic.com/news/claude-sonnet-4-5) 模型，通过 Bedrock API 创建并运行一个简单的 Koog 智能体。
 
     === "Kotlin"
 

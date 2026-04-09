@@ -3,8 +3,8 @@
 
 基于 LLM 的规划器使用 LLM 来生成和评估计划。
 它们基于字符串状态运行，并通过 LLM 请求执行步骤。
-字符串状态意味着代理的状态是一个单一的字符串。
-在每一步中，代理接受一个初始状态字符串，并返回最终状态字符串作为结果。
+字符串状态意味着智能体的状态是一个单一的字符串。
+在每一步中，智能体接受一个初始状态字符串，并返回最终状态字符串作为结果。
 
 ??? note "先决条件"
 
@@ -21,12 +21,12 @@ Koog 提供了两种简单的规划器：
 - [SimpleLLMPlanner](https://api.koog.ai/agents/agents-planner/ai.koog.agents.planner.llm/-simple-l-l-m-planner/index.html)
   仅在开始时生成一次计划，然后按照计划执行直到完成。
   若要包含重新规划功能，请扩展 `SimpleLLMPlanner` 并重写 `assessPlan` 方法，
-  以指示代理何时应重新规划。
+  以指示智能体何时应重新规划。
 - [SimpleLLMWithCriticPlanner](https://api.koog.ai/agents/agents-planner/ai.koog.agents.planner.llm/-simple-l-l-m-with-critic-planner/index.html)
   实现了 `assessPlan` 方法，该方法使用 LLM 通过 LLM 请求检查计划的有效性，
-  并评估代理是否应重新规划。
+  并评估智能体是否应重新规划。
 
-以下示例展示了如何使用 `SimpleLLMPlanner` 创建一个简单的规划器代理：
+以下示例展示了如何使用 `SimpleLLMPlanner` 创建一个简单的规划器智能体：
 
 === "Kotlin"
 

@@ -155,7 +155,7 @@ graph TB
 
 ## 创建并运行智能体 { #create-and-run-the-agent }
 
-让我们用这个策略创建一个代理实例并运行它：
+让我们用这个策略创建一个智能体实例并运行它：
 
 === "Kotlin"
 
@@ -235,7 +235,7 @@ graph TB
         System.out.println(result);
     ```
 
-当你运行这个代理时，它会返回类似这样的响应：
+当你运行这个智能体时，它会返回类似这样的响应：
 
 ```text
 To calculate this, I'll follow the order of operations:
@@ -248,7 +248,7 @@ To calculate this, I'll follow the order of operations:
 The final answer is 193.
 ```
 
-然而，由于该代理没有任何工具，LLM 始终不会返回工具调用，而是直接生成完整答案。实际发生的情况如下：
+然而，由于该智能体没有任何工具，LLM 始终不会返回工具调用，而是直接生成完整答案。实际发生的情况如下：
 
 ```mermaid
 ---
@@ -332,7 +332,7 @@ graph LR
     }
     ```
 
-将工具注册表添加到代理配置中：
+将工具注册表添加到智能体配置中：
 
 === "Kotlin"
 
@@ -364,7 +364,7 @@ graph LR
     System.out.println(result);
     ```
 
-现在运行代理时，它会返回类似这样的响应：
+现在运行智能体时，它会返回类似这样的响应：
 
 ```text
 Multiplying 3 and 4...
@@ -378,11 +378,11 @@ Finally, 123 was added to the result:
 70 + 123 = 193
 ```
 
-根据此输出，代理正确执行了计算，但它仅调用了一次`multiply`工具，而未对每个运算调用相应的工具。我们可以通过描述代理角色并在系统提示中提供使用适当工具的说明来帮助代理。
+根据此输出，智能体正确执行了计算，但它仅调用了一次`multiply`工具，而未对每个运算调用相应的工具。我们可以通过描述智能体角色并在系统提示中提供使用适当工具的说明来帮助智能体。
 
 ## 提供一条系统提示 { #provide-a-system-prompt }
 
-一个[系统提示](../prompts/prompt-creation/index.md#system-message)定义了代理的角色和执行任务的指令。在我们的示例中，重要的是描述代理应如何处理复杂的多步骤计算：
+一个[系统提示](../prompts/prompt-creation/index.md#system-message)定义了智能体的角色和执行任务的指令。在我们的示例中，重要的是描述智能体应如何处理复杂的多步骤计算：
 
 === "Kotlin"
 
@@ -422,7 +422,7 @@ Finally, 123 was added to the result:
     System.out.println(result);
     ```
 
-现在运行代理时，它会返回类似这样的响应：
+现在运行智能体时，它会返回类似这样的响应：
 
 ```text
 Multiplying 3 and 4...
@@ -432,10 +432,10 @@ Adding 70 and 123...
 The final result is: 193
 ```
 
-如您所见，代理现在能够正确调用每个操作对应的工具，确保以确定性的方式执行计算，从而避免了产生幻觉结果的风险。
+如您所见，智能体现在能够正确调用每个操作对应的工具，确保以确定性的方式执行计算，从而避免了产生幻觉结果的风险。
 
 ## 下一步 { #next-steps }
 
-- 与[功能代理](functional-agents.md)和[规划代理](planner-agents/index.md)相比
+- 与[功能智能体](functional-agents.md)和[规划智能体](planner-agents/index.md)相比
 - 通过[安装功能](../features/index.md)增强您的智能体
 - 通过[结构化输出](../structured-output.md)提升可预测性与可靠性

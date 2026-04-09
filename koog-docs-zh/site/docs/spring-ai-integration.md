@@ -101,7 +101,7 @@ koog.spring.ai.chat.dispatcher.type=AUTO
 
 ### 使用示例 { #usage-example }
 
-注入 `PromptExecutor` 并使用它来运行 Koog 代理：
+注入 `PromptExecutor` 并使用它来运行 Koog 智能体：
 
 === "Kotlin"
 

@@ -146,7 +146,7 @@
 | Timing | Behavior |
 |---|---|
 | `ON_LLM_CALL` | 在每个 LLM 呼叫/流上摄取消息（启用会话内 RAG） |
-| `ON_AGENT_COMPLETION` | 代理运行完成后立即提取所有消息 |
+| `ON_AGENT_COMPLETION` | 智能体运行完成后立即提取所有消息 |
 
 ## 从策略节点访问长期记忆 { #accessing-long-term-memory-from-strategy-nodes }
 

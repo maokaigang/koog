@@ -1,21 +1,21 @@
 <!-- koog-zh-meta: {"last_synced_at": "2026-03-28T13:02:36+00:00", "source_path": "model-context-protocol.md", "source_sha256": "c93d00387ee5fd6d4c8110b72c33dcc134de5aaeb74c77f5cc27cc88ab5aaeaa", "source_tag": "0.7.3", "translation_status": "changed"} -->
 # 模型上下文协议 { #model-context-protocol }
 
-模型上下文协议（MCP）是一种标准化协议，允许AI代理通过一致的接口与外部工具和服务进行交互。
+模型上下文协议（MCP）是一种标准化协议，允许AI智能体通过一致的接口与外部工具和服务进行交互。
 
-MCP将工具和提示作为API端点暴露给AI代理调用。每个工具具有特定的名称，并使用JSON架构格式描述其输入和输出的输入模式。
+MCP将工具和提示作为API端点暴露给AI智能体调用。每个工具具有特定的名称，并使用JSON架构格式描述其输入和输出的输入模式。
 
-Koog框架提供与MCP服务器的集成，使您能够将MCP工具纳入您的Koog代理中。
+Koog框架提供与MCP服务器的集成，使您能够将MCP工具纳入您的Koog智能体中。
 
 要了解更多关于该协议的信息，请参阅[模型上下文协议](https://modelcontextprotocol.io)文档。
 
 ## MCP服务器 { #mcp-servers }
 
-MCP服务器实现了模型上下文协议，为AI代理与工具和服务的交互提供了标准化方式。
+MCP服务器实现了模型上下文协议，为AI智能体与工具和服务的交互提供了标准化方式。
 
 您可以在[MCP市场](https://mcp.so/)或[MCP DockerHub](https://hub.docker.com/u/mcp)中找到现成的MCP服务器。
 
-MCP服务器支持以下传输协议与代理通信：
+MCP服务器支持以下传输协议与智能体通信：
 
 * 标准输入/输出（stdio）传输协议，用于与作为独立进程运行的MCP服务器通信。例如，Docker容器或CLI工具。
 * 服务器发送事件（SSE）传输协议（可选），用于通过HTTP与MCP服务器通信。
@@ -24,7 +24,7 @@ MCP服务器支持以下传输协议与代理通信：
 
 Koog框架通过[MCP SDK](https://github.com/modelcontextprotocol/kotlin-sdk)与MCP集成，并包含`agent-mcp`模块中提供的额外API扩展。
 
-此集成使Koog代理能够执行以下操作：
+此集成使Koog智能体能够执行以下操作：
 
 * 通过各种传输机制（stdio、SSE）连接到MCP服务器。
 * 从MCP服务器检索可用工具。
@@ -51,7 +51,7 @@ Koog框架通过[MCP SDK](https://github.com/modelcontextprotocol/kotlin-sdk)与
 1. 启动一个 MCP 服务器（可以作为进程、Docker 容器或 Web 服务运行）。
 2. 创建与服务器通信的传输机制。
 
-MCP 服务器支持 stdio 和 SSE 传输机制与代理通信，因此您可以使用其中一种进行连接。
+MCP 服务器支持 stdio 和 SSE 传输机制与智能体通信，因此您可以使用其中一种进行连接。
 
 #### 使用 stdio 连接 { #connect-with-stdio }
 
@@ -99,9 +99,9 @@ val toolRegistry = McpToolRegistryProvider.fromClient(
 )
 ```
 
-### 3. 与您的代理集成 { #3-integrate-with-your-agent }
+### 3. 与您的智能体集成 { #3-integrate-with-your-agent }
 
-要在您的 Koog 代理中使用 MCP 工具，您需要将工具注册表注册到代理：
+要在您的 Koog 智能体中使用 MCP 工具，您需要将工具注册表注册到智能体：
 ```kotlin
 // Create an agent with the tools
 val agent = AIAgent(
@@ -118,7 +118,7 @@ val result = agent.run("Use the MCP tool to perform a task")
 [//]: # (## 直接使用 MCP 工具)
 
 [//]: # ()
-[//]: # (除了通过代理运行工具外，您也可以直接运行它们：)
+[//]: # (除了通过智能体运行工具外，您也可以直接运行它们：)
 
 [//]: # ()
 [//]: # (1. 从工具注册表中检索特定工具。)

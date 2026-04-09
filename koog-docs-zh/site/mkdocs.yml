@@ -104,7 +104,7 @@ nav:
       - Unity + Koog：通过 Kotlin 智能体驱动你的游戏: examples/UnityMcp.md
       - 使用 Koog 进行 OpenTelemetry：追踪你的 AI 智能体: examples/OpenTelemetry.md
       - 构建一个简单的吸尘器智能体: examples/VaccumAgent.md
-      - 为 Koog 代理启用 Weave 追踪: examples/Weave.md
+      - 为 Koog 智能体启用 Weave 追踪: examples/Weave.md
       - 使用 Bright Data Web MCP 与 Koog 进行网页抓取: examples/WebMcpClient.md
   - API 参考: https://api.koog.ai/
 

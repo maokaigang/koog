@@ -63,7 +63,7 @@
     System.out.println(result);
     ```
 
-代理可以生成以下输出：
+智能体可以生成以下输出：
 
 ```text
 The answer to 12 × 9 is 108.
@@ -118,7 +118,7 @@ The answer to 12 × 9 is 108.
         .build();
     ```
 
-代理可以生成以下输出：
+智能体可以生成以下输出：
 
 ```text
 To calculate the product of 12 and 9, we multiply these two numbers together.
@@ -128,13 +128,13 @@ To calculate the product of 12 and 9, we multiply these two numbers together.
 
 ## 添加工具 { #add-tools }
 
-在许多情况下，一个功能型代理需要完成特定任务，例如读写数据、调用API或执行其他确定性操作。在Koog中，您将这些能力作为[工具](../tools-overview.md)公开，并让LLM决定何时调用它们。
+在许多情况下，一个功能型智能体需要完成特定任务，例如读写数据、调用API或执行其他确定性操作。在Koog中，您将这些能力作为[工具](../tools-overview.md)公开，并让LLM决定何时调用它们。
 
 以下是您需要完成的任务：
 
 1. 创建一个[基于注解的工具](../annotation-based-tools.md)。
-2. 将其添加到工具注册表中，并将注册表传递给代理。
-3. 确保代理策略能够识别LLM响应中的工具调用，执行所请求的工具，
+2. 将其添加到工具注册表中，并将注册表传递给智能体。
+3. 确保智能体策略能够识别LLM响应中的工具调用，执行所请求的工具，
    将结果发送回LLM，并重复此过程，直到没有剩余的工具调用。
 
 === "Kotlin"
@@ -238,7 +238,7 @@ To calculate the product of 12 and 9, we multiply these two numbers together.
     }
     ```
 
-代理可以生成以下输出：
+智能体可以生成以下输出：
 
 ```text
 Multiplying 3 and 4...

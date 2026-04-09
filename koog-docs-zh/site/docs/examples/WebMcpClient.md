@@ -4,9 +4,9 @@
 [:material-github: 在 GitHub 上打开](https://github.com/JetBrains/koog/blob/develop/examples/bright-data-mcp/){ .md-button .md-button--primary }
 [:material-download: 下载 .kt](https://raw.githubusercontent.com/JetBrains/koog/develop/examples/bright-data-mcp/Main.kt){ .md-button }
 
-在本教程中，您将把一个 Koog 代理连接到 Bright Data 的 Web MCP 服务器，并让它执行网络爬取和数据收集任务。我们将演示如何通过 Model Context Protocol，利用 Bright Data 强大的网络爬取基础设施搜索关于 Koog.ai 的信息。
+在本教程中，您将把一个 Koog 智能体连接到 Bright Data 的 Web MCP 服务器，并让它执行网络爬取和数据收集任务。我们将演示如何通过 Model Context Protocol，利用 Bright Data 强大的网络爬取基础设施搜索关于 Koog.ai 的信息。
 
-我们将保持简单和可复现性，专注于一个最小化但实用的代理 + 工具设置，您可以将其适配到自己的网络爬取需求中。
+我们将保持简单和可复现性，专注于一个最小化但实用的智能体 + 工具设置，您可以将其适配到自己的网络爬取需求中。
 
 ## 先决条件 { #prerequisites }
 
@@ -50,7 +50,7 @@ val process = processBuilder.start()
 Thread.sleep(2000)
 ```
 
-## 3) 从 Koog 连接并创建代理 { #3-connect-from-koog-and-create-the-agent }
+## 3) 从 Koog 连接并创建智能体 { #3-connect-from-koog-and-create-the-agent }
 
 我们构建一个带有 OpenAI 执行器的 Koog `AIAgent`，并通过 STDIO 传输将其工具注册表连接到 Bright Data MCP 服务器。然后，我们将探索可用的工具并运行一个网络爬取任务。
 
@@ -200,7 +200,7 @@ fun main() = runBlocking {
 
 ## 故障排除 { #troubleshooting }
 
-- **连接问题**：如果代理无法连接到 MCP 服务器，请确保已通过 `npx @brightdata/mcp` 正确安装了 Bright Data MCP 包。
+- **连接问题**：如果智能体无法连接到 MCP 服务器，请确保已通过 `npx @brightdata/mcp` 正确安装了 Bright Data MCP 包。
 - **token错误**（Bright Data API）：请仔细检查您的 `BRIGHT_DATA_API_TOKEN` 是否有效，并具备网页抓取所需的必要权限。
 - **身份验证问题**（OpenAI）：请确认 `OPENAI_API_KEY` 环境变量已正确设置，并且对应的 API 密钥有效。
 - **进程超时**：如果服务器启动时间较长，请增加 `Thread.sleep(2000)` 时长。
@@ -209,17 +209,17 @@ fun main() = runBlocking {
 
 - **探索不同的查询**：尝试爬取不同的网站或搜索各种主题。
 - **自定义工具集成**：在 Bright Data 的网络爬取能力之外添加您自己的工具。
-- **高级爬取**：利用 Bright Data 的高级功能，如住宅代理、CAPTCHA 解决和 JavaScript 渲染。
-- **数据处理**：将爬取的数据与其他 Koog 代理结合进行分析和洞察。
+- **高级爬取**：利用 Bright Data 的高级功能，如住宅智能体、CAPTCHA 解决和 JavaScript 渲染。
+- **数据处理**：将爬取的数据与其他 Koog 智能体结合进行分析和洞察。
 - **生产部署**：将此模式集成到您的应用程序中，实现自动化的网络数据收集。
 
 ## 所学内容
 
 本教程演示了如何：
 - 设置并配置 Bright Data 的 The Web MCP
-- 通过 STDIO 传输将 Koog AI 代理连接到外部 MCP 服务器
+- 通过 STDIO 传输将 Koog AI 智能体连接到外部 MCP 服务器
 - 使用自然语言指令执行 AI 驱动的网页抓取任务
 - 正确处理资源清理和错误管理
 - 为生产级网页抓取应用程序构建代码结构
 
-将 Koog 的 AI 代理能力与 Bright Data 的企业级网页抓取基础设施相结合，为自动化数据收集和分析工作流提供了强大的基础。
+将 Koog 的 AI 智能体能力与 Bright Data 的企业级网页抓取基础设施相结合，为自动化数据收集和分析工作流提供了强大的基础。

@@ -93,9 +93,9 @@ EventHandler 功能通过 `EventHandler` 类与智能体工作流集成，
             cfg.onToolCallStarting(ctx -> {
                 System.out.println("工具调用: " + ctx.getToolName() + " 参数为 " + ctx.getToolArgs());
             });
-            // 处理代理完成执行时触发的事件
+            // 处理智能体完成执行时触发的事件
             cfg.onAgentCompleted(ctx -> {
-                System.out.println("代理执行完成，结果: " + ctx.getResult());
+                System.out.println("智能体执行完成，结果: " + ctx.getResult());
             });
         })
         .build();

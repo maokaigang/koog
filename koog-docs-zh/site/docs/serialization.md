@@ -4,9 +4,9 @@
 ## 简介 { #introduction }
 
 Koog 使用一个轻量级、与库无关的序列化层，将工具参数和结果与 JSON 相互转换。
-该层位于代理运行时与底层序列化库之间，因此您可以更换库而无需更改任何工具或代理代码。
+该层位于智能体运行时与底层序列化库之间，因此您可以更换库而无需更改任何工具或智能体代码。
 
-除了工具之外，序列化层还被代理功能（如**持久化**）用于序列化和反序列化节点输入和输出。
+除了工具之外，序列化层还被智能体功能（如**持久化**）用于序列化和反序列化节点输入和输出。
 
 默认情况下，Koog 使用 `KotlinxSerializer`（基于 kotlinx-serialization）。 在 JVM 上，您也可以切换到 `JacksonSerializer`（基于 jackson-databind）。
 
@@ -112,7 +112,7 @@ Koog 使用一个轻量级、与库无关的序列化层，将工具参数和结
 
 ## `JSONElement` — 库无关的 JSON 树 { #jsonelement-library-agnostic-json-tree }
 
-`JSONElement` 是 JSON 数据的一种中性中间表示。它的存在使得序列化器、工具和代理内部实现无需依赖特定库中的 JSON 类型。
+`JSONElement` 是 JSON 数据的一种中性中间表示。它的存在使得序列化器、工具和智能体内部实现无需依赖特定库中的 JSON 类型。
 
 ### 层级结构 { #hierarchy }
 
@@ -323,11 +323,11 @@ dependencies {
 
 ## 工具如何与序列化器交互 { #how-tools-interact-with-the-serializer }
 
-代理运行时会自动在每个 `Tool` 实例上调用以下方法。
+智能体运行时会自动在每个 `Tool` 实例上调用以下方法。
 在正常使用中，您无需自行调用它们。
 
 - **`decodeArgs(rawArgs, serializer)`** (JSON → TArgs) — 将来自 LLM 的原始 JSON 参数反序列化为工具的强类型参数类。
-- **`encodeArgs(args, serializer)`** (TArgs → JSON) — 将强类型参数序列化回 JSON（供某些代理功能使用）。
+- **`encodeArgs(args, serializer)`** (TArgs → JSON) — 将强类型参数序列化回 JSON（供某些智能体功能使用）。
 - **`decodeResult(rawResult, serializer)`** (JSON → TResult) — 反序列化存储的 JSON 结果。
 - **`encodeResult(result, serializer)`** (TResult → JSON) — 将工具的结果序列化为 JSON。
 - **`encodeResultToString(result, serializer)`** (TResult → String) — 将工具的结果序列化为发送给 LLM 的字符串。
@@ -337,8 +337,8 @@ dependencies {
 
 ## 功能如何使用序列化器 { #how-features-use-the-serializer }
 
-序列化层不仅限于工具——某些代理功能也依赖它。
+序列化层不仅限于工具——某些智能体功能也依赖它。
 
-例如，**持久化** 使用在 `AIAgentConfig` 中配置的 `JSONSerializer` 来序列化和反序列化节点输入和输出，以创建检查点和恢复代理状态。这意味着流经持久化节点的任何类型都必须能够被配置的 `JSONSerializer` 序列化。
+例如，**持久化** 使用在 `AIAgentConfig` 中配置的 `JSONSerializer` 来序列化和反序列化节点输入和输出，以创建检查点和恢复智能体状态。这意味着流经持久化节点的任何类型都必须能够被配置的 `JSONSerializer` 序列化。
 
-有关检查点创建和恢复的详细信息，请参阅 [代理持久化](features/agent-persistence.md)。
+有关检查点创建和恢复的详细信息，请参阅 [智能体持久化](features/agent-persistence.md)。

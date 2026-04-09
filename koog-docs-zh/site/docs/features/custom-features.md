@@ -268,7 +268,7 @@ class LoggingFeature(val loggerName: String) {
 }
 ```
 
-以下是在代理中安装自定义日志功能的示例。该示例展示了基本功能安装过程，同时包含自定义配置属性 `loggerName`，可用于指定日志记录器的名称：
+以下是在智能体中安装自定义日志功能的示例。该示例展示了基本功能安装过程，同时包含自定义配置属性 `loggerName`，可用于指定日志记录器的名称：
 
 ```kotlin
 val agent = AIAgent(

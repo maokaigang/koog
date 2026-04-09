@@ -1,7 +1,7 @@
 <!-- koog-zh-meta: {"last_synced_at": "2026-03-29T03:04:35+00:00", "source_path": "spring-boot.md", "source_sha256": "cbc8f9b94f02945bb7a4f1d286d729ace40c146aee3971a806edc3b14a3ded1a", "source_tag": "0.7.3", "translation_status": "changed"} -->
 # Spring Boot 集成 { #spring-boot-integration }
 
-Koog 通过其自动配置启动器提供无缝的 Spring Boot 集成，使得在 Spring Boot 应用中集成 AI 代理变得非常简单，只需最少的设置。
+Koog 通过其自动配置启动器提供无缝的 Spring Boot 集成，使得在 Spring Boot 应用中集成 AI 智能体变得非常简单，只需最少的设置。
 
 ## 概述 { #overview }
 

@@ -320,4 +320,4 @@ For Java:
     // or another serializer-aware type. Returning String works out-of-the-box with Koog's Java interop.
     ```
 
-在 Kotlin 或 Java 中实现你的工具后，你需要将其添加到工具注册表中，然后通过代理来使用它。详情请参阅 [工具注册表](tools-overview.md#tool-registry)。
+在 Kotlin 或 Java 中实现你的工具后，你需要将其添加到工具注册表中，然后通过智能体来使用它。详情请参阅 [工具注册表](tools-overview.md#tool-registry)。

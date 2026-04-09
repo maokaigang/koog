@@ -209,11 +209,11 @@ val structuredResponse = promptExecutor.executeStructured<WeatherForecast>(
 
 该方法返回一个 `Result<StructuredResponse<T>>`，其中包含成功解析的结构化数据或错误。
 
-### 第二层：代理 LLM 上下文 { #layer-2-agent-llm-context }
+### 第二层：智能体 LLM 上下文 { #layer-2-agent-llm-context }
 
-代理 LLM 上下文层允许您在代理会话中请求结构化响应。这对于构建需要在流程中特定点获取结构化数据的对话代理非常有用。
+智能体 LLM 上下文层允许您在智能体会话中请求结构化响应。这对于构建需要在流程中特定点获取结构化数据的对话智能体非常有用。
 
-在 `writeSession` 中使用 `requestLLMStructured` 方法进行基于代理的交互：
+在 `writeSession` 中使用 `requestLLMStructured` 方法进行基于智能体的交互：
 
 ```kotlin
 val structuredResponse = llm.writeSession {
@@ -236,9 +236,9 @@ val structuredResponse = llm.writeSession {
 
 修复过程会迭代地将解析错误传递给辅助模型，该模型尝试在保留原始数据并进行最小更改的情况下纠正 JSON。
 
-#### 与代理策略集成 { #integrating-with-agent-strategies }
+#### 与智能体策略集成 { #integrating-with-agent-strategies }
 
-您可以将结构化数据处理集成到代理策略中：
+您可以将结构化数据处理集成到智能体策略中：
 
 ```kotlin
 val agentStrategy = strategy("weather-forecast") {
@@ -268,9 +268,9 @@ val agentStrategy = strategy("weather-forecast") {
 
 ### 第三层：节点层 { #layer-3-node-layer }
 
-节点层为代理工作流中的结构化输出提供了最高级别的抽象。使用 `nodeLLMRequestStructured` 创建可重用的处理结构化数据的代理节点。
+节点层为智能体工作流中的结构化输出提供了最高级别的抽象。使用 `nodeLLMRequestStructured` 创建可重用的处理结构化数据的智能体节点。
 
-这将创建一个代理节点，该节点：
+这将创建一个智能体节点，该节点：
 - 接受 `String` 输入（用户消息）
 - 将消息附加到 LLM 提示词
 - 向 LLM 请求结构化输出
@@ -463,7 +463,7 @@ val structuredResponse = promptExecutor.executeStructured(
 高级配置在 API 的所有三个层级中均保持一致。方法名称保持不变，仅参数从简单参数变为更高级的 `StructuredRequestConfig`：
 
 - **提示词执行器**：`executeStructured(prompt, model, config: StructuredRequestConfig<T>)`
-- **代理 LLM 上下文**：`requestLLMStructured(config: StructuredRequestConfig<T>)`
+- **智能体 LLM 上下文**：`requestLLMStructured(config: StructuredRequestConfig<T>)`
 - **节点层**：`nodeLLMRequestStructured(config: StructuredRequestConfig<T>)`
 
 对于大多数用例，推荐使用简化的 API（仅使用 `examples` 和 `fixingParser` 参数），而高级 API 则在需要额外控制时提供支持。

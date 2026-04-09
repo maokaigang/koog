@@ -1,21 +1,21 @@
 <!-- koog-zh-meta: {"last_synced_at": "2026-03-28T16:36:09+00:00", "source_path": "features/open-telemetry/index.md", "source_sha256": "c30379e50abb68d1244f4c65ab8241be9d2790a282d0fe3261a907720382e6e1", "source_tag": "0.7.3", "translation_status": "changed"} -->
 # OpenTelemetry 支持 { #opentelemetry-support }
 
-本页详细介绍了 Koog 代理框架对 OpenTelemetry 的支持，用于追踪和监控您的 AI 代理。
+本页详细介绍了 Koog 智能体框架对 OpenTelemetry 的支持，用于追踪和监控您的 AI 智能体。
 
 ## 概述 { #overview }
 
-OpenTelemetry 是一个可观测性框架，提供用于生成、收集和导出应用程序遥测数据（追踪）的工具。Koog 的 OpenTelemetry 功能允许您对 AI 代理进行插装以收集遥测数据，这可以帮助您：
+OpenTelemetry 是一个可观测性框架，提供用于生成、收集和导出应用程序遥测数据（追踪）的工具。Koog 的 OpenTelemetry 功能允许您对 AI 智能体进行插装以收集遥测数据，这可以帮助您：
 
-- 监控代理的性能和行为
-- 调试复杂代理工作流中的问题
-- 可视化代理的执行流程
+- 监控智能体的性能和行为
+- 调试复杂智能体工作流中的问题
+- 可视化智能体的执行流程
 - 追踪 LLM 调用和工具使用情况
-- 分析代理行为模式
+- 分析智能体行为模式
 
 ## 关键 OpenTelemetry 概念 { #key-opentelemetry-concepts }
 
-- **跨度（Spans）**：跨度表示分布式追踪中的单个工作单元或操作。它们指示应用程序中特定活动的开始和结束，例如代理执行、函数调用、LLM 调用或工具调用。
+- **跨度（Spans）**：跨度表示分布式追踪中的单个工作单元或操作。它们指示应用程序中特定活动的开始和结束，例如智能体执行、函数调用、LLM 调用或工具调用。
 - **属性（Attributes）**：属性提供关于遥测相关项目（例如跨度）的元数据。属性以键值对的形式表示。
 - **事件（Events）**：事件是跨度生命周期中的特定时间点（与跨度相关的事件），表示可能值得注意的事件。
 - **导出器（Exporters）**：导出器是负责将收集到的遥测数据发送到各种后端或目的地的组件。
@@ -23,16 +23,16 @@ OpenTelemetry 是一个可观测性框架，提供用于生成、收集和导出
 - **采样器（Samplers）**：采样器根据采样策略决定是否应记录追踪。它们用于管理遥测数据的量。
 - **资源（Resources）**：资源表示产生遥测数据的实体。它们由资源属性标识，资源属性是提供有关资源信息的键值对。
 
-Koog 中的 OpenTelemetry 功能会自动为各种代理事件创建跨度，包括：
+Koog 中的 OpenTelemetry 功能会自动为各种智能体事件创建跨度，包括：
 
-- 代理执行开始和结束
+- 智能体执行开始和结束
 - 节点执行
 - LLM 调用
 - 工具调用
 
 ## 安装 { #installation }
 
-要在 Koog 中使用 OpenTelemetry，请将 OpenTelemetry 功能添加到您的代理中：
+要在 Koog 中使用 OpenTelemetry，请将 OpenTelemetry 功能添加到您的智能体中：
 
 === "Kotlin"
 
@@ -66,7 +66,7 @@ Koog 中的 OpenTelemetry 功能会自动为各种代理事件创建跨度，包
 
 ### 基本配置 { #basic-configuration }
 
-以下是您在代理中配置 OpenTelemetry 功能时设置的可用属性的完整列表：
+以下是您在智能体中配置 OpenTelemetry 功能时设置的可用属性的完整列表：
 
 | 名称 | 数据类型 | 默认值 | 描述 |
 |------------------|--------------------|------------------------------|------------------------------------------------------------------------------|
@@ -169,7 +169,7 @@ Koog 中的 OpenTelemetry 功能会自动为各种代理事件创建跨度，包
 
 | 名称 | 数据类型 | 必填 | 描述 |
 |-------|--------------------|----------|---------------------------------------|
-| `sdk` | `OpenTelemetrySdk` | 是 | 在代理中使用的 SDK 实例。 |
+| `sdk` | `OpenTelemetrySdk` | 是 | 在智能体中使用的 SDK 实例。 |
 
 ### 高级配置 { #advanced-configuration }
 
@@ -261,13 +261,13 @@ Koog 中的 OpenTelemetry 功能会自动为各种代理事件创建跨度，包
 
 ## Span 类型和属性 { #span-types-and-attributes }
 
-OpenTelemetry 功能会自动创建不同类型的跨度来跟踪代理中的各种操作：
+OpenTelemetry 功能会自动创建不同类型的跨度来跟踪智能体中的各种操作：
 
-- **创建智能体跨度**（`CreateAgentSpan`）：运行代理时创建，在代理关闭或进程终止时结束。
-- **调用智能体跨度**（`InvokeAgentSpan`）：表示一次代理调用。
-- **策略跨度**（`StrategySpan`）：表示代理策略的执行，也就是顶层执行流程。
-- **节点执行跨度**（`NodeExecuteSpan`）：表示代理策略中某个节点的执行。这是 Koog 自定义的跨度。
-- **子图执行跨度**（`SubgraphExecuteSpan`）：表示代理策略内某个子图的执行。这也是 Koog 自定义的跨度。
+- **创建智能体跨度**（`CreateAgentSpan`）：运行智能体时创建，在智能体关闭或进程终止时结束。
+- **调用智能体跨度**（`InvokeAgentSpan`）：表示一次智能体调用。
+- **策略跨度**（`StrategySpan`）：表示智能体策略的执行，也就是顶层执行流程。
+- **节点执行跨度**（`NodeExecuteSpan`）：表示智能体策略中某个节点的执行。这是 Koog 自定义的跨度。
+- **子图执行跨度**（`SubgraphExecuteSpan`）：表示智能体策略内某个子图的执行。这也是 Koog 自定义的跨度。
 - **推理跨度**（`InferenceSpan`）：表示一次 LLM 调用。
 - **工具执行跨度**（`ExecuteToolSpan`）：表示一次工具调用。
 - **MCP 客户端跨度**（`McpClientSpan`）：表示 MCP（Model Context Protocol）客户端操作。此跨度遵循 MCP 的 OpenTelemetry 语义约定。
@@ -291,12 +291,12 @@ CreateAgentSpan
 
 Span 属性提供与 Span 相关的元数据。每个跨度都有其一组属性，而某些跨度还可以重复属性。
 
-Koog 支持遵循 OpenTelemetry 的 [生成人工智能事件的语义约定](https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-spans/) 的预定义属性列表。例如，约定定义了一个名为 `gen_ai.conversation.id` 的属性，该属性通常是跨度的必需属性。在 Koog 中，此属性的值是代理运行的唯一标识符，在调用 `agent.run()` 方法时自动设置。
+Koog 支持遵循 OpenTelemetry 的 [生成人工智能事件的语义约定](https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-spans/) 的预定义属性列表。例如，约定定义了一个名为 `gen_ai.conversation.id` 的属性，该属性通常是跨度的必需属性。在 Koog 中，此属性的值是智能体运行的唯一标识符，在调用 `agent.run()` 方法时自动设置。
 
 此外，Koog 还包括自定义的、Koog 特定的属性。您可以通过 `koog.` 前缀来识别大多数属性。以下是可用的自定义属性：
 
-- `koog.strategy.name`：代理策略的名称。策略是 Koog 中用于描述
-  代理用途的实体。用于 `StrategySpan` 跨度。
+- `koog.strategy.name`：智能体策略的名称。策略是 Koog 中用于描述
+  智能体用途的实体。用于 `StrategySpan` 跨度。
 - `koog.node.id`：正在执行的节点标识符（名称）。用于 `NodeExecuteSpan` 跨度。
 - `koog.node.input`：执行开始时传递给节点的输入。节点启动时出现在 `NodeExecuteSpan` 上。
 - `koog.node.output`：节点完成后产生的输出。当节点成功完成时出现在 `NodeExecuteSpan` 上。
@@ -433,7 +433,7 @@ OpenTelemetry gRPC 导出器 (`OtlpGrpcSpanExporter`) 是 `opentelemetry-java` S
 
 ## 与 Langfuse 集成 { #integration-with-langfuse }
 
-Langfuse 为 LLM/代理工作负载提供跟踪可视化和分析。
+Langfuse 为 LLM/智能体工作负载提供跟踪可视化和分析。
 
 您可以配置 Koog 使用辅助函数将 OpenTelemetry 跟踪直接导出到 Langfuse：
 
@@ -467,7 +467,7 @@ Langfuse 为 LLM/代理工作负载提供跟踪可视化和分析。
 
 ## 与 W&B Weave 集成 { #integration-with-w-b-weave }
 
-W&B Weave 为 LLM/代理工作负载提供跟踪可视化和分析。与 W&B Weave 的集成可以通过预定义的导出器进行配置：
+W&B Weave 为 LLM/智能体工作负载提供跟踪可视化和分析。与 W&B Weave 的集成可以通过预定义的导出器进行配置：
 
 === "Kotlin"
 
@@ -499,7 +499,7 @@ W&B Weave 为 LLM/代理工作负载提供跟踪可视化和分析。与 W&B Wea
 
 ## 与 Jaeger 集成 { #integration-with-jaeger }
 
-Jaeger 是一个常用的分布式追踪系统，可与 OpenTelemetry 搭配使用。Koog 仓库 `examples` 目录下的 `opentelemetry` 示例展示了如何将 OpenTelemetry、Jaeger 和 Koog 代理结合使用。
+Jaeger 是一个常用的分布式追踪系统，可与 OpenTelemetry 搭配使用。Koog 仓库 `examples` 目录下的 `opentelemetry` 示例展示了如何将 OpenTelemetry、Jaeger 和 Koog 智能体结合使用。
 
 ### 前置条件 { #prerequisites }
 
@@ -608,11 +608,11 @@ services:
 1. **Jaeger、Langfuse 或 W&B Weave 中没有看到追踪数据**
     - 确认目标服务已启动，并且 OpenTelemetry 端口 `4317` 可访问。
     - 检查 OpenTelemetry 导出器是否配置了正确的端点。
-    - 代理执行结束后等待几秒钟，确保追踪数据有时间被导出。
+    - 智能体执行结束后等待几秒钟，确保追踪数据有时间被导出。
 
 2. **缺少 span 或追踪不完整**
-    - 确认代理执行已成功完成。
-    - 不要在代理执行结束后立刻关闭应用。
+    - 确认智能体执行已成功完成。
+    - 不要在智能体执行结束后立刻关闭应用。
     - 可以在执行结束后增加一点延迟，给 span 导出留出时间。
 
 3. **span 数量过多**
@@ -620,7 +620,7 @@ services:
     - 例如，使用 `Sampler.traceIdRatioBased(0.1)` 仅采样 10% 的追踪。
 
 4. **多个 span 适配器互相覆盖**
-    - 当前 OpenTelemetry 代理特性还不支持同时应用多个 span 适配器，见 [KG-265](https://youtrack.jetbrains.com/issue/KG-265/Adding-Weave-exporter-breaks-Langfuse-exporter)。
+    - 当前 OpenTelemetry 智能体特性还不支持同时应用多个 span 适配器，见 [KG-265](https://youtrack.jetbrains.com/issue/KG-265/Adding-Weave-exporter-breaks-Langfuse-exporter)。
 
 ## MCP（Model Context Protocol）遥测支持 { #mcp-model-context-protocol-telemetry-support }
 

@@ -3,7 +3,7 @@
 
 Koog 提供了一种使用 `AIAgentStorage` 存储和传递数据的方式，这是一个键值存储系统，设计为在不同节点甚至子图之间传递数据的类型安全方法。
 
-该存储可通过代理节点中可用的 `storage` 属性（`storage: AIAgentStorage`）进行访问，允许在 AI 代理系统的不同组件之间无缝共享数据。
+该存储可通过智能体节点中可用的 `storage` 属性（`storage: AIAgentStorage`）进行访问，允许在 AI 智能体系统的不同组件之间无缝共享数据。
 
 ## 键值结构 { #key-and-value-structure }
 

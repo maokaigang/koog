@@ -334,10 +334,10 @@ AgentMemory 功能包含多种处理边界情况的机制：
 
 特定包的 API 文档：
 
-- [ai.koog.agents.local.memory.feature](api:agents-features-memory::ai.koog.agents.memory.feature)：包含 `AgentMemory` 类以及 AI 代理记忆功能的核心实现。
+- [ai.koog.agents.local.memory.feature](api:agents-features-memory::ai.koog.agents.memory.feature)：包含 `AgentMemory` 类以及 AI 智能体记忆功能的核心实现。
 - [ai.koog.agents.local.memory.feature.nodes](api:agents-features-memory::ai.koog.agents.memory.feature.nodes)：包含可在子图中使用的预定义记忆相关节点。
 - `ai.koog.agents.memory.config`：提供用于记忆操作的内存范围定义。
-- [ai.koog.agents.local.memory.model](api:agents-features-memory::ai.koog.agents.memory.model)：包含核心数据结构和接口的定义，使代理能够在不同上下文和时间段内存储、组织和检索信息。
+- [ai.koog.agents.local.memory.model](api:agents-features-memory::ai.koog.agents.memory.model)：包含核心数据结构和接口的定义，使智能体能够在不同上下文和时间段内存储、组织和检索信息。
 - [ai.koog.agents.local.memory.feature.history](api:agents-features-memory::ai.koog.agents.memory.feature.history)：提供历史压缩策略，用于从过去的会话活动或存储的记忆中检索和整合关于特定概念的事实知识。
 - [ai.koog.agents.local.memory.providers](api:agents-features-memory::ai.koog.agents.memory.providers)：提供核心接口，该接口定义了以结构化、上下文感知的方式存储和检索知识的基本操作及其实现。
 - [ai.koog.agents.local.memory.storage](api:agents-features-memory::ai.koog.agents.memory.storage)：提供核心接口以及针对不同平台和存储后端的文件操作的具体实现。

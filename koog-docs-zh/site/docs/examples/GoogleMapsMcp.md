@@ -8,7 +8,7 @@ https://github.com/JetBrains/koog/blob/develop/examples/notebooks/GoogleMapsMcp.
 https://raw.githubusercontent.com/JetBrains/koog/develop/examples/notebooks/GoogleMapsMcp.ipynb
 ){ .md-button }
 
-在这篇简短的、博客风格的教程中，我们将把 Koog 连接到用于 Google 地图的模型上下文协议（MCP）服务器。我们将使用 Docker 启动服务器，发现可用的工具，并让一个 AI 代理对地址进行地理编码并获取其海拔高度——所有这些都从一个 Kotlin 笔记本中完成。
+在这篇简短的、博客风格的教程中，我们将把 Koog 连接到用于 Google 地图的模型上下文协议（MCP）服务器。我们将使用 Docker 启动服务器，发现可用的工具，并让一个 AI 智能体对地址进行地理编码并获取其海拔高度——所有这些都从一个 Kotlin 笔记本中完成。
 
 到最后，你将拥有一个可重现的端到端示例，可以将其融入你的工作流或文档中。
 
@@ -69,8 +69,8 @@ toolRegistry.tools.forEach {
 
 ```
 
-## 使用 OpenAI 构建 AI 代理 { #build-an-ai-agent-with-openai }
-接下来，我们组装一个由 OpenAI 执行器和模型支持的简单代理。该代理将能够通过我们刚刚创建的注册表调用 MCP 服务器公开的工具。
+## 使用 OpenAI 构建 AI 智能体 { #build-an-ai-agent-with-openai }
+接下来，我们组装一个由 OpenAI 执行器和模型支持的简单智能体。该智能体将能够通过我们刚刚创建的注册表调用 MCP 服务器公开的工具。
 
 ```kotlin
 val agent = AIAgent(
@@ -82,7 +82,7 @@ val agent = AIAgent(
 ```
 
 ## 请求海拔高度：先地理编码，再获取海拔 { #ask-for-elevation-geocode-first-then-elevation }
-我们提示代理查找 JetBrains 慕尼黑办公室的海拔高度。指令明确告诉代理仅使用可用的工具，并优先使用哪些工具来完成此任务。
+我们提示智能体查找 JetBrains 慕尼黑办公室的海拔高度。指令明确告诉智能体仅使用可用的工具，并优先使用哪些工具来完成此任务。
 
 ```kotlin
 import kotlinx.coroutines.runBlocking
@@ -107,7 +107,7 @@ process.destroy()
 
 ## 故障排除与后续步骤 { #troubleshooting-and-next-steps }
 - 如果容器启动失败，请检查 Docker 是否正在运行以及你的 `GOOGLE_MAPS_API_KEY` 是否有效。
-- 如果代理无法调用工具，请重新运行发现单元格以确保工具注册表已填充。
+- 如果智能体无法调用工具，请重新运行发现单元格以确保工具注册表已填充。
 - 尝试使用可用的 Google 地图工具进行其他提示，例如路线规划或地点搜索。
 
 接下来，可以考虑组合多个 MCP 服务器（例如，用于 Web 自动化的 Playwright + Google 地图），并让 Koog 协调工具使用，以完成更丰富的任务。

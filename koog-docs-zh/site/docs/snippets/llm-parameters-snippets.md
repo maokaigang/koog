@@ -34,7 +34,7 @@ search:
 
 # --8<-- [end:stop]
 # --8<-- [start:parallelToolCalls]
-| `parallelToolCalls` | Boolean | 如果设置为 `true`，则可以并行运行多个工具调用。特别适用于自定义节点或代理策略之外的 LLM 交互。 |
+| `parallelToolCalls` | Boolean | 如果设置为 `true`，则可以并行运行多个工具调用。特别适用于自定义节点或智能体策略之外的 LLM 交互。 |
 
 # --8<-- [end:parallelToolCalls]
 # --8<-- [start:promptCacheKey]

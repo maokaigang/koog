@@ -467,12 +467,12 @@ public annotation class LLMDescription(val description: String)
 
 ### 工具未被识别 { #tools-not-being-recognized }
 
-如果代理无法识别您的工具，请检查以下事项：
+如果智能体无法识别您的工具，请检查以下事项：
 
 - 您的类实现了 `ToolSet` 接口。
 - 所有工具函数或方法均使用 `@Tool` 进行注解。
 - 工具函数或方法具有适当的返回类型（建议使用 `String` 以简化）。
-- 您的工具已正确注册到代理中。
+- 您的工具已正确注册到智能体中。
 
 ### 工具描述不清晰 { #unclear-tool-descriptions }
 

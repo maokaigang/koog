@@ -273,7 +273,7 @@ listOf(clientJob).joinAll()
 
 追踪功能采用模块化架构，包含以下关键组件：
 
-1. [Tracing](api:agents-features-trace::ai.koog.agents.features.tracing.feature.Tracing)：主功能类，用于在代理管道中拦截事件。
+1. [Tracing](api:agents-features-trace::ai.koog.agents.features.tracing.feature.Tracing)：主功能类，用于在智能体管道中拦截事件。
 2. [TraceFeatureConfig](api:agents-features-trace::ai.koog.agents.features.tracing.feature.TraceFeatureConfig)：配置类，用于自定义功能行为。
 3. 消息处理器：处理和输出追踪事件的组件：
     - [TraceFeatureMessageLogWriter](api:agents-features-trace::ai.koog.agents.features.tracing.writer.TraceFeatureMessageLogWriter)：将追踪事件写入日志。

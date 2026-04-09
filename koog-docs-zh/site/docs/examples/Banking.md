@@ -8,14 +8,14 @@ https://github.com/JetBrains/koog/blob/develop/examples/notebooks/Banking.ipynb
 https://raw.githubusercontent.com/JetBrains/koog/develop/examples/notebooks/Banking.ipynb
 ){ .md-button }
 
-在本教程中，我们将使用 **Koog** 代理在 Kotlin 中构建一个小型银行助手。
+在本教程中，我们将使用 **Koog** 智能体在 Kotlin 中构建一个小型银行助手。
 您将学习如何：
 - 定义领域模型和示例数据
 - 为**转账**和**交易分析**提供面向能力的工具
 - 对用户意图进行分类（转账与分析）
 - 以两种风格编排调用：
   1) 图/子图策略
-  2) “代理即工具”
+  2) “智能体即工具”
 
 最终，您将能够将自由格式的用户请求路由到正确的工具，并生成有用、可审计的响应。
 
@@ -41,7 +41,7 @@ val openAIExecutor = simpleOpenAIExecutor(apiKey)
 
 ## 定义系统提示 { #defining-the-system-prompt }
 
-精心设计的系统提示有助于 AI 理解其角色和约束。此提示将指导我们所有代理的行为。
+精心设计的系统提示有助于 AI 理解其角色和约束。此提示将指导我们所有智能体的行为。
 
 ```kotlin
 val bankingAssistantSystemPrompt = """
@@ -86,7 +86,7 @@ val contactById = contactList.associateBy(Contact::id)
 
 我们建模两个“软契约”：
 - `chooseRecipient` 在检测到歧义时返回*候选对象*。
-- `sendMoney` 支持 `confirmed` 标志。如果 `false`，它会要求代理向用户确认。
+- `sendMoney` 支持 `confirmed` 标志。如果 `false`，它会要求智能体向用户确认。
 
 ```kotlin
 import ai.koog.agents.core.tools.annotations.LLMDescription
@@ -187,10 +187,10 @@ class MoneyTransferTools : ToolSet {
 }
 ```
 
-## 创建您的第一个代理 { #creating-your-first-agent }
+## 创建您的第一个智能体 { #creating-your-first-agent }
 
-现在让我们创建一个使用转账工具的代理。
-代理将 LLM 与工具结合以完成任务。
+现在让我们创建一个使用转账工具的智能体。
+智能体将 LLM 与工具结合以完成任务。
 
 ```kotlin
 import ai.koog.agents.core.agent.AIAgent
@@ -452,9 +452,9 @@ runBlocking {
 
     任务成功完成。
 
-## 使用图构建代理 { #building-an-agent-with-graph }
+## 使用图构建智能体 { #building-an-agent-with-graph }
 
-现在让我们将专用代理组合成一个图代理，以便将请求路由到适当的处理程序。
+现在让我们将专用智能体组合成一个图智能体，以便将请求路由到适当的处理程序。
 
 ### 请求分类 { #request-classification }
 
@@ -493,7 +493,7 @@ val toolRegistry = ToolRegistry {
 }
 ```
 
-## 代理策略 { #agent-strategy }
+## 智能体策略 { #agent-strategy }
 
 现在我们将创建一个编排多个节点的策略：
 
@@ -616,7 +616,7 @@ val agent = AIAgent<String, String>(
 )
 ```
 
-## 运行图代理 { #run-graph-agent }
+## 运行图智能体 { #run-graph-agent }
 
 ```kotlin
 println("Banking Assistant started")

@@ -1,5 +1,5 @@
 <!-- koog-zh-meta: {"last_synced_at": "2026-03-28T12:59:00+00:00", "source_path": "examples/Weave.md", "source_sha256": "013d3ffa83562aceef1327497fd2651d0111085bf88c4b2ed6deb4eeaaf07a77", "source_tag": "0.7.3", "translation_status": "changed"} -->
-# 为 Koog 代理启用 Weave 追踪 { #weave-tracing-for-koog-agents }
+# 为 Koog 智能体启用 Weave 追踪 { #weave-tracing-for-koog-agents }
 
 [:material-github: 在 GitHub 上打开](
 https://github.com/JetBrains/koog/blob/develop/examples/notebooks/Weave.ipynb
@@ -8,7 +8,7 @@ https://github.com/JetBrains/koog/blob/develop/examples/notebooks/Weave.ipynb
 https://raw.githubusercontent.com/JetBrains/koog/develop/examples/notebooks/Weave.ipynb
 ){ .md-button }
 
-本笔记本演示了如何使用 OpenTelemetry (OTLP) 将 Koog 代理的追踪数据发送到 W&B Weave。
+本笔记本演示了如何使用 OpenTelemetry (OTLP) 将 Koog 智能体的追踪数据发送到 W&B Weave。
 您将创建一个简单的 Koog `AIAgent`，启用 Weave 导出器，运行一个提示，并在 Weave UI 中查看丰富的追踪信息。
 
 有关背景信息，请参阅 Weave OpenTelemetry 文档：https://weave-docs.wandb.ai/guides/tracking/otel/
@@ -22,7 +22,7 @@ https://raw.githubusercontent.com/JetBrains/koog/develop/examples/notebooks/Weav
 - 您的 Weave 实体（团队或用户）名称已作为 `WEAVE_ENTITY` 暴露
   - 在您的 W&B 仪表板上查找：https://wandb.ai/home（左侧边栏的 "Teams"）
 - 一个项目名称已作为 `WEAVE_PROJECT_NAME` 暴露（如果未设置，本示例将使用 `koog-tracing`）
-- 一个 OpenAI API 密钥已作为 `OPENAI_API_KEY` 暴露，用于运行 Koog 代理
+- 一个 OpenAI API 密钥已作为 `OPENAI_API_KEY` 暴露，用于运行 Koog 智能体
 
 示例（macOS/Linux）：
 ```bash
@@ -42,7 +42,7 @@ export OPENAI_API_KEY=...
 
 ```
 
-## 创建代理并启用 Weave 追踪 { #create-an-agent-and-enable-weave-tracing }
+## 创建智能体并启用 Weave 追踪 { #create-an-agent-and-enable-weave-tracing }
 
 我们构建一个最小的 `AIAgent`，并使用 Weave 导出器安装 `OpenTelemetry` 功能。
 该导出器会根据您的环境配置将 OTLP 跨度发送到 Weave：
@@ -74,10 +74,10 @@ val agent = AIAgent(
 
 ```
 
-## 运行代理并在 Weave 中查看追踪 { #run-the-agent-and-view-traces-in-weave }
+## 运行智能体并在 Weave 中查看追踪 { #run-the-agent-and-view-traces-in-weave }
 
 执行一个简单的提示。完成后，打开打印的链接以在 Weave 中查看追踪。
-您应该能看到代理运行、模型调用和其他已检测操作的跨度。
+您应该能看到智能体运行、模型调用和其他已检测操作的跨度。
 
 ```kotlin
 import kotlinx.coroutines.runBlocking

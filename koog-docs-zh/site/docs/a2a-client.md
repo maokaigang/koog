@@ -123,7 +123,7 @@ val client = A2AClient(transport, agentCardResolver)
 
 ### 2. 连接与发现 { #2-connect-and-discover }
 
-连接到代理并获取其名片。拥有代理名片后，您可以查询其能力并执行其他操作，例如检查是否支持流式传输。
+连接到智能体并获取其名片。拥有智能体名片后，您可以查询其能力并执行其他操作，例如检查是否支持流式传输。
 
 ```kotlin
 // Connect and retrieve agent capabilities
@@ -136,8 +136,8 @@ println("Supports streaming: ${agentCard.capabilities.streaming}")
 
 ### 3. 发送消息 { #3-send-messages }
 
-向代理发送消息并接收单次响应。
-响应可以是代理直接回复的消息，也可以是代理执行任务时产生的任务事件。
+向智能体发送消息并接收单次响应。
+响应可以是智能体直接回复的消息，也可以是智能体执行任务时产生的任务事件。
 
 ```kotlin
 val message = Message(

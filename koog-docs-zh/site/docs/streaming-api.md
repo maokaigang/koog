@@ -173,7 +173,7 @@ llm.writeSession {
 
 ### 在事件处理器中监听流事件 { #listening-to-stream-events-in-event-handlers }
 
-您可以在[代理事件处理器](features/agent-event-handlers.md)中监听流事件。
+您可以在[智能体事件处理器](features/agent-event-handlers.md)中监听流事件。
 
 === "Kotlin"
 

@@ -35,7 +35,7 @@ Koog 与各大 LLM 提供商兼容，同时支持通过 [Ollama](https://ollama.
 | 本地执行                                     | –                            | –                         | –                                       | –        | –                | –                | –                         | –                                            | ✓                     |
 
 !!! note
-    Koog 支持创建 AI 代理最常用的能力。
+    Koog 支持创建 AI 智能体最常用的能力。
     各提供商的 LLM 可能具备 Koog 目前尚未支持的额外功能。
     了解更多信息，请参阅 [模型能力](model-capabilities.md)。
 
@@ -62,7 +62,7 @@ Koog 允许您在两个层面上使用 LLM 提供商：
 
 ## 后续步骤 { #next-steps }
 
-- 使用特定的 LLM 提供商 [创建并运行代理](quickstart.md)。
+- 使用特定的 LLM 提供商 [创建并运行智能体](quickstart.md)。
 - 了解更多关于 [提示](prompts/index.md) 的信息。
 
 [^1]: 该能力仅由该提供商的部分模型支持。
